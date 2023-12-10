@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo ""
+echo "---------------------"
+echo "Step 1: npm run lint"
+echo "--------------------"
+
+pnpm run lint
+
+echo "[32m√[39m lint check ran successfully! Everything seems ok."
+
+
+echo ""
+echo "----------------------------"
+echo "Step 2: npm run check-format"
+echo "----------------------------"
+
+npm run check-format
+
+echo ""
+echo "[32m√[39m Formatter check passed 100%"
+
+
+echo ""
+echo "  ____                              _  "
+echo " / ___| _   _  ___ ___ ___  ___ ___| | "
+echo " \___ \| | | |/ __/ __/ _ \/ __/ __| | "
+echo "  ___) | |_| | (_| (_|  __/\__ \__ \_| "
+echo " |____/ \__,_|\___\___\___||___/___(_) "
+echo ""
+
+echo "[32m√ Changes have been commited successfully![39m"
+echo ""
+
+# echo "    _    _ _      _              _           ____   _    ____ ____  _____ ____  _   "
+# echo "   / \  | | |   _| |_ ___  ___ _| |_ ___    |  _ \ / \  / ___/ ___|| ____|  _ \| |  "
+# echo "  / _ \ | | |  |_  __/ _ \/ __|_   _/ __|   | |_) / _ \ \___ \___ \|  _| | | | | |  "
+# echo " / ___ \| | |    | ||  __/\__ \ | |_\__ \   |  __/ ___ \ ___) |__) | |___| |_| |_|  "
+# echo "/_/   \_\_|_|     \__\___||___/ \___|___/   |_| /_/   \_\____/____/|_____|____/(_)  "
+# echo ""

@@ -34,17 +34,13 @@
       "typescript": {
         "alwaysTryTypes": true,
         "project": "./jsconfig.json" // <--- use your jsconfig.json configuration file to align eslint on how to resolve imports. For example, it solved `import useMyHook from './AppHooks/useMyHook';` not being recognized, where useMyHook was a file with a .jsx extension.
-      },
-      "alias": {
-        "map": [["/*", "./public/*"]]
-        // "extensions": [".js", ".jsx",".svg"]
       }
     }
   },
   "parserOptions": {
     "ecmaVersion": "latest", // <--- latest is currently on version 2023 or 14. Solved module not being recognized.
-    "sourceType": "module", // <--- Solved import & export not being recognized.
-    "ecmaFeatures": { "jsx": true } // <--- this once solved .jsx files not being linted but I guess not anymore. I see that .jsx files are being linted out-of-the-box these days.
+    "sourceType": "module" // <--- Solved import & export not being recognized.
+    // "ecmaFeatures": { "jsx": true } // <--- this once solved .jsx files not being linted but I guess not anymore. I see that .jsx files are being linted out-of-the-box these days.
   },
   "overrides": [
     { "files": ["*.html"], "parser": "html" },
