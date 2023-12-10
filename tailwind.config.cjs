@@ -220,7 +220,16 @@ module.exports = {
         '4xl': '2rem', // use like so: rounded-4xl
       },
       boxShadow: {
-        mini: '0 2px 2px 0 rgba(0, 0, 0, 0.2)',
+        xs: '0 0 2px 2px rgba(0, 0, 0, 0.1)',
+        sm: '0 0 4px 4px rgba(0, 0, 0, 0.1)',
+        md: '0 0 6px 6px rgba(0, 0, 0, 0.1)',
+        base: '0 0 8px 8px rgba(0, 0, 0, 0.1)',
+        lg: '0 0 10px 10px rgba(0, 0, 0, 0.1)',
+        'dark-xs': '0 0 2px 2px rgba(255,255,255, 0.1)',
+        'dark-sm': '0 0 4px 4px rgba(255,255,255, 0.1)',
+        'dark-md': '0 0 6px 6px rgba(255,255,255, 0.1)',
+        'dark-base': '0 0 8px 8px rgba(255,255,255, 0.1)',
+        'dark-lg': '0 0 10px 10px rgba(255,255,255, 0.1)',
       },
       saturate: {
         10: '.1',
