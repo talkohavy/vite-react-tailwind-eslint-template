@@ -1,5 +1,4 @@
-import viteSvg from './public/vite.svg';
-import './App.css';
+import viteSvg from '/vite.svg';
 
 function App() {
   return (

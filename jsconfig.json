@@ -19,7 +19,7 @@
     "allowSyntheticDefaultImports": true,
     // "outDir": "./dist", // no need to have this! all the microservices are being used just as they are, and the only thing being bundled is the app-frontend, which gets bundled using vite, which already has an outDir set in its config file.
     "paths": {
-      "/*": ["./public/*"]
+      "/*": ["src/public/*"]
     }
   },
   "compileOnSave": true,

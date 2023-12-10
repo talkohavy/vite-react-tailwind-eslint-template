@@ -127,8 +127,8 @@
       {
         "commonjs": true, // <--- If true, require calls will be resolved.
         "caseSensitive": true, // <--- defaults to true. The import: const { default: x } = require('./foo') will reported if './foo' is actually './Foo' and caseSensitive is set to true.
-        "caseSensitiveStrict": true // <--- defaults to false. The caseSensitive option does not detect case for the current working directory. The caseSensitiveStrict option allows checking cwd in resolved path. By default, the option is disabled.
-        // "ignore": "" // <--- This rule has its own ignore list, separate from import/ignore. This is because you may want to know whether a module can be located, regardless of whether it can be parsed for exports: node_modules, CoffeeScript files, etc. are all good to resolve properly, but will not be parsed if configured as such via import/ignore.
+        "caseSensitiveStrict": true, // <--- defaults to false. The caseSensitive option does not detect case for the current working directory. The caseSensitiveStrict option allows checking cwd in resolved path. By default, the option is disabled.
+        "ignore": ["^/"] // <--- This rule has its own ignore list, separate from import/ignore. This is because you may want to know whether a module can be located, regardless of whether it can be parsed for exports: node_modules, CoffeeScript files, etc. are all good to resolve properly, but will not be parsed if configured as such via import/ignore.
       }
     ],
     "import/newline-after-import": ["error", { "count": 1, "considerComments": true }], // must use a newline between all imports and next line of code. Options object defaults to { count: 1, considerComments: false }.
