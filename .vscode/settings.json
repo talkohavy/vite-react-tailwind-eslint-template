@@ -1,0 +1,166 @@
+{
+  // -----------------
+  // Part 1: git Rules
+  // -----------------
+  "git.closeDiffOnOperation": false, // <--- defaults to "true". Basically? This is relevant for when you hit the plus sign to stage changes. Do you want VsCode to close the DiffEditor afterwards? or not? I do not.
+  "git.showCommitInput": false, // <--- defaults to "true". I'm not using it to commit, so I hide it.
+  "git.showActionButton": { "commit": false, "publish": true, "sync": false },
+  "git.alwaysShowStagedChangesResourceGroup": true, // <--- defaults to "false". Always show the "Staged Changes" tab, even if there are 0 changes staged.
+  // "git.showInlineOpenFileAction": false, // <--- defaults to "true". When examining changes, there's an "open file" icon near the revert changes icon. I use it, so I keep it visible.
+  // "git.untrackedChanges": "separate", // <--- defaults to "mixed".
+  // "git.openDiffOnClick": false, // <--- defaults to "true".
+  "files.exclude": { "**/.git": false },
+
+  // ---------------------
+  // Part 2: gitlens Rules
+  // ---------------------
+  // "gitlens.advanced.blame.delayAfterEdit": 5000,
+
+  // ------------------------
+  // Part 3: Javascript Rules
+  // ------------------------
+  "javascript.preferences.importModuleSpecifier": "shortest", // <--- defaults to "shortest"
+  "javascript.preferences.importModuleSpecifierEnding": "index", // <--- defaults to "auto"
+  "javascript.updateImportsOnFileMove.enabled": "always", // <--- defaults to "prompt"
+  "js/ts.implicitProjectConfig.checkJs": true, // <--- defaults to "false". Either this property, or `checkJs` property within your jsconfig must be set to true for type-checkingto work inside js files.
+
+  // ------------------------
+  // Part 4: DiffEditor Rules
+  // ------------------------
+  // "diffEditor.codeLens": false, // <--- defaults to "false"
+  // "diffEditor.renderSideBySide": true, // <--- defaults to "true"
+
+  // --------------------
+  // Part 5: Editor Rules
+  // --------------------
+  // "files.autoSave": "off", // Defaults to false. Possible options: off | onFocusChange | afterDelay | onWindowChange
+  // "files.autoSaveDelay": 1000,
+  // "files.refactoring.autoSave": true,
+  // "editor.autoSurround": "languageDefined", // defaults to "languageDefined". Defines what to do when text is selected, and you hit ' or [.
+  "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
+  // "editor.minimap.enabled": true, // <--- defaults to "true". The minimap is the mini-code on the right, which you can use to navigate a really long file.
+  // "editor.mouseWheelZoom": false, // <--- default to "false".
+  // "editor.multiCursorModifier": "alt", // <--- defaults to "alt".
+  // "editor.showUnused": true, // <--- defaults to "true". true value marks unreachable code as faded out.
+  // "editor.wordWrap": "off", // <--- defaults to "off".
+  "[json]": {
+    // "editor.defaultFormatter": "vscode.json-language-features", // <--- Commented out since I'm using prettier
+    "editor.quickSuggestions": { "strings": true },
+    "editor.suggest.insertMode": "replace" // defaults to insert
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.renderWhitespace": "all",
+    "editor.acceptSuggestionOnEnter": "off"
+  },
+
+  // ------------------------------------
+  // Part 6: Linting and Formatting Rules (eslint & prettier)
+  // ------------------------------------
+  // "eslint.options": { "overrideConfigFile": "./.eslintrc.yaml" },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.addMissingImports": "never"
+  },
+  // "prettier.configPath": ".prettierrc.js",
+  // Enable eslint for all supported languages
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "json"
+    // "jsonc" // <--- commented out because it errored the eslintrc config file
+    // "yaml" // <--- works badly on yamls
+    // "markdown" // <--- works badly on markdowns
+  ],
+  "css.lint.unknownProperties": "ignore",
+  "css.lint.unknownAtRules": "ignore",
+  // "[css]": {
+  //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
+  // },
+
+  // -------------------------------------
+  // Part 7: IDE Color Customization Rules
+  // -------------------------------------
+  "workbench.colorCustomizations": {
+    // - Background related:
+    // "editor.background": "#000088",
+    // "editor.selectionBackground": "#008800",
+    // - Text related:
+    // "editor.foreground": "#880000",
+    // - Numbered lines related:
+    // "editorLineNumber.foreground": "#005500",
+    "editorLineNumber.activeForeground": "#00ff00"
+  },
+
+  // ----------------------
+  // Part 8: terminal Rules
+  // ----------------------
+  "terminal.integrated.scrollback": 1000, // <--- defaults to 1000 lines backwards
+  "terminal.integrated.smoothScrolling": true, // <--- defaults to "false".
+  "terminal.integrated.defaultLocation": "view", // <--- defaults to "view".
+  "terminal.integrated.copyOnSelection": true, // <--- defaults to "false".
+  "terminal.integrated.rightClickBehavior": "copyPaste", // <--- defaults to "selectWord".
+  "terminal.integrated.altClickMovesCursor": true, // <--- defaults to "true".
+  "terminal.integrated.cursorBlinking": false, // <--- defaults to "false".
+  "terminal.integrated.cursorStyle": "line", // <--- defaults to "block".
+  "terminal.integrated.cursorWidth": 2, // <--- defaults to "1".
+  "terminal.integrated.enablePersistentSessions": false, // defaults to "true".
+  "terminal.integrated.persistentSessionReviveProcess": "never", // defaults to "onExit".
+  "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’|", // defaults to  ()[]{}',\"`─‘’|
+
+  // --------------------------
+  // Part 9: gotoLocation Rules
+  // --------------------------
+  "editor.gotoLocation.multipleDefinitions": "goto", // <--- I FOUND IT!!!! No more peeking !!! default value was peek
+  "editor.gotoLocation.multipleReferences": "peek", // <--- I FOUND IT!!!! When a reference was mis-spelled, it couldn't perform the goto operation, so it gets stuck in the same place.
+  // "editor.gotoLocation.alternativeDeclarationCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeImplementationCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeReferenceCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.multipleDeclarations": "goto",
+  // "editor.gotoLocation.multipleImplementations": "goto",
+  // "editor.gotoLocation.multipleTypeDefinitions": ,
+
+  // -------------------
+  // Part 10: debug Rules
+  // -------------------
+  "debug.console.acceptSuggestionOnEnter": "on", // finally!!! This drove me mad!!! defaults to off.
+
+  // -------------------
+  // Part 11: Misc Rules
+  // -------------------
+  "window.zoomLevel": 0,
+  "search.exclude": {
+    // The default ones:
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true
+    // The custom ones:
+  },
+
+  // ----------------------
+  // Part 12: mongodb Rules
+  // ----------------------
+  "mdb.confirmDeleteDocument": true,
+  "mdb.confirmRunAll": false,
+
+  // --------------
+  // Part 13: MISC.
+  // --------------
+  "cSpell.words": ["luckylove"],
+  "files.associations": { "*.json": "jsonc" },
+  "explorer.autoReveal": true,
+  "explorer.autoRevealExclude": {
+    "**/node_modules": false, // <--- open/reveal files in node_modules in explorer tree view.
+    "**/bower_components": false
+  }
+
+  // "[html]": {
+  //   "editor.defaultFormatter": "vscode.html-language-features"
+  // }
+}

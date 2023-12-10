@@ -3,6 +3,7 @@
     "moduleResolution": "Node", // Possible values: "Node", "Node16", "NodeNext"
     "target": "ESNext", // default value is "ES3"
     "module": "ESNext",
+    "jsx": "react-jsx",
     "importsNotUsedAsValues": "error",
     "ignoreDeprecations": "5.0",
     "isolatedModules": true, // <--- Setting the isolatedModules flag tells TypeScript to warn you if you write certain code that can’t be correctly interpreted by a single-file transpilation process.
@@ -17,7 +18,9 @@
     "baseUrl": "./",
     "allowSyntheticDefaultImports": true,
     // "outDir": "./dist", // no need to have this! all the microservices are being used just as they are, and the only thing being bundled is the app-frontend, which gets bundled using vite, which already has an outDir set in its config file.
-    "paths": {}
+    "paths": {
+      "/*": ["./public/*"]
+    }
   },
   "compileOnSave": true,
   "exclude": ["node_modules", "**/node_modules/*", "<node_internals>/**", "bin/**"],

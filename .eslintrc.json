@@ -13,48 +13,53 @@
  */
 {
   "root": true,
-  "plugins": ["import", "sort-exports", "jsdoc"],
+  "plugins": [
+    "react", // <--- I'm extending instead
+    "react-refresh",
+    "react-hooks",
+    "import",
+    "sort-exports",
+    "tailwindcss",
+    "jsdoc"
+  ],
   "extends": [
-    "eslint:recommended", // <--- I would like to get rid of this soon and move it to "plugins".
-    "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react-hooks/recommended"
-    ], 
+    "eslint:recommended" // <--- I would like to get rid of this soon and move it to "plugins".
+    // "plugin:react/recommended"
+    // "plugin:react/jsx-runtime"
+  ],
   "settings": {
+    "react": { "version": "detect" },
+    "import/extensions": [".js", ".jsx"],
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true,
         "project": "./jsconfig.json" // <--- use your jsconfig.json configuration file to align eslint on how to resolve imports. For example, it solved `import useMyHook from './AppHooks/useMyHook';` not being recognized, where useMyHook was a file with a .jsx extension.
+      },
+      "alias": {
+        "map": [["/*", "./public/*"]]
+        // "extensions": [".js", ".jsx",".svg"]
       }
     }
   },
   "parserOptions": {
     "ecmaVersion": "latest", // <--- latest is currently on version 2023 or 14. Solved module not being recognized.
-    "sourceType": "module" // <--- Solved import & export not being recognized.
-    // "ecmaFeatures": { "jsx": true } // <--- this once solved .jsx files not being linted but I guess not anymore. I see that .jsx files are being linted out-of-the-box these days.
+    "sourceType": "module", // <--- Solved import & export not being recognized.
+    "ecmaFeatures": { "jsx": true } // <--- this once solved .jsx files not being linted but I guess not anymore. I see that .jsx files are being linted out-of-the-box these days.
   },
   "overrides": [
     { "files": ["*.html"], "parser": "html" },
     { "files": ["*.js", "*.jsx", "*.ts", "*.tsx"], "parser": "@typescript-eslint/parser" }, // i don't know what the default parser is, but it didn't work well. Only with "@typescript-eslint/parser" as the default parser eslint is able to lint these files properly.
     { "files": ["*.d.ts"], "rules": { "no-unused-vars": "off" } } // <--- when declaring a function, of course its parameters are going to be "unused", so we need to turn this rule off.
   ],
+
   "env": {
     "node": true, // Solved "XXX not being recognized". XXX: module, require, process
     "browser": true, // Solved window & document object not being recognized.
     "jest": true, // Solved jest keywords like test & expect.
     "es6": true // Solved Promise is not defined.
   },
-  "globals": {
-    "myCache": true,
-    "redisClient": true,
-    "defaultUser": true,
-    "ValidationError": true,
-    "UnauthorizedError": true,
-    "ForbiddenError": true,
-    "NotFoundError": true,
-    "InternalServerError": true,
-    "ServerError": true
-  },
+  "globals": {},
+  "ignorePatterns": ["dist"],
   "rules": {
     // NOTE: This is where you can Override default settings coming from the plugins!
 
@@ -134,7 +139,7 @@
     "import/first": "error", // <--- I want the imports to be the first thing to appear in every file.
     "import/exports-last": "error", // <--- Ensure all exports appear after other statements.
     // - about import/extensions = Ensures consistent use of file extension on import path. it also had ""always", { ignorePackages: true }", which made internal packages fail at runtime if I enable this (api-gateway is an example case).
-    "import/extensions": ["error", "never", { "js": "always" }],
+    "import/extensions": ["error", "never", { "svg": "always" }], // <--- vite doesn't need extensions, otherwise I would have added { "js": "always" }.
     "import/order": [
       // The given rule enforces a convention in the order of require() / import statements!
       "error",
@@ -230,7 +235,7 @@
     "jsdoc/require-yields-check": "warn", // Recommended
     "jsdoc/sort-tags": "warn", // <--- sort @tags. This is not an alphabetic sorting.
     "jsdoc/tag-lines": ["warn", "always", { "count": 0, "applyToEndTag": false }], // <--- Recommended. Disallow empty lines between two annotation tags. Note! A "count" of 1+ conflicts with the "jsdoc/sort-tags" rule.
-    "jsdoc/valid-types": "warn" // Recommended
+    "jsdoc/valid-types": "warn", // Recommended
     // "jsdoc/check-examples": "warn", // <--- This rule cannot yet be supported for ESLint 8; you should either downgrade to ESLint 7 or disable this rule.
     // "jsdoc/no-missing-syntax": "warn" , // <--- this rule is a rather complex one, and does not add much value.
     // "jsdoc/no-restricted-syntax": "error",
@@ -243,6 +248,77 @@
     // "jsdoc/require-param-description": "warn", // Recommended. I left it off. Sometimes I just want to have a param named "props", without it having a description.
     // "jsdoc/require-property-description": "warn", // Recommended. I left it off. Sometimes a property is self explanatory, and doesn't need a description.
     // "jsdoc/require-returns-description": "warn", // Recommended
+
+    // #######################
+    // Rule Set 6: react rules
+    // #######################
+    "react/prop-types": "off",
+    "react/no-unescaped-entities": "off",
+    "react/jsx-uses-react": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-uses-vars": "error", // DO NOT USE if no-unused-vars is marked off!
+    "react/display-name": "error", // <--- check what this does
+    "react/no-children-prop": "error", // <--- check what this does
+    "react-hooks/rules-of-hooks": "error", // <--- check what this does
+    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }],
+    // "react/react-in-jsx-scope": "error", // <--- Since React 18, this is no longer needed. "error" triggers the 'React' must be in scope when using JSX message.
+    // "react/jsx-filename-extension": "error", // Yells at you if you add(?) an extension.
+
+    // #############################
+    // Rule Set 7: tailwindcss rules
+    // #############################
+    "tailwindcss/classnames-order": "error",
+    "tailwindcss/enforces-negative-arbitrary-values": "error",
+    "tailwindcss/enforces-shorthand": "error",
+    "tailwindcss/no-arbitrary-value": "off", // <-- already off by default! prohibits using w-[5px]
+    "tailwindcss/no-contradicting-classname": "error", // <--- avoids situations where you wrote p-2 & p-3 under the same className.
+    "tailwindcss/no-custom-classname": [
+      "warn",
+      {
+        // only allow classNames from Tailwind CSS and the values from the whitelist option, so put everything you created inside this white list!
+        "whitelist": [
+          "btn-love",
+          "border-0.5",
+          "border-1",
+          "border-1.5",
+          "border-b-1.5",
+          "h-13",
+          "h-15",
+          "h-xs",
+          "h-md",
+          "h-3xl",
+          "h-95/100",
+          "w-15",
+          "w-30",
+          "w-34",
+          "w-2xl",
+          "w-5xl",
+          "w-95/100",
+          "min-w-14",
+          "min-w-28",
+          "min-h-20",
+          "min-h-40",
+          "min-h-sm",
+          "min-h-lg",
+          "max-w-28",
+          "max-w-98/100",
+          "max-h-lg",
+          "max-h-sm",
+          "max-h-90/100",
+          "saturate-70",
+          "translate-x-half",
+          "translate-y-half",
+          "animate-appear",
+          "shadow-mini",
+          "bg-gradient-radial-bottom",
+          "scale-80",
+          "animate-appear-quick",
+          "-top-19",
+          "invert-90",
+          "contrast-90"
+        ]
+      }
+    ]
 
     // #####################
     // Rule Set 6: Rule Bank
