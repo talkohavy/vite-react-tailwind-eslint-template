@@ -3,6 +3,7 @@ import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider as TooltipProvider } from '@radix-ui/react-tooltip';
 import App from '@src/App';
 import { initDAL } from './DAL';
 import DarkThemeProvider from './providers/DarkThemeProvider';
@@ -21,7 +22,9 @@ function Client() {
       <StoreProvider store={store}>
         <BrowserRouter>
           <DarkThemeProvider>
-            <App />
+            <TooltipProvider delayDuration={800} skipDelayDuration={500}>
+              <App />
+            </TooltipProvider>
           </DarkThemeProvider>
         </BrowserRouter>
       </StoreProvider>
