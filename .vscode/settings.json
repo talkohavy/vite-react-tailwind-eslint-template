@@ -117,14 +117,14 @@
   // --------------------------
   "editor.gotoLocation.multipleDefinitions": "goto", // <--- I FOUND IT!!!! No more peeking !!! default value was peek
   "editor.gotoLocation.multipleReferences": "peek", // <--- I FOUND IT!!!! When a reference was mis-spelled, it couldn't perform the goto operation, so it gets stuck in the same place.
+  "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.goToImplementation", // <--- this will show "no implementation found!". I'd much rather have this warning, than it showing me places of where i'm using this function! Happened when clicked `alternativeFuncName` on case: const { setValue: alternativeFuncName } = useLocalStorage('key');
   // "editor.gotoLocation.alternativeDeclarationCommand": "editor.action.goToImplementation",
-  // "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.goToImplementation",
   // "editor.gotoLocation.alternativeImplementationCommand": "editor.action.goToImplementation",
   // "editor.gotoLocation.alternativeReferenceCommand": "editor.action.goToImplementation",
   // "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToImplementation",
   // "editor.gotoLocation.multipleDeclarations": "goto",
   // "editor.gotoLocation.multipleImplementations": "goto",
-  // "editor.gotoLocation.multipleTypeDefinitions": ,
+  // "editor.gotoLocation.multipleTypeDefinitions": "peek",
 
   // -------------------
   // Part 10: debug Rules

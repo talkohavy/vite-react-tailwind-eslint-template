@@ -3,12 +3,7 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class', // behind the scenes it's: darkMode: ['class', '[data-mode="dark"]'], you can set the name to something else like this.
   theme: {
-    screens: {
-      sm: '480px',
-      md: '768px',
-      lg: '976px',
-      xl: '1440px',
-    },
+    screens: { sm: '480px', md: '768px', lg: '976px', xl: '1440px' },
     extend: {
       spacing: {
         13: '3.25rem',
