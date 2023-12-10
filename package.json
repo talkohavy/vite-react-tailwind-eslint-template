@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
+    "@radix-ui/react-popover": "1.0.7",
     "axios": "^1.7.3",
     "clsx": "^2.1.1",
     "react": "^18.3.1",
