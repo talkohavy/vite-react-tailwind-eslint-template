@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "Node", // Possible values: "Node", "Node16", "NodeNext"
+    "target": "ESNext", // default value is "ES3"
+    "module": "ESNext",
+    "importsNotUsedAsValues": "error",
+    "ignoreDeprecations": "5.0",
+    "isolatedModules": true, // <--- Setting the isolatedModules flag tells TypeScript to warn you if you write certain code that can’t be correctly interpreted by a single-file transpilation process.
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true, // new
+    "lib": ["ES2022", "DOM"], // adding the "DOM" library helps vs-code to recognize the window & document objects.
+    "checkJs": true, // without it? this config file would not apply to js/jsx files.
+    "sourceMap": true, // default value is false
+    "noImplicitOverride": true, // If you use inheritance, and you provide an override function, you must specify that it is an override function.
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    // "outDir": "./dist", // no need to have this! all the microservices are being used just as they are, and the only thing being bundled is the app-frontend, which gets bundled using vite, which already has an outDir set in its config file.
+    "paths": {}
+  },
+  "compileOnSave": true,
+  "exclude": ["node_modules", "**/node_modules/*", "<node_internals>/**", "bin/**"],
+  "include": ["**/*/*.ts", "**/*.d.ts", "**/*.js", "**/*.jsx", "**/*.cjs", "*.ts", "*.d.ts", "*.js", "*.jsx", "*.cjs"]
+}

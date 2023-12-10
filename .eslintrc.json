@@ -1,0 +1,274 @@
+/**
+ * To have this eslintrc file working you need to install the following packages as dev-dependency:
+ * - prettier // Have your IDE format using prettier! The rest of the rules in this config simply align with prettier's built-in rules (and, of course, your custom rules).
+ * - eslint
+ * - eslint-plugin-import
+ * - eslint-import-resolver-typescript
+ * - @typescript-eslint/parser
+ * - eslint-plugin-sort-exports
+ * - eslint-plugin-jsdoc
+ *
+ * // Here is a how-to-install example using pnpm:
+ * pnpm add -wD prettier eslint eslint-plugin-import eslint-import-resolver-typescript @typescript-eslint/parser eslint-plugin-sort-exports eslint-plugin-jsdoc
+ */
+{
+  "root": true,
+  "plugins": ["import", "sort-exports", "jsdoc"],
+  "extends": [
+    "eslint:recommended", // <--- I would like to get rid of this soon and move it to "plugins".
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended"
+    ], 
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./jsconfig.json" // <--- use your jsconfig.json configuration file to align eslint on how to resolve imports. For example, it solved `import useMyHook from './AppHooks/useMyHook';` not being recognized, where useMyHook was a file with a .jsx extension.
+      }
+    }
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest", // <--- latest is currently on version 2023 or 14. Solved module not being recognized.
+    "sourceType": "module" // <--- Solved import & export not being recognized.
+    // "ecmaFeatures": { "jsx": true } // <--- this once solved .jsx files not being linted but I guess not anymore. I see that .jsx files are being linted out-of-the-box these days.
+  },
+  "overrides": [
+    { "files": ["*.html"], "parser": "html" },
+    { "files": ["*.js", "*.jsx", "*.ts", "*.tsx"], "parser": "@typescript-eslint/parser" }, // i don't know what the default parser is, but it didn't work well. Only with "@typescript-eslint/parser" as the default parser eslint is able to lint these files properly.
+    { "files": ["*.d.ts"], "rules": { "no-unused-vars": "off" } } // <--- when declaring a function, of course its parameters are going to be "unused", so we need to turn this rule off.
+  ],
+  "env": {
+    "node": true, // Solved "XXX not being recognized". XXX: module, require, process
+    "browser": true, // Solved window & document object not being recognized.
+    "jest": true, // Solved jest keywords like test & expect.
+    "es6": true // Solved Promise is not defined.
+  },
+  "globals": {
+    "myCache": true,
+    "redisClient": true,
+    "defaultUser": true,
+    "ValidationError": true,
+    "UnauthorizedError": true,
+    "ForbiddenError": true,
+    "NotFoundError": true,
+    "InternalServerError": true,
+    "ServerError": true
+  },
+  "rules": {
+    // NOTE: This is where you can Override default settings coming from the plugins!
+
+    // ######################
+    // Rule Set 1: base rules
+    // ######################
+    "array-bracket-spacing": ["error", "never"], // <--- "error & never" is already what prettier is doing by default. Only now you would also be alerted about it by eslint.
+    "arrow-body-style": "error", // <--- Turns a single-lined curly-braced callback, which returns a value, into a one-liner (which essentially removes the `return`).
+    "comma-dangle": ["error", "always-multiline"], // "error & always-multiline" is already what prettier is doing by default. Only now you would also be alerted about it by eslint. Could potentially collide with "trailingComma" rule of prettier.
+    "comma-spacing": ["error", { "before": false, "after": true }], // <--- "error & before:false,after:true" is already what prettier is doing by default. Only now you would also be alerted about it by eslint.
+    "comma-style": ["error", "last"], // <--- "error & last" is already what prettier is doing by default. Only now you would also be alerted about it by eslint.
+    "computed-property-spacing": ["error", "never"], // <--- "error & never" is already what prettier is doing by default. Only now you would also be alerted about it by eslint.
+    "max-len": [
+      // "error" could collide with prettier. The "max-len" rule was deprecated in ESLint v8.53.0
+      "error",
+      {
+        "code": 120, // <--- make sure to keep "code" value in sync with prettier's "printWidth" value.
+        "tabWidth": 2, // <--- defaults to 4.
+        "ignoreComments": true, // <--- defaults to true. true value ignores all trailing comments and comments on their own line
+        "ignoreStrings": true, // <--- ignore strings
+        "ignoreTemplateLiterals": true, // <--- ignore long template literals
+        "ignoreRegExpLiterals": true, // <--- ignore long RegExp'es
+        "ignoreUrls": true // <--- ignore long urls
+      }
+    ],
+    "no-constant-condition": "off", // <--- eslint/recommended set this to "error" by default. Disallows if(true){}.
+    "no-debugger": "warn", // default value is error. Disallow the use of the debugger keyword.
+    "no-multiple-empty-lines": ["error", { "max": 1 }], // <--- "error & max=1" is already what prettier is doing by default. Only now you would also be alerted about it by eslint.
+    "no-tabs": ["error", { "allowIndentationTabs": false }], // <--- "error" could collides with prettier's useTabs=true. Keep them in sync. That can be used just fine with Prettier as long as you don’t configure Prettier to indent using tabs, which I don't, so we're good. Even if you use the prettier rule of useTabs:true, you can still use this rule with "error", just set allowIndentationTabs to true.
+    "no-trailing-spaces": "error", // <--- "error" is already what prettier is doing by default. Only now you would also be alerted about it by eslint.
+    "no-multi-spaces": ["error", { "exceptions": { "Property": false } }], // <--- "error & Property=false" is already what prettier is doing by default. Only now you would also be alerted about it by eslint.
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all", // <--- Should global variables be checked too? Or just the local ones? Options are: "all" | "local". "all" checks all variables for usage, including those in the global scope. This is the default setting. "local" checks only that locally-declared variables are used but will allow global variables to be unused.
+        "args": "all", // <--- Should all arguments of a function be used? Options are: "all" | "after-used" | "none". "after-used" - unused positional arguments that occur before the last used argument will not be checked, but all named arguments and all positional arguments after the last used argument will be checked. "all" - all named arguments must be used. "none" - do not check arguments.
+        "argsIgnorePattern": "(^_|^req$|^res$|^next$)",
+        "caughtErrors": "all", // <--- In a try/catch block, are you using the error object? Options are: "all" | "none" (default). "all" - error argument must be used. "none" - do not check the error object.
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_", // <--- When destructuring an array like so: const [first, _iAmUnused, third] = arr;
+        "ignoreRestSiblings": false, // <--- if true, then when doing : const { someVar, ...rest } = obj; someVar will NOT be marked as unused.
+        "varsIgnorePattern": "^React$"
+      }
+    ],
+    "object-curly-spacing": ["error", "always"], // <--- "error & always" is already what prettier is doing by default. Only now you would also be alerted about it by eslint. Turns this {a:1} into this { a: 1 }.
+    "object-shorthand": "error", // <--- turns { lastName: lastName } to { lastName }.
+    "prefer-arrow-callback": ["error", { "allowUnboundThis": true }], // <--- "error" could collide with prettier. The collision occurs when the "arrow-body-style" eslint rule is set to "error" and the "arrowParens" prettier rule set to "avoid". However, since my "arrowParens" rule is set to "always", we're good. There's no collision. Turns this `foo(function(a) { return a; })` into this `foo((a) => a)`.
+    "prefer-destructuring": "error", // <--- turns this: const aaa = props.aaa; to this: const { aaa } = props;
+    "prefer-const": "error", // <--- turns this "let i = 3" into this "const i = 3".
+    "prefer-template": "error", // <--- turns this: name + value, to `${name}${value}`
+    "quotes": [
+      // <--- Force single quotes. "error" could collide with prettier. This rule was deprecated in ESLint v8.53.0
+      "error",
+      "single",
+      {
+        "avoidEscape": true, // <--- setting it to false would see this as an issue: "a string containing 'single' quotes", when it actually isn't. So set it on true.
+        "allowTemplateLiterals": false // <--- disallow the use of back ticks for strings who don't either: A) include a param inside. B) break into a new line.
+      }
+    ],
+    "space-in-parens": ["error", "never"], // <--- "error & never" is already what prettier is doing by default. Only now you would also be alerted about it by eslint. Flags these: 1. foo( 'bar'); 2. foo('bar' ); 3. foo( 'bar' ); as errors.
+
+    // ########################
+    // Rule Set 2: import rules
+    // ########################
+    "import/no-duplicates": "error", // <--- when 2+ import lines import from the same file, merge them!
+    "import/no-unresolved": [
+      // This rules catches unresolved imports. By default, only ES6 imports will be resolved.
+      "error",
+      {
+        "commonjs": true, // <--- If true, require calls will be resolved.
+        "caseSensitive": true, // <--- defaults to true. The import: const { default: x } = require('./foo') will reported if './foo' is actually './Foo' and caseSensitive is set to true.
+        "caseSensitiveStrict": true // <--- defaults to false. The caseSensitive option does not detect case for the current working directory. The caseSensitiveStrict option allows checking cwd in resolved path. By default, the option is disabled.
+        // "ignore": "" // <--- This rule has its own ignore list, separate from import/ignore. This is because you may want to know whether a module can be located, regardless of whether it can be parsed for exports: node_modules, CoffeeScript files, etc. are all good to resolve properly, but will not be parsed if configured as such via import/ignore.
+      }
+    ],
+    "import/newline-after-import": ["error", { "count": 1, "considerComments": true }], // must use a newline between all imports and next line of code. Options object defaults to { count: 1, considerComments: false }.
+    "import/first": "error", // <--- I want the imports to be the first thing to appear in every file.
+    "import/exports-last": "error", // <--- Ensure all exports appear after other statements.
+    // - about import/extensions = Ensures consistent use of file extension on import path. it also had ""always", { ignorePackages: true }", which made internal packages fail at runtime if I enable this (api-gateway is an example case).
+    "import/extensions": ["error", "never", { "js": "always" }],
+    "import/order": [
+      // The given rule enforces a convention in the order of require() / import statements!
+      "error",
+      {
+        "pathGroups": [
+          { "pattern": "react", "group": "builtin" },
+          { "pattern": "@*/**", "group": "internal" }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"], // <--- don"t comment this line out! otherwise @luckylove-pkg imports would come before remote npm installed packages!
+        "newlines-between": "never",
+        /**
+         * The order of elements in this array determines the order of your imports.
+         * - *builtin*: built-in modules. Example: import fs from "fs" & import path from "path"
+         * - *external*: external modules. Example: import clsx from "clsx"
+         * - *internal*: internal modules. Example: import foo from "src/foo";
+         * - *parent*: modules from a "parent" directory. Example: import foo from "../foo" & import foo from "../../foo"
+         * - *sibling*: modules from the same or a sibling's directory. Example: import bar from "./bar" & import baz from "./bar/baz"
+         * - *index*: the path of the current directory. Example: import main from "./"
+         * - *object*: only available in TypeScript
+         * - *type*: only available in TypeScript
+         */
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
+        "alphabetize": {
+          "order": "asc" /* sort in ascending order. Options: ["ignore", "asc", "desc"] */,
+          "caseInsensitive": true /* ignore case. Options: [true, false] */
+        }
+      }
+    ],
+    // "import/prefer-default-export": "error", // Uncomment this if you only want to see export default and to disallow export { someVariable }.
+    // "import/named": "error", // I disabled this, because typescript gives the same effect. When you import { servicename } from "./A.js" but A doesn't contain an export { servicename }, you'll get a servicename not found in './A.js' eslint (import/named).
+    // "import/default": "error", // I disabled this, because typescript gives the same effect. Ensures that a default export is present, given a default import.
+    // "import/export": "error", // I disabled this, because typescript gives the same effect. Report any invalid exports, i.e. re-export of the same name.
+
+    // ##############################
+    // Rule Set 3: sort-imports rules
+    // ##############################
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": false, // set to false, because I want UPPERCASE letters up and lowercase letters down.
+        "ignoreDeclarationSort": true, // set to true, because import order is handled by the import/order rule.
+        "ignoreMemberSort": false, // set to false, because this is the rules that allows for inner sorting!
+        "memberSyntaxSortOrder": ["all", "single", "multiple", "none"],
+        "allowSeparatedGroups": false // When true, the rule only checks the sorting of imports that appear on consecutive lines.
+      }
+    ],
+
+    // ##############################
+    // Rule Set 4: sort-exports rules
+    // ##############################
+    // NOTE: Comes from the plugin eslint-plugin-sort-exports.
+    "sort-exports/sort-exports": ["error", { "sortDir": "asc" }],
+
+    // #######################
+    // Rule Set 5: jsdoc rules
+    // #######################
+    "jsdoc/check-access": "warn", // <--- Recommended. Enforces valid @access tags.
+    "jsdoc/check-alignment": "warn", // <--- Recommended. aligns the asterisks (*) of a JSDoc.
+    "jsdoc/check-indentation": ["warn", { "excludeTags": ["param", "returns", "example"] }], // <--- Checks for invalid padding inside JSDoc blocks
+    "jsdoc/check-line-alignment": "warn", // <--- Disallow double space between: * & @, annotation & '{', '}' & param name, param name & param description.
+    "jsdoc/check-param-names": "warn", // <--- Recommended. Check the @param name against the param name used in the function's signature.
+    "jsdoc/check-property-names": "warn", // Recommended
+    "jsdoc/check-syntax": "warn", // <--- Disallow the Google style of how to declare an optional prop: `* @param {string=} foo`. Only allow for: `* @param {string} [foo]`
+    "jsdoc/check-tag-names": "warn", // <--- Recommended. Reports invalid jsdoc (block) tag names. i.e. report `@par1am` as error.
+    "jsdoc/check-types": "warn", // <--- Recommended. ensure that the casing of native types is as in this list: [undefined, null, boolean, number, bigint, string, symbol, object, Array, Function, Date, RegExp].
+    "jsdoc/check-values": "warn", // <--- Recommended. Checks for expected content within some miscellaneous tags (@version, @since, @license, @author).
+    "jsdoc/empty-tags": "warn", // <--- Recommended. Checks tags that are expected to be empty. i.e. @private, @readonly, @abstract, @async, etc.
+    "jsdoc/implements-on-classes": "warn", // Recommended
+    "jsdoc/informative-docs": "warn", // <--- Reports on JSDoc texts that only repeats their attached name. i.e. `* @param {any} obj - The obj`.
+    "jsdoc/match-description": [
+      "warn",
+      { "matchDescription": "^\n?([*A-Z`\\d_][\\s\\S]*([.?!`]|\\*\\w+\\*{1,3})\\s*)?$" }
+    ],
+    "jsdoc/multiline-blocks": ["error", { "noSingleLineBlocks": true, "singleLineTags": ["*"] }], // Recommended. Ensure that a JSDoc should not have text on the "0th" line.
+    "jsdoc/no-bad-blocks": "warn", // <--- bad jsdoc looks like /* */, or even /*** */. good jsdoc looks like /** */, meaning with exactly 2 asterisks.
+    "jsdoc/no-blank-block-descriptions": "warn",
+    "jsdoc/no-defaults": "warn", // <--- This rule reports defaults being used on the relevant portion of @param or @default.
+    "jsdoc/no-multi-asterisks": ["warn", { "allowWhitespace": true }], // Recommended
+    "jsdoc/no-undefined-types": "warn", // <--- Recommended. Besides some expected built-in types, prohibits any types not specified as globals or within @typedef
+    "jsdoc/require-asterisk-prefix": "warn", // <--- all jsdoc lines must start with asterisks. as
+    "jsdoc/require-hyphen-before-param-description": "warn",
+    "jsdoc/require-param": "warn", // <--- Recommended. Requires that all function parameters are documented with a @param tag.
+    "jsdoc/require-param-name": "warn", // Recommended
+    "jsdoc/require-param-type": "warn", // Recommended
+    "jsdoc/require-property": "warn", // Recommended
+    "jsdoc/require-property-name": "warn", // Recommended
+    "jsdoc/require-property-type": "warn", // Recommended
+    "jsdoc/require-returns": "warn", // Recommended
+    "jsdoc/require-returns-check": "warn", // Recommended
+    "jsdoc/require-returns-type": "warn", // Recommended
+    "jsdoc/require-throws": "warn",
+    "jsdoc/require-yields": "warn", // Recommended
+    "jsdoc/require-yields-check": "warn", // Recommended
+    "jsdoc/sort-tags": "warn", // <--- sort @tags. This is not an alphabetic sorting.
+    "jsdoc/tag-lines": ["warn", "always", { "count": 0, "applyToEndTag": false }], // <--- Recommended. Disallow empty lines between two annotation tags. Note! A "count" of 1+ conflicts with the "jsdoc/sort-tags" rule.
+    "jsdoc/valid-types": "warn" // Recommended
+    // "jsdoc/check-examples": "warn", // <--- This rule cannot yet be supported for ESLint 8; you should either downgrade to ESLint 7 or disable this rule.
+    // "jsdoc/no-missing-syntax": "warn" , // <--- this rule is a rather complex one, and does not add much value.
+    // "jsdoc/no-restricted-syntax": "error",
+    // "jsdoc/no-types": "warn", // <--- turns this: `@param {object} obj1` into this: `@param obj1`. Disallows types for params.
+    // "jsdoc/require-description": "warn",
+    // "jsdoc/require-description-complete-sentence": ["warn", { "abbreviations": ["empty."] }],
+    // "jsdoc/require-example": "warn",
+    // "jsdoc/require-file-overview": "warn",
+    // "jsdoc/require-jsdoc": "warn", // Recommended
+    // "jsdoc/require-param-description": "warn", // Recommended. I left it off. Sometimes I just want to have a param named "props", without it having a description.
+    // "jsdoc/require-property-description": "warn", // Recommended. I left it off. Sometimes a property is self explanatory, and doesn't need a description.
+    // "jsdoc/require-returns-description": "warn", // Recommended
+
+    // #####################
+    // Rule Set 6: Rule Bank
+    // #####################
+    // "curly": "error", // <--- "error" could collide with prettier. Enforces use of curly braces to avoid one-liners. I like one-liners when possible, and the removal of curly braces whenever possible.
+    // "eqeqeq": "error", // <--- It is considered good practice to use the type-safe equality operators === and !== instead of their regular counterparts == and !=.
+    // "linebreak-style": ["error", "unix"],
+    // "lines-around-directive": ["error", "never"],
+    // "lines-around-comment": "error", // <--- "error" could collide with prettier.
+    // "no-console": "error", // <--- Disallows console.log()
+    // "no-duplicate-imports": "error", // <--- The rule "import/no-duplicates" has better performance, and can actually merges them, offering a fix!
+    // "no-mixed-operators": "error", // <--- "error" could collide with prettier. The rule would suggest adding parentheses. However, Prettier removes many "unnecessary" parentheses, turning it back to without, thus causing a collision.
+    // "no-redeclare": "error" // <--- Rule already included in eslint/recommended. Disallows re-declaring vars.
+    // "no-shadow-restricted-names": "warn", // <--- Rule already included in eslint/recommended. Disallows defining NaN, Infinity, undefined, eval, Object.
+    // "no-undef": "error", // <--- Rule already included in eslint/recommended. Disallows the use of undeclared variables.
+    // "no-unreachable": "error", // <--- Rule already included in eslint/recommended.
+    // "no-undefined": "error", // <--- Disallow declaring "undefined" as a variable. No need, since the "no-shadow-restricted-names" already catches that.
+    // "no-unexpected-multiline": "error", // <--- "error" could collide with prettier.
+    // "no-confusing-arrow": [
+    //   // <--- "error" could collide with prettier. The intent is not clear: var x = a => 1 ? 2 : 3; // Did the author mean this `var x = function (a) { return 1 ? 2 : 3; };` Or this: `var x = a <= 1 ? 2 : 3;`. This rule was deprecated in ESLint v8.53.0.
+    //   "error",
+    //   {
+    //     "allowParens": true, // <--- defaults to true. true relaxes the rule and accepts parenthesis as a valid "confusion-preventing" syntax. false warns even if the expression is wrapped in parenthesis. In short, you DON'T WANT to set it to false!
+    //     "onlyOneSimpleParam": true // <--- defaults to false. true relaxes the rule and doesn’t report errors if the arrow function has 0 or more than 1 parameters, or the parameter is not an identifier. false warns regardless of parameters.
+    //   }
+    // ],
+    // "padding-line-between-statements": ["error", { "blankLine": "always", "prev": "*", "next": "return" }],
+  }
+}
