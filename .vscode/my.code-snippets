@@ -29,12 +29,12 @@
     "description": "My Simple useState."
   },
   "My console.log": {
-    "prefix": ["c", "cl", "clg"],
+    "prefix": ["c", "clg"],
     "body": ["console.log(${0:props})"],
     "description": "My Console Log"
   },
   "My console.log is": {
-    "prefix": ["c", "cl", "clg", "clgis"],
+    "prefix": ["c", "clg", "clgis"],
     "body": ["console.log('${1:props} is:', ${0:props})"],
     "description": "My Console Log Is"
   },
