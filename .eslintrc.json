@@ -223,7 +223,6 @@
     "jsdoc/require-property": "warn", // Recommended
     "jsdoc/require-property-name": "warn", // Recommended
     "jsdoc/require-property-type": "warn", // Recommended
-    "jsdoc/require-returns": "warn", // Recommended
     "jsdoc/require-returns-check": "warn", // Recommended
     "jsdoc/require-returns-type": "warn", // Recommended
     "jsdoc/require-throws": "warn",
@@ -232,6 +231,7 @@
     "jsdoc/sort-tags": "warn", // <--- sort @tags. This is not an alphabetic sorting.
     "jsdoc/tag-lines": ["warn", "always", { "count": 0, "applyToEndTag": false }], // <--- Recommended. Disallow empty lines between two annotation tags. Note! A "count" of 1+ conflicts with the "jsdoc/sort-tags" rule.
     "jsdoc/valid-types": "warn", // Recommended
+    // "jsdoc/require-returns": "warn", // Recommended
     // "jsdoc/check-examples": "warn", // <--- This rule cannot yet be supported for ESLint 8; you should either downgrade to ESLint 7 or disable this rule.
     // "jsdoc/no-missing-syntax": "warn" , // <--- this rule is a rather complex one, and does not add much value.
     // "jsdoc/no-restricted-syntax": "error",
