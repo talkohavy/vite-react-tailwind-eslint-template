@@ -1,11 +1,11 @@
-import viteSvg from '/vite.svg';
+import Layout from './components/Layout/index';
+import HomePage from './pages/Home/index';
 
 function App() {
   return (
-    <div>
-      <div>hello world</div>
-      <img src={viteSvg} alt='vite svg' />
-    </div>
+    <Layout>
+      <HomePage />
+    </Layout>
   );
 }
 

@@ -20,7 +20,7 @@ export default function ToggleButton({ value, setValue, size = 32, className = '
 
   //------------------- Render GUI ----------------------
   return (
-    <div className={className} style={style}>
+    <div className='flex items-center' style={style}>
       <label
         className={clsx('relative mx-4 inline-block cursor-pointer rounded-full outline-none', className)}
         style={{
