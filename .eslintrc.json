@@ -47,7 +47,6 @@
     { "files": ["*.js", "*.jsx", "*.ts", "*.tsx"], "parser": "@typescript-eslint/parser" }, // i don't know what the default parser is, but it didn't work well. Only with "@typescript-eslint/parser" as the default parser eslint is able to lint these files properly.
     { "files": ["*.d.ts"], "rules": { "no-unused-vars": "off" } } // <--- when declaring a function, of course its parameters are going to be "unused", so we need to turn this rule off.
   ],
-
   "env": {
     "node": true, // Solved "XXX not being recognized". XXX: module, require, process
     "browser": true, // Solved window & document object not being recognized.
