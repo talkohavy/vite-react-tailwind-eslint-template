@@ -59,6 +59,8 @@
   // ------------------------------------
   // "eslint.options": { "overrideConfigFile": "./.eslintrc.yaml" },
   "editor.codeActionsOnSave": {
+    // "source.fixAll": true, // <--- This is stronger than source.fixAll.eslint! because it also aggresively removes unreachable code!
+    // "source.organizeImports": true, // <--- This also removes unused imports. I disabled it, since I'm already using eslint for that.
     "source.fixAll.eslint": "explicit",
     "source.addMissingImports": "never"
   },
