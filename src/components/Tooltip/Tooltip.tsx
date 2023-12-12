@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import * as TooltipOriginal from '@radix-ui/react-tooltip';
+import { Arrow, Content, Portal, Provider, Root, Trigger } from '@radix-ui/react-tooltip';
 
 type TooltipProps = PropsWithChildren<{
   content: any;
@@ -9,20 +9,20 @@ export default function Tooltip(props: TooltipProps) {
   const { content, children } = props;
 
   return (
-    <TooltipOriginal.Provider delayDuration={600} skipDelayDuration={2000}>
-      <TooltipOriginal.Root>
-        <TooltipOriginal.Trigger asChild>{children}</TooltipOriginal.Trigger>
+    <Provider delayDuration={600} skipDelayDuration={2000}>
+      <Root>
+        <Trigger asChild>{children}</Trigger>
 
-        <TooltipOriginal.Portal>
-          <TooltipOriginal.Content
-            className='tooltip-content z-10 max-w-lg rounded border border-black bg-white p-2'
+        <Portal>
+          <Content
+            className='z-10 max-w-lg rounded border border-black bg-white p-2 data-[side=bottom]:animate-slide-down data-[side=top]:animate-slide-up'
             sideOffset={5}
           >
             {content}
-            <TooltipOriginal.Arrow className='fill-gray-600' />
-          </TooltipOriginal.Content>
-        </TooltipOriginal.Portal>
-      </TooltipOriginal.Root>
-    </TooltipOriginal.Provider>
+            <Arrow className='fill-gray-600' />
+          </Content>
+        </Portal>
+      </Root>
+    </Provider>
   );
 }

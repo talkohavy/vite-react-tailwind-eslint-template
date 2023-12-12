@@ -1,4 +1,4 @@
-import * as AvatarOriginal from '@radix-ui/react-avatar';
+import { Fallback, Image, Root } from '@radix-ui/react-avatar';
 
 const SIZES = {
   xs: 15,
@@ -19,20 +19,20 @@ const SIZES = {
  */
 export default function Avatar({ size = 'sm', imgSrc, imgAlt, initialsFallback = '' }) {
   return (
-    <AvatarOriginal.Root>
-      <AvatarOriginal.Image
+    <Root>
+      <Image
         src={imgSrc}
         alt={imgAlt}
         className='inline-flex items-center justify-center rounded-full border-2 border-orange-500'
         style={{ width: SIZES[size] ?? SIZES.sm, height: SIZES[size] ?? SIZES.sm }}
       />
-      <AvatarOriginal.Fallback
+      <Fallback
         delayMs={250}
         className='inline-flex items-center justify-center rounded-full border-2 border-orange-500 bg-blue-300'
         style={{ width: SIZES[size] ?? SIZES.sm, height: SIZES[size] ?? SIZES.sm }}
       >
         {initialsFallback}
-      </AvatarOriginal.Fallback>
-    </AvatarOriginal.Root>
+      </Fallback>
+    </Root>
   );
 }
