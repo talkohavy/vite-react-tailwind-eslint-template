@@ -7,7 +7,7 @@ export default function Layout({ children }) {
     <div className='h-full'>
       <Header />
 
-      <div className='z-10 flex h-full items-center justify-center'>
+      <div className='flex h-full items-center justify-center'>
         <Sidebar />
 
         <Main>{children}</Main>
