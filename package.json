@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint -c ./.eslintrc.json '**/*/*.{js,jsx,tsx}' --report-unused-disable-directives --max-warnings 0",
-    "check-format": "prettier . --check --config .prettier.config.mjs",
+    "check-format": "prettier . --check --config .prettierrc.mjs",
+    "format": "prettier . --check --config .prettierrc.mjs",
     "preview": "vite preview",
     "prepare": "husky install"
   },
