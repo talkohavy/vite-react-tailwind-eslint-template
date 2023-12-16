@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  darkMode: 'class', // behind the scenes it's: darkMode: ['class', '[data-mode="dark"]'], you can set the name to something else like this.
+  // safelist: [{ pattern: /^(bg-|border-|text-)/, variants: ['hover', 'active'] }, 'bg-red-200'],
+  darkMode: ['class', '[data-theme="dark"]'], // <--- from tests I made on Storybook, this array doesn't work. Only the data-theme="dark" affects the result, and the class does nothing. At first I thought may there's an AND behavior, but no, just the data attributes affects it. The class is rendered useless in this array form.
   theme: {
     screens: { sm: '480px', md: '768px', lg: '976px', xl: '1440px' },
     extend: {
@@ -22,7 +23,6 @@ module.exports = {
         '80/100': '80%',
         '90/100': '90%',
         '95/100': '95%',
-        15: '3.75rem',
         px: '1px',
         xs: '20rem',
         sm: '24rem',
@@ -126,12 +126,10 @@ module.exports = {
         '7xl': '80rem',
       },
       height: {
-        // 38: '152px',
         '80/100': '80%',
         '85/100': '85%',
         '90/100': '90%',
         '95/100': '95%',
-        15: '3.75rem',
         xs: '20rem',
         sm: '24rem',
         md: '28rem',
@@ -273,16 +271,36 @@ module.exports = {
         'gradient-radial-bottom': 'radial-gradient(circle at bottom,var(--tw-gradient-stops))',
       },
       animation: {
+        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-down': 'slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         'appear-quick': 'appear 150ms normal ease forwards',
-        appear: 'appear 1000ms normal ease forwards',
-        blinking: 'blinking 0.8s ease-in-out infinite alternate',
         spin: 'spin 1.5s cubic-bezier(.72,.18,.3,.99) infinite',
+        blinkingText: 'blinkingText 0.8s ease-in-out infinite alternate',
         shake: 'shake ease-in 5s infinite',
+        appear: 'appear 1000ms normal ease forwards',
       },
       keyframes: {
-        appear: {
-          '0%': { opacity: 0 },
-          '100%': { opacity: 1 },
+        slideUp: {
+          from: { opacity: 0, transform: 'translateY(10px)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
+        slideDown: {
+          from: { opacity: 0, transform: 'translateY(-10px)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        blinkingText: {
+          from: {
+            textShadow:
+              '0 0 2px #fff, 0 0 3px #dfaa7e, 0 0 4px #dfaa7e, 0 0 5px #dfaa7e, 0 0 6px #dfaa7e, 0 0 7px #dfaa7e, 0 0 8px #dfaa7e;',
+          },
+          to: {
+            textShadow:
+              '#FFF 0px 0px 1px, #FFF 0px 0px 2px, #FFF 0px 0px 3px, #dfaa7e 0px 0px 2px, #dfaa7e 0px 0px 3px, #dfaa7e 0px 0px 4px, #dfaa7e 0px 0px 20px, #dfaa7e 0px 0px 10px;',
+          },
         },
         shake: {
           '0%': { left: 0 },
@@ -294,19 +312,9 @@ module.exports = {
           '6%': { left: 3 },
           '7%': { left: 0 },
         },
-        spin: {
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
-        },
-        blinking: {
-          from: {
-            textShadow:
-              '0 0 2px #fff, 0 0 3px #dfaa7e, 0 0 4px #dfaa7e, 0 0 5px #dfaa7e, 0 0 6px #dfaa7e, 0 0 7px #dfaa7e, 0 0 8px #dfaa7e;',
-          },
-          to: {
-            textShadow:
-              '#FFF 0px 0px 1px, #FFF 0px 0px 2px, #FFF 0px 0px 3px, #dfaa7e 0px 0px 2px, #dfaa7e 0px 0px 3px, #dfaa7e 0px 0px 4px, #dfaa7e 0px 0px 20px, #dfaa7e 0px 0px 10px;',
-          },
+        appear: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
         },
       },
       lineClamp: {
