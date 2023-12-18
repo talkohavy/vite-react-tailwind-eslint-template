@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import avatarImage from '../../assets/avatar.webp';
 import Accordion from '../../components/AccordionStack/index';
 import Avatar from '../../components/Avatar/index';
+import Modal from '../../components/Modal/index';
 import Popover from '../../components/Popover/index';
 import Tooltip from '../../components/Tooltip/index';
 
@@ -24,6 +26,8 @@ const accordionData = [
 ];
 
 export default function HomePage() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className='flex flex-col items-start justify-start gap-10 p-10'>
       <div className='flex items-center gap-5'>
@@ -59,6 +63,35 @@ export default function HomePage() {
         <div className='font-bold'>Accordion:</div>
 
         <Accordion data={accordionData} globalContentClassName='px-5 py-4' />
+      </div>
+
+      <div className='flex items-center gap-5'>
+        <div className='font-bold'>Modal:</div>
+
+        <button
+          onClick={() => setIsOpen(true)}
+          className='inline-flex h-9 items-center justify-center rounded bg-white px-4 text-sm font-medium text-gray-500 shadow-md hover:bg-gray-200 focus:shadow-sm'
+        >
+          open modal
+        </button>
+
+        <Modal
+          isOpen={isOpen}
+          onConfirmClick={() => {
+            console.log('Confirmed!');
+            setIsOpen(false);
+          }}
+          onCancelClick={() => {
+            console.log('Cancelled...');
+            setIsOpen(false);
+          }}
+          title='Edit profile'
+          body={<>hello world</>}
+          handleEscapeAndClickAway={() => setIsOpen(false)}
+          // footerClassName='!justify-start'
+          // showCancelButton={false}
+          // showCloseIcon={false}
+        />
       </div>
     </div>
   );
