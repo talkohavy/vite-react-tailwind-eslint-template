@@ -12,11 +12,11 @@ echo "[32m√[39m lint check ran successfully! Everything seems ok."
 
 
 echo ""
-echo "----------------------------"
-echo "Step 2: npm run check-format"
-echo "----------------------------"
+echo "----------------------"
+echo "Step 2: npm run format"
+echo "----------------------"
 
-npm run check-format
+npm run format
 
 echo ""
 echo "[32m√[39m Formatter check passed 100%"
