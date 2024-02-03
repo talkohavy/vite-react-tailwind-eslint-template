@@ -18,7 +18,6 @@ export default function ToggleButton({ value, setValue, size = 32, className = '
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  //------------------- Render GUI ----------------------
   return (
     <div className='flex items-center' style={style}>
       <label

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { LSKEY_THEME } from '../../utils/globalConstants';
 import { DarkThemeContext } from './DarkThemeContext';
@@ -37,5 +37,7 @@ export default function DarkThemeProvider({ children }) {
     setIsDarkMode(!isDarkMode);
   }, [isDarkMode, setIsDarkMode, setLocalStorageTheme]);
 
-  return <DarkThemeContext.Provider value={{ isDarkMode, toggleDarkMode }}>{children}</DarkThemeContext.Provider>;
+  const value = useMemo(() => ({ isDarkMode, toggleDarkMode }), [isDarkMode, toggleDarkMode]);
+
+  return <DarkThemeContext.Provider value={value}>{children}</DarkThemeContext.Provider>;
 }
