@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { THEME_OPTIONS } from '../providers/DarkThemeProvider/DarkThemeProvider';
 
 /**
  * @description
@@ -27,7 +28,11 @@ import React, { useCallback, useEffect, useState } from 'react';
  * deleteValue(key);
  */
 export function useLocalStorage(key) {
-  const [value, setValue] = useState(() => JSON.parse(localStorage.getItem(key)));
+  const [value, setValue] = useState(() => {
+    const themeRaw = localStorage.getItem(key);
+
+    return THEME_OPTIONS[themeRaw] ?? JSON.parse(themeRaw);
+  });
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));

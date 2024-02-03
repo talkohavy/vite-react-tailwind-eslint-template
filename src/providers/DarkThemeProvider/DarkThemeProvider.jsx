@@ -3,7 +3,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { LSKEY_THEME } from '../../utils/globalConstants';
 import { DarkThemeContext } from './DarkThemeContext';
 
-const THEME_OPTIONS = { dark: 'dark', light: 'light' };
+export const THEME_OPTIONS = { dark: 'dark', light: 'light' };
 
 export default function DarkThemeProvider({ children }) {
   const { value: localStorageTheme, setValue: setLocalStorageTheme } = useLocalStorage(LSKEY_THEME);
