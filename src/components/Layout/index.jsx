@@ -4,10 +4,10 @@ import Sidebar from './Sidebar/index';
 
 export default function Layout({ children }) {
   return (
-    <div className='h-full'>
+    <div className='flex h-full flex-col items-start justify-start'>
       <Header />
 
-      <div className='flex h-full items-center justify-center'>
+      <div className='flex w-full flex-grow items-center justify-center'>
         <Sidebar />
 
         <Main>{children}</Main>
