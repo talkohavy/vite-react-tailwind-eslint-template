@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "clsx": "^2.0.0",
-    "eslint-plugin-ezlint": "^1.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.0"
@@ -34,11 +33,11 @@
     "autoprefixer": "^10.4.16",
     "eslint": "^8.53.0",
     "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-ezlint": "^1.2.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-jsdoc": "^46.9.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
     "eslint-plugin-sort-exports": "^0.8.0",
     "eslint-plugin-tailwindcss": "^3.13.0",
