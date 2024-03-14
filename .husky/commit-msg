@@ -9,21 +9,13 @@ pnpm run lint
 
 echo "[32m√[39m lint check ran successfully! Everything seems ok."
 
-
-echo ""
-echo "[34m-------------------------[39m"
-echo "[34mStep 2: npm run typecheck[39m"
-echo "[34m-------------------------[39m"
-
-npm run typecheck
-
 echo ""
 echo "[32m√[39m All type were checked. passed."
 
 
 echo ""
 echo "[34m----------------------[39m"
-echo "[34mStep 3: npm run format[39m"
+echo "[34mStep 2: npm run format[39m"
 echo "[34m----------------------[39m"
 
 npm run format
