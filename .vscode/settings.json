@@ -3,6 +3,8 @@
   // Part 1: Basic Editor Rules
   // --------------------------
   "window.zoomLevel": 0,
+  "window.zoomPerWindow": true, // <--- defaults to true. It used to be false before version 1.86.
+  "workbench.tree.stickyScrollMaxItemCount": 7, // <--- defaults to 7. It used to be 1 before version 1.86.
   "search.exclude": {
     // The default ones:
     "**/node_modules": true,
@@ -14,10 +16,7 @@
     "**/node_modules": false, // <--- Finally!!! I've been looking for this! opens/reveals files in node_modules in explorer tree view.
     "**/bower_components": false
   },
-  "files.associations": {
-    "*.json": "jsonc"
-    // "*.css": "tailwindcss"
-  },
+  "files.associations": { "*.json": "jsonc", "*.svg": "html" },
   "editor.colorDecorators": true, // <--- Controls whether the editor should render the inline color decorators and color picker.
   "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
   "editor.gotoLocation.multipleDefinitions": "goto", // <--- I FOUND IT!!!! No more peeking !!! default value was peek
@@ -45,8 +44,8 @@
   // ------------------------
   // Part 2: Javascript Rules
   // ------------------------
-  "javascript.preferences.importModuleSpecifier": "relative", // <--- defaults to "shortest"
-  "javascript.preferences.importModuleSpecifierEnding": "index", // <--- defaults to "auto"
+  "javascript.preferences.importModuleSpecifier": "shortest", // <--- defaults to "shortest"
+  "javascript.preferences.importModuleSpecifierEnding": "js", // <--- defaults to "auto"
   "javascript.updateImportsOnFileMove.enabled": "always", // <--- defaults to "prompt"
   "js/ts.implicitProjectConfig.checkJs": true, // <--- defaults to "false". Either this property, or `checkJs` property within your jsconfig must be set to true for type-checkingto work inside js files.
 
@@ -89,8 +88,17 @@
   // "git.openDiffOnClick": false, // <--- defaults to "true".
   "files.exclude": { "**/.git": false },
 
+  // ---------------------
+  // Part 6: gitlens Rules
+  // ---------------------
+  "gitlens.codeLens.enabled": false, // <--- finallyyy!!! I wanted to disable this for soooo longggg!
+  // "gitlens.advanced.blame.delayAfterEdit": 5000,
+  // "gitlens.outputLevel": "warn",
+  // "gitlens.currentLine.enabled": false,
+  // "gitlens.currentLine.format": "${author, }${agoOrDate}${' via 'pullRequest}${ • message|50?}",
+
   // ----------------------
-  // Part 6: terminal Rules
+  // Part 7: terminal Rules
   // ----------------------
   "terminal.integrated.smoothScrolling": true, // <--- defaults to "false".
   "terminal.integrated.copyOnSelection": true, // <--- defaults to "false".
@@ -99,19 +107,22 @@
   "terminal.integrated.cursorWidth": 2, // <--- defaults to "1".
   "terminal.integrated.enablePersistentSessions": false, // defaults to "true".
   "terminal.integrated.persistentSessionReviveProcess": "never", // defaults to "onExit".
+  "terminal.integrated.mouseWheelZoom": false, // <--- default to false.
+  "terminal.integrated.fontSize": 18, // <--- defaults to 12.
   // "terminal.integrated.cursorBlinking": false, // <--- defaults to "false".
   // "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’|", // defaults to  ()[]{}',\"`─‘’|
   // "terminal.integrated.scrollback": 1000, // <--- defaults to 1000 lines backwards
   // "terminal.integrated.defaultLocation": "view", // <--- defaults to "view".
-  // "terminal.integrated.altClickMovesCursor": true, // <--- defaults to "true".
+  // "terminal.integrated.altClickMovesCursor": true, // <--- defaults to "true". Write a long word (i.e. multiCursorModifiermultiCursorModifier), and now alt+click a position within that word. watch what happens to the cursor.
 
   // -------------------
-  // Part 7: debug Rules
+  // Part 8: debug Rules
   // -------------------
   "debug.console.acceptSuggestionOnEnter": "on", // finally!!! This drove me mad!!! defaults to off.
+  "debug.closeReadonlyTabsOnEnd": true, // <--- defaults to false. When attached to a debugger, there can be internal or virtual source files that don't exist on-disk, which are opened as readonly. This new setting causes VS Code to automatically close any opened readonly files from the debug session when the session ends.
 
   // ----------------------------
-  // Part 8: Rules for json files
+  // Part 9: Rules for json files
   // ----------------------------
   "[jsonc]": {
     "editor.quickSuggestions": { "strings": "on" },
@@ -120,7 +131,7 @@
   },
 
   // --------------------------------
-  // Part 9: Rules for markdown files
+  // Part 10: Rules for markdown files
   // --------------------------------
   "[markdown]": {
     "editor.wordWrap": "on",
@@ -129,8 +140,15 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
+  // --------------------------------------------
+  // Part 11: html should be parsed with prettier
+  // --------------------------------------------
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
   // -------------------------
-  // Part 10: Rules for eslint
+  // Part 12: Rules for eslint
   // -------------------------
   // "prettier.configPath": ".prettierrc.js",
   // Enable eslint for all supported languages
@@ -140,20 +158,19 @@
     "typescript",
     "typescriptreact",
     "vue",
-    "html",
     "json"
+    // "html", // <--- commented out because svg files are treated as html and eslint can't handle that.
     // "jsonc" // <--- commented out because it errored the eslintrc config file
     // "yaml" // <--- works badly on yamls
     // "markdown" // <--- works badly on markdowns
   ],
 
   // ----------------------------
-  // Part 11: Rules for css files
+  // Part 13: Rules for css files
   // ----------------------------
   "css.lint.unknownProperties": "ignore",
-  "css.lint.unknownAtRules": "ignore",
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-    // "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
-  }
+  "css.lint.unknownAtRules": "ignore"
+  // "[css]": {
+  //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
+  // },
 }
