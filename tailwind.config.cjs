@@ -143,7 +143,6 @@ module.exports = {
         '7xl': '80rem',
       },
       minHeight: {
-        mainWindow: 'calc(100vh - 230px)',
         1: '0.25rem',
         2: '0.5rem',
         3: '0.75rem',
