@@ -8,12 +8,12 @@ const routesRaw = [
     text: 'Home',
   },
   {
-    to: '/books',
-    text: 'Books',
+    to: '/redux',
+    text: 'Redux Example',
   },
   {
-    to: '/about',
-    text: 'About',
+    to: '/some-url',
+    text: 'Not Found Page',
   },
 ];
 

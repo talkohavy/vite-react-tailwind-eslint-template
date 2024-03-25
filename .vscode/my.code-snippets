@@ -40,7 +40,7 @@
   },
   "My console.error": {
     "prefix": ["cle"],
-    "body": ["console.error(${0:props});"],
+    "body": ["console.error(${0:error});"],
     "description": "My Console Error"
   },
   "My console.warn": {
