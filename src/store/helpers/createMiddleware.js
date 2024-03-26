@@ -22,19 +22,23 @@
  * @returns {import('@reduxjs/toolkit').Middleware<(action: Action<any>) => number, any>}
  */
 function createMiddleware({ uniquePrefix = '*', handleAction }) {
-  const regex = uniquePrefix === '*' ? /.?/ : new RegExp(`^\\[${uniquePrefix}]`); // <--- For example: [backMsgs]
+  const regex = uniquePrefix === '*' ? /.?/ : new RegExp(`^\\[${uniquePrefix}]`); // <--- For example: [modals]
 
   /**
    * @param {Action} action
    * @returns {boolean}
    */
   function shouldThisMiddlewareHandleTheAction(action) {
-    return regex.test(action.type);
+    const shouldHandleAction = regex.test(action.type);
+    // debugger;
+
+    return shouldHandleAction;
   }
 
   function reduxEnhancerReturnsAMiddleware({ dispatch, getState }) {
     return function reduxMiddleware(next) {
       return function actBasedOnAction(action) {
+        // debugger;
         next(action);
 
         if (shouldThisMiddlewareHandleTheAction(action)) handleAction({ dispatch, getState, action });

@@ -1,5 +1,7 @@
 {
   "root": true,
   "extends": ["plugin:ezlint/recommended", "plugin:ezlint/react"],
-  "rules": {}
+  "rules": {
+    "import/exports-last": "off"
+  }
 }

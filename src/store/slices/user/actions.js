@@ -3,15 +3,22 @@ import { createActionString } from '../../helpers/createActionString';
 
 /**
  * @typedef {{nickname: string, age: number, city: string}} UserDB
+ * @typedef {import('./types').CredentialsLogin} CredentialsLogin
+ * @typedef {import('./types').CookieLogin} CookieLogin
+ * @typedef {import('./types').SamlLogin} SamlLogin
  */
 
-const prefix = 'masterRoom';
+const prefix = 'user';
 const customActionString = (actionString) => createActionString({ prefix, actionString });
 
-const loginRequest = createAction(customActionString('login request'), (payload) => ({ payload }));
+const loginRequest = createAction(
+  customActionString('login request'),
+  /** @param {CredentialsLogin | CookieLogin | SamlLogin} payload */
+  (payload) => ({ payload }),
+);
 const loginSuccess = createAction(
   customActionString('login success'),
-  /** @param {any} payload */
+  /** @param {{data: any}} payload */
   (payload) => ({ payload }),
 );
 const loginFailure = createAction(

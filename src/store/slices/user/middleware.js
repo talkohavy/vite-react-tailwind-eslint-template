@@ -1,8 +1,8 @@
 import { API_URLS } from '../../../utils/globalConstants';
 import { createMiddleware } from '../../helpers/createMiddleware';
 import { apiRequest } from '../api';
-import { enterBackMsgMode } from '../backMsgs/actions';
-import { closeLogin, closeRegister } from '../modals/actions';
+import { closeLoginModal, closeRegisterModal } from '../modals/actions';
+import { showToastMessage } from '../toast/actions';
 import {
   clearUser,
   hideSpinner,
@@ -25,14 +25,16 @@ const userMiddleware = createMiddleware({
   uniquePrefix: prefix,
   handleAction: ({ action, dispatch, getState }) => {
     if (loginRequest.match(action)) {
-      const { loginType = 'withParams', params } = action.payload;
+      const { loginType, params } = action.payload;
 
-      if (loginType === 'withParams') {
+      if (loginType === 'credentials') {
+        // debugger;
         dispatch(showSpinner());
+        // debugger;
         dispatch(
           apiRequest({
             method: 'POST',
-            URL: API_URLS.users_service.login,
+            URL: API_URLS.users_service.loginWithCredentials,
             body: params,
             onSuccess: loginSuccess,
             onFailure: loginFailure,
@@ -40,22 +42,43 @@ const userMiddleware = createMiddleware({
         );
       }
 
-      // if (loginType === 'withToken') {}
+      if (loginType === 'cookie') {
+        dispatch(showSpinner());
+        dispatch(
+          apiRequest({
+            method: 'POST',
+            URL: API_URLS.users_service.loginWithCookie,
+            onSuccess: loginSuccess,
+            onFailure: loginFailure,
+          }),
+        );
+      }
+
+      if (loginType === 'saml') {
+        dispatch(
+          apiRequest({
+            method: 'POST',
+            URL: API_URLS.users_service.loginWithSaml,
+            body: params,
+            onSuccess: loginSuccess,
+            onFailure: loginFailure,
+          }),
+        );
+      }
     }
 
     if (loginSuccess.match(action)) {
-      const { payload } = action;
-      const { data: user } = payload;
+      // debugger;
+      const { data: user } = action.payload;
+      const enrichedData = { isLogged: true, user };
 
       const { modals } = getState();
 
-      const enrichedData = { isLogged: true, user };
-
       dispatch(updateUser(enrichedData));
       dispatch(hideSpinner());
-
-      if (modals.login) dispatch(closeLogin());
-      if (modals.register) dispatch(closeRegister());
+      if (modals.login) dispatch(closeLoginModal());
+      if (modals.register) dispatch(closeRegisterModal());
+      dispatch(showToastMessage({ from: 'login', text: 'successful login!', type: 'success' }));
     }
 
     if (loginFailure.match(action)) {
@@ -63,13 +86,13 @@ const userMiddleware = createMiddleware({
 
       dispatch(hideSpinner());
 
-      if (error) dispatch(enterBackMsgMode({ from: 'login', type: 'error', text: error }));
+      if (error) dispatch(showToastMessage({ from: 'login', type: 'error', text: error }));
     }
 
     if (updateUserRequest.match(action)) {
       dispatch(showSpinner());
 
-      const { userID } = getState().masterRoom.user;
+      const { userID } = getState().user.data;
       dispatch(
         apiRequest({
           method: 'PATCH',
@@ -92,8 +115,8 @@ const userMiddleware = createMiddleware({
 
       dispatch(hideSpinner());
 
-      if (modals.login) dispatch(closeLogin());
-      if (modals.register) dispatch(closeRegister());
+      if (modals.login) dispatch(closeLoginModal());
+      if (modals.register) dispatch(closeRegisterModal());
     }
 
     if (updateUserFailure.match(action)) {
@@ -101,7 +124,7 @@ const userMiddleware = createMiddleware({
 
       dispatch(hideSpinner());
 
-      if (error) dispatch(enterBackMsgMode({ from: 'update', type: 'error', text: 'update failed...' }));
+      if (error) dispatch(showToastMessage({ from: 'update', type: 'error', text: 'update failed...' }));
     }
 
     if (registerUserRequest.match(action)) {
@@ -133,7 +156,7 @@ const userMiddleware = createMiddleware({
 
       dispatch(hideSpinner());
 
-      if (error) dispatch(enterBackMsgMode({ from: 'register', type: 'error', text: error }));
+      if (error) dispatch(showToastMessage({ from: 'register', type: 'error', text: error }));
     }
 
     if (logout.match(action)) {

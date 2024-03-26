@@ -3,7 +3,7 @@ import { createActionString } from '../../helpers/createActionString';
 
 /** @typedef {import('./types').ApiRequest} ApiRequest */
 
-const prefix = 'app';
+const prefix = 'api';
 const customActionString = (actionString) => createActionString({ prefix, actionString });
 
 const fireFallbackAction = createAction(customActionString('server responded'), (payload) => ({ payload }));

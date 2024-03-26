@@ -4,11 +4,19 @@ import { createActionString } from '../../helpers/createActionString';
 const prefix = 'modals';
 const customActionString = (actionString) => createActionString({ prefix, actionString });
 
-const openLogin = createAction(customActionString('Open login modal'));
-const closeLogin = createAction(customActionString('Close login modal'));
-const openRegister = createAction(customActionString('Open register modal'));
-const closeRegister = createAction(customActionString('Close register modal'));
-const openMobile = createAction(customActionString('Open mobile modal'));
-const closeMobile = createAction(customActionString('Close mobile modal'));
+const openLoginModal = createAction(customActionString('Open login modal'));
+const closeLoginModal = createAction(customActionString('Close login modal'));
+const openRegisterModal = createAction(customActionString('Open register modal'));
+const closeRegisterModal = createAction(customActionString('Close register modal'));
+const openMobileModal = createAction(customActionString('Open mobile modal'));
+const closeMobileModal = createAction(customActionString('Close mobile modal'));
 
-export { closeLogin, closeMobile, closeRegister, openLogin, openMobile, openRegister, prefix };
+export {
+  closeLoginModal,
+  closeMobileModal,
+  closeRegisterModal,
+  openLoginModal,
+  openMobileModal,
+  openRegisterModal,
+  prefix,
+};

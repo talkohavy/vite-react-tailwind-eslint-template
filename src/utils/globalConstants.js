@@ -3,7 +3,9 @@ const LSKEY_SEARCH_PARAMS = 'search-params';
 
 const API_URLS = {
   users_service: {
-    login: '/login',
+    loginWithCredentials: '/login',
+    loginWithCookie: '/login-with-cookie',
+    loginWithSaml: '/login-with-saml',
     logout: '/logout',
     users: '/users',
   },

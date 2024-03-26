@@ -1,6 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { closeLogin, closeMobile, closeRegister, openLogin, openMobile, openRegister } from './actions';
+import {
+  closeLoginModal,
+  closeMobileModal,
+  closeRegisterModal,
+  openLoginModal,
+  openMobileModal,
+  openRegisterModal,
+} from './actions';
 
+/** @typedef {import('../../types').ModalsState} ModalsState */
+
+/** @type {ModalsState} */
 const INITIAL_STATE = {
   login: false,
   register: false,
@@ -8,22 +18,24 @@ const INITIAL_STATE = {
 };
 
 const modalsReducer = createReducer(INITIAL_STATE, ({ addCase }) => {
-  addCase(openLogin, (state) => {
+  addCase(openLoginModal, (state) => {
+    // debugger;
     state.login = true;
   });
-  addCase(closeLogin, (state) => {
+  addCase(closeLoginModal, (state) => {
+    // debugger;
     state.login = false;
   });
-  addCase(openRegister, (state) => {
+  addCase(openRegisterModal, (state) => {
     state.register = true;
   });
-  addCase(closeRegister, (state) => {
+  addCase(closeRegisterModal, (state) => {
     state.register = false;
   });
-  addCase(openMobile, (state) => {
+  addCase(openMobileModal, (state) => {
     state.mobile = true;
   });
-  addCase(closeMobile, (state) => {
+  addCase(closeMobileModal, (state) => {
     state.mobile = false;
   });
 });

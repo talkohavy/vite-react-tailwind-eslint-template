@@ -31,6 +31,7 @@ const runOnSuccess =
  *   onFailure: import('@reduxjs/toolkit').ActionCreatorWithPreparedPayload<[payload: {error: any}], {error: any}, string, never, never>,
  * }} props
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const runOnFailure =
   ({ dispatch, onFailure }) =>
   (error) => {
@@ -47,16 +48,31 @@ const runOnFailure =
   };
 
 /** @param {{ axiosInstance: import('axios').AxiosInstance }} props */
+// eslint-disable-next-line
 const fetchApiMiddleware = ({ axiosInstance }) =>
   createMiddleware({
     uniquePrefix: prefix,
     handleAction: ({ action, dispatch }) => {
       if (apiRequest.match(action)) {
+        // eslint-disable-next-line
         const { method, URL, body, config, onSuccess, onFailure } = action.payload;
 
-        axiosInstance({ method, url: URL, ...config, data: body })
-          .then(runOnSuccess({ dispatch, onSuccess, onFailure }))
-          .catch(runOnFailure({ dispatch, onFailure }));
+        // - Real API request:
+        // axiosInstance({ method, url: URL, ...config, data: body })
+        //   .then(runOnSuccess({ dispatch, onSuccess, onFailure }))
+        //   .catch(runOnFailure({ dispatch, onFailure }));
+
+        // - Fake API request:
+        setTimeout(() => {
+          // debugger;
+          const fakeResponseSuccess = {
+            config: {},
+            data: { data: { nickname: 'tal', age: 28 } },
+          };
+          runOnSuccess({ dispatch, onSuccess, onFailure })(fakeResponseSuccess);
+          // const fakeResponseError = { error: {}, config: {} };
+          // runOnFailure({ dispatch, onFailure })(fakeResponseError);
+        }, 4000);
       }
     },
   });
