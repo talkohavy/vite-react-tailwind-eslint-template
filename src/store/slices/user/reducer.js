@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { clearUser, hideSpinner, showSpinner, updateUser } from './actions';
+import { hideLoginSpinner, showLoginSpinner, updateUser } from './actions';
 
 /** @typedef {import('../../types').UserState} UserState */
 
@@ -16,14 +16,13 @@ const userReducer = createReducer(INITIAL_STATE, ({ addCase }) => {
     state.isLogged = isLogged;
     state.data = user;
   });
-  addCase(showSpinner, (state) => {
+  addCase(showLoginSpinner, (state) => {
     // debugger;
     state.isLoading = true;
   });
-  addCase(hideSpinner, (state) => {
+  addCase(hideLoginSpinner, (state) => {
     state.isLoading = false;
   });
-  addCase(clearUser, () => INITIAL_STATE);
 });
 
 export { userReducer };

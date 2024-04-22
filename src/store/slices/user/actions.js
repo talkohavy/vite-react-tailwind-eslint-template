@@ -11,39 +11,28 @@ import { createActionString } from '../../helpers/createActionString';
 const prefix = 'user';
 const customActionString = (actionString) => createActionString({ prefix, actionString });
 
-const loginRequest = createAction(
-  customActionString('login request'),
+const startLoginFlow = createAction(
+  customActionString('start login flow'),
   /** @param {CredentialsLogin | CookieLogin | SamlLogin} payload */
   (payload) => ({ payload }),
 );
-const loginSuccess = createAction(
-  customActionString('login success'),
-  /** @param {{data: any}} payload */
+const loginWithCredentialsRequest = createAction(
+  customActionString('login with credentials request'),
+  /** @param {{params: any}} payload */
   (payload) => ({ payload }),
 );
-const loginFailure = createAction(
+const loginWithCredentialsSuccess = createAction(
+  customActionString('login with credentials success'),
+  /** @param {{response: any, requestMetadata?: any}} payload */
+  (payload) => ({ payload }),
+);
+const loginWithCredentialsFailure = createAction(
   customActionString('login failed'),
   /** @param {{error: any}} payload */
   (payload) => ({ payload }),
 );
-const logout = createAction(customActionString('logout request'));
-const registerUserRequest = createAction(customActionString('register request'), (payload) => ({ payload }));
-const registerUserSuccess = createAction(customActionString('Register success'), (payload) => ({ payload }));
-const registerUserFailure = createAction(
-  customActionString('Register failed'),
-  /** @param {{error: any}} payload */
-  (payload) => ({ payload }),
-);
-const updateUserRequest = createAction(customActionString('user update request'), (payload) => ({ payload }));
-const updateUserSuccess = createAction(customActionString('user update success'), (payload) => ({ payload }));
-const updateUserFailure = createAction(
-  customActionString('user update failure'),
-  /** @param {{error: any}} payload */
-  (payload) => ({ payload }),
-);
-const clearUser = createAction(customActionString('Clear user'));
-const hideSpinner = createAction(customActionString('Hide spinner'));
-const showSpinner = createAction(customActionString('Show spinner'));
+const hideLoginSpinner = createAction(customActionString('Hide login spinner'));
+const showLoginSpinner = createAction(customActionString('Show login spinner'));
 const updateUser = createAction(
   customActionString('Update user in store'),
   /** @param {{isLogged: boolean, user: UserDB}} payload */
@@ -51,19 +40,12 @@ const updateUser = createAction(
 );
 
 export {
-  clearUser,
-  hideSpinner,
-  loginFailure,
-  loginRequest,
-  loginSuccess,
-  logout,
+  hideLoginSpinner,
+  loginWithCredentialsFailure,
+  loginWithCredentialsRequest,
+  loginWithCredentialsSuccess,
   prefix,
-  registerUserFailure,
-  registerUserRequest,
-  registerUserSuccess,
-  showSpinner,
+  showLoginSpinner,
+  startLoginFlow,
   updateUser,
-  updateUserFailure,
-  updateUserRequest,
-  updateUserSuccess,
 };

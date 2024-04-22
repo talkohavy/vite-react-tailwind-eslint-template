@@ -8,15 +8,15 @@ const customActionString = (actionString) => createActionString({ prefix, action
 
 const fireFallbackAction = createAction(customActionString('server responded'), (payload) => ({ payload }));
 
-const apiRequest = createAction(
+const apiRequestFlow = createAction(
   customActionString('API Request'),
   /**
    * @param {ApiRequest} payload
    * @returns {{payload: ApiRequest}}
    */
   (payload) => ({
-    payload: { method: 'GET', onSuccess: fireFallbackAction, onFailure: fireFallbackAction, ...payload },
+    payload: { onSuccess: fireFallbackAction, onFailure: fireFallbackAction, ...payload },
   }),
 );
 
-export { apiRequest, fireFallbackAction, prefix };
+export { apiRequestFlow, fireFallbackAction, prefix };

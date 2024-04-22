@@ -23,22 +23,19 @@ const rootReducer = combineReducers({
   apiFallback: apiFallbackReducer,
 });
 
-function getAllMiddlewares({ axiosInstance }) {
-  return [userMiddleware, toastMiddleware, galleryMiddleware, fetchApiMiddleware({ axiosInstance })];
+function getAllMiddlewares() {
+  return [userMiddleware, toastMiddleware, galleryMiddleware, fetchApiMiddleware];
 }
 
 /**
- * @param {{
- *   preloadedState?: Partial<State>,
- *   axiosInstance?: any
- * }} props
+ * @param {{preloadedState?: Partial<State>}} props
  */
-export function createStore({ preloadedState, axiosInstance }) {
+export function createStore({ preloadedState }) {
   const store = configureStore({
     preloadedState,
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
-      const middlewares = getAllMiddlewares({ axiosInstance });
+      const middlewares = getAllMiddlewares();
       import.meta.env.MODE !== 'production' && middlewares.push(reduxLogger);
       return getDefaultMiddleware({ serializableCheck: false }).concat(...middlewares);
     },

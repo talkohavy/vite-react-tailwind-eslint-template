@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ReactDom from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeLoginModal } from '../../store/slices/modals/actions';
-import { loginRequest } from '../../store/slices/user/actions';
+import { startLoginFlow } from '../../store/slices/user/actions';
 import { isUserLoadingSelector } from '../../store/slices/user/selectors';
 
 export default function LoginModal() {
@@ -44,7 +44,7 @@ export default function LoginModal() {
         <button
           type='button'
           // @ts-ignore
-          onClick={() => dispatch(loginRequest({ loginType: 'credentials', params: { username, password } }))}
+          onClick={() => dispatch(startLoginFlow({ loginType: 'credentials', params: { username, password } }))}
           className='self-center rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-700 disabled:bg-gray-400'
           disabled={isUserLoading}
         >

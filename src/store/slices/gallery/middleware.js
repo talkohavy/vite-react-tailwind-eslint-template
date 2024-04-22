@@ -1,6 +1,6 @@
-import { API_URLS, LSKEY_SEARCH_PARAMS } from '../../../utils/globalConstants';
+import { LSKEY_SEARCH_PARAMS } from '../../../utils/globalConstants';
 import { createMiddleware } from '../../helpers/createMiddleware';
-import { apiRequest } from '../api';
+import { apiRequestFlow } from '../api';
 import {
   enterGallery,
   fetchUsersFailure,
@@ -47,10 +47,9 @@ const galleryMiddleware = createMiddleware({
 
     if (fetchUsersRequest.match(action)) {
       dispatch(
-        apiRequest({
-          method: 'GET',
-          URL: API_URLS.users_service.users,
-          config: { params: action.payload },
+        apiRequestFlow({
+          dalMethodName: 'loginWithCredentials',
+          dalMethodProps: { params: action.payload },
           onSuccess: fetchUsersSuccess,
           onFailure: fetchUsersFailure,
         }),
