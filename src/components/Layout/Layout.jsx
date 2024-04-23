@@ -7,7 +7,7 @@ export default function Layout({ children }) {
     <div className='flex h-full flex-col items-start justify-start'>
       <Header />
 
-      <div className='flex w-full flex-grow items-center justify-center'>
+      <div className='flex size-full items-center justify-center overflow-auto'>
         <Sidebar />
 
         <Main>{children}</Main>
