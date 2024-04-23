@@ -12,7 +12,7 @@ export default function ReduxExamplePage() {
   const dispatch = useDispatch();
 
   return (
-    <div className='flex size-full flex-col items-start justify-start gap-6 border border-red-600 p-6 dark:text-white'>
+    <div className='flex size-full flex-col items-start justify-start gap-6 p-6 dark:text-white'>
       <h1 className='self-center text-3xl font-bold'>Redux Advanced Middleware Example</h1>
 
       <button
