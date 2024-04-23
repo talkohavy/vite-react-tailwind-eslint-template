@@ -270,6 +270,9 @@ module.exports = {
         'gradient-radial': 'radial-gradient(circle,var(--tw-gradient-stops))',
         'gradient-radial-bottom': 'radial-gradient(circle at bottom,var(--tw-gradient-stops))',
       },
+      rotate: {
+        270: '270deg',
+      },
       animation: {
         'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         'slide-down': 'slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
