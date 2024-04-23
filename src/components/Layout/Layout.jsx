@@ -1,6 +1,6 @@
-import Header from './Header/index';
-import Main from './Main/index';
-import Sidebar from './Sidebar/index';
+import Header from './Header';
+import Main from './Main';
+import Sidebar from './Sidebar';
 
 export default function Layout({ children }) {
   return (
