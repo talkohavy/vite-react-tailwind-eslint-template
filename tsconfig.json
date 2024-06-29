@@ -1,0 +1,89 @@
+{
+  "compilerOptions": {
+    // unknown:
+    "useDefineForClassFields": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    // -------------------
+    // Section 1: Projects
+    // -------------------
+    "composite": true,
+    "incremental": true, // Save .tsbuildinfo files to allow for incremental compilation of projects.
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    // -----------------------------------
+    // Section 2: Language and Environment
+    // -----------------------------------
+    "target": "ESNext",
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"], // adding the "DOM" library helps vs-code to recognize the window & document objects.
+
+    // ------------------
+    // Section 3: Modules
+    // ------------------
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "typeRoots": ["node_modules/@types"],
+    "paths": {
+      "/*": ["src/public/*"]
+    },
+
+    // -----------------------------
+    // Section 4: JavaScript Support
+    // -----------------------------
+    "checkJs": true, // without it? this config file would not apply to js/jsx files.
+    "maxNodeModuleJsDepth": 0, // Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'.
+
+    // ---------------
+    // Section 5: Emit
+    // ---------------
+    "sourceMap": true, // default value is false
+    // "outDir": "./dist", // no need to have this! all the microservices are being used just as they are, and the only thing being bundled is the app-frontend, which gets bundled using vite, which already has an outDir set in its config file.
+
+    // ------------------------------
+    // Section 6: Interop Constraints
+    // ------------------------------
+    "isolatedModules": true, // <--- Setting the isolatedModules flag tells TypeScript to warn you if you write certain code that can’t be correctly interpreted by a single-file transpilation process.
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    // "preserveSymlinks": true, // <--- Solved being redirected to node_modules/.pnpm symlink all the time! Disable resolving symlinks to their realpath. This correlates to the same flag in node. But on the other-hand, I wasn't able to import Page as type from playwright in jsdoc.
+
+    // ------------------------
+    // Section 7: Type Checking
+    // ------------------------
+    /* Linting */
+    // "strictNullChecks": true,                         // <--- When type checking, take into account 'null' and 'undefined'.
+    // "strictFunctionTypes": true,                      // <--- When assigning functions, check to ensure parameters and the return values are subtype-compatible.
+    // "strictBindCallApply": true,                      // <--- Check that the arguments for 'bind', 'call', and 'apply' methods match the original function.
+    // "strictPropertyInitialization": true,             // <--- Check for class properties that are declared but not set in the constructor.
+    "strict": true, // <--- Enable all strict type-checking options.
+    "noImplicitAny": true, // <--- Enable error reporting for expressions and declarations with an implied 'any' type.
+    "noImplicitThis": true, // <---Enable error reporting when 'this' is given the type 'any'.
+    "useUnknownInCatchVariables": true, // <--- Default catch clause variables as 'unknown' instead of 'any'.
+    "alwaysStrict": true, // <--- Ensure 'use strict' is always emitted.
+    "noUnusedLocals": true, // <--- Enable error reporting when local variables aren't read.
+    "noUnusedParameters": true, // <--- Raise an error when a function parameter isn't read.
+    "exactOptionalPropertyTypes": true, // <--- Interpret optional property types as written, rather than adding 'undefined'.
+    "noImplicitReturns": true, // <--- Enable error reporting for codepaths that do not explicitly return in a function.
+    "noFallthroughCasesInSwitch": true, // <--- Enable error reporting for fallthrough cases in switch statements.
+    "noUncheckedIndexedAccess": true, // <--- Add 'undefined' to a type when accessed using an index.
+    "noImplicitOverride": true, // <--- Ensure overriding members in derived classes are marked with an override modifier.
+    "noPropertyAccessFromIndexSignature": true, // <--- Enforces using indexed accessors for keys declared using an indexed type.
+    "allowUnusedLabels": false, // <--- Disable error reporting for unused labels.
+    // "allowUnreachableCode": true,                     // <--- Disable error reporting for unreachable code.
+
+    // -----------------------
+    // Section 8: Completeness
+    // -----------------------
+    "skipLibCheck": true
+  },
+  "compileOnSave": true,
+  "exclude": ["node_modules", "**/node_modules/*", "<node_internals>/**", "bin/**"],
+  "include": ["**/*/*.ts", "**/*.d.ts", "**/*.js", "**/*.jsx", "**/*.cjs", "*.ts", "*.d.ts", "*.js", "*.jsx", "*.cjs"]
+}
