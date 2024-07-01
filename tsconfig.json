@@ -85,5 +85,5 @@
   },
   "compileOnSave": true,
   "exclude": ["node_modules", "**/node_modules/*", "<node_internals>/**", "bin/**"],
-  "include": ["**/*/*.ts", "**/*.d.ts", "**/*.js", "**/*.jsx", "**/*.cjs", "*.ts", "*.d.ts", "*.js", "*.jsx", "*.cjs"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts", "**/*.js", "**/*.jsx", "**/*.cjs", "**/*.mjs"]
 }
