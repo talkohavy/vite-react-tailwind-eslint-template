@@ -3,7 +3,7 @@ import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
+import App from '@src/App';
 import { initDAL } from './DAL';
 import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
@@ -15,14 +15,20 @@ const store = createStore({ preloadedState: {} });
 
 initDAL(httpClientAxios);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <StoreProvider store={store}>
-      <BrowserRouter>
-        <DarkThemeProvider>
-          <App />
-        </DarkThemeProvider>
-      </BrowserRouter>
-    </StoreProvider>
-  </React.StrictMode>,
-);
+function Client() {
+  return (
+    <React.StrictMode>
+      <StoreProvider store={store}>
+        <BrowserRouter>
+          <DarkThemeProvider>
+            <App />
+          </DarkThemeProvider>
+        </BrowserRouter>
+      </StoreProvider>
+    </React.StrictMode>
+  );
+}
+
+const rootElement = document.getElementById('root')!;
+
+ReactDOM.createRoot(rootElement).render(<Client />);

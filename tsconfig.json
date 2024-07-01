@@ -30,7 +30,8 @@
     "baseUrl": "./",
     "typeRoots": ["node_modules/@types"],
     "paths": {
-      "/*": ["src/public/*"]
+      "/*": ["src/public/*"],
+      "@src/*": ["src/*"]
     },
 
     // -----------------------------
