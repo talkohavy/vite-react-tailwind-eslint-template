@@ -5,13 +5,21 @@ echo "[34m--------------------[39m"
 echo "[34mStep 1: npm run lint[39m"
 echo "[34m--------------------[39m"
 
+start_time=$(date +%s)
+
 pnpm run lint
+
+end_time=$(date +%s)
+
+elapsed_time=$((end_time - start_time))
 
 echo "[32m√[39m lint check ran successfully! Everything seems ok."
 
 echo ""
 echo "[32m√[39m All type were checked. passed."
 
+echo ""
+echo "[32mChecked all files in $elapsed_time seconds[39m"
 
 echo ""
 echo "[34m----------------------[39m"
