@@ -22,6 +22,19 @@
       "env": { "ENV_FILE": "${workspaceFolder}/envs/.env.development" },
       "console": "integratedTerminal"
     },
+    // ------------
+    // Debug React:
+    // ------------
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug React",
+      "url": "http://localhost:3000",
+      "smartStep": true,
+      "outputCapture": "std", // This is to be able to also capture logger outputs
+      "sourceMaps": true,
+      "env": { "ENV_FILE": "${workspaceFolder}/envs/.env.development" }
+    },
     // -------
     // backend
     // -------
