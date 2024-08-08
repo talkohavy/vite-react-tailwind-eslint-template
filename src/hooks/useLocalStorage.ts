@@ -1,9 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 
-export function useLocalStorage(key: string) {
+export function useLocalStorage(key: string, defaultValue?: any) {
   const [value, setValue] = useState(() => {
-    const value = localStorage.getItem(key);
-    if (value) return JSON.parse(value);
+    const item = localStorage.getItem(key);
+
+    if (item) {
+      try {
+        return JSON.parse(item);
+      } catch (_error) {
+        return item;
+      }
+    }
+
+    return defaultValue;
   });
 
   useEffect(() => {
