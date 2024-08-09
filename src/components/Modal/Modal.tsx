@@ -11,34 +11,35 @@ const CLASSES = {
   closeIcon: 'inline-flex h-6 w-6 stroke-black hover:stroke-red-500 group-focus:stroke-red-500',
 };
 
-/**
- * @param {{
- *   isOpen: boolean
- *   onConfirmClick?: any,
- *   onCancelClick?: any,
- *   title: string,
- *   body: import('react').ReactNode,
- *   confirmText?: string,
- *   cancelText?: string,
- *   showCloseIcon?: boolean,
- *   showCancelButton?: boolean
- *   handleEscapeAndClickAway?: (props?: any) => void,
- *   footerClassName?: string,
- * }} props
- */
-export default function Modal({
-  isOpen,
-  onConfirmClick,
-  onCancelClick,
-  title,
-  body,
-  confirmText = 'Ok',
-  cancelText = 'Cancel',
-  showCloseIcon = true,
-  showCancelButton = true,
-  handleEscapeAndClickAway,
-  footerClassName,
-}) {
+type ModalProps = {
+  isOpen: boolean;
+  onConfirmClick?: any;
+  onCancelClick?: any;
+  title: string;
+  body: import('react').ReactNode;
+  confirmText?: string;
+  cancelText?: string;
+  showCloseIcon?: boolean;
+  showCancelButton?: boolean;
+  handleEscapeAndClickAway?: (props?: any) => void;
+  footerClassName?: string;
+};
+
+export default function Modal(props: ModalProps) {
+  const {
+    isOpen,
+    onConfirmClick,
+    onCancelClick,
+    title,
+    body,
+    confirmText = 'Ok',
+    cancelText = 'Cancel',
+    showCloseIcon = true,
+    showCancelButton = true,
+    handleEscapeAndClickAway,
+    footerClassName,
+  } = props;
+
   return (
     <Root open={isOpen} onOpenChange={handleEscapeAndClickAway}>
       <Portal>
@@ -47,7 +48,7 @@ export default function Modal({
         <Content className={CLASSES.modalWrapperElement}>
           {showCloseIcon && (
             <Close asChild>
-              <button className={CLASSES.closeButton} aria-label='Close' onClick={onCancelClick}>
+              <button type='button' className={CLASSES.closeButton} aria-label='Close' onClick={onCancelClick}>
                 <XIcon className={CLASSES.closeIcon} />
               </button>
             </Close>

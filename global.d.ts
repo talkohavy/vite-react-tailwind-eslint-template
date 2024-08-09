@@ -12,4 +12,3 @@ declare module '*.webp' {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
-

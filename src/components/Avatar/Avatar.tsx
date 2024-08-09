@@ -1,23 +1,16 @@
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
+import { SIZES } from './constants';
 
-const SIZES = {
-  xs: 15,
-  sm: 25,
-  md: 35,
-  lg: 45,
-  xl: 60,
+type AvatarProps = {
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  imgSrc: any;
+  imgAlt?: string;
+  initialsFallback?: string;
 };
 
-/**
- * @param {{
- *   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
- *   imgSrc: any,
- *   imgAlt?: string,
- *   initialsFallback?: string
- * }} props
- * @returns {any}
- */
-export default function Avatar({ size = 'sm', imgSrc, imgAlt, initialsFallback = '' }) {
+export default function Avatar(props: AvatarProps) {
+  const { size = 'sm', imgSrc, imgAlt, initialsFallback = '' } = props;
+
   return (
     <Root>
       <Image

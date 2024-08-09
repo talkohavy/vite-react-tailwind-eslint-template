@@ -1,6 +1,12 @@
 import { Arrow, Content, Portal, Root, Trigger } from '@radix-ui/react-popover';
 
-export default function Popover({ content }) {
+type PopoverProps = {
+  content: any;
+};
+
+export default function Popover(props: PopoverProps) {
+  const { content } = props;
+
   return (
     <Root>
       <Trigger className='inline-flex h-9 items-center justify-center rounded border border-transparent bg-white px-4 font-medium shadow-xs hover:bg-neutral-100 focus:border-black dark:bg-slate-800 dark:shadow-dark-xs dark:hover:bg-neutral-800'>
