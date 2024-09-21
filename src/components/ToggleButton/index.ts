@@ -1,1 +1,1 @@
-export { default } from './DarkVersion';
+export { default } from './ToggleButton';

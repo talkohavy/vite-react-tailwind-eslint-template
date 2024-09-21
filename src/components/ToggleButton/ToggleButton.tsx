@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-/**
- * @param {{
- *    value: boolean,
- *    setValue: () => void,
- *    size?: number,
- *    className?: string,
- *    style?: any,
- * }} props
- * @returns {any}
- */
-export default function ToggleButton({ value, setValue, size = 32, className = '', style }) {
+type ToggleButtonProps = {
+  value: boolean;
+  setValue: (value: any) => void;
+  size?: number;
+  className?: string;
+  style?: any;
+};
+
+export default function ToggleButton(props: ToggleButtonProps) {
+  const { value, setValue, size = 32, className = '', style } = props;
+
   const isChecked = value;
 
   // all useStates:

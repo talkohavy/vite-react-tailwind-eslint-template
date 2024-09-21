@@ -1,4 +1,11 @@
-export default function DownArrow({ title = 'arrow icon', className = undefined }) {
+type DownArrowProps = {
+  title?: string;
+  className?: string;
+};
+
+export default function DownArrow(props: DownArrowProps) {
+  const { title = 'arrow icon', className } = props;
+
   return (
     <svg stroke='currentColor' strokeWidth='12' viewBox='0 0 100 100' className={className}>
       <title>{title}</title>
