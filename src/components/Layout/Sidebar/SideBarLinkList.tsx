@@ -1,24 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+import { routes as routesRaw } from '@src/routes';
 import SideBarLinkItem from './SideBarLinkItem';
-
-const routesRaw = [
-  {
-    to: '/',
-    text: 'Home',
-    activeNames: ['/home', '/'],
-  },
-  {
-    to: '/redux',
-    text: 'Redux Example',
-    activeNames: ['/redux'],
-  },
-  {
-    to: '/some-url',
-    text: 'Not Found Page',
-    activeNames: ['/some-url'],
-  },
-];
 
 export default function SideBarLinkList() {
   const { pathname } = useLocation();
