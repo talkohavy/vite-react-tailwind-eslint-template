@@ -1,4 +1,13 @@
-export default function Checkbox({ isChecked, setIsChecked, label }) {
+type CheckboxProps = {
+  isChecked: boolean;
+  setIsChecked: (value: any) => void;
+  disabled?: boolean;
+  label?: string;
+};
+
+export default function Checkbox(props: CheckboxProps) {
+  const { isChecked, setIsChecked, disabled, label } = props;
+
   return (
     <label className='group flex cursor-pointer items-center justify-center gap-2'>
       <div className='flex items-center justify-center'>
@@ -7,6 +16,7 @@ export default function Checkbox({ isChecked, setIsChecked, label }) {
           // value={isChecked} // <--- apparently you don't need value in a checkbox
           checked={!!isChecked}
           onChange={setIsChecked}
+          disabled={disabled}
           className='size-0 opacity-0'
         />
 
