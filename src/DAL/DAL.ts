@@ -1,17 +1,23 @@
 import axios from 'axios';
-import { API_URLS } from '../utils/globalConstants';
+import { API_URLS } from '../utils/constants';
+import type { LoginWithCredentialsProps } from './DAL.interface';
 
-/** @type {DAL} */
-let dalClient;
+type DalProps = {
+  client: DAL;
+};
+
+let dalClient: DAL;
 
 class DAL {
   client;
 
-  constructor({ client }) {
+  constructor(props: DalProps) {
+    const { client } = props;
+
     this.client = client;
   }
 
-  async loginWithCredentials(props) {
+  async loginWithCredentials(props: LoginWithCredentialsProps) {
     const { requestParams, headers } = props;
 
     const response = await axios.post(API_URLS.users_service.loginWithCredentials, requestParams, { headers });
@@ -32,7 +38,13 @@ class DAL {
   }
 }
 
-function initDAL(httpClient) {
+type InitDALProps = {
+  httpClient: any;
+};
+
+function initDAL(props: InitDALProps) {
+  const { httpClient } = props;
+
   dalClient = new DAL({ client: httpClient });
 }
 

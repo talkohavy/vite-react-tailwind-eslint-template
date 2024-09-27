@@ -1,5 +1,5 @@
-const LSKEY_THEME = 'theme';
-const LSKEY_SEARCH_PARAMS = 'search-params';
+const LS_KEY_THEME = 'theme';
+const LS_KEY_SEARCH_PARAMS = 'search-params';
 
 const API_URLS = {
   users_service: {
@@ -11,4 +11,4 @@ const API_URLS = {
   },
 };
 
-export { API_URLS, LSKEY_SEARCH_PARAMS, LSKEY_THEME };
+export { API_URLS, LS_KEY_SEARCH_PARAMS, LS_KEY_THEME };

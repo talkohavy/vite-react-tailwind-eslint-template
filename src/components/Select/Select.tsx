@@ -1,18 +1,18 @@
+import type { ReactNode } from 'react';
 import clsx from 'clsx';
 
-/**
- * @typedef {{value: string | number, label: import('react').ReactNode}} Option
- */
+type Option = { value: string | number; label: ReactNode };
 
-/**
- * @param {{
- *   selectedOption: Option,
- *   setOption: any,
- *   options: Array<Option>,
- *   className?: string
- * }} props
- */
-export default function Select({ selectedOption, setOption, options, className }) {
+type SelectProps = {
+  selectedOption: Option;
+  setOption: any;
+  options: Array<Option>;
+  className?: string;
+};
+
+export default function Select(props: SelectProps) {
+  const { selectedOption, setOption, options, className } = props;
+
   return (
     <select
       value={selectedOption.value}

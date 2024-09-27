@@ -13,7 +13,7 @@ const httpClientAxios = axios.create({ baseURL: 'http://localhost:8000', withCre
 
 const store = createStore({ preloadedState: {} });
 
-initDAL(httpClientAxios);
+initDAL({ httpClient: httpClientAxios });
 
 function Client() {
   return (

@@ -1,17 +1,24 @@
-import React, { useRef, useState } from 'react';
-import Input from './Input';
+import { useRef, useState } from 'react';
+import Input from '../Input';
+import { DELAY_BETWEEN_STEPS, DELAY_START_RUNNING } from './constants';
 
-const DELAY_START_RUNNING = 350;
-const DELAY_BETWEEN_STEPS = 50;
+type NumberInputProps = {
+  value: any;
+  setValue: (value: any) => void;
+  step: number;
+  placeholder?: string;
+};
 
-export default function NumberInput({ value, setValue, step = 1, placeholder = '' }) {
-  const [intervalId, setIntervalId] = useState(null);
+export default function NumberInput(props: NumberInputProps) {
+  const { value, setValue, step = 1, placeholder = '' } = props;
+
+  const [intervalId, setIntervalId] = useState<any>(null);
   const isAddingRef = useRef(false);
   const isSubtractingRef = useRef(false);
-  const timeoutIdRef = useRef(null);
+  const timeoutIdRef = useRef<any>(null);
 
-  const incrementValue = () => setValue((prev) => +prev + step);
-  const decrementValue = () => setValue((prev) => +prev - step);
+  const incrementValue = () => setValue((prev: any) => +prev + step);
+  const decrementValue = () => setValue((prev: any) => +prev - step);
 
   const startAdding = () => {
     incrementValue();
@@ -50,7 +57,6 @@ export default function NumberInput({ value, setValue, step = 1, placeholder = '
       <div className='flex flex-col items-center justify-between p-0.5'>
         <button
           type='button'
-          // onClick={incrementValue}
           onMouseDown={startAdding}
           onMouseUp={stopAdding}
           onMouseLeave={stopAdding}
@@ -62,7 +68,6 @@ export default function NumberInput({ value, setValue, step = 1, placeholder = '
         </button>
         <button
           type='button'
-          // onClick={decrementValue}
           onMouseDown={startSubtracting}
           onMouseUp={stopSubtracting}
           onMouseLeave={stopSubtracting}

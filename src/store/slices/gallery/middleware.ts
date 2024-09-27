@@ -1,4 +1,4 @@
-import { LSKEY_SEARCH_PARAMS } from '../../../utils/globalConstants';
+import { LS_KEY_SEARCH_PARAMS } from '../../../utils/constants';
 import { createMiddleware } from '../../helpers/createMiddleware';
 import { apiRequestFlow } from '../api';
 import {
@@ -36,7 +36,7 @@ const galleryMiddleware = createMiddleware({
 
       // Step 4: use searchParams?
       if (params.useSearchParams) {
-        const searchParams = JSON.parse(localStorage.getItem(LSKEY_SEARCH_PARAMS));
+        const searchParams = JSON.parse(localStorage.getItem(LS_KEY_SEARCH_PARAMS));
         params = { ...params, ...searchParams };
       }
 
