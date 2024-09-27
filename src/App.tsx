@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Layout from './components/Layout/index';
+import Layout from './components/Layout';
 import PageNotFound from './pages/PageNotFound';
 import { routes } from './routes';
 
-function App() {
+export default function App() {
   return (
     <Layout>
       <Suspense>
@@ -19,5 +19,3 @@ function App() {
     </Layout>
   );
 }
-
-export default App;
