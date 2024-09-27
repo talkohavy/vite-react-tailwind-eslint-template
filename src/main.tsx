@@ -1,6 +1,6 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import axios from 'axios';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from '@src/App';
@@ -17,7 +17,7 @@ initDAL({ httpClient: httpClientAxios });
 
 function Client() {
   return (
-    <React.StrictMode>
+    <StrictMode>
       <StoreProvider store={store}>
         <BrowserRouter>
           <DarkThemeProvider>
@@ -25,10 +25,10 @@ function Client() {
           </DarkThemeProvider>
         </BrowserRouter>
       </StoreProvider>
-    </React.StrictMode>
+    </StrictMode>
   );
 }
 
 const rootElement = document.getElementById('root')!;
 
-ReactDOM.createRoot(rootElement).render(<Client />);
+createRoot(rootElement).render(<Client />);
