@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from '@src/App';
+import SuspenseUntilReady from './components/SuspenseUntilReady';
 import { initDAL } from './DAL';
 import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
@@ -18,13 +19,19 @@ initDAL({ httpClient: httpClientAxios });
 function Client() {
   return (
     <StrictMode>
-      <StoreProvider store={store}>
-        <BrowserRouter>
-          <DarkThemeProvider>
-            <App />
-          </DarkThemeProvider>
-        </BrowserRouter>
-      </StoreProvider>
+      <SuspenseUntilReady
+        asyncFn={async () => {
+          console.log('Application is up and running!');
+        }}
+      >
+        <StoreProvider store={store}>
+          <BrowserRouter>
+            <DarkThemeProvider>
+              <App />
+            </DarkThemeProvider>
+          </BrowserRouter>
+        </StoreProvider>
+      </SuspenseUntilReady>
     </StrictMode>
   );
 }
