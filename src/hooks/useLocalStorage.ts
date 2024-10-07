@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-export function useLocalStorage(key: string, defaultValue?: any) {
-  const [value, setValue] = useState(() => {
+export function useLocalStorage<T = any>(key: string, defaultValue?: T) {
+  const [value, setValue] = useState<T>(() => {
     const item = localStorage.getItem(key);
 
     if (item) {
@@ -21,5 +21,5 @@ export function useLocalStorage(key: string, defaultValue?: any) {
 
   const deleteValue = useCallback(() => localStorage.removeItem(key), [key]);
 
-  return [value, setValue, deleteValue];
+  return [value, setValue, deleteValue] as [T, React.Dispatch<React.SetStateAction<T>>, () => void];
 }
