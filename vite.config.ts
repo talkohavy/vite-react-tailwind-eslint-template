@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
   publicDir: './public', // defaults to "public". The location of the public dir relative to the index.html file.
   server: {
     open: true,
-    port: 3000,
+    port: 3001,
     strictPort: true,
   },
   resolve: {
