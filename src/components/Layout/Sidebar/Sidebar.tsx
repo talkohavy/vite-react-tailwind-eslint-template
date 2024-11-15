@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import DownArrow from '../../../utils/svgs/DownArrow';
+import DownArrow from '../../svgs/DownArrow';
 import SideBarLinkList from './SideBarLinkList';
 
 export default function Sidebar() {
