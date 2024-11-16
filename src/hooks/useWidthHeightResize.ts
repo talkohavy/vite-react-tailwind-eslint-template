@@ -17,8 +17,8 @@ export function useWidthHeightResize(props: UseWidthHeightResizeProps) {
 
   const [size, setSize] = useState(() => ({ width: 0, height: 0 }));
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedCallback = useCallback(
+    // eslint-disable-next-line react-compiler/react-compiler
     wrapInDebounce(() => {
       const { width, height } = wrapperRef.current.getBoundingClientRect();
       const newSize = { width, height };

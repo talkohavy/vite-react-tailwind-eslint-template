@@ -28,6 +28,5 @@ export default function useEventListener(props: UseEventListenerProps) {
     callbackRef.current();
 
     return () => element.removeEventListener(eventType, callbackRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...dependencies, shouldExecute]);
 }

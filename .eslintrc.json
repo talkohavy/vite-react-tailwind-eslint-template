@@ -1,8 +1,0 @@
-{
-  "root": true,
-  "extends": ["plugin:ezlint/recommended", "plugin:ezlint/react"],
-  "rules": {
-    "import/exports-last": "off",
-    "sort-exports/sort-exports": "off"
-  }
-}
