@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
   publicDir: './public', // defaults to "public". The location of the public dir relative to the index.html file.
   server: {
     open: true,
-    port: 3001,
+    port: 3000,
     strictPort: true,
   },
   resolve: {
@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => ({
   logLevel: 'info', // <--- default is info. Options are: info, warn, error, silent
   // envPrefix: 'VITE_', // <--- default is VITE_
   // appType: 'spa', // <--- default is spa. For ssr, use custom
-  cacheDir: './node_modules/.cache/vite',
+  cacheDir: '../node_modules/.cache/vite',
   build: {
     outDir: '../dist', // <--- default is dist. Specify the output directory (relative to project root).
     sourcemap: true, // <--- default is false. Options are: true, false, inline, hidden. Generate production source maps. If true, a separate sourcemap file will be created. If 'inline', the sourcemap will be appended to the resulting output file as a data URI. 'hidden' works like true except that the corresponding sourcemap comments in the bundled files are suppressed.
@@ -39,14 +39,14 @@ export default defineConfig(({ mode }) => ({
     assetsInlineLimit: 4096, // <--- default is 4096. Imported or referenced assets that are smaller than this threshold will be inlined as base64 URLs to avoid extra http requests. Set to 0 to disable inlining altogether.
     cssCodeSplit: true, // <--- default is true. Enable/disable CSS code splitting. When enabled, CSS imported in async chunks will be inlined into the async chunk itself and inserted when the chunk is loaded. If disabled, all CSS in the entire project will be extracted into a single CSS file.
     cssMinify: 'esbuild', // <--- Options are: 'esbuild' (default) | 'lightningcss'.
-    rollupOptions: {
-      output: {
-        chunkFileNames: 'static/js/[name].[hash].js', // <--- defaults to assets/[name].[hash].js
-        sourcemapFileNames: 'sourcemaps/[name].[hash].js.map', // <--- defaults to [name].[hash].js.map. You can also use one that's called [chunkhash].
-        assetFileNames: () => 'static/css/[name].[hash:12].[ext]', // <--- this is for css files! defaults to 'assets/
-        // sourcemapBaseUrl: 'http://localhost:5050', // When using sourcemaps, to the end of each '.js' file, a relative path is added which points to its sourcemap. By default, this relative path points to the root of the 'dist' folder. This is fine! because then in the serving server I can modify the req.url to point to the correct path, which is `sourcemaps/${sourcemapFilename}`, as you can see at `sourcemapFileNames`.
-      },
-    },
+    // rollupOptions: {
+    //   output: {
+    //     chunkFileNames: 'static/js/[name].[hash].js', // <--- defaults to assets/[name].[hash].js
+    //     sourcemapFileNames: 'sourcemaps/[name].[hash].js.map', // <--- defaults to [name].[hash].js.map. You can also use one that's called [chunkhash].
+    //     assetFileNames: () => 'static/css/[name].[hash:12].[ext]', // <--- this is for css files! defaults to 'assets/
+    //     // sourcemapBaseUrl: 'http://localhost:5050', // When using sourcemaps, to the end of each '.js' file, a relative path is added which points to its sourcemap. By default, this relative path points to the root of the 'dist' folder. This is fine! because then in the serving server I can modify the req.url to point to the correct path, which is `sourcemaps/${sourcemapFilename}`, as you can see at `sourcemapFileNames`.
+    //   },
+    // },
   },
   preview: { port: 3000, strictPort: true, open: false }, // When running `npm run preview` locally, no loadEnvVariables process occurs, so VITE_PORT would be undefined. On a CI however, there are always ENV VARIABLES set in the global scope so it *would* work.
   css: {
