@@ -1,9 +1,7 @@
-/** @typedef {import('../../types').State} State */
+import { State } from '@src/store';
 
-/** @param {State} state */
-const isUserLoadingSelector = (state) => state.user.isLoading;
+const isUserLoadingSelector = (state: State) => state.user.isLoading;
 
-/** @param {State} state */
-const userDataSelector = (state) => state.user.data;
+const userDataSelector = (state: State) => state.user.data;
 
 export { isUserLoadingSelector, userDataSelector };

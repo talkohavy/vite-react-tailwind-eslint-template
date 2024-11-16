@@ -1,11 +1,11 @@
-enum LoginTypes {
+export enum LoginTypes {
   credentials = 'credentials',
   cookie = 'cookie',
   saml = 'saml',
   oauth = 'oauth',
 }
 
-type CredentialsLogin = {
+export type CredentialsLogin = {
   loginType: LoginTypes.credentials;
   params: {
     username: string;
@@ -13,18 +13,22 @@ type CredentialsLogin = {
   };
 };
 
-type CookieLogin = {
+export type CookieLogin = {
   loginType: LoginTypes.cookie;
   params: {
     cookie: string;
   };
 };
 
-type SamlLogin = {
+export type SamlLogin = {
   loginType: LoginTypes.saml;
   params: {
     idp: string;
   };
 };
 
-export type { CookieLogin, CredentialsLogin, LoginTypes, SamlLogin };
+export interface UserState {
+  isLogged: boolean;
+  isLoading: boolean;
+  data: any;
+}

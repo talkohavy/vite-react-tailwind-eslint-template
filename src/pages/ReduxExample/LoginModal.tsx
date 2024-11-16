@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import ReactDom from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeLoginModal } from '../../store/slices/modals/actions';
-import { startLoginFlow } from '../../store/slices/user/actions';
 import { isUserLoadingSelector } from '../../store/slices/user/selectors';
+
+// import { closeLoginModal } from '../../store/slices/modals/actions';
+// import { startLoginFlow } from '../../store/slices/user/actions';
 
 export default function LoginModal() {
   const [username, setUsername] = useState('');
@@ -15,7 +16,7 @@ export default function LoginModal() {
   return ReactDom.createPortal(
     <div
       data-test-id='login-modal'
-      onKeyDown={(e) => e.key === 'Escape' && dispatch(closeLoginModal())}
+      // onKeyDown={(e) => e.key === 'Escape' && dispatch(closeLoginModal())}
       // @ts-ignore - attributes does not exist on e.target
       onMouseDown={(e) => e.target.attributes['data-test-id']?.value === 'login-modal' && dispatch(closeLoginModal())}
       className='fixed left-0 top-0 z-50 flex size-full items-start overflow-auto bg-black bg-opacity-50 px-1 py-0'
