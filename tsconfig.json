@@ -32,7 +32,7 @@
     "module": "ESNext", // <--- defaults to `commonjs`. Specify what module code is generated.
     "moduleResolution": "Bundler", // Specify how TypeScript looks up a file from a given module specifier.
     "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
+    // "allowImportingTsExtensions": true,
     "baseUrl": "./", // Specify the base directory to resolve non-relative module names.
     "typeRoots": ["node_modules/@types"], // Specify multiple folders that act like './node_modules/@types'.
     "paths": {
