@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import axios from 'axios';
 import { createRoot } from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import App from '@src/App';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
 import { initDAL } from './DAL';
