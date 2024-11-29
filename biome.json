@@ -46,7 +46,16 @@
     "enabled": true,
     "formatWithErrors": true,
     "include": ["src"],
-    "ignore": ["public", "assets", "__unit_tests_results__", "**/*.html", "**/*.mdx"],
+    "ignore": [
+      "public",
+      "assets",
+      "__unit_tests_results__",
+      "**/*.html",
+      "**/*.mdx",
+      "**/*.css",
+      "**/*.scss",
+      "**/.DS_Store"
+    ],
     "indentWidth": 2,
     "indentStyle": "space",
     "lineEnding": "lf",
