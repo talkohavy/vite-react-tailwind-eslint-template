@@ -12,7 +12,7 @@ import './index.css';
 
 const httpClientAxios = axios.create({ baseURL: 'http://localhost:8000', withCredentials: true });
 
-const store = createStore({ preloadedState: {} });
+const store = createStore({} as any);
 
 initDAL({ httpClient: httpClientAxios });
 
