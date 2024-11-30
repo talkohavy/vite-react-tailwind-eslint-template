@@ -1,13 +1,25 @@
 import path from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import svgr from 'vite-plugin-svgr';
 
 const rootDir = path.join(__dirname, '../../');
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   root: `${process.cwd()}/src`, // <--- defaults to process.cwd(). where the index.html is located.
-  plugins: [react()],
+  plugins: [
+    react(),
+    svgr({
+      include: '**/*.svg',
+      svgrOptions: {
+        exportType: 'named',
+        // ref: true,
+        // svgo: false,
+        // titleProp: true,
+      },
+    }),
+  ],
   publicDir: './public', // defaults to "public". The location of the public dir relative to the index.html file.
   server: {
     open: true,
