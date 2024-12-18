@@ -1,0 +1,65 @@
+.inputWrapper {
+  --on-idle-light-color: #ccc;
+  --on-focus-light-color: #333;
+  --on-idle-dark-color: #666;
+  --on-focus-dark-color: #e4e4e4;
+  position: relative;
+  width: 200px;
+}
+
+.input {
+  width: 100%;
+  padding: 5px 0;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid var(--on-idle-light-color);
+  outline: none;
+}
+
+html[data-theme='dark'] .input {
+  border-color: var(--on-idle-dark-color);
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--on-idle-light-color);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+html[data-theme='dark'] .label {
+  color: var(--on-idle-dark-color);
+}
+
+.input:focus ~ .label,
+.input:valid ~ .label {
+  top: -20px;
+  color: var(--on-focus-light-color);
+}
+
+html[data-theme='dark'] .input:focus ~ .label,
+html[data-theme='dark'] .input:valid ~ .label {
+  color: var(--on-focus-dark-color);
+}
+
+.underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: var(--on-focus-light-color);
+  transform: scaleX(0);
+  transition: all 0.3s ease;
+}
+
+html[data-theme='dark'] .underline {
+  background-color: var(--on-focus-dark-color);
+}
+
+.input:focus ~ .underline,
+.input:valid ~ .underline {
+  transform: scaleX(1);
+}
