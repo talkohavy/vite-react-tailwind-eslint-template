@@ -1,0 +1,39 @@
+.spinner {
+  display: flex;
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid #444;
+  box-shadow:
+    -8.48px -8.48px 10px 0 #6359f8,
+    0px -12px 10px 0 #9c32e2,
+    8.48px -8.48px 10px 0 #9c32e2,
+    12px 0px 10px 0 #f36896,
+    8.48px 8.48px 10px 0 #ffb700,
+    0px 12px 10px 0px #ff9500,
+    -8.48px 8.48px 10px 0px #ff5500,
+    -12px 0px 10px 0px red;
+  animation:
+    grow-shrink 2s ease infinite,
+    rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes grow-shrink {
+  0%,
+  100% {
+    width: 6px;
+    height: 6px;
+  }
+
+  50% {
+    width: 80px;
+    height: 80px;
+  }
+}
