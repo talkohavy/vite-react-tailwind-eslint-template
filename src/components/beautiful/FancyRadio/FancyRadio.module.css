@@ -1,0 +1,102 @@
+.switchButton {
+  --btn-height: 42px;
+  --btn-padding: 6px;
+  --round-ball-size: calc(var(--btn-height) - 2 * var(--btn-padding) - 2px);
+  --indicator-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: var(--btn-height);
+  cursor: pointer;
+}
+
+.switchInnerBg {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  background-color: #252532;
+  height: 100%;
+  width: 100%;
+  padding: 6px;
+  border-radius: 9999px;
+  border: 1px solid #32303e;
+  box-sizing: border-box;
+  box-shadow:
+    inset 0px 5px 10px 0px #16151c,
+    0px 3px 6px -2px #403f4e;
+}
+
+.switchButton input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  appearance: none;
+}
+
+.blackRoundToggleTrack {
+  position: relative;
+  width: calc(100% - var(--round-ball-size)) !important;
+}
+
+.blackRoundToggle {
+  position: absolute;
+  left: 0;
+  height: var(--round-ball-size);
+  width: var(--round-ball-size);
+  background: linear-gradient(#3b3a4e, #272733);
+  border-radius: 100%;
+  box-shadow:
+    inset 0px 5px 4px 0px #424151,
+    0px 4px 15px 0px #0f0e17;
+  z-index: 2;
+  transition: left 0.1s ease-in;
+}
+
+.statusIndicatorStyle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border-width: 2px;
+  border-style: solid;
+  box-sizing: border-box;
+  height: var(--indicator-size);
+  width: var(--indicator-size);
+}
+
+.statusOff {
+  right: 10px;
+  border-color: #ef565f;
+}
+
+.statusOn {
+  left: 10px;
+  border-color: #60d480;
+}
+
+.switchButton input[type='checkbox']:checked + .blackRoundToggleTrack .blackRoundToggle {
+  left: 100%;
+}
+
+.switchButton:has(input[type='checkbox']:not(:checked)) .statusOff {
+  animation: appear 1s forwards;
+}
+
+.switchButton:has(input[type='checkbox']:checked) .statusOn {
+  animation: appear 1s forwards;
+  opacity: 1;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
