@@ -14,9 +14,11 @@ export default function FancyRadio(props: FancyRadioProps) {
     <label className={styles.switchButton}>
       <div className={styles.switchInnerBg}>
         <input type='checkbox' checked={!!isChecked} onChange={setIsChecked} disabled={disabled} />
+
         <div className={styles.blackRoundToggleTrack}>
           <div className={styles.blackRoundToggle} />
         </div>
+
         <div className={clsx(styles.statusIndicatorStyle, styles.statusOn)} />
         <div className={clsx(styles.statusIndicatorStyle, styles.statusOff)} />
       </div>
