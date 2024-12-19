@@ -1,0 +1,41 @@
+.basicToggleWrapper {
+  position: relative;
+  --btn-height: 40px;
+  --btn-padding: 3px;
+  --round-ball-size: calc(var(--btn-height) - 2 * var(--btn-padding) - 2px);
+  height: var(--btn-height);
+  width: 70px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  background-color: #e9e9eb;
+}
+
+.checkbox {
+  position: absolute;
+  opacity: 0;
+  appearance: none;
+}
+
+.roundBall {
+  position: absolute;
+  top: 50%;
+  left: var(--btn-padding);
+  width: var(--round-ball-size);
+  height: var(--round-ball-size);
+  transform: translateY(-50%);
+  border-radius: 50%;
+  box-shadow:
+    0px 3px 8px rgba(0, 0, 0, 0.15),
+    0px 3px 1px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease-out;
+  background: white;
+}
+
+.basicToggleWrapper:has(.checkbox:checked) {
+  background-color: #34c759;
+}
+
+.basicToggleWrapper:has(.checkbox:checked) .roundBall {
+  left: calc(100% - var(--round-ball-size) - var(--btn-padding));
+}
