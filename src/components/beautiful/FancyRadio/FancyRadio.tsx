@@ -11,13 +11,11 @@ export default function FancyRadio(props: FancyRadioProps) {
   const { isChecked, setIsChecked, disabled } = props;
 
   return (
-    <label className={styles.switchButton}>
-      <div className={styles.switchInnerBg}>
+    <label className={styles.fancyRadio}>
+      <div className={styles.fancyRadioInnerStyle}>
         <input type='checkbox' checked={!!isChecked} onChange={setIsChecked} disabled={disabled} />
 
-        <div className={styles.blackRoundToggleTrack}>
-          <div className={styles.blackRoundToggle} />
-        </div>
+        <div className={styles.blackRoundToggle} />
 
         <div className={clsx(styles.statusIndicatorStyle, styles.statusOn)} />
         <div className={clsx(styles.statusIndicatorStyle, styles.statusOff)} />
