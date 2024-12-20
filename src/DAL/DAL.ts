@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URLS } from '../utils/constants';
+import { API_URLS } from '../common/constants';
 import type { LoginWithCredentialsProps } from './DAL.interface';
 
 type DalProps = {

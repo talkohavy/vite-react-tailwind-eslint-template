@@ -1,6 +1,6 @@
 import { type PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { LS_KEY_THEME } from '../../utils/constants';
+import { LS_KEY_THEME } from '../../common/constants';
 import { DarkThemeContext } from './DarkThemeContext';
 
 const THEME_OPTIONS = { dark: 'dark', light: 'light' };
