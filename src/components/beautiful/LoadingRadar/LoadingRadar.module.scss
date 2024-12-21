@@ -1,0 +1,63 @@
+.loader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 25px 25px 75px rgba(0, 0, 0, 0.55);
+  border: 1px solid #333;
+  overflow: hidden;
+  background-color: #212121;
+}
+
+.firstRing {
+  position: absolute;
+  width: 34%;
+  height: 34%;
+  border-radius: 50%;
+  border: 1px dashed#444;
+  box-shadow:
+    inset -5px -5px 25px rgba(0, 0, 0, 0.25),
+    inset 5px 5px 35px rgba(0, 0, 0, 0.25);
+}
+
+.secondRing {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  border: 1px dashed#444;
+  border-radius: 50%;
+  box-shadow:
+    inset -5px -5px 25px rgba(0, 0, 0, 0.25),
+    inset 5px 5px 35px rgba(0, 0, 0, 0.25);
+}
+
+.rotatingLine {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  transform-origin: top left;
+  animation: radar 2s linear infinite;
+  border-top: 1px dashed #fff;
+}
+
+.greenLightBeam {
+  width: 100%;
+  height: 100%;
+  transform-origin: top left;
+  transform: rotate(-45deg);
+  filter: blur(30px) drop-shadow(20px 20px 20px seagreen);
+  background-color: rgba(46, 139, 86, 0.4);
+}
+
+@keyframes radar {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
