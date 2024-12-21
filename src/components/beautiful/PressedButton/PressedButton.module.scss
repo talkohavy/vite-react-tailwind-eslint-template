@@ -1,0 +1,64 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 50px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid #8f9092;
+  color: #606060;
+  background-image: linear-gradient(to top, #d8d9db 0%, #fff 80%, #fdfdfd 100%);
+  text-shadow: 0 1px #fff;
+}
+
+.button:not(.buttonChecked):hover {
+  box-shadow:
+    0 4px 3px 1px #fcfcfc,
+    0 6px 8px #d6d7d9,
+    0 -4px 4px #cecfd1,
+    0 -6px 4px #fefefe,
+    inset 0 0 3px 3px #cecfd1;
+}
+
+.buttonChecked {
+  box-shadow:
+    0 4px 3px 1px #fcfcfc,
+    0 6px 8px #d6d7d9,
+    0 -4px 4px #cecfd1,
+    0 -6px 4px #fefefe,
+    inset 0 0 5px 3px #999,
+    inset 0 0 30px #aaa;
+}
+
+html[data-theme='dark'] .button {
+  border: 1px solid #898989;
+  color: #e0e0e0;
+  background-image: linear-gradient(to bottom, #333336 0%, #232323 80%, #3b3b3e 100%);
+  text-shadow: -1px 1px black;
+}
+
+html[data-theme='dark'] .button:not(.buttonChecked):hover {
+  box-shadow:
+    0 4px 3px 1px #29292c,
+    0 6px 8px #1a1a1d,
+    0 -4px 4px #1e1e20,
+    0 -6px 4px #333336,
+    inset 0 0 2px 2px black;
+}
+
+html[data-theme='dark'] .buttonChecked {
+  // #29292c
+  // #1a1a1d
+  // #1e1e20
+  // #333336
+  // #606060
+  box-shadow:
+    0 4px 3px 1px rgb(58, 58, 58),
+    0 6px 8px #1a1a1d,
+    2px -4px 4px #343434,
+    0 -2px 2px 0px #111,
+    inset 0 0 5px 6px #1a1a1d,
+    inset 0 0 10px black;
+}
