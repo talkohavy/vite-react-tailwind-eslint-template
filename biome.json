@@ -39,7 +39,8 @@
         "useSingleVarDeclarator": "off",
         "noParameterAssign": "off",
         "noVar": "off",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "useSelfClosingElements": "off"
       }
     }
   },
