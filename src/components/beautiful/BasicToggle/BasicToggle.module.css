@@ -1,10 +1,11 @@
 .basicToggleWrapper {
-  position: relative;
-  --btn-height: 40px;
-  --btn-padding: 3px;
+  --btn-height: 22px;
+  --btn-padding: 2px;
   --round-ball-size: calc(var(--btn-height) - 2 * var(--btn-padding) - 2px);
+  width: 40px;
+  position: relative;
+  display: block;
   height: var(--btn-height);
-  width: 70px;
   border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s ease-out;
