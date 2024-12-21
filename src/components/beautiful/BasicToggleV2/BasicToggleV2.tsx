@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 import styles from './BasicToggleV2.module.css';
 
-type BasicToggleProps = {
+type BasicToggleV2Props = {
   isChecked: boolean;
   setIsChecked: (value: any) => void;
   disabled?: boolean;
   className?: string;
 };
 
-export default function BasicToggle(props: BasicToggleProps) {
+export default function BasicToggleV2(props: BasicToggleV2Props) {
   const { isChecked, setIsChecked, disabled, className } = props;
 
   return (
