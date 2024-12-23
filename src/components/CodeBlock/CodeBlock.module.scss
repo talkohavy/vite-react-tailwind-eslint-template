@@ -1,0 +1,45 @@
+.codeBlock {
+  position: relative;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+  flex-grow: 1;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background-color: rgb(226, 226, 226);
+}
+
+html[data-theme='dark'] .codeBlock {
+  background-color: black;
+}
+
+.copyIconButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all ease-in-out 0.3s;
+}
+
+.copyIconButton:hover {
+  background-color: rgb(29, 83, 220, 0.8);
+}
+
+.codeBlock:hover .copyIconButton {
+  opacity: 1;
+}
+
+.copied {
+  background-color: rgb(16, 223, 102);
+}
+
+.copyIconButton.copied {
+  background-color: rgb(26, 204, 100);
+}
