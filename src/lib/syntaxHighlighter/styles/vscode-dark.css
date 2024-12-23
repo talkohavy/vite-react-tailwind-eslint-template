@@ -1,0 +1,148 @@
+/*
+
+VSCode Dark by Tal Kohavy
+
+*/
+
+/* Background & default font color */
+.hljs {
+  color: #c0e4f6;
+}
+
+/* Non-Highlighted Line-Numbers */
+.hljs-ln-line.hljs-ln-numbers {
+  opacity: 0.6;
+  color: rgb(223, 217, 217);
+}
+
+/* Highlighted Line-Numbers */
+.highlight-line .hljs-ln-line.hljs-ln-numbers {
+  opacity: 1;
+  color: #1bd41b;
+}
+
+/* keyword group 1: purple */
+.hljs-keyword,
+.hljs-formula {
+  color: #c586c0;
+}
+
+/* keyword group 2: blue */
+/* hljs-variable.language_    = this                              */
+/* hljs-keywords2             = const, let, var, function, async  */
+/* hljs-doctag                = jsdoc stuff. like, @typedef       */
+.hljs-variable.language_,
+.hljs-array-bracket,
+.hljs-arrow,
+.hljs-doctag,
+.hljs-keyword2 {
+  color: #569cd6;
+}
+
+.hljs-title.variable_ {
+  /* variable names instantiated with const or let */
+  color: #4ab9ee;
+}
+
+/* variable names instantiated with var */
+.hljs-var-variable-name {
+  color: #9cdcfe;
+}
+
+/* Comments & Strings: green */
+.hljs-comment,
+.hljs-quote {
+  color: #6a9956;
+}
+
+/* A function's name */
+.hljs-title.function_,
+.hljs-title.function_.call__ {
+  color: #dcdcaa;
+}
+
+/* All the values: true, false, null, undefined, Infinity */
+.hljs-literal {
+  color: #569cd6;
+}
+
+/* 
+.hljs-react-component        = A Jsx Component
+.hljs-type                   = I.E. @param {{name: string}} props
+*/
+.hljs-react-component,
+.hljs-type,
+.hljs-name {
+  color: #40b9a1;
+}
+
+/* An html element: */
+.hljs-html {
+  color: #569cd6;
+}
+
+.hljs-section,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+  color: #e06c75;
+}
+
+.hljs-parenthesis,
+.hljs-curly-brace {
+  color: yellow;
+}
+
+.hljs-meta,
+.hljs-string {
+  color: #ce9178;
+}
+
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #98c379;
+}
+.hljs-number {
+  color: #c4f1ae;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #9cdcfe;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-selector-id,
+.hljs-title {
+  color: #61aeee;
+}
+
+/* .hljs-class        = new Person(); */
+/* .hljs-title.class_ = Typescript - a type's name */
+/* .hljs-built_in     = Typescript's type (i.e. const aaa: SomeType) */
+.hljs-built_in,
+.hljs-class,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #4dc9b0;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  text-decoration: underline;
+}

@@ -21,6 +21,7 @@
     "@talkohavy/lodash": "^1.3.0",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
+    "highlight.js": "^11.11.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
