@@ -1,8 +1,8 @@
+import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import Copy from '../svgs/Copy';
 import styles from './CodeBlock.module.scss';
-import hljs from 'highlight.js';
-import { useEffect, useRef, useState } from 'react';
+import useSyntaxHighlighter from './logic/hooks/useSyntaxHighlighter';
 
 type CodeBlockProps = {
   code: string;
@@ -13,13 +13,11 @@ type CodeBlockProps = {
 export default function CodeBlock(props: CodeBlockProps) {
   const { code, language, onCopySuccess } = props;
 
-  const [copied, setCopied] = useState(false);
-
   const codeRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    if (codeRef.current) hljs.highlightElement(codeRef.current);
-  }, [code]);
+  const [copied, setCopied] = useState(false);
+
+  useSyntaxHighlighter({ codeRef });
 
   const handleCopyClick = () => {
     navigator.clipboard.writeText(code);
