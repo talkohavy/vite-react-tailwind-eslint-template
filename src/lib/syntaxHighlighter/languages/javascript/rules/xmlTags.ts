@@ -8,7 +8,7 @@ function getXmlTagRules() {
      * @param {RegExpMatchArray} match
      * @param {import('highlight.js').CallbackResponse} response
      */
-    isTrulyOpeningTag: (match, response) => {
+    isTrulyOpeningTag: (match: any, response: any) => {
       const afterMatchIndex = match[0].length + match.index;
       const nextChar = match.input[afterMatchIndex];
       if (
@@ -34,7 +34,7 @@ function getXmlTagRules() {
       // `<blah />` (self-closing)
       // handled by simpleSelfClosing rule
 
-      let m;
+      let m: any;
       const afterMatch = match.input.substring(afterMatchIndex);
 
       // some more template typing stuff
@@ -47,7 +47,7 @@ function getXmlTagRules() {
       if ((m = afterMatch.match(/^\s+extends\s+/))) {
         if (m.index === 0) {
           response.ignoreMatch();
-          // eslint-disable-next-line no-useless-return
+
           return;
         }
       }
