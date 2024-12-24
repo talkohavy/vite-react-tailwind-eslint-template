@@ -125,6 +125,6 @@ export class HttpClient {
   }
 }
 
-export function initHttpClient(aiChatbotGatewayUrl: string) {
-  httpClient = new HttpClient(aiChatbotGatewayUrl);
+export function initHttpClient(apiGatewayUrl: string) {
+  httpClient = new HttpClient(apiGatewayUrl);
 }
