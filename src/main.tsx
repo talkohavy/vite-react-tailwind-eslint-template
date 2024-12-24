@@ -6,8 +6,12 @@ import App from '@src/App';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
 import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
+import { initSessionManager } from './SessionManager';
+import { initHttpClient } from './lib/HttpClient';
 import './common/bootstrap';
 import './index.css';
+
+const API_GATEWAY_URL = 'http://localhost:8000';
 
 const store = createStore({} as any);
 
@@ -16,6 +20,8 @@ function Client() {
     <StrictMode>
       <SuspenseUntilReady
         asyncFn={async () => {
+          initSessionManager();
+          initHttpClient(API_GATEWAY_URL);
           console.log('Application is up and running!');
         }}
       >
