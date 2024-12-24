@@ -5,9 +5,9 @@ import hljs from 'highlight.js';
 import { useEffect, useRef, useState } from 'react';
 
 type CodeBlockProps = {
-  language: string;
   code: string;
   onCopySuccess?: () => void;
+  language?: string; // 'bash' | 'javascript' | 'typescript' | 'html';
 };
 
 export default function CodeBlock(props: CodeBlockProps) {
