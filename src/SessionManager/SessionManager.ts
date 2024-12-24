@@ -51,8 +51,8 @@ class SessionManager {
   }
 }
 
+export let sessionManager = null as unknown as SessionManager;
+
 export function initSessionManager() {
   sessionManager = new SessionManager();
 }
-
-export let sessionManager = null as unknown as SessionManager;
