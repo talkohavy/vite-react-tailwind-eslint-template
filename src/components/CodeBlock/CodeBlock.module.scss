@@ -20,16 +20,16 @@ html[data-theme='dark'] .codeBlock {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
-  padding: 10px;
+  width: 36px;
+  height: 36px;
+  padding: 9px;
   border-radius: 50%;
   opacity: 0;
   transition: all ease-in-out 0.3s;
 }
 
 .copyIconButton:hover {
-  background-color: rgb(29, 83, 220, 0.8);
+  background-color: rgba(37, 92, 231, 0.8);
 }
 
 .codeBlock:hover .copyIconButton {
@@ -37,9 +37,9 @@ html[data-theme='dark'] .codeBlock {
 }
 
 .copied {
-  background-color: rgb(16, 223, 102);
+  opacity: 1;
 }
 
 .copyIconButton.copied {
-  background-color: rgb(26, 204, 100);
+  background-color: seagreen;
 }
