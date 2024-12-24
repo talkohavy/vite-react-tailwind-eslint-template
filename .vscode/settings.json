@@ -53,6 +53,12 @@
   "typescript.preferences.importModuleSpecifierEnding": "auto", // <--- defaults to "auto"
   "typescript.updateImportsOnFileMove.enabled": "always", // <--- defaults to "prompt"
 
+  // -----------------
+  // Part X: Work Tree
+  // -----------------
+  "workbench.tree.indent": 25,
+  "workbench.tree.renderIndentGuides": "onHover",
+
   // -------------------------------------
   // Part 3: IDE Color Customization Rules
   // -------------------------------------
