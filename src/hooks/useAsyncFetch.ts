@@ -5,7 +5,7 @@ import { httpClient } from '../lib/HttpClient';
 type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
   asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
   /**
-   * Should a memoed function.
+   * Should be a memoed function.
    */
   transform?: (data: ReturnType) => TransformType;
   /**
@@ -13,11 +13,11 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    */
   isManual?: boolean;
   /**
-   * Should a memoed function.
+   * Should be a memoed function.
    */
   onSuccess?: (data: TransformType) => void;
   /**
-   * Should a memoed function.
+   * Should be a memoed function.
    */
   onError?: (error: any) => void;
 };
