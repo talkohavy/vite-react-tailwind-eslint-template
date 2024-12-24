@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Copy from '../svgs/Copy';
 import styles from './CodeBlock.module.scss';
@@ -14,6 +14,7 @@ export default function CodeBlock(props: CodeBlockProps) {
   const { code, language, onCopySuccess } = props;
 
   const codeRef = useRef<HTMLElement>(null);
+  const copyTimeoutRef = useRef(null as any);
 
   const [copied, setCopied] = useState(false);
 
@@ -23,8 +24,22 @@ export default function CodeBlock(props: CodeBlockProps) {
     navigator.clipboard.writeText(code);
     setCopied(true);
     onCopySuccess?.();
-    setTimeout(() => setCopied(false), 3000);
+
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+
+    copyTimeoutRef.current = setTimeout(() => {
+      setCopied(false);
+      copyTimeoutRef.current = null;
+    }, 3000);
   };
+
+  useEffect(() => {
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+  }, []);
 
   return (
     <pre className={styles.codeBlock}>
