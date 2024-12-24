@@ -15,31 +15,44 @@ class SessionManager {
     }
   }
 
-  setSessionId() {
-    const localStorageId = localStorage.getItem(SESSION_KEYS.LOCAL_STORAGE);
+  setTabId() {
     const sessionStorageId = sessionStorage.getItem(SESSION_KEYS.SESSION_STORAGE);
-
-    if (!localStorageId) {
-      localStorage.setItem(SESSION_KEYS.LOCAL_STORAGE, uuid());
-    }
 
     if (!sessionStorageId) {
       sessionStorage.setItem(SESSION_KEYS.SESSION_STORAGE, uuid());
     }
   }
 
-  getSessionId() {
+  setBrowserId() {
     const localStorageId = localStorage.getItem(SESSION_KEYS.LOCAL_STORAGE);
+
+    if (!localStorageId) {
+      localStorage.setItem(SESSION_KEYS.LOCAL_STORAGE, uuid());
+    }
+  }
+
+  getTabId() {
     const sessionStorageId = sessionStorage.getItem(SESSION_KEYS.SESSION_STORAGE);
+
+    return sessionStorageId;
+  }
+
+  getBrowserId() {
+    const localStorageId = localStorage.getItem(SESSION_KEYS.LOCAL_STORAGE);
+
+    return localStorageId;
+  }
+
+  getSessionIds() {
+    const localStorageId = this.getBrowserId();
+    const sessionStorageId = this.getTabId();
 
     return { localStorageId, sessionStorageId };
   }
 }
 
-function initSessionManager() {
+export function initSessionManager() {
   sessionManager = new SessionManager();
 }
 
-let sessionManager: SessionManager = null as any;
-
-export { initSessionManager, sessionManager };
+export let sessionManager = null as unknown as SessionManager;
