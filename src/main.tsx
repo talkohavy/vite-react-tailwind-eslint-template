@@ -6,7 +6,7 @@ import App from '@src/App';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
 import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
-import { initSessionManager } from './SessionManager';
+import { initSessionManager } from './lib/SessionManager';
 import { initHttpClient } from './lib/HttpClient';
 import './common/bootstrap';
 import './index.css';
