@@ -1,11 +1,12 @@
 .switch {
-  --btn-height: 22px;
-  --btn-padding: 2px;
-  --ball-size: calc(var(--btn-height) - 2 * var(--btn-padding) - 2px);
+  --height: 22px;
+  --padding: calc(var(--height) / 16);
+  --ball-size: calc(var(--height) - 2 * var(--padding) - 2px);
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: var(--btn-height);
+  width: calc(var(--height) * 2);
+  height: var(--height);
+  transition: all 0.4s;
 }
 
 /* Hide default HTML checkbox */
@@ -15,8 +16,7 @@
   height: 0;
 }
 
-/* The slider */
-.slider {
+.radioButtonBg {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -26,14 +26,14 @@
   background-color: #fff;
   border: 1px solid #adb5bd;
   transition: 0.4s;
-  border-radius: 30px;
+  border-radius: 9999px;
 }
 
-.roundBall {
+.slider {
   content: '';
   position: absolute;
-  left: var(--btn-padding);
   top: 50%;
+  left: var(--padding);
   transform: translateY(-50%);
   height: var(--ball-size);
   width: var(--ball-size);
@@ -42,16 +42,16 @@
   transition: all 0.4s;
 }
 
-input:checked + .slider {
+.switch:has(input:checked) .slider {
+  left: calc(100% - var(--ball-size) - var(--padding));
+  background-color: #fff;
+}
+
+.switch:has(input:checked) .radioButtonBg {
   background-color: #007bff;
   border: 1px solid #007bff;
 }
 
-input:focus + .slider {
+.switch:has(input:focus) .radioButtonBg {
   box-shadow: 0 0 1px #007bff;
-}
-
-.switch:has(input:checked) .roundBall {
-  left: calc(100% - var(--ball-size) - var(--btn-padding));
-  background-color: #fff;
 }

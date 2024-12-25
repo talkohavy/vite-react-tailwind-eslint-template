@@ -14,8 +14,8 @@ export default function BasicToggleV3(props: BasicToggleV3Props) {
   return (
     <label className={clsx(styles.switch, className)}>
       <input type='checkbox' checked={isChecked} onChange={setIsChecked} disabled={disabled} />
-      <span className={styles.slider}>
-        <div className={styles.roundBall} />
+      <span className={styles.radioButtonBg}>
+        <div className={styles.slider} />
       </span>
     </label>
   );
