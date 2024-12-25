@@ -1,20 +1,21 @@
 import clsx from 'clsx';
 import styles from './Toggle.module.scss';
-import ToggleMark from './ToggleMark';
 
 type ToggleProps = {
   isChecked: boolean;
   setIsChecked: (value: any) => void;
+  disabled?: boolean;
   className?: string;
-  checkmarkClassName?: string;
 };
 
 export default function Toggle(props: ToggleProps) {
-  const { isChecked, setIsChecked, className, checkmarkClassName } = props;
+  const { isChecked, setIsChecked, disabled, className } = props;
 
   return (
     <div className={clsx(styles.toggle, className)} onClick={setIsChecked}>
-      <ToggleMark isChecked={isChecked} className={checkmarkClassName} />
+      <input type='checkbox' checked={isChecked} onChange={setIsChecked} disabled={disabled} />
+
+      <div className={styles.toggleMark} />
     </div>
   );
 }

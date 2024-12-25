@@ -11,6 +11,31 @@
   box-shadow: rgba(66, 66, 66, 0.8) 0px 0px 4px 0px;
 }
 
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  appearance: none;
+}
+
 html[data-theme='dark'] .toggle:hover {
   box-shadow: rgba(255, 255, 255, 0.2) 0px 2px 8px 0px;
+}
+
+.toggleMark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  border: 1px solid black;
+  border-radius: 50%;
+  height: 100%;
+  aspect-ratio: 1/1;
+  background-color: rgb(79, 77, 77);
+  transition: all 0.2s;
+}
+
+.toggle:has(input:checked) .toggleMark {
+  left: calc(100%);
+  transform: translateY(-50%) translateX(-100%);
+  background-color: rgb(24, 130, 251);
 }
