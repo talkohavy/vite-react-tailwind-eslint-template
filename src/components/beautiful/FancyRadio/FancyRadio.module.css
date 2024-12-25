@@ -1,13 +1,13 @@
 .fancyRadio {
-  --btn-height: 42px;
-  --btn-padding: 6px;
-  --round-ball-size: calc(var(--btn-height) - 2 * var(--btn-padding) - 2px);
-  --indicator-size: 20px;
+  --height: 42px;
+  --padding: calc(var(--height) / 10);
+  --ball-size: calc(var(--height) - 2 * var(--padding) - 2px);
+  --indicator-size: calc(var(--height) / 2);
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80px;
-  height: var(--btn-height);
+  height: var(--height);
+  width: calc(var(--height) * 2);
   cursor: pointer;
 }
 
@@ -15,7 +15,6 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  background-color: #252532;
   height: 100%;
   width: 100%;
   padding: 6px;
@@ -25,6 +24,7 @@
   box-shadow:
     inset 0px 5px 10px 0px #16151c,
     0px 3px 6px -2px #403f4e;
+  background-color: #252532;
 }
 
 .fancyRadio input[type='checkbox'] {
@@ -33,11 +33,13 @@
   appearance: none;
 }
 
-.blackRoundToggle {
+.slider {
   position: absolute;
-  left: var(--btn-padding);
-  height: var(--round-ball-size);
-  width: var(--round-ball-size);
+  top: 50%;
+  left: var(--padding);
+  transform: translateY(-50%);
+  height: var(--ball-size);
+  width: var(--ball-size);
   background: linear-gradient(#3b3a4e, #272733);
   border-radius: 100%;
   box-shadow:
@@ -52,7 +54,7 @@
   top: 50%;
   transform: translateY(-50%);
   border-radius: 50%;
-  border-width: 2px;
+  border-width: calc(var(--height) / 20);
   border-style: solid;
   box-sizing: border-box;
   height: var(--indicator-size);
@@ -60,17 +62,17 @@
 }
 
 .statusOff {
-  right: 10px;
+  right: calc(var(--height) / 4);
   border-color: #ef565f;
 }
 
 .statusOn {
-  left: 10px;
+  left: calc(var(--height) / 4);
   border-color: #60d480;
 }
 
-.fancyRadio input[type='checkbox']:checked + .blackRoundToggle {
-  left: calc(100% - var(--round-ball-size) - var(--btn-padding));
+.fancyRadio:has(input[type='checkbox']:checked) .slider {
+  left: calc(100% - var(--ball-size) - var(--padding));
 }
 
 .fancyRadio:has(input[type='checkbox']:not(:checked)) .statusOff {
