@@ -25,11 +25,11 @@ html[data-theme='dark'] .codeBlock {
   padding: 9px;
   border-radius: 50%;
   opacity: 0;
-  transition: all ease-in-out 0.3s;
+  transition: all ease-in-out 0.2s;
 }
 
 .copyIconButton:hover {
-  background-color: rgba(37, 92, 231, 0.8);
+  background-color: rgba(37, 92, 231, 0.6);
 }
 
 .codeBlock:hover .copyIconButton {
@@ -41,5 +41,5 @@ html[data-theme='dark'] .codeBlock {
 }
 
 .copyIconButton.copied {
-  background-color: seagreen;
+  background-color: rgb(54, 174, 106);
 }

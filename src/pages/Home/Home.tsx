@@ -2,7 +2,7 @@ import CodeBlock from '../../components/CodeBlock/CodeBlock';
 
 export default function HomePage() {
   return (
-    <div className='size-xs p-6 overflow-auto'>
+    <div className='size-full p-6 overflow-auto'>
       <CodeBlock
         language='typescript'
         code={`
