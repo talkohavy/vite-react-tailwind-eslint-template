@@ -56,14 +56,15 @@
   // -----------------
   // Part X: Work Tree
   // -----------------
-  "workbench.tree.indent": 25,
-  "workbench.tree.renderIndentGuides": "onHover",
+  "workbench.tree.indent": 14,
+  "workbench.tree.renderIndentGuides": "always",
 
   // -------------------------------------
   // Part 3: IDE Color Customization Rules
   // -------------------------------------
   "workbench.colorCustomizations": {
-    "editorLineNumber.activeForeground": "#00ff00"
+    "editorLineNumber.activeForeground": "#00ff00",
+    "tree.indentGuidesStroke": "#c8c8c8" // <--- defaults to #585858
     // - Background related:
     // "editor.background": "#000088",
     // "editor.selectionBackground": "#008800",
