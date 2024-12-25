@@ -1,8 +1,10 @@
 .toggleSwitch {
+  --size: 80px;
+  --ball-size: calc(var(--size) * 3 / 8);
   position: relative;
   display: inline-block;
-  width: 80px;
-  height: 40px;
+  width: var(--size);
+  height: calc(var(--size) / 2);
   cursor: pointer;
 }
 
@@ -17,17 +19,18 @@
   width: 100%;
   height: 100%;
   background-color: #ddd;
-  border-radius: 20px;
+  border-radius: 9999px;
   box-shadow: inset 0 0 0 2px #ccc;
   transition: background-color 0.3s ease-in-out;
 }
 
-.toggleSwitchHandle {
+.toggleSwitchSlider {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 30px;
-  height: 30px;
+  top: 50%;
+  left: calc(var(--size) / 16);
+  transform: translateY(-50%);
+  width: var(--ball-size);
+  height: var(--ball-size);
   background-color: #fff;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -39,6 +42,6 @@
   box-shadow: inset 0 0 0 2px #04b360;
 }
 
-.toggleSwitch input[type='checkbox']:checked + .toggleSwitchBackground .toggleSwitchHandle {
-  left: calc(100% - 30px - 5px);
+.toggleSwitch input[type='checkbox']:checked + .toggleSwitchBackground .toggleSwitchSlider {
+  left: calc(100% - var(--ball-size) - calc(var(--size) / 16));
 }

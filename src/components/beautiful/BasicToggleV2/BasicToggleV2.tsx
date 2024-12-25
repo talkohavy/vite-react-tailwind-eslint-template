@@ -14,8 +14,9 @@ export default function BasicToggleV2(props: BasicToggleV2Props) {
   return (
     <label className={clsx(styles.toggleSwitch, className)}>
       <input type='checkbox' checked={isChecked} onChange={setIsChecked} disabled={disabled} />
+
       <div className={styles.toggleSwitchBackground}>
-        <div className={styles.toggleSwitchHandle}></div>
+        <div className={styles.toggleSwitchSlider} />
       </div>
     </label>
   );
