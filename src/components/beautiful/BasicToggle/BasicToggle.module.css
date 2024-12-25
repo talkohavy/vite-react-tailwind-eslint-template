@@ -1,11 +1,11 @@
 .basicToggleWrapper {
-  --btn-height: 22px;
-  --btn-padding: 2px;
-  --round-ball-size: calc(var(--btn-height) - 2 * var(--btn-padding) - 2px);
-  width: 40px;
+  --height: 22px;
+  --padding: calc(var(--height) / 11);
+  --slider-size: calc(var(--height) - 2 * var(--padding) - 2px);
+  width: calc(var(--height) * 2);
   position: relative;
   display: block;
-  height: var(--btn-height);
+  height: var(--height);
   border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s ease-out;
@@ -21,9 +21,9 @@
 .roundBall {
   position: absolute;
   top: 50%;
-  left: var(--btn-padding);
-  width: var(--round-ball-size);
-  height: var(--round-ball-size);
+  left: var(--padding);
+  width: var(--slider-size);
+  height: var(--slider-size);
   transform: translateY(-50%);
   border-radius: 50%;
   box-shadow:
@@ -38,5 +38,5 @@
 }
 
 .basicToggleWrapper:has(.checkbox:checked) .roundBall {
-  left: calc(100% - var(--round-ball-size) - var(--btn-padding));
+  left: calc(100% - var(--slider-size) - var(--padding));
 }
