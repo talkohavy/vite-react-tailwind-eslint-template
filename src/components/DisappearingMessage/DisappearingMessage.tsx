@@ -2,6 +2,11 @@ import { type PropsWithChildren, useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 type DisappearingMessageProps = PropsWithChildren<{
+  /**
+   * When value is `null`, the children of this component are invisible.
+   *
+   * `value` **MUST** be a primitive value, since it is being compared v.s. its previous state.
+   */
   value: number | string | boolean | null;
   className?: string;
 }>;
