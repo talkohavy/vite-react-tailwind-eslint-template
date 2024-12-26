@@ -1,7 +1,7 @@
 import { lazy } from 'react';
+import type { Route } from './common/types';
 import { BASE_URL } from './common/constants';
 import RedirectToHome from './pages/RedirectToHome';
-import type { Route } from './common/types';
 
 const HomePage = lazy(() => import('./pages/Home'));
 const ReduxExamplePage = lazy(() => import('./pages/ReduxExample'));

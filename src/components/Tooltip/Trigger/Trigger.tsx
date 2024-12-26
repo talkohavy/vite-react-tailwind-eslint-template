@@ -1,5 +1,5 @@
-import { PropsWithChildren, useMemo } from 'react';
-import { Placement, Variant } from '../types';
+import { type PropsWithChildren, useMemo } from 'react';
+import type { Placement, Variant } from '../types';
 
 type TriggerProps = PropsWithChildren<{
   groupId?: string;

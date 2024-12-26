@@ -1,4 +1,4 @@
-import { RadioOption } from '../types';
+import type { RadioOption } from '../types';
 import FakeRadioTab from './FakeRadioTab';
 
 type RadioTabsProps<T> = {

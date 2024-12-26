@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { SelectOption } from './types';
+import type { SelectOption } from './types';
 
 type SelectProps = {
   selectedOption: SelectOption;

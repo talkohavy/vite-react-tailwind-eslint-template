@@ -4,10 +4,10 @@ import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router';
 import App from '@src/App';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
+import { initHttpClient } from './lib/HttpClient';
+import { initSessionManager } from './lib/SessionManager';
 import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
-import { initSessionManager } from './lib/SessionManager';
-import { initHttpClient } from './lib/HttpClient';
 import './common/bootstrap';
 import './index.css';
 

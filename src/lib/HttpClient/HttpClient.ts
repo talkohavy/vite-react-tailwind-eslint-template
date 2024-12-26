@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
-import { type ExecuteProps, type FetchOptions, HttpHeaders, HttpMethod, type HttpResponse } from './types';
-import { HttpError } from './logic/HttpError';
 import { sessionManager } from '../SessionManager';
+import { HttpError } from './logic/HttpError';
+import { type ExecuteProps, type FetchOptions, HttpHeaders, HttpMethod, type HttpResponse } from './types';
 
 export let httpClient: HttpClient;
 

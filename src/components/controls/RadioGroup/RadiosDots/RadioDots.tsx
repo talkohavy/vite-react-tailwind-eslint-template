@@ -1,6 +1,6 @@
-import FakeRadioDot from './FakeRadioDot';
+import type { RadioOption } from '../types';
 import RadioGroupWrapper from '../logic/RadioGroupWrapper';
-import { RadioOption } from '../types';
+import FakeRadioDot from './FakeRadioDot';
 
 type RadioDotsProps<T> = {
   value: number | string;

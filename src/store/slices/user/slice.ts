@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { UserState } from './types';
+import type { UserState } from './types';
 
 const initialState: UserState = {
-  isLogged: false,
-  isLoading: false,
   data: null,
+  isLoading: false,
+  isLogged: false,
 };
 
 const userSlice = createSlice({

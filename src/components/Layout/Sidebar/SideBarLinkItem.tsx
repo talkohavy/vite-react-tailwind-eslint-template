@@ -1,5 +1,5 @@
-import clsx from 'clsx';
 import { Link } from 'react-router';
+import clsx from 'clsx';
 
 type SideBarLinkItemProps = {
   to: string;

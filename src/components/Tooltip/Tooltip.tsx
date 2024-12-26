@@ -1,7 +1,7 @@
-import { PropsWithChildren } from 'react';
-import { ChildrenType, Tooltip as TooltipOriginal } from 'react-tooltip';
+import type { PropsWithChildren } from 'react';
+import { type ChildrenType, Tooltip as TooltipOriginal } from 'react-tooltip';
 import styles from './Tooltip.module.scss';
-import { Placement, Variant } from './types';
+import { Placement, type Variant } from './types';
 
 type TooltipProps = PropsWithChildren<{
   groupId?: string;
