@@ -26,6 +26,7 @@
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router": "^7.1.1",
+    "react-router-dom": "^7.1.1",
     "react-tooltip": "^5.28.0",
     "tailwind": "^4.0.0",
     "tailwind-merge": "^2.6.0",

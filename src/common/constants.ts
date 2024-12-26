@@ -10,3 +10,5 @@ export const API_URLS = {
     users: '/users',
   },
 };
+
+export const BASE_URL = '/base';
