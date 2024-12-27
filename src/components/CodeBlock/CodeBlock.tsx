@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
-import Copy from '../svgs/Copy';
+import { useRef } from 'react';
 import styles from './CodeBlock.module.scss';
+import CopyToClipboardButton from './logic/CopyToClipboardButton';
 import useSyntaxHighlighter from './logic/hooks/useSyntaxHighlighter';
 
 type CodeBlockProps = {
@@ -14,32 +13,8 @@ export default function CodeBlock(props: CodeBlockProps) {
   const { code, language, onCopySuccess } = props;
 
   const codeRef = useRef<HTMLElement>(null);
-  const copyTimeoutRef = useRef(null as any);
-
-  const [copied, setCopied] = useState(false);
 
   useSyntaxHighlighter({ codeRef });
-
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    onCopySuccess?.();
-
-    if (copyTimeoutRef.current) {
-      clearTimeout(copyTimeoutRef.current);
-    }
-
-    copyTimeoutRef.current = setTimeout(() => {
-      setCopied(false);
-      copyTimeoutRef.current = null;
-    }, 3000);
-  };
-
-  useEffect(() => {
-    if (copyTimeoutRef.current) {
-      clearTimeout(copyTimeoutRef.current);
-    }
-  }, []);
 
   return (
     <pre className={styles.codeBlock}>
@@ -47,9 +22,7 @@ export default function CodeBlock(props: CodeBlockProps) {
         {code}
       </code>
 
-      <button type='button' onClick={handleCopyClick} className={clsx(styles.copyIconButton, copied && styles.copied)}>
-        <Copy className='h-full relative block' />
-      </button>
+      <CopyToClipboardButton code={code} onCopySuccess={onCopySuccess} />
     </pre>
   );
 }

@@ -1,0 +1,55 @@
+.copyToClipboardButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid #606770;
+  border-radius: 6px;
+  opacity: 0.4;
+}
+
+.copyToClipboardButton:hover {
+  opacity: 1;
+}
+
+.copied {
+  padding: 8px; /* same as above, just didn't want to leave as empty */
+}
+
+.copyIcon {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  padding: 8px;
+  opacity: 1;
+}
+
+.copiedIcon {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  color: #00d600;
+  padding: 8px;
+  opacity: 0;
+  stroke-width: 2;
+}
+
+.copyToClipboardButton.copied .copyIcon {
+  opacity: 0;
+}
+
+.copyToClipboardButton.copied,
+.copyToClipboardButton.copied .copiedIcon {
+  opacity: 1;
+}
+
+.copyToClipboardButton.copied {
+  border: 1px solid rgb(38, 98, 64);
+}
