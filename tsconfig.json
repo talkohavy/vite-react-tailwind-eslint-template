@@ -63,6 +63,7 @@
     // ---------------
     "sourceMap": true, // defaults to `false`. Create source map files for emitted JavaScript files.
     "noEmit": true, // Disable emitting files from a compilation.
+    // "removeComments": true, // <--- defaults to false. Disable emitting comments.
     // "outDir": "./dist", // no need to have this! all the microservices are being used just as they are, and the only thing being bundled is the app-frontend, which gets bundled using vite, which already has an outDir set in its config file.
     // "declaration": true, // <--- defaults to true if composite is true, and false otherwise. Generate .d.ts files from TypeScript and JavaScript files in your project.
     // "declarationMap": true, // <--- defaults to false. Create sourcemaps for d.ts files.
@@ -70,7 +71,6 @@
     // "inlineSourceMap": true,                          /* Include sourcemap files inside the emitted JavaScript. */
     // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
     // "outDir": "./",                                   /* Specify an output folder for all emitted files. */
-    // "removeComments": true,                           /* Disable emitting comments. */
     // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
     // "downlevelIteration": true,                       /* Emit more compliant, but verbose and less performant JavaScript for iteration. */
     // "sourceRoot": "",                                 /* Specify the root path for debuggers to find the reference source code. */
