@@ -103,6 +103,15 @@
   // Part 6: gitlens Rules
   // ---------------------
   "gitlens.codeLens.enabled": false, // <--- finallyyy!!! I wanted to disable this for soooo longggg!
+  "gitlens.views.scm.grouped.views": {
+    // All of these will appear:
+    "branches": false,
+    "stashes": false,
+    // All of these will NOT appear:
+    "commits": true,
+    "remotes": true,
+    "repositories": true
+  },
   // "gitlens.advanced.blame.delayAfterEdit": 5000,
   // "gitlens.outputLevel": "warn",
   // "gitlens.currentLine.enabled": false,
