@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'node:path';
 import { defineConfig } from 'vite';
@@ -10,6 +11,7 @@ export default defineConfig(({ mode }) => ({
   root: `${process.cwd()}/src`, // <--- defaults to process.cwd(). where the index.html is located.
   plugins: [
     react(),
+    tailwindcss(),
     svgr({
       include: '**/*.svg',
       svgrOptions: {

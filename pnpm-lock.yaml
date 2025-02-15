@@ -60,6 +60,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.0.0
         version: 4.0.0
+      '@tailwindcss/vite':
+        specifier: ^4.0.6
+        version: 4.0.6(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1)(sass-embedded@1.85.0)(yaml@2.6.0))
       '@types/node':
         specifier: ^22.13.4
         version: 22.13.4
@@ -90,9 +93,6 @@ importers:
       husky:
         specifier: ^9.1.7
         version: 9.1.7
-      postcss:
-        specifier: ^8.5.2
-        version: 8.5.2
       prettier:
         specifier: ^3.5.1
         version: 3.5.1
@@ -872,6 +872,11 @@ packages:
 
   '@tailwindcss/postcss@4.0.0':
     resolution: {integrity: sha512-lI2bPk4TvwavHdehjr5WiC6HnZ59hacM6ySEo4RM/H7tsjWd8JpqiNW9ThH7rO/yKtrn4mGBoXshpvn8clXjPg==}
+
+  '@tailwindcss/vite@4.0.6':
+    resolution: {integrity: sha512-O25vZ/URWbZ2JHdk2o8wH7jOKqEGCsYmX3GwGmYS5DjE4X3mpf93a72Rn7VRnefldNauBzr5z2hfZptmBNtTUQ==}
+    peerDependencies:
+      vite: ^5.2.0 || ^6
 
   '@talkohavy/lodash@1.3.5':
     resolution: {integrity: sha512-DI8nreEHUbaS4wfiL+wxadrKErjuE2yooZpeiBJWEi+/JLAyU25bMKDgH43CrZa/ExmvnqUoI99dSk3+3Y1B1Q==}
@@ -3330,6 +3335,14 @@ snapshots:
       lightningcss: 1.29.1
       postcss: 8.5.2
       tailwindcss: 4.0.0
+
+  '@tailwindcss/vite@4.0.6(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1)(sass-embedded@1.85.0)(yaml@2.6.0))':
+    dependencies:
+      '@tailwindcss/node': 4.0.6
+      '@tailwindcss/oxide': 4.0.6
+      lightningcss: 1.29.1
+      tailwindcss: 4.0.6
+      vite: 6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1)(sass-embedded@1.85.0)(yaml@2.6.0)
 
   '@talkohavy/lodash@1.3.5': {}
 
