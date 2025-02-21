@@ -6,7 +6,6 @@ import svgr from 'vite-plugin-svgr';
 
 const rootDir = path.join(__dirname, '../../');
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   root: `${process.cwd()}/src`, // <--- defaults to process.cwd(). where the index.html is located.
   plugins: [

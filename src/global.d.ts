@@ -1,6 +1,13 @@
 declare module '*.svg' {
-  const content: React.FC<React.SVGProps<SVGElement>>;
-  export default content;
+  // 1. When importing svg as src inside an img:
+  // const content: React.FC<React.SVGProps<SVGElement>>;
+  // export default content;
+
+  // 2. When importing svg as ReactComponent:
+  import type React from 'react';
+  const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;
+  export { ReactComponent };
+  export default ReactComponent;
 }
 
 interface ImportMetaEnv {
