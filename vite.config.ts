@@ -64,11 +64,11 @@ export default defineConfig(({ mode }) => ({
   preview: { port: 3000, strictPort: true, open: false }, // When running `npm run preview` locally, no loadEnvVariables process occurs, so VITE_PORT would be undefined. On a CI however, there are always ENV VARIABLES set in the global scope so it *would* work.
   css: {
     modules: {
-      generateScopedName: mode === 'development' ? '[name].[local].[hash:base64:3]' : '[hash:base64:7]',
-      localsConvention: 'camelCaseOnly',
-      // scopeBehaviour: 'local'
+      generateScopedName: mode === 'development' ? '[name].[local].[hash:base64:3]' : '[hash:base64:7]', // <--- A className named "sharedBtn" found at a css file named "App.module.css" would turn into: Button-module-sharedBtn-LyEfZ. `name` is the component name, and `local` is the css class name.
+      localsConvention: 'camelCaseOnly', // <--- default to `undefined`. It seems like every value but `undefined` works, so just choose one.
+      scopeBehaviour: 'local', // <--- Defaults to 'local'. Always use 'local'. 'global' would disregard the .module.css extension, and make all css as global.
     },
-    devSourcemap: true,
-    transformer: 'postcss', // <--- Options are: 'postcss' (default) | 'lightningcss'. While Lightning CSS handles the most commonly used PostCSS plugins like autoprefixer, postcss-preset-env, and CSS modules, you may still need PostCSS for more custom plugins like TailwindCSS. If that's the case, your PostCSS config will be picked up automatically.
+    devSourcemap: true, // <--- defaults to `false`. The provided value here will affect the Elements --> Styles tab. With `true`, the clickable link would read "Button.module.css", and clicking it would direct you to the file. When `false`, it would read `<style>`, and clicking it would direct you to a <style> element on the <head> element.
+    transformer: 'postcss', // <--- Defaults to `postcss`. Options are: 'postcss' (default) | 'lightningcss'. While Lightning CSS handles the most commonly used PostCSS plugins like autoprefixer, postcss-preset-env, and CSS modules, you may still need PostCSS for more custom plugins like TailwindCSS. If that's the case, your PostCSS config will be picked up automatically.
   },
 }));
