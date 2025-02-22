@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf node_modules",
     "lint": "eslint",
-    "lint-fix": "eslint --fix",
+    "lint:fix": "eslint --fix",
     "format": "biome format ./src",
     "format-fix": "biome format --verbose ./src --write",
     "format-prettier": "prettier . --check --config .prettierrc.mjs --ignore-path .prettierignore",
