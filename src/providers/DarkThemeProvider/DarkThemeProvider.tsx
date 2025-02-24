@@ -20,8 +20,6 @@ export default function DarkThemeProvider(props: DarkThemeProviderProps) {
 
     const currentTheme = localStorageTheme || deviceTheme;
 
-    const [htmlElement] = document.getElementsByTagName('html');
-    htmlElement!.setAttribute('data-theme', currentTheme);
     document.body.setAttribute('class', currentTheme);
 
     return currentTheme === THEME_OPTIONS.dark;
@@ -32,9 +30,6 @@ export default function DarkThemeProvider(props: DarkThemeProviderProps) {
     const themeToBe = isDarkMode ? THEME_OPTIONS.light : THEME_OPTIONS.dark;
     setLocalStorageTheme(themeToBe);
 
-    // @ts-ignore
-    const [htmlElement] = document.getElementsByTagName('html');
-    htmlElement!.setAttribute('data-theme', themeToBe);
     document.body.setAttribute('class', themeToBe);
 
     setIsDarkMode(!isDarkMode);
