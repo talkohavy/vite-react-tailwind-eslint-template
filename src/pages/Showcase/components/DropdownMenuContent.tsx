@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { DotFilledIcon } from '@radix-ui/react-icons';
 import { DropdownMenu as DropdownMenuOriginal } from 'radix-ui';
 import CheckIcon from '../../../components/svgs/CheckIcon';
+import DotFilledIcon from '../../../components/svgs/DotFilledIcon';
 import RightArrow from '../../../components/svgs/RightArrow';
 import styles from './DropdownMenuContent.module.css';
 
@@ -19,10 +18,17 @@ const {
   Label,
 } = DropdownMenuOriginal;
 
-export default function DropdownMenuContent() {
-  const [bookmarksChecked, setBookmarksChecked] = useState(true);
-  const [urlsChecked, setUrlsChecked] = useState(false);
-  const [person, setPerson] = useState('pedro');
+type DropdownMenuContentProps = {
+  bookmarksChecked: boolean;
+  setBookmarksChecked: (value: boolean) => void;
+  urlsChecked: boolean;
+  setUrlsChecked: (value: boolean) => void;
+  person: string;
+  setPerson: (value: string) => void;
+};
+
+export default function DropdownMenuContent(props: DropdownMenuContentProps) {
+  const { bookmarksChecked, setBookmarksChecked, setUrlsChecked, urlsChecked, person, setPerson } = props;
 
   return (
     <>
@@ -88,18 +94,18 @@ export default function DropdownMenuContent() {
       <Label className={styles.dropdownMenuLabel}>People</Label>
 
       <RadioGroup value={person} onValueChange={setPerson}>
-        <RadioItem className={styles.dropdownMenuRadioItem} value='pedro'>
-          <ItemIndicator className={styles.dropdownMenuItemIndicator}>
-            <DotFilledIcon />
-          </ItemIndicator>
-          Pedro Duarte
-        </RadioItem>
-
         <RadioItem className={styles.dropdownMenuRadioItem} value='colm'>
           <ItemIndicator className={styles.dropdownMenuItemIndicator}>
-            <DotFilledIcon />
+            <DotFilledIcon className='size-4' />
           </ItemIndicator>
           Colm Tuite
+        </RadioItem>
+
+        <RadioItem className={styles.dropdownMenuRadioItem} value='pedro'>
+          <ItemIndicator className={styles.dropdownMenuItemIndicator}>
+            <DotFilledIcon className='size-4' />
+          </ItemIndicator>
+          Pedro Duarte
         </RadioItem>
       </RadioGroup>
     </>

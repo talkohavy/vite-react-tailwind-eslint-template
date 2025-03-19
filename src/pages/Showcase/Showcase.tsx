@@ -8,6 +8,9 @@ import DropdownMenuContent from './components/DropdownMenuContent';
 export default function RadixComponents() {
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false);
   const tooltipUniqueId = useId();
+  const [bookmarksChecked, setBookmarksChecked] = useState(true);
+  const [urlsChecked, setUrlsChecked] = useState(false);
+  const [person, setPerson] = useState('colm');
 
   return (
     <div className='flex flex-col gap-10 items-end size-full p-6 overflow-auto'>
@@ -21,7 +24,14 @@ export default function RadixComponents() {
         setIsOpen={setIsDropDownMenuOpen}
         showArrow
       >
-        <DropdownMenuContent />
+        <DropdownMenuContent
+          bookmarksChecked={bookmarksChecked}
+          setBookmarksChecked={setBookmarksChecked}
+          urlsChecked={urlsChecked}
+          setUrlsChecked={setUrlsChecked}
+          person={person}
+          setPerson={setPerson}
+        />
       </DropdownMenu>
 
       <TooltipTrigger groupId={tooltipUniqueId} contentOverride={'spelling'} className='w-auto inline-block'>
