@@ -5,6 +5,7 @@ import RedirectToHome from './pages/RedirectToHome';
 
 const HomePage = lazy(() => import('./pages/Home'));
 const ReduxExamplePage = lazy(() => import('./pages/ReduxExample'));
+const ShowcasePage = lazy(() => import('./pages/Showcase'));
 
 export const routes: Array<Route> = [
   {
@@ -17,6 +18,12 @@ export const routes: Array<Route> = [
     text: 'Home',
     activeNames: ['/home', '/'],
     Component: HomePage,
+  },
+  {
+    to: `${BASE_URL}/showcase`,
+    text: 'Showcase',
+    activeNames: ['/showcase'],
+    Component: ShowcasePage,
   },
   {
     to: `${BASE_URL}/redux`,
