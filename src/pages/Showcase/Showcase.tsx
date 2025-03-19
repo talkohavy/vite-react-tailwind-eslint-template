@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import DropdownMenu from '../../components/controls/DropdownMenu';
+import DropdownMenu from '../../components/DropdownMenu';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
 import { Placement } from '../../components/Tooltip/types';
