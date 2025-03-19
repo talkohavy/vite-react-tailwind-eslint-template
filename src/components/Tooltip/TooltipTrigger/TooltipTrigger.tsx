@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useMemo } from 'react';
 import type { Placement, Variant } from '../types';
 
-type TriggerProps = PropsWithChildren<{
+type TooltipTriggerProps = PropsWithChildren<{
   groupId?: string;
   /**
    * Content to be displayed in the tooltip.
@@ -26,7 +26,7 @@ type TriggerProps = PropsWithChildren<{
   className?: string;
 }>;
 
-export default function Trigger(props: TriggerProps) {
+export default function TooltipTrigger(props: TooltipTriggerProps) {
   const {
     groupId,
     children,
