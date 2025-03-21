@@ -1,3 +1,5 @@
+import CheckIcon from '../../svgs/CheckIcon';
+
 type CheckboxProps = {
   isChecked: boolean;
   setIsChecked: (value: any) => void;
@@ -23,7 +25,9 @@ export default function Checkbox(props: CheckboxProps) {
             className='size-0 opacity-0 pointer-events-none'
           />
 
-          <div className='size-6 rounded-md border border-black group-has-[input:checked]:bg-blue-400' />
+          <div className='flex justify-center items-center size-6 rounded-md border border-black group-has-[input:checked]:bg-blue-400'>
+            <CheckIcon className='opacity-0 group-has-[input:checked]:opacity-100 transition-all duration-200' />
+          </div>
         </div>
 
         <div>{label}</div>
