@@ -26,7 +26,7 @@ export default function Checkbox(props: CheckboxProps) {
           />
 
           <div className='flex justify-center items-center size-6 rounded-md border border-black group-has-[input:checked]:bg-blue-400'>
-            <CheckIcon className='opacity-0 group-has-[input:checked]:opacity-100 transition-all duration-200' />
+            <CheckIcon className='fill-white opacity-0 group-has-[input:checked]:opacity-100 transition-all duration-200' />
           </div>
         </div>
 
