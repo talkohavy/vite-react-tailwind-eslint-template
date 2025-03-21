@@ -12,11 +12,21 @@ export default function Toggle(props: ToggleProps) {
   const { isChecked, setIsChecked, disabled, className } = props;
 
   return (
-    <label className={clsx(styles.switch, className)}>
-      <input type='checkbox' checked={isChecked} onChange={setIsChecked} disabled={disabled} />
-      <span className={styles.radioButtonBg}>
-        <div className={styles.slider} />
-      </span>
-    </label>
+    <button type='button' role='switch' aria-checked={isChecked ? 'true' : 'false'}>
+      <label className={clsx(styles.switch, className)}>
+        <input
+          type='checkbox'
+          checked={isChecked}
+          onChange={setIsChecked}
+          disabled={disabled}
+          aria-hidden='true'
+          tabIndex={-1}
+        />
+
+        <span className={styles.radioButtonBg}>
+          <div className={styles.slider} />
+        </span>
+      </label>
+    </button>
   );
 }
