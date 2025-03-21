@@ -11,7 +11,7 @@ export default function Checkbox(props: CheckboxProps) {
   const { isChecked, setIsChecked, disabled, label } = props;
 
   return (
-    <button type='button' role='switch' aria-checked={isChecked ? 'true' : 'false'}>
+    <button type='button' role='checkbox' aria-checked={isChecked ? 'true' : 'false'}>
       <label className='group flex cursor-pointer items-center justify-center gap-2'>
         <div className='flex items-center justify-center'>
           <input

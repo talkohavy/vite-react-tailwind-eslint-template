@@ -32,7 +32,8 @@
         "useKeyWithClickEvents": "off",
         "useKeyWithMouseEvents": "off",
         "useValidAnchor": "off",
-        "noSvgWithoutTitle": "off"
+        "noSvgWithoutTitle": "off",
+        "useSemanticElements": "off"
       },
       "style": {
         "noCommaOperator": "off",
