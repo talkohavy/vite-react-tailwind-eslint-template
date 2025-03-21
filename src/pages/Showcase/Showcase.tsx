@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import Checkbox from '../../components/controls/Checkbox';
+import Toggle from '../../components/controls/Toggle';
 import DropdownMenu from '../../components/DropdownMenu';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
@@ -16,6 +17,8 @@ export default function RadixComponents() {
 
   return (
     <div className='flex flex-col gap-10 items-end size-full p-6 overflow-auto'>
+      <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+
       <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
       <DropdownMenu
