@@ -1,4 +1,5 @@
 import { useId, useState } from 'react';
+import Checkbox from '../../components/controls/Checkbox';
 import DropdownMenu from '../../components/DropdownMenu';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
@@ -11,9 +12,12 @@ export default function RadixComponents() {
   const [bookmarksChecked, setBookmarksChecked] = useState(true);
   const [urlsChecked, setUrlsChecked] = useState(false);
   const [person, setPerson] = useState('colm');
+  const [isChecked, setIsChecked] = useState(false);
 
   return (
     <div className='flex flex-col gap-10 items-end size-full p-6 overflow-auto'>
+      <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+
       <DropdownMenu
         triggerElement={
           <button type='button' className='!border !border-white !p-4 !rounded-lg'>
