@@ -27,8 +27,9 @@ export default function RadixComponents() {
   const [person, setPerson] = useState('colm');
   const [isChecked, setIsChecked] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption>({} as SelectOption);
-  const [comboboxInputValue, setComboboxInputValue] = useState<string>('');
   const [selectComboboxOption, setSelectComboboxOption] = useState<any>(options[4]);
+
+  console.log('selectComboboxOption is:', selectComboboxOption);
 
   return (
     <div className='flex flex-col gap-10 items-end size-full p-6 overflow-auto'>
@@ -47,8 +48,8 @@ export default function RadixComponents() {
       />
 
       <Combobox
-        inputValue={comboboxInputValue}
-        setInputValue={setComboboxInputValue}
+        // inputValue={comboboxInputValue}
+        // setInputValue={setComboboxInputValue}
         options={options}
         selectOption={selectComboboxOption}
         setSelectOption={setSelectComboboxOption}
