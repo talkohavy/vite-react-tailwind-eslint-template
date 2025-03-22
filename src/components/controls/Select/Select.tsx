@@ -25,7 +25,7 @@ type SelectProps = {
    * Only visible when selectedOption is `null` or an empty object.
    */
   placeholder?: string;
-  isDisabled?: boolean;
+  disabled?: boolean;
   isRequired?: boolean;
   /**
    * @default 5
@@ -63,7 +63,7 @@ export default function Select(props: SelectProps) {
     setSelectedOption,
     options,
     placeholder,
-    isDisabled,
+    disabled,
     isRequired,
     sideOffset = 5,
     placement,
@@ -88,7 +88,7 @@ export default function Select(props: SelectProps) {
         setSelectedOption(selectedOption);
       }}
       dir='ltr'
-      disabled={isDisabled}
+      disabled={disabled}
       required={isRequired}
       // open={isOpen}
       // onOpenChange={setIsOpen}
@@ -122,8 +122,8 @@ export default function Select(props: SelectProps) {
 
           <Viewport className={styles.selectViewport}>
             <Group>
-              {options.map(({ value, label, isDisabled }) => (
-                <SelectItem key={value} value={value} disabled={isDisabled} className={itemClassName}>
+              {options.map(({ value, label, disabled }) => (
+                <SelectItem key={value} value={value} disabled={disabled} className={itemClassName}>
                   {label}
                 </SelectItem>
               ))}
