@@ -22,48 +22,31 @@
       "env": { "ENV_FILE": "${workspaceFolder}/envs/.env.development" },
       "console": "integratedTerminal"
     },
-    // ------------
-    // Debug React:
-    // ------------
+    // ----------------------
+    // Debug React in VSCode:
+    // ----------------------
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Debug React",
+      "name": "vite-react",
       "url": "http://localhost:3000",
-      "smartStep": true,
-      "outputCapture": "std", // This is to be able to also capture logger outputs
+      "webRoot": "${workspaceFolder}",
       "sourceMaps": true,
-      "env": { "ENV_FILE": "${workspaceFolder}/envs/.env.development" }
+      "smartStep": true,
+      "outputCapture": "std" // This is to be able to also capture logger outputs
     },
-    // -------
-    // backend
-    // -------
+    // -----------
+    // node-server
+    // -----------
     {
-      "name": "backend",
+      "name": "server",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}/apps/backend/",
       // "runtimeArgs": ["--watch"],
-      "runtimeExecutable": "nodemon",
-      "runtimeArgs": ["--config", "${cwd}/nodemon.json"], // <-- flags to add to the runtimeExecutable
-      "program": "src/index.js",
-      "restart": true, // Try to reconnect to a program if we lose connection. If set to `true`, we'll try once every second, forever.
-      "outputCapture": "std", // This is to be able to also capture logger outputs
-      "sourceMaps": true,
-      "env": { "ENV_FILE": "development" }
-    },
-    // -----------
-    // api-gateway
-    // -----------
-    {
-      "name": "api-gateway",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/apps/api-gateway/",
-      // "runtimeArgs": ["--watch"],
-      "runtimeExecutable": "nodemon",
-      // "runtimeArgs": ["--config", "${cwd}/apps/api-gateway/nodemon.json"], // <-- flags to add to the runtimeExecutable
-      "program": "src/index.js",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/nodemon",
+      "runtimeArgs": ["--config", "${workspaceFolder}/apps/backend/nodemon.json"], // <-- flags to add to the runtimeExecutable
+      "program": "src/index.ts",
       "restart": true, // Try to reconnect to a program if we lose connection. If set to `true`, we'll try once every second, forever.
       "outputCapture": "std", // This is to be able to also capture logger outputs
       "sourceMaps": true,
