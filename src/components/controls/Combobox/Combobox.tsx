@@ -36,6 +36,7 @@ type ComboboxProps = {
    */
   options: Array<SelectOption>;
   placeholder?: string;
+  label?: string;
   allowCustomValue?: boolean;
   autoFocus?: boolean;
   closeOnSelect?: boolean;
@@ -43,6 +44,7 @@ type ComboboxProps = {
   isInvalid?: boolean;
   loop?: boolean;
   isMultiSelect?: boolean;
+  labelClassName?: string;
   controlClassName?: string;
   triggerClassName?: string;
   clearIconClassName?: string;
@@ -50,6 +52,7 @@ type ComboboxProps = {
 
 export default function Combobox(props: ComboboxProps) {
   const {
+    label,
     selectOption,
     setSelectOption,
     options,
@@ -61,6 +64,7 @@ export default function Combobox(props: ComboboxProps) {
     isInvalid,
     loop,
     isMultiSelect,
+    labelClassName,
     controlClassName,
     triggerClassName,
     clearIconClassName,
@@ -106,8 +110,6 @@ export default function Combobox(props: ComboboxProps) {
     closeOnSelect,
   });
 
-  console.log('combobox is:', combobox);
-
   return (
     <Field.Root {...rest}>
       <RootProvider
@@ -121,7 +123,7 @@ export default function Combobox(props: ComboboxProps) {
         // onOpenChange={() => {}}
         // onPointerDownOutside={() => {}}
       >
-        <Label className='bg-red-400'>Framework</Label>
+        <Label className={labelClassName}>{label}</Label>
         <Control className={clsx(styles.control, controlClassName)}>
           <Input placeholder={placeholder} />
 
