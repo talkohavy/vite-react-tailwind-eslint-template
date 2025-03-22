@@ -1,0 +1,41 @@
+.root {
+  display: flex;
+  gap: 0.375rem;
+  flex-direction: column;
+}
+
+.label {
+  color: var(--colors-fg-default);
+  font-size: var(--font-sizes-sm);
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.control {
+  display: flex;
+  gap: 0.4rem;
+  flex-direction: row;
+}
+
+.channelInput {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border-radius: 0.25rem;
+  color: #eeeeec;
+  outline: 0;
+  position: relative;
+  width: 100%;
+  border-color: #494844;
+  border-width: 1px;
+  padding-inline: 0.75rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+
+  // --transition-duration: var(--durations-normal);
+  // transition-duration: var(--durations-normal);
+  // --transition-prop: box-shadow, border-color;
+  // transition-property: box-shadow, border-color;
+  // --transition-easing: var(--easings-default);
+  // transition-timing-function: var(--easings-default);
+}
