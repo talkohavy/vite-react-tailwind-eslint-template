@@ -4,7 +4,7 @@ type DownArrowProps = {
 };
 
 export default function DownArrow(props: DownArrowProps) {
-  const { title = 'arrow icon', className } = props;
+  const { title, className } = props;
 
   return (
     <svg stroke='currentColor' strokeWidth='12' viewBox='0 0 100 100' className={className}>
