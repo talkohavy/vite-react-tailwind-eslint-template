@@ -1,5 +1,8 @@
 import { DatePicker as DatePickerOriginal, useDatePicker } from '@ark-ui/react/date-picker';
 import { Portal } from '@ark-ui/react/portal';
+import CalendarIcon from '../svgs/CalendarIcon';
+import DownArrow from '../svgs/DownArrow';
+import styles from './DatePicker.module.scss';
 
 const {
   RootProvider,
@@ -29,13 +32,14 @@ const {
 } = DatePickerOriginal;
 
 type DatePickerProps = {
+  selectionMode?: 'single' | 'range' | 'multiple';
   label?: string;
 };
 
 export default function DatePicker(props: DatePickerProps) {
-  const { label } = props;
+  const { label, selectionMode = 'single' } = props;
 
-  const datePicker = useDatePicker();
+  const datePicker = useDatePicker({ selectionMode });
 
   return (
     <>
@@ -46,33 +50,54 @@ export default function DatePicker(props: DatePickerProps) {
       <RootProvider value={datePicker}>
         {label && <Label>{label}</Label>}
 
-        <Control>
-          <Input />
-          <Trigger>📅</Trigger>
+        <Control className={styles.control}>
+          <Input index={0} className={styles.input} />
+          {selectionMode === 'range' && <Input index={1} />}
+
+          <Trigger className={styles.trigger}>
+            <CalendarIcon />
+          </Trigger>
+
           <ClearTrigger>Clear</ClearTrigger>
         </Control>
 
+        {/* <DatePickerOriginal.PresetTrigger value='last7Days'>Last 7 days</DatePickerOriginal.PresetTrigger>
+        <DatePickerOriginal.PresetTrigger value='thisMonth'>This month</DatePickerOriginal.PresetTrigger>
+        <DatePickerOriginal.PresetTrigger value='last30Days'>Last 30 days</DatePickerOriginal.PresetTrigger>
+        <DatePickerOriginal.PresetTrigger value='thisYear'>This year</DatePickerOriginal.PresetTrigger> */}
+
         <Portal>
           <Positioner>
-            <Content>
-              <YearSelect />
-              <MonthSelect />
-              <View view='day'>
+            <Content className={styles.content}>
+              {/* <YearSelect /> */}
+
+              {/* <MonthSelect /> */}
+
+              <View view='day' className={styles.dayView}>
                 <Context>
                   {(datePicker) => (
                     <>
-                      <ViewControl>
-                        <PrevTrigger>Prev</PrevTrigger>
-                        <ViewTrigger>
+                      <ViewControl className={styles.dayViewControl}>
+                        <PrevTrigger className={styles.prevNextTrigger}>
+                          <DownArrow className='rotate-90 size-3.5' />
+                        </PrevTrigger>
+
+                        <ViewTrigger className={styles.viewTrigger}>
                           <RangeText />
                         </ViewTrigger>
-                        <NextTrigger>Next</NextTrigger>
+
+                        <NextTrigger className={styles.prevNextTrigger}>
+                          <DownArrow className='-rotate-90 size-3.5' />
+                        </NextTrigger>
                       </ViewControl>
-                      <Table>
+
+                      <Table className={styles.table}>
                         <TableHead>
                           <TableRow>
                             {datePicker.weekDays.map((weekDay, id) => (
-                              <TableHeader key={id}>{weekDay.short}</TableHeader>
+                              <TableHeader key={id} className={styles.tableHeader}>
+                                {weekDay.short}
+                              </TableHeader>
                             ))}
                           </TableRow>
                         </TableHead>
@@ -80,8 +105,8 @@ export default function DatePicker(props: DatePickerProps) {
                           {datePicker.weeks.map((week, id) => (
                             <TableRow key={id}>
                               {week.map((day, id) => (
-                                <TableCell key={id} value={day}>
-                                  <TableCellTrigger>{day.day}</TableCellTrigger>
+                                <TableCell key={id} value={day} className={styles.tableCell}>
+                                  <TableCellTrigger className={styles.tableCellTrigger}>{day.day}</TableCellTrigger>
                                 </TableCell>
                               ))}
                             </TableRow>
@@ -92,7 +117,8 @@ export default function DatePicker(props: DatePickerProps) {
                   )}
                 </Context>
               </View>
-              <View view='month'>
+
+              {/* <View view='month'>
                 <Context>
                   {(datePicker) => (
                     <>
@@ -119,8 +145,9 @@ export default function DatePicker(props: DatePickerProps) {
                     </>
                   )}
                 </Context>
-              </View>
-              <View view='year'>
+              </View> */}
+
+              {/* <View view='year'>
                 <Context>
                   {(datePicker) => (
                     <>
@@ -147,7 +174,7 @@ export default function DatePicker(props: DatePickerProps) {
                     </>
                   )}
                 </Context>
-              </View>
+              </View> */}
             </Content>
           </Positioner>
         </Portal>
