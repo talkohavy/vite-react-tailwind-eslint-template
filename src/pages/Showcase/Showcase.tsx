@@ -1,6 +1,8 @@
 import { useId, useState } from 'react';
+import { parseColor } from '@ark-ui/react/color-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
 import Checkbox from '../../components/controls/Checkbox';
+import ColorPicker from '../../components/controls/ColorPicker';
 import Combobox from '../../components/controls/Combobox';
 import Select from '../../components/controls/Select';
 import Toggle from '../../components/controls/Toggle';
@@ -28,10 +30,19 @@ export default function RadixComponents() {
   const [isChecked, setIsChecked] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SelectOption>({} as SelectOption);
   const [selectComboboxOption, setSelectComboboxOption] = useState<any>(options[4]);
+  const [color, setColor] = useState(() => parseColor('hsl(20, 100%, 50%)'));
 
   return (
     <div className='flex flex-col gap-10 items-end size-full p-6 overflow-auto'>
-      <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+      <ColorPicker color={color} setColor={setColor} />
+
+      <div>
+        <div>hex color: {color.toString('hex')}</div>
+        <div>rgba color: {color.toString('rgba')}</div>
+        <div>rgba color: {color.toString('hsla')}</div>
+      </div>
+
+      <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} className='mt-96' />
 
       <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
