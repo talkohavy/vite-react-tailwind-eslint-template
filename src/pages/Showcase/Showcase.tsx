@@ -33,7 +33,7 @@ export default function RadixComponents() {
   const [color, setColor] = useState(() => parseColor('hsl(20, 100%, 50%)'));
 
   return (
-    <div className='flex flex-col gap-10 items-end size-full p-6 overflow-auto'>
+    <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
       <ColorPicker color={color} setColor={setColor} />
 
       <div>
@@ -42,7 +42,7 @@ export default function RadixComponents() {
         <div>rgba color: {color.toString('hsla')}</div>
       </div>
 
-      <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} className='mt-96' />
+      <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
       <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
