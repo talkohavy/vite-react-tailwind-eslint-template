@@ -6,6 +6,7 @@ import ColorPicker from '../../components/controls/ColorPicker';
 import Combobox from '../../components/controls/Combobox';
 import Select from '../../components/controls/Select';
 import Toggle from '../../components/controls/Toggle';
+import DatePicker from '../../components/DatePicker';
 import DropdownMenu from '../../components/DropdownMenu';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
@@ -34,6 +35,8 @@ export default function RadixComponents() {
 
   return (
     <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
+      <DatePicker />
+
       <ColorPicker color={color} setColor={setColor} />
 
       <div>
