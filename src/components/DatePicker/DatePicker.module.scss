@@ -121,7 +121,8 @@
   cursor: not-allowed;
 }
 
-.tableCellTrigger:is(:hover, [data-hover]) {
+.tableCellTrigger:is(:hover, [data-hover]),
+.tableCellTrigger[data-selected] {
   background-color: #f6f6f513;
 }
 
