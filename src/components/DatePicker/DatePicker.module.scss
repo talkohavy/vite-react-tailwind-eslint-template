@@ -1,3 +1,11 @@
+.trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
 .control {
   display: flex;
   justify-content: start;
@@ -17,22 +25,22 @@
   border: 1px solid #eb5e41;
 }
 
-.trigger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.25rem;
+.controlTrigger {
   border: 1px solid #494844;
   height: 100%;
   width: 40px;
-  cursor: pointer;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // border-radius: 0.25rem;
+  // cursor: pointer;
 }
 
-.trigger:hover {
+.controlTrigger:hover {
   background-color: #f4f4f309;
 }
 
-.trigger > svg {
+.controlTrigger > svg {
   height: 16px;
 }
 
@@ -51,7 +59,7 @@
   color: white;
 }
 
-.dayView {
+.view {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,7 +68,7 @@
   width: 100%;
 }
 
-.dayViewControl {
+.viewControl {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -70,13 +78,8 @@
 }
 
 .prevNextTrigger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-width: 2.25rem;
   height: 100%;
-  border-radius: 0.25rem;
-  cursor: pointer;
 }
 
 .prevNextTrigger:is(:hover, [data-hover]) {
@@ -88,8 +91,6 @@
   min-width: 2.25rem;
   padding-inline: 0.875rem;
   background-color: #f6f6f513;
-  border-radius: 0.25rem;
-  cursor: pointer;
 }
 
 .table {
@@ -110,14 +111,9 @@
 }
 
 .tableCellTrigger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 2.5rem;
   width: 100%;
   min-width: 2.5rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
 }
 
 .tableCellTrigger:is(:disabled, [disabled], [data-disabled]) {
@@ -127,4 +123,8 @@
 
 .tableCellTrigger:is(:hover, [data-hover]) {
   background-color: #f6f6f513;
+}
+
+.fontBold {
+  font-weight: 600;
 }

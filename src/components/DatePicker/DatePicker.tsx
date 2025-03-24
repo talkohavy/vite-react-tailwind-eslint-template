@@ -1,5 +1,6 @@
 import { DatePicker as DatePickerOriginal, useDatePicker } from '@ark-ui/react/date-picker';
 import { Portal } from '@ark-ui/react/portal';
+import clsx from 'clsx';
 import CalendarIcon from '../svgs/CalendarIcon';
 import DownArrow from '../svgs/DownArrow';
 import styles from './DatePicker.module.scss';
@@ -13,8 +14,8 @@ const {
   ClearTrigger,
   Positioner,
   Content,
-  YearSelect,
-  MonthSelect,
+  // YearSelect,
+  // MonthSelect,
   View,
   Context,
   ViewControl,
@@ -54,7 +55,7 @@ export default function DatePicker(props: DatePickerProps) {
           <Input index={0} className={styles.input} />
           {selectionMode === 'range' && <Input index={1} />}
 
-          <Trigger className={styles.trigger}>
+          <Trigger className={clsx(styles.trigger, styles.controlTrigger)}>
             <CalendarIcon />
           </Trigger>
 
@@ -73,20 +74,20 @@ export default function DatePicker(props: DatePickerProps) {
 
               {/* <MonthSelect /> */}
 
-              <View view='day' className={styles.dayView}>
+              <View view='day' className={styles.view}>
                 <Context>
                   {(datePicker) => (
                     <>
-                      <ViewControl className={styles.dayViewControl}>
-                        <PrevTrigger className={styles.prevNextTrigger}>
+                      <ViewControl className={styles.viewControl}>
+                        <PrevTrigger className={clsx(styles.trigger, styles.prevNextTrigger)}>
                           <DownArrow className='rotate-90 size-3.5' />
                         </PrevTrigger>
 
-                        <ViewTrigger className={styles.viewTrigger}>
+                        <ViewTrigger className={clsx(styles.trigger, styles.viewTrigger)}>
                           <RangeText />
                         </ViewTrigger>
 
-                        <NextTrigger className={styles.prevNextTrigger}>
+                        <NextTrigger className={clsx(styles.trigger, styles.prevNextTrigger)}>
                           <DownArrow className='-rotate-90 size-3.5' />
                         </NextTrigger>
                       </ViewControl>
@@ -106,7 +107,9 @@ export default function DatePicker(props: DatePickerProps) {
                             <TableRow key={id}>
                               {week.map((day, id) => (
                                 <TableCell key={id} value={day} className={styles.tableCell}>
-                                  <TableCellTrigger className={styles.tableCellTrigger}>{day.day}</TableCellTrigger>
+                                  <TableCellTrigger className={clsx(styles.trigger, styles.tableCellTrigger)}>
+                                    {day.day}
+                                  </TableCellTrigger>
                                 </TableCell>
                               ))}
                             </TableRow>
@@ -118,24 +121,35 @@ export default function DatePicker(props: DatePickerProps) {
                 </Context>
               </View>
 
-              {/* <View view='month'>
+              <View view='month' className={styles.view}>
                 <Context>
                   {(datePicker) => (
                     <>
-                      <ViewControl>
-                        <PrevTrigger>Prev</PrevTrigger>
-                        <ViewTrigger>
+                      <ViewControl className={styles.viewControl}>
+                        <PrevTrigger className={clsx(styles.trigger, styles.prevNextTrigger)}>
+                          <DownArrow className='rotate-90 size-3.5' />
+                        </PrevTrigger>
+
+                        <ViewTrigger className={clsx(styles.trigger, styles.viewTrigger)}>
                           <RangeText />
                         </ViewTrigger>
-                        <NextTrigger>Next</NextTrigger>
+
+                        <NextTrigger className={clsx(styles.trigger, styles.prevNextTrigger)}>
+                          <DownArrow className='-rotate-90 size-3.5' />
+                        </NextTrigger>
                       </ViewControl>
-                      <Table>
+
+                      <Table className={styles.table}>
                         <TableBody>
                           {datePicker.getMonthsGrid({ columns: 4, format: 'short' }).map((months, id) => (
                             <TableRow key={id}>
                               {months.map((month, id) => (
-                                <TableCell key={id} value={month.value}>
-                                  <TableCellTrigger>{month.label}</TableCellTrigger>
+                                <TableCell key={id} value={month.value} className={styles.tableCell}>
+                                  <TableCellTrigger
+                                    className={clsx(styles.trigger, styles.tableCellTrigger, styles.fontBold)}
+                                  >
+                                    {month.label}
+                                  </TableCellTrigger>
                                 </TableCell>
                               ))}
                             </TableRow>
@@ -145,26 +159,37 @@ export default function DatePicker(props: DatePickerProps) {
                     </>
                   )}
                 </Context>
-              </View> */}
+              </View>
 
-              {/* <View view='year'>
+              <View view='year' className={styles.view}>
                 <Context>
                   {(datePicker) => (
                     <>
-                      <ViewControl>
-                        <PrevTrigger>Prev</PrevTrigger>
-                        <ViewTrigger>
+                      <ViewControl className={styles.viewControl}>
+                        <PrevTrigger className={clsx(styles.trigger, styles.prevNextTrigger)}>
+                          <DownArrow className='rotate-90 size-3.5' />
+                        </PrevTrigger>
+
+                        <ViewTrigger className={clsx(styles.trigger, styles.viewTrigger)}>
                           <RangeText />
                         </ViewTrigger>
-                        <NextTrigger>Next</NextTrigger>
+
+                        <NextTrigger className={clsx(styles.trigger, styles.prevNextTrigger)}>
+                          <DownArrow className='-rotate-90 size-3.5' />
+                        </NextTrigger>
                       </ViewControl>
-                      <Table>
+
+                      <Table className={styles.table}>
                         <TableBody>
                           {datePicker.getYearsGrid({ columns: 4 }).map((years, id) => (
                             <TableRow key={id}>
                               {years.map((year, id) => (
-                                <TableCell key={id} value={year.value}>
-                                  <TableCellTrigger>{year.label}</TableCellTrigger>
+                                <TableCell key={id} value={year.value} className={styles.tableCell}>
+                                  <TableCellTrigger
+                                    className={clsx(styles.trigger, styles.tableCellTrigger, styles.fontBold)}
+                                  >
+                                    {year.label}
+                                  </TableCellTrigger>
                                 </TableCell>
                               ))}
                             </TableRow>
@@ -174,7 +199,7 @@ export default function DatePicker(props: DatePickerProps) {
                     </>
                   )}
                 </Context>
-              </View> */}
+              </View>
             </Content>
           </Positioner>
         </Portal>
