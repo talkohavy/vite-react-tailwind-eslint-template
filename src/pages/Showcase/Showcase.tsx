@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { parseColor } from '@ark-ui/react/color-picker';
+import { parseDate } from '@ark-ui/react/date-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
 import Checkbox from '../../components/controls/Checkbox';
 import ColorPicker from '../../components/controls/ColorPicker';
@@ -32,10 +33,13 @@ export default function RadixComponents() {
   const [selectedOption, setSelectedOption] = useState<SelectOption>({} as SelectOption);
   const [selectComboboxOption, setSelectComboboxOption] = useState<any>(options[4]);
   const [color, setColor] = useState(() => parseColor('hsl(20, 100%, 50%)'));
+  const [date, setDate] = useState([parseDate('2022-01-01')]);
+
+  console.log('date is:', date);
 
   return (
     <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
-      <DatePicker />
+      <DatePicker value={date} setValue={setDate} />
 
       <ColorPicker color={color} setColor={setColor} />
 
