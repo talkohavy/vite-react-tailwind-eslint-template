@@ -1,4 +1,4 @@
-import { DatePicker as DatePickerOriginal, useDatePicker } from '@ark-ui/react/date-picker';
+import { DatePicker as DatePickerOriginal, type DateValue, useDatePicker } from '@ark-ui/react/date-picker';
 import { Portal } from '@ark-ui/react/portal';
 import clsx from 'clsx';
 import CalendarIcon from '../svgs/CalendarIcon';
@@ -33,14 +33,53 @@ const {
 } = DatePickerOriginal;
 
 type DatePickerProps = {
+  value: Array<DateValue>;
+  setValue: (value: any) => void;
   selectionMode?: 'single' | 'range' | 'multiple';
   label?: string;
+  disabled?: boolean;
+  /**
+   * @default true
+   */
+  closeOnSelect?: boolean;
+  /**
+   * Whether the calendar should have a fixed number of weeks. This renders the calendar with 6 weeks instead of 5 or 6.
+   *
+   * @default false
+   */
+  fixedWeeks?: boolean;
+  // minDateToBeSelected?: DateValue;
+  maxDateToBeSelected?: DateValue;
 };
 
 export default function DatePicker(props: DatePickerProps) {
-  const { label, selectionMode = 'single' } = props;
+  const {
+    value,
+    setValue,
+    label,
+    selectionMode = 'single',
+    disabled,
+    closeOnSelect,
+    fixedWeeks,
+    maxDateToBeSelected,
+  } = props;
 
-  const datePicker = useDatePicker({ selectionMode });
+  const datePicker = useDatePicker({
+    selectionMode,
+    startOfWeek: 0,
+    disabled,
+    closeOnSelect,
+    fixedWeeks,
+    max: maxDateToBeSelected,
+    value,
+    onValueChange(details) {
+      const { value, valueAsString, view } = details;
+      console.log('changed!', valueAsString, view);
+      setValue(value);
+    },
+    // min: minDateToBeSelected,
+    // maxView: 'day',
+  });
 
   return (
     <>
@@ -170,7 +209,13 @@ export default function DatePicker(props: DatePickerProps) {
                           <DownArrow className='rotate-90 size-3.5' />
                         </PrevTrigger>
 
-                        <ViewTrigger className={clsx(styles.trigger, styles.viewTrigger)}>
+                        <ViewTrigger
+                          className={clsx(styles.trigger, styles.viewTrigger)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            datePicker.setView('day');
+                          }}
+                        >
                           <RangeText />
                         </ViewTrigger>
 
