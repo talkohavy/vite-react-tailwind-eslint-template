@@ -8,6 +8,7 @@ type PinInputProps = {
   onDone?: (value: PinInputValueChangeDetails) => void;
   defaultValue?: Array<string>;
   placeholder?: string;
+  disabled?: boolean;
   /**
    * makes the last input element lose focus on complete.
    *
@@ -38,12 +39,24 @@ type PinInputProps = {
 };
 
 export default function PinInput(props: PinInputProps) {
-  const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label, isOtp, isSecureMask, autoFocus } = props;
+  const {
+    pinLength,
+    onDone,
+    defaultValue,
+    placeholder,
+    disabled,
+    blurOnComplete,
+    label,
+    isOtp,
+    isSecureMask,
+    autoFocus,
+  } = props;
 
   const pinInput = usePinInput({
     defaultValue: defaultValue,
     onValueComplete: onDone,
     placeholder: placeholder,
+    disabled,
     blurOnComplete: blurOnComplete,
     otp: isOtp,
     mask: isSecureMask,

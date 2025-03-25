@@ -44,8 +44,9 @@ export default function RadixComponents() {
       <PinInput
         pinLength={4}
         onDone={(props) => setPinInput(props.valueAsString)}
-        placeholder='_'
         blurOnComplete
+        // disabled
+        // placeholder='_'
         // isOtp
         // isSecureMask
         // autoFocus
