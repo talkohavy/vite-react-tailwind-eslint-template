@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { PinInput as PinInputOriginal, usePinInput, type PinInputValueChangeDetails } from '@ark-ui/react/pin-input';
 import styles from './PinInput.module.scss';
 
@@ -49,18 +48,15 @@ export default function PinInput(props: PinInputProps) {
     otp: isOtp,
     mask: isSecureMask,
     autoFocus,
+    count: pinLength,
   });
-
-  const timesArr = useMemo(() => {
-    return Array.from({ length: pinLength });
-  }, [pinLength]);
 
   return (
     <RootProvider value={pinInput} className={styles.root}>
       {label && <Label className={styles.label}>{label}</Label>}
 
       <Control className={styles.control}>
-        {timesArr.map((_, index) => (
+        {pinInput.items.map((index) => (
           <Input key={index} index={index} className={styles.input} />
         ))}
       </Control>
