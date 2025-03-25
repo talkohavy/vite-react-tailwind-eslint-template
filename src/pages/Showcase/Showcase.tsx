@@ -41,7 +41,11 @@ export default function RadixComponents() {
 
   return (
     <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
-      <PinInput pinLength={4} onDone={(props) => setPinInput(props.valueAsString)} />
+      <PinInput
+        pinLength={4}
+        onDone={(props) => setPinInput(props.valueAsString)}
+        // defaultValue={['_', '_', '_', '_']}
+      />
 
       <DatePicker value={date} setValue={setDate} />
 
