@@ -27,11 +27,19 @@ type PinInputProps = {
    * @default false
    */
   isSecureMask?: boolean;
+  /**
+   * auto focus the first input element.
+   *
+   * If `blurOnComplete` is set to true, this option is negated.
+   *
+   * @default false
+   */
+  autoFocus?: boolean;
   label?: string;
 };
 
 export default function PinInput(props: PinInputProps) {
-  const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label, isOtp, isSecureMask } = props;
+  const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label, isOtp, isSecureMask, autoFocus } = props;
 
   const pinInput = usePinInput({
     defaultValue: defaultValue,
@@ -40,6 +48,7 @@ export default function PinInput(props: PinInputProps) {
     blurOnComplete: blurOnComplete,
     otp: isOtp,
     mask: isSecureMask,
+    autoFocus,
   });
 
   const timesArr = useMemo(() => {

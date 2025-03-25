@@ -48,6 +48,7 @@ export default function RadixComponents() {
         blurOnComplete
         // isOtp
         // isSecureMask
+        // autoFocus
         // defaultValue={['1', '2', '3', '4']}
       />
 
