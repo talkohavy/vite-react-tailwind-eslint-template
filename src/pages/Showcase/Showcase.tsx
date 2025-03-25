@@ -47,6 +47,7 @@ export default function RadixComponents() {
         placeholder='_'
         blurOnComplete
         // isOtp
+        // isSecureMask
         // defaultValue={['1', '2', '3', '4']}
       />
 

@@ -21,11 +21,17 @@ type PinInputProps = {
    * @default false
    */
   isOtp?: boolean;
+  /**
+   * When collecting private or sensitive information using the pin input, you might need to mask the value entered.
+   *
+   * @default false
+   */
+  isSecureMask?: boolean;
   label?: string;
 };
 
 export default function PinInput(props: PinInputProps) {
-  const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label, isOtp } = props;
+  const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label, isOtp, isSecureMask } = props;
 
   const timesArr = useMemo(() => {
     return Array.from({ length: pinLength });
@@ -38,6 +44,7 @@ export default function PinInput(props: PinInputProps) {
       placeholder={placeholder}
       blurOnComplete={blurOnComplete}
       otp={isOtp}
+      mask={isSecureMask}
       className={styles.root}
     >
       {label && <Label className={styles.label}>{label}</Label>}
