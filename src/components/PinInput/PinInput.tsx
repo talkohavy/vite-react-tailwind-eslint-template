@@ -40,6 +40,13 @@ type PinInputProps = {
    * @default false
    */
   autoFocus?: boolean;
+  /**
+   * When moving between digits of the the pin, using the keyboard arrow keys,
+   * should it select the existing value.
+   *
+   * @default false
+   */
+  selectOnFocus?: boolean;
   label?: string;
   /**
    * The regular expression that the user-entered input value is checked against.
@@ -61,6 +68,7 @@ export default function PinInput(props: PinInputProps) {
     isOtp,
     isSecureMask,
     autoFocus,
+    selectOnFocus,
     pattern,
   } = props;
 
@@ -75,6 +83,7 @@ export default function PinInput(props: PinInputProps) {
     blurOnComplete: blurOnComplete,
     otp: isOtp,
     mask: isSecureMask,
+    selectOnFocus,
     autoFocus,
     pattern,
   });

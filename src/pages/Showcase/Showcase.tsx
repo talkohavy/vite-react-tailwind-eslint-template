@@ -44,6 +44,7 @@ export default function RadixComponents() {
       <PinInput
         pinLength={4}
         onDone={(props) => setPinInput(props.valueAsString)}
+        selectOnFocus
         blurOnComplete
         required
         // disabled
