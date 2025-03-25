@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
@@ -9,6 +9,7 @@ import Select from '../../components/controls/Select';
 import Toggle from '../../components/controls/Toggle';
 import DatePicker from '../../components/DatePicker';
 import DropdownMenu from '../../components/DropdownMenu';
+import LinearProgressBar from '../../components/LinearProgressBar';
 import PinInput from '../../components/PinInput';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
@@ -36,11 +37,20 @@ export default function RadixComponents() {
   const [color, setColor] = useState(() => parseColor('hsl(20, 100%, 50%)'));
   const [date, setDate] = useState([parseDate('2022-01-01')]);
   const [pinInput, setPinInput] = useState<string>('');
+  const [progressBarValue, setProgressBarValue] = useState<number>(0);
+
+  useEffect(() => {
+    setTimeout(() => setProgressBarValue(10), 1000);
+    setTimeout(() => setProgressBarValue(40), 4000);
+    setTimeout(() => setProgressBarValue(100), 6000);
+  }, []);
 
   console.log('pinInput is:', pinInput);
 
   return (
     <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
+      <LinearProgressBar className='shrink-0 h-12 w-full' completed={progressBarValue} />
+
       <PinInput
         pinLength={4}
         onDone={(props) => setPinInput(props.valueAsString)}
