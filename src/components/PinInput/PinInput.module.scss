@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.control {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input {
+  height: 2.5rem;
+  width: 2.5rem;
+  text-align: center;
+  border: 1px solid #494844;
+  border-radius: 0.25rem;
+}

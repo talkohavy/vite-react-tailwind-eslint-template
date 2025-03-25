@@ -9,6 +9,7 @@ import Select from '../../components/controls/Select';
 import Toggle from '../../components/controls/Toggle';
 import DatePicker from '../../components/DatePicker';
 import DropdownMenu from '../../components/DropdownMenu';
+import PinInput from '../../components/PinInput';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
 import { Placement } from '../../components/Tooltip/types';
@@ -34,9 +35,14 @@ export default function RadixComponents() {
   const [selectComboboxOption, setSelectComboboxOption] = useState<any>(options[4]);
   const [color, setColor] = useState(() => parseColor('hsl(20, 100%, 50%)'));
   const [date, setDate] = useState([parseDate('2022-01-01')]);
+  const [pinInput, setPinInput] = useState<string>('');
+
+  console.log('pinInput is:', pinInput);
 
   return (
     <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
+      <PinInput pinLength={4} onDone={(props) => setPinInput(props.valueAsString)} />
+
       <DatePicker value={date} setValue={setDate} />
 
       <ColorPicker color={color} setColor={setColor} />
