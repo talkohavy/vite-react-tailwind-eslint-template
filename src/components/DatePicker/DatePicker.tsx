@@ -73,9 +73,7 @@ export default function DatePicker(props: DatePickerProps) {
     max: maxDateToBeSelected,
     value,
     onValueChange(details) {
-      const { value, valueAsString, view } = details;
-      console.log('changed!', valueAsString, view);
-      setValue(value);
+      setValue(details.value);
     },
     // min: minDateToBeSelected,
     // maxView: 'day',

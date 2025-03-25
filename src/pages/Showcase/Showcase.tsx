@@ -35,8 +35,6 @@ export default function RadixComponents() {
   const [color, setColor] = useState(() => parseColor('hsl(20, 100%, 50%)'));
   const [date, setDate] = useState([parseDate('2022-01-01')]);
 
-  console.log('date is:', date);
-
   return (
     <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
       <DatePicker value={date} setValue={setDate} />
