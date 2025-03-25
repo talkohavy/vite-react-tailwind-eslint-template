@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { PinInput as PinInputOriginal, type PinInputValueChangeDetails } from '@ark-ui/react/pin-input';
+import { PinInput as PinInputOriginal, usePinInput, type PinInputValueChangeDetails } from '@ark-ui/react/pin-input';
 import styles from './PinInput.module.scss';
 
-const { Root, Label, Control, Input, HiddenInput } = PinInputOriginal;
+const { RootProvider, Label, Control, Input, HiddenInput } = PinInputOriginal;
 
 type PinInputProps = {
   pinLength: number;
@@ -33,20 +33,21 @@ type PinInputProps = {
 export default function PinInput(props: PinInputProps) {
   const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label, isOtp, isSecureMask } = props;
 
+  const pinInput = usePinInput({
+    defaultValue: defaultValue,
+    onValueComplete: onDone,
+    placeholder: placeholder,
+    blurOnComplete: blurOnComplete,
+    otp: isOtp,
+    mask: isSecureMask,
+  });
+
   const timesArr = useMemo(() => {
     return Array.from({ length: pinLength });
   }, [pinLength]);
 
   return (
-    <Root
-      defaultValue={defaultValue}
-      onValueComplete={onDone}
-      placeholder={placeholder}
-      blurOnComplete={blurOnComplete}
-      otp={isOtp}
-      mask={isSecureMask}
-      className={styles.root}
-    >
+    <RootProvider value={pinInput} className={styles.root}>
       {label && <Label className={styles.label}>{label}</Label>}
 
       <Control className={styles.control}>
@@ -55,6 +56,6 @@ export default function PinInput(props: PinInputProps) {
         ))}
       </Control>
       <HiddenInput />
-    </Root>
+    </RootProvider>
   );
 }
