@@ -15,11 +15,17 @@ type PinInputProps = {
    * @default false
    */
   blurOnComplete?: boolean;
+  /**
+   * To trigger smartphone OTP auto-suggestion, it is recommended to set the autocomplete attribute to "one-time-code". The pin input component provides support for this automatically when you set the otp prop to true.
+   *
+   * @default false
+   */
+  isOtp?: boolean;
   label?: string;
 };
 
 export default function PinInput(props: PinInputProps) {
-  const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label } = props;
+  const { pinLength, onDone, defaultValue, placeholder, blurOnComplete, label, isOtp } = props;
 
   const timesArr = useMemo(() => {
     return Array.from({ length: pinLength });
@@ -31,6 +37,7 @@ export default function PinInput(props: PinInputProps) {
       onValueComplete={onDone}
       placeholder={placeholder}
       blurOnComplete={blurOnComplete}
+      otp={isOtp}
       className={styles.root}
     >
       {label && <Label className={styles.label}>{label}</Label>}

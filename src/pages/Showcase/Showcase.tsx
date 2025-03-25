@@ -46,6 +46,7 @@ export default function RadixComponents() {
         onDone={(props) => setPinInput(props.valueAsString)}
         placeholder='_'
         blurOnComplete
+        // isOtp
         // defaultValue={['1', '2', '3', '4']}
       />
 
