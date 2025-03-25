@@ -45,6 +45,7 @@ export default function RadixComponents() {
         pinLength={4}
         onDone={(props) => setPinInput(props.valueAsString)}
         blurOnComplete
+        required
         // disabled
         // placeholder='_'
         // isOtp

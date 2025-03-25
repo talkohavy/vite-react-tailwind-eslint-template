@@ -4,11 +4,16 @@ import styles from './PinInput.module.scss';
 const { RootProvider, Label, Control, Input, HiddenInput } = PinInputOriginal;
 
 type PinInputProps = {
+  /**
+   * @default 'numeric'
+   */
+  type?: 'numeric' | 'alphabetic' | 'alphanumeric';
   pinLength: number;
   onDone?: (value: PinInputValueChangeDetails) => void;
   defaultValue?: Array<string>;
   placeholder?: string;
   disabled?: boolean;
+  required?: boolean;
   /**
    * makes the last input element lose focus on complete.
    *
@@ -36,32 +41,42 @@ type PinInputProps = {
    */
   autoFocus?: boolean;
   label?: string;
+  /**
+   * The regular expression that the user-entered input value is checked against.
+   */
+  pattern?: string;
 };
 
 export default function PinInput(props: PinInputProps) {
   const {
+    type,
     pinLength,
     onDone,
     defaultValue,
     placeholder,
     disabled,
+    required,
     blurOnComplete,
     label,
     isOtp,
     isSecureMask,
     autoFocus,
+    pattern,
   } = props;
 
   const pinInput = usePinInput({
+    type,
+    count: pinLength,
     defaultValue: defaultValue,
     onValueComplete: onDone,
     placeholder: placeholder,
     disabled,
+    required,
     blurOnComplete: blurOnComplete,
     otp: isOtp,
     mask: isSecureMask,
     autoFocus,
-    count: pinLength,
+    pattern,
   });
 
   return (
