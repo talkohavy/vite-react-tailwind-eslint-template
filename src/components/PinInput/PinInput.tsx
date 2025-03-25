@@ -8,18 +8,19 @@ type PinInputProps = {
   pinLength: number;
   onDone?: (value: PinInputValueChangeDetails) => void;
   defaultValue?: Array<string>;
+  placeholder?: string;
   label?: string;
 };
 
 export default function PinInput(props: PinInputProps) {
-  const { pinLength, onDone, defaultValue, label } = props;
+  const { pinLength, onDone, defaultValue, placeholder, label } = props;
 
   const timesArr = useMemo(() => {
     return Array.from({ length: pinLength });
   }, [pinLength]);
 
   return (
-    <Root onValueComplete={onDone} defaultValue={defaultValue} className={styles.root}>
+    <Root defaultValue={defaultValue} onValueComplete={onDone} placeholder={placeholder} className={styles.root}>
       {label && <Label className={styles.label}>{label}</Label>}
 
       <Control className={styles.control}>

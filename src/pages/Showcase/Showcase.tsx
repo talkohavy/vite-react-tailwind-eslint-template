@@ -44,7 +44,8 @@ export default function RadixComponents() {
       <PinInput
         pinLength={4}
         onDone={(props) => setPinInput(props.valueAsString)}
-        // defaultValue={['_', '_', '_', '_']}
+        placeholder='_'
+        // defaultValue={['1', '2', '3', '4']}
       />
 
       <DatePicker value={date} setValue={setDate} />
