@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
@@ -14,6 +14,8 @@ import PinInput from '../../components/PinInput';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
 import { Placement } from '../../components/Tooltip/types';
+import { useIsCloseToEdge } from '../../hooks/useIsCloseToEdge';
+import { useScrollToEdge } from '../../hooks/useScrollToEdge';
 import DropdownMenuContent from './components/DropdownMenuContent';
 
 const opt = Array.from(Array(4).keys()).map((_, index) => ({ value: index || 'a', label: index.toString() }));
@@ -38,6 +40,16 @@ export default function RadixComponents() {
   const [date, setDate] = useState([parseDate('2022-01-01')]);
   const [pinInput, setPinInput] = useState<string>('');
   const [progressBarValue, setProgressBarValue] = useState<number>(0);
+  const refElement = useRef<HTMLElement>({} as HTMLElement);
+
+  const { isVisible: isTopButtonVisible, onScroll: onTopButtonScroll } = useIsCloseToEdge({
+    to: 'top',
+    initialIsVisible: true,
+  });
+  const { scrollToEdge: scrollToBottom } = useScrollToEdge({ refElement: refElement, to: 'bottom' });
+
+  const { isVisible: isBottomButtonVisible, onScroll: onBottomButtonScroll } = useIsCloseToEdge({ to: 'bottom' });
+  const { scrollToEdge: scrollToTop } = useScrollToEdge({ refElement: refElement, to: 'top' });
 
   useEffect(() => {
     setTimeout(() => setProgressBarValue(10), 1000);
@@ -48,7 +60,24 @@ export default function RadixComponents() {
   console.log('pinInput is:', pinInput);
 
   return (
-    <div className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'>
+    <div
+      ref={refElement as any}
+      onScroll={(e) => {
+        onTopButtonScroll(e);
+        onBottomButtonScroll(e);
+      }}
+      className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'
+    >
+      {isTopButtonVisible && (
+        <button
+          type='button'
+          onClick={scrollToBottom}
+          className='fixed bottom-10 right-10 w-44 h-12 bg-red-500 rounded-full border'
+        >
+          Click me
+        </button>
+      )}
+
       <LinearProgressBar className='shrink-0 h-12 w-full' completed={progressBarValue} />
 
       <PinInput
@@ -121,6 +150,18 @@ export default function RadixComponents() {
         <div className='border border-black p-4 rounded-lg dark:border-white w-auto'>My Tooltip</div>
       </TooltipTrigger>
       <Tooltip groupId={tooltipUniqueId} place={Placement.Top} isClickable className='!p-3' />
+
+      <div className='h-[1000px] border shrink-0'></div>
+
+      {isBottomButtonVisible && (
+        <button
+          type='button'
+          onClick={scrollToTop}
+          className='fixed bottom-10 right-10 w-44 h-12 bg-blue-500 rounded-full border'
+        >
+          Click me
+        </button>
+      )}
     </div>
   );
 }
