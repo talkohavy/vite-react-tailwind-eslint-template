@@ -42,13 +42,13 @@ export default function RadixComponents() {
   const [progressBarValue, setProgressBarValue] = useState<number>(0);
   const refElement = useRef<HTMLElement>({} as HTMLElement);
 
-  const { isVisible: isTopButtonVisible, onScroll: onTopButtonScroll } = useIsCloseToEdge({
-    to: 'top',
+  const { isVisible: isScrollToBottomVisible, onScroll: onScrollToBottom } = useIsCloseToEdge({
+    to: 'bottom',
     initialIsVisible: true,
   });
   const { scrollToEdge: scrollToBottom } = useScrollToEdge({ refElement: refElement, to: 'bottom' });
 
-  const { isVisible: isBottomButtonVisible, onScroll: onBottomButtonScroll } = useIsCloseToEdge({ to: 'bottom' });
+  const { isVisible: isScrollToTopVisible, onScroll: onScrollToTop } = useIsCloseToEdge({ to: 'top' });
   const { scrollToEdge: scrollToTop } = useScrollToEdge({ refElement: refElement, to: 'top' });
 
   useEffect(() => {
@@ -63,16 +63,16 @@ export default function RadixComponents() {
     <div
       ref={refElement as any}
       onScroll={(e) => {
-        onTopButtonScroll(e);
-        onBottomButtonScroll(e);
+        onScrollToBottom(e);
+        onScrollToTop(e);
       }}
       className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'
     >
-      {isTopButtonVisible && (
+      {isScrollToBottomVisible && (
         <button
           type='button'
           onClick={scrollToBottom}
-          className='fixed bottom-10 right-10 w-44 h-12 bg-red-500 rounded-full border'
+          className='fixed top-20 z-10 right-10 w-44 h-12 bg-red-500 rounded-full border'
         >
           Click me
         </button>
@@ -153,7 +153,7 @@ export default function RadixComponents() {
 
       <div className='h-[1000px] border shrink-0'></div>
 
-      {isBottomButtonVisible && (
+      {isScrollToTopVisible && (
         <button
           type='button'
           onClick={scrollToTop}
