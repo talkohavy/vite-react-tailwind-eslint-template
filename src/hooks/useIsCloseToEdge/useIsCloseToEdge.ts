@@ -49,9 +49,9 @@ export function useIsCloseToEdge(props: UseIsCloseToEdgeProps) {
 
       const actualGap = calcGapFunc({ clientHeight, scrollHeight, scrollTop });
 
-      if (actualGap > thresholdGap && isVisible) return setIsVisible(false);
+      if (actualGap > thresholdGap && !isVisible) return setIsVisible(true);
 
-      if (actualGap <= thresholdGap && !isVisible) return setIsVisible(true);
+      if (actualGap <= thresholdGap && isVisible) return setIsVisible(false);
     }, delayMs),
     [isVisible],
   );
