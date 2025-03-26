@@ -11,6 +11,7 @@ import DatePicker from '../../components/DatePicker';
 import DropdownMenu from '../../components/DropdownMenu';
 import LinearProgressBar from '../../components/LinearProgressBar';
 import PinInput from '../../components/PinInput';
+import DownArrow from '../../components/svgs/DownArrow';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
 import { Placement } from '../../components/Tooltip/types';
@@ -72,9 +73,9 @@ export default function RadixComponents() {
         <button
           type='button'
           onClick={scrollToBottom}
-          className='fixed top-20 z-10 right-10 w-44 h-12 bg-red-500 rounded-full border'
+          className='fixed top-20 z-10 right-10 flex justify-center items-center size-12 cursor-pointer bg-red-500 hover:bg-red-400 rounded-full border'
         >
-          Click me
+          <DownArrow className='size-3' />
         </button>
       )}
 
@@ -157,9 +158,9 @@ export default function RadixComponents() {
         <button
           type='button'
           onClick={scrollToTop}
-          className='fixed bottom-10 right-10 w-44 h-12 bg-blue-500 rounded-full border'
+          className='fixed bottom-10 right-10 flex justify-center items-center size-12 cursor-pointer bg-blue-500 hover:bg-blue-400 rounded-full border'
         >
-          Click me
+          <DownArrow className='size-3 rotate-180' />
         </button>
       )}
     </div>
