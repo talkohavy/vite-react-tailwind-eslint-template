@@ -1,5 +1,5 @@
-import { PropsWithChildren } from 'react';
-import { RadioOption } from '../../types';
+import type { PropsWithChildren } from 'react';
+import type { RadioOption } from '../../types';
 
 type RadioGroupWrapperProps<T> = PropsWithChildren<{
   value: number | string;

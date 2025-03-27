@@ -5,6 +5,7 @@ import type { SelectOption } from '../../components/controls/Select/types';
 import Checkbox from '../../components/controls/Checkbox';
 import ColorPicker from '../../components/controls/ColorPicker';
 import Combobox from '../../components/controls/Combobox';
+import RadioDots from '../../components/controls/RadioGroup/RadiosDots';
 import Select from '../../components/controls/Select';
 import Toggle from '../../components/controls/Toggle';
 import DatePicker from '../../components/DatePicker';
@@ -41,6 +42,8 @@ export default function RadixComponents() {
   const [date, setDate] = useState([parseDate('2022-01-01')]);
   const [pinInput, setPinInput] = useState<string>('');
   const [progressBarValue, setProgressBarValue] = useState<number>(0);
+  const [selectedRadio, setSelectedRadio] = useState<any>(null);
+
   const refElement = useRef<HTMLElement>({} as HTMLElement);
 
   const { isVisible: isScrollToBottomVisible, onScroll: onScrollToBottom } = useIsCloseToEdge({
@@ -78,6 +81,15 @@ export default function RadixComponents() {
           <DownArrow className='size-3' />
         </button>
       )}
+
+      <RadioDots
+        options={[
+          { value: 0, label: '0' },
+          { value: 1, label: '2' },
+        ]}
+        value={selectedRadio}
+        setValue={setSelectedRadio}
+      />
 
       <LinearProgressBar className='shrink-0 h-12 w-full' completed={progressBarValue} />
 
