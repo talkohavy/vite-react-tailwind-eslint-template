@@ -119,7 +119,7 @@ export default function RadixComponents() {
 
       <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
-      <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+      <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Remember me?' />
 
       <Select
         selectedOption={selectedOption}
