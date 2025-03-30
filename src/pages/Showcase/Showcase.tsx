@@ -7,6 +7,7 @@ import ColorPicker from '../../components/controls/ColorPicker';
 import Combobox from '../../components/controls/Combobox';
 import RadioDots from '../../components/controls/RadioGroup/RadiosDots';
 import Select from '../../components/controls/Select';
+import Textarea from '../../components/controls/Textarea';
 import Toggle from '../../components/controls/Toggle';
 import DatePicker from '../../components/DatePicker';
 import DropdownMenu from '../../components/DropdownMenu';
@@ -43,6 +44,7 @@ export default function RadixComponents() {
   const [pinInput, setPinInput] = useState<string>('');
   const [progressBarValue, setProgressBarValue] = useState<number>(0);
   const [selectedRadio, setSelectedRadio] = useState<any>(null);
+  const [textareaValue, setTextareaValue] = useState<string>('');
 
   const refElement = useRef<HTMLElement>({} as HTMLElement);
 
@@ -120,6 +122,8 @@ export default function RadixComponents() {
       <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
       <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Remember me?' />
+
+      <Textarea value={textareaValue} setValue={(e) => setTextareaValue(e.target.value)} />
 
       <Select
         selectedOption={selectedOption}

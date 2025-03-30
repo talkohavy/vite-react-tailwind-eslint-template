@@ -1,0 +1,39 @@
+.textarea {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 6px;
+  padding: 8px;
+  // height: 40px; <--- do not define height here! textarea's rows attribute would always lose in a fight.
+}
+
+body[class*='dark'] .textarea {
+  border-color: white;
+}
+
+.textarea:hover,
+body[class*='dark'] .textarea:hover {
+  border-color: rgb(148, 148, 254);
+}
+
+.textarea:focus,
+body[class*='dark'] .textarea:focus {
+  border-color: rgb(70, 70, 255);
+}
+
+.resize_none {
+  resize: none;
+}
+
+.resize_vertical {
+  resize: vertical;
+}
+
+.resize_horizontal {
+  resize: horizontal;
+}
+
+.resize_both {
+  resize: both;
+}
