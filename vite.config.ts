@@ -65,7 +65,7 @@ export default defineConfig(({ mode }) => ({
   css: {
     modules: {
       generateScopedName: mode === 'development' ? '[name].[local].[hash:base64:3]' : '[hash:base64:7]', // <--- A className named "sharedBtn" found at a css file named "App.module.css" would turn into: Button-module-sharedBtn-LyEfZ. `name` is the component name, and `local` is the css class name.
-      localsConvention: 'camelCaseOnly', // <--- default to `undefined`. It seems like every value but `undefined` works, so just choose one.
+      localsConvention: 'camelCase', // <--- default to `undefined`. Leaving it as `undefined` doesn't work, so you need to choose one. camelCaseOnly would ignore a style like this: 'resize_none', whereas camelCase would accept it.
       scopeBehaviour: 'local', // <--- Defaults to 'local'. Always use 'local'. 'global' would disregard the .module.css extension, and make all css as global.
     },
     devSourcemap: true, // <--- defaults to `false`. The provided value here will affect the Elements --> Styles tab. With `true`, the clickable link would read "Button.module.css", and clicking it would direct you to the file. When `false`, it would read `<style>`, and clicking it would direct you to a <style> element on the <head> element.
