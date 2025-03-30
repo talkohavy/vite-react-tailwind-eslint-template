@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     open: true,
     port: 3000,
-    strictPort: true,
+    strictPort: false,
   },
   resolve: {
     alias: {
