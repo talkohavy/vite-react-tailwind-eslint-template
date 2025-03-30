@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { RuleReturnValue } from './types';
 import InputBase from './InputBase';
 
-type InputProps = {
+export type InputProps = {
   /**
    * @default 'text'
    */
