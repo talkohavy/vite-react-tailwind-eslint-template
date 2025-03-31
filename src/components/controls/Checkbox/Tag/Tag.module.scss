@@ -1,0 +1,29 @@
+.tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background-color: gray;
+  cursor: pointer;
+}
+
+.tag:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+button:focus .tag,
+body[class*='dark'] button:focus .tag {
+  box-shadow: 0 0 2px 2px rgba(0, 123, 255, 0.5);
+}
+
+body[class*='dark'] .tag {
+  border-color: white;
+}
+
+div:has(input:checked) > .tag {
+  background-color: yellow;
+  color: black;
+  transition: all;
+  transition-duration: 200ms;
+}

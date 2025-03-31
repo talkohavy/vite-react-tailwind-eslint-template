@@ -23,7 +23,7 @@ body[class*='dark'] .checkboxHolder {
 }
 
 div:has(input:checked) > .checkboxHolder {
-  background-color: rgb(93 93 255 / 90%);
+  background-color: #007bff;
   transition: all;
   transition-duration: 200ms;
 }

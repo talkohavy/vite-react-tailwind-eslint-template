@@ -3,6 +3,7 @@ import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
 import Checkbox from '../../components/controls/Checkbox';
+import Tag from '../../components/controls/Checkbox/Tag';
 import ColorPicker from '../../components/controls/ColorPicker';
 import Combobox from '../../components/controls/Combobox';
 import RadioDots from '../../components/controls/RadioGroup/RadiosDots';
@@ -122,6 +123,8 @@ export default function RadixComponents() {
       <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
       <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Remember me?' />
+
+      <Tag isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Bicycle' />
 
       <Textarea value={textareaValue} setValue={(e) => setTextareaValue(e.target.value)} />
 
