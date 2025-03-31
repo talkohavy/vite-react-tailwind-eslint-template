@@ -38,7 +38,7 @@ export default function CheckboxLogic(props: CheckboxLogicProps) {
           {children}
         </div>
 
-        <div>{label}</div>
+        {label && <div>{label}</div>}
       </label>
     </button>
   );
