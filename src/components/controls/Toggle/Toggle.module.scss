@@ -1,21 +1,31 @@
-.switch {
+.label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+
+.checkboxInputAndFakeCheckMark {
   --height: 22px;
   --padding: calc(var(--height) / 16);
   --ball-size: calc(var(--height) - 2 * var(--padding) - 2px);
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   width: calc(var(--height) * 2);
   height: var(--height);
   transition: all 0.4s;
 }
 
-.switch input {
+.input {
   opacity: 0;
   width: 0;
   height: 0;
+  pointer-events: none;
 }
 
-.radioButtonBg {
+.fakeToggleHolder {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -28,7 +38,7 @@
   border-radius: 9999px;
 }
 
-.slider {
+.toggleCheckMark {
   content: '';
   position: absolute;
   top: 50%;
@@ -41,16 +51,16 @@
   transition: all 0.4s;
 }
 
-.switch:has(input:checked) .slider {
+.label:has(input:checked) .toggleCheckMark {
   left: calc(100% - var(--ball-size) - var(--padding));
   background-color: #fff;
 }
 
-.switch:has(input:checked) .radioButtonBg {
+.label:has(input:checked) .fakeToggleHolder {
   background-color: #007bff;
   border: 1px solid #007bff;
 }
 
-.switch:has(input:focus) .radioButtonBg {
+.label:has(input:focus) .fakeToggleHolder {
   box-shadow: 0 0 1px #007bff;
 }
