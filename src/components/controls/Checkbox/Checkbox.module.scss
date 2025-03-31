@@ -1,0 +1,39 @@
+.checkboxHolder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 24px;
+  width: 24px;
+  border-radius: 6px;
+  border: 1px solid black;
+}
+
+.checkboxHolder:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+button:focus .checkboxHolder,
+body[class*='dark'] button:focus .checkboxHolder {
+  border-color: seagreen;
+}
+
+body[class*='dark'] .checkboxHolder {
+  border-color: white;
+}
+
+div:has(input:checked) > .checkboxHolder {
+  background-color: rgb(93 93 255 / 90%);
+  transition: all;
+  transition-duration: 200ms;
+}
+
+.checkboxCheckMark {
+  fill: white;
+  opacity: 0;
+}
+
+div:has(input:checked) > .checkboxHolder > .checkboxCheckMark {
+  opacity: 1;
+  transition: all;
+  transition-duration: 200ms;
+}
