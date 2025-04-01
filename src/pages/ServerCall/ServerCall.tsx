@@ -3,20 +3,33 @@ import { httpClient } from '../../lib/HttpClient';
 
 export default function ServerCall() {
   const [data, setData] = useState<any>();
-
-  console.log('data is:', data);
+  const [error, setError] = useState<any>();
 
   useEffect(() => {
     async function fetchData() {
-      const response = await httpClient.get('http://localhost:8000');
+      try {
+        const response = await httpClient.get('http://localhost:8000');
 
-      console.log('response is:', response);
+        console.log('response is:', response);
 
-      setData(response);
+        setData(response);
+      } catch (error) {
+        setError(error);
+      }
     }
 
     fetchData();
   }, []);
 
-  return <div>hello world</div>;
+  return (
+    <div className='w-full p-4'>
+      <div>hello world</div>
+
+      <hr />
+      <br />
+
+      <div>data: {data && JSON.stringify(data)}</div>
+      <div>error: {error?.message}</div>
+    </div>
+  );
 }
