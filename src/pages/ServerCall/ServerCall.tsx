@@ -8,7 +8,7 @@ export default function ServerCall() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await httpClient.get('http://localhost:8000');
+        const response = await httpClient.get('/');
 
         console.log('response is:', response);
 

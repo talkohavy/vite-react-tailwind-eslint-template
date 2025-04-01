@@ -16,10 +16,28 @@ export class HttpClient {
     this.baseUrl = url;
   }
 
+  /**
+   * @description
+   * `url` should be without the BASE_URL!
+   *
+   * i.e. if the full url is "http://localhost:3000/users",
+   * then you should pass in only "/users".
+   *
+   * The "http://localhost:3000" part is considered as BASE_URL, and is added automatically.
+   */
   public get<TResponse = any>(url: string, options?: FetchOptions) {
     return this.execute<TResponse>({ url, method: HttpMethod.GET, ...options });
   }
 
+  /**
+   * @description
+   * `url` should be without the BASE_URL!
+   *
+   * i.e. if the full url is "http://localhost:3000/users",
+   * then you should pass in only "/users".
+   *
+   * The "http://localhost:3000" part is considered as BASE_URL, and is added automatically.
+   */
   public post<TResponse = any>(url: string, options?: FetchOptions) {
     return this.execute<TResponse>({ url, method: HttpMethod.POST, ...options });
   }
@@ -41,7 +59,7 @@ export class HttpClient {
 
     const requestId = uuid();
     const signal = this.addAbortControllerToList(requestId);
-    const fullTargetUrl = `${this._baseUrl}/${url}`;
+    const fullTargetUrl = `${this._baseUrl}${url}`;
     const { localStorageId, sessionStorageId } = sessionManager.getSessionIds();
     const headers = {
       'Content-Type': 'application/json',
