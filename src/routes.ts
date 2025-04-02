@@ -7,6 +7,7 @@ const HomePage = lazy(() => import('./pages/Home'));
 const ReduxExamplePage = lazy(() => import('./pages/ReduxExample'));
 const ShowcasePage = lazy(() => import('./pages/Showcase'));
 const ServerCallPage = lazy(() => import('./pages/ServerCall'));
+const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 
 export const routes: Array<Route> = [
   {
@@ -31,6 +32,12 @@ export const routes: Array<Route> = [
     text: 'Server Call',
     activeNames: ['/server-call'],
     Component: ServerCallPage,
+  },
+  {
+    to: `${BASE_URL}/server-sent-events`,
+    text: 'Server Sent Events',
+    activeNames: ['/server-sent-events'],
+    Component: ServerSentEventsPage,
   },
   {
     to: `${BASE_URL}/redux`,
