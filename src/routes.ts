@@ -9,6 +9,7 @@ const ShowcasePage = lazy(() => import('./pages/Showcase'));
 const ServerCallPage = lazy(() => import('./pages/ServerCall'));
 const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
+const WebWorkerPage = lazy(() => import('./pages/WebWorker'));
 
 export const routes: Array<Route> = [
   {
@@ -45,6 +46,12 @@ export const routes: Array<Route> = [
     text: 'Tab Communication',
     activeNames: ['/tab-communication'],
     Component: TabCommunicationPage,
+  },
+  {
+    to: `${BASE_URL}/web-worker`,
+    text: 'Web Worker',
+    activeNames: ['/web-worker'],
+    Component: WebWorkerPage,
   },
   {
     to: `${BASE_URL}/redux`,
