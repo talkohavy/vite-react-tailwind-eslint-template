@@ -10,6 +10,7 @@ const ServerCallPage = lazy(() => import('./pages/ServerCall'));
 const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
 const WebWorkerPage = lazy(() => import('./pages/WebWorker'));
+const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorker'));
 
 export const routes: Array<Route> = [
   {
@@ -52,6 +53,12 @@ export const routes: Array<Route> = [
     text: 'Web Worker',
     activeNames: ['/web-worker'],
     Component: WebWorkerPage,
+  },
+  {
+    to: `${BASE_URL}/service-worker`,
+    text: 'Service Worker',
+    activeNames: ['/service-worker'],
+    Component: ServiceWorkerPage,
   },
   {
     to: `${BASE_URL}/redux`,
