@@ -3,26 +3,34 @@
 console.log('Service Worker script mounted!');
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open('static').then((cache) => {
-      console.log('[Service Worker] caching app shell');
-      cache.addAll([
-        '/index.html',
-        'index-BWWZR0Od.css',
-        // '/',
-        // '/manifest.json',
-        // '/src/public/css/style.css',
-        // '/src/public/js/app.js',
-        // '/src/public/img/favicon.png',
-        // '/src/public/img/logo.png',
-        // '/src/public/img/hero.jpg',
-        // '/src/public/img/hero.webp',
-        // '/src/public/img/hero.avif',
-      ]);
-    }),
-  );
+  async function onInstall() {
+    console.log('[Service Worker] installing service worker...', event);
 
-  console.log('[Service Worker] installing service worker...', event);
+    const cache = await caches.open('static');
+
+    const manifest = [
+      '/',
+      '/index.html',
+      '/vite.svg',
+      '/main/Button-omu9TOoX.js',
+      '/main/app.worker-CNfNJUnC.js',
+      '/main/index-4eE04RDn.js',
+      '/main/index-B3dQYfP6.css',
+      '/main/index-BYJ2YQ0L.js',
+      '/main/index-CLo41o5m.js',
+      '/main/index-CNkW44am.js',
+      '/main/index-CYHV7gDG.js',
+      '/main/index-CbWa3dfm.js',
+      '/main/index-CjjH-qJD.css',
+      '/main/index-CpFIWtVZ.js',
+      '/main/index-D8J9BXga.js',
+      '/main/index-DpW0JFHX.js',
+    ];
+
+    await cache.addAll(manifest);
+  }
+
+  event.waitUntil(onInstall());
 });
 
 self.addEventListener('activate', (event) => {
@@ -31,16 +39,29 @@ self.addEventListener('activate', (event) => {
   return self.clients.claim();
 });
 
-self.addEventListener('fetch', async (event) => {
-  try {
-    // console.log('[Service Worker] fetching...', event);
+self.addEventListener('fetch', (event) => {
+  async function fetchProxyHandler() {
+    try {
+      const cacheHit = await caches.match(event.request);
 
-    const cacheHit = await caches.match(event.request);
+      if (cacheHit) return cacheHit;
 
-    const response = cacheHit ? cacheHit : fetch(event.request);
+      const response = await fetch(event.request);
 
-    await event.respondWith(response);
-  } catch (error) {
-    console.error(error);
+      // Optionally cache the fetched response for future use
+      if (response && response.status === 200 && response.type === 'basic') {
+        const cache = await caches.open('dynamic');
+        const responseClone = response.clone();
+        await cache.put(event.request.url, responseClone);
+      }
+
+      return response;
+    } catch (error) {
+      console.error(error);
+      // Fallback to a default offline page if fetch fails
+      return caches.match('/index.html');
+    }
   }
+
+  event.respondWith(fetchProxyHandler());
 });
