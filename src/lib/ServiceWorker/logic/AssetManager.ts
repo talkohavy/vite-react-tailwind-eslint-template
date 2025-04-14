@@ -1,6 +1,8 @@
 import { DYNAMIC_CACHE_NAME, STATIC_CACHE_NAME } from './constants';
 
 export class AssetManager {
+  cacheLimit = 50;
+
   async cacheStaticAssets() {
     const staticCache = await caches.open(STATIC_CACHE_NAME);
 
@@ -91,20 +93,31 @@ export class AssetManager {
     }
   }
 
-  async cacheThenNetwork(event: any) {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const cacheHit = await cache.match(event.request);
-    if (cacheHit) return cacheHit;
-    const response = await fetch(event.request);
-    if (response && response.status === 200 && response.type === 'basic') {
-      await this.dynamicallyCacheResponse(event, response);
+  private async dynamicallyCacheResponse(event: any, response: Response) {
+    const dynamicCache = await caches.open(DYNAMIC_CACHE_NAME);
+    const responseClone = response.clone();
+
+    const cacheKeys = await dynamicCache.keys();
+    const cacheLength = cacheKeys.length;
+
+    if (cacheLength >= this.cacheLimit) {
+      const removeCount = cacheLength - this.cacheLimit + 1;
+      await this.removeOverflowCache(dynamicCache, removeCount);
     }
-    return response;
+
+    await dynamicCache.put(event.request.url, responseClone);
   }
 
-  private async dynamicallyCacheResponse(event: any, response: Response) {
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const responseClone = response.clone();
-    await cache.put(event.request.url, responseClone);
+  async removeOverflowCache(dynamicCache: Cache, removeCount: number) {
+    const cacheKeys = await dynamicCache.keys();
+
+    const promiseArr = [] as Array<Promise<boolean>>;
+
+    for (let i = 0; i < removeCount; i++) {
+      const oldestCacheKey = cacheKeys[i]!;
+      promiseArr.push(dynamicCache.delete(oldestCacheKey));
+    }
+
+    return Promise.all(promiseArr);
   }
 }
