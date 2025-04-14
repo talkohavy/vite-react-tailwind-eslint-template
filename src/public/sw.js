@@ -1,12 +1,16 @@
 // @ts-nocheck
 
+const CACHE_VERSION = 'v2';
+const STATIC_CACHE_NAME = `static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE_NAME = `dynamic-${CACHE_VERSION}`;
+
 console.log('Service Worker script mounted!');
 
 self.addEventListener('install', (event) => {
   async function onInstall() {
     console.log('[Service Worker] installing service worker...', event);
 
-    const cache = await caches.open('static');
+    const cache = await caches.open(STATIC_CACHE_NAME);
 
     const manifest = [
       '/',
@@ -36,6 +40,23 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   console.log('[Service Worker] activating service worker...', event);
 
+  async function cleanupCache() {
+    const cacheNames = await caches.keys();
+    const cacheWhitelist = [STATIC_CACHE_NAME, DYNAMIC_CACHE_NAME];
+    const cachesToDelete = cacheNames.filter((cacheName) => !cacheWhitelist.includes(cacheName));
+    const promiseArr = cachesToDelete.map((cacheName) => {
+      try {
+        caches.delete(cacheName);
+      } catch (_error) {
+        console.log(`cacheName ${cacheName} does not exists. moving on...`);
+      }
+    });
+
+    return Promise.all(promiseArr);
+  }
+
+  event.waitUntil(cleanupCache());
+
   return self.clients.claim();
 });
 
@@ -50,7 +71,7 @@ self.addEventListener('fetch', (event) => {
 
       // Optionally cache the fetched response for future use
       if (response && response.status === 200 && response.type === 'basic') {
-        const cache = await caches.open('dynamic');
+        const cache = await caches.open(DYNAMIC_CACHE_NAME);
         const responseClone = response.clone();
         await cache.put(event.request.url, responseClone);
       }
