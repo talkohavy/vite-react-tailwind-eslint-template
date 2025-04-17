@@ -7,6 +7,8 @@
   "workbench.tree.stickyScrollMaxItemCount": 7, // <--- defaults to 7. It used to be 1 before version 1.86.
   "workbench.list.horizontalScrolling": true,
   "workbench.activityBar.iconClickBehavior": "focus",
+  "workbench.colorTheme": "Default Dark Modern", // "Default Light Modern" |
+  "workbench.editor.editorActionsLocation": "default",
   "search.exclude": {
     // The default ones:
     "**/node_modules": true,
@@ -60,6 +62,8 @@
   // -----------------
   "workbench.tree.indent": 14,
   "workbench.tree.renderIndentGuides": "always",
+  "editor.defaultColorDecorators": "auto",
+  "editor.colorDecoratorsLimit": 500,
 
   // -------------------------------------
   // Part 3: IDE Color Customization Rules
