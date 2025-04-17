@@ -5,6 +5,8 @@
   "window.zoomLevel": 0,
   "window.zoomPerWindow": true, // <--- defaults to true. It used to be false before version 1.86.
   "workbench.tree.stickyScrollMaxItemCount": 7, // <--- defaults to 7. It used to be 1 before version 1.86.
+  "workbench.list.horizontalScrolling": true,
+  "workbench.activityBar.iconClickBehavior": "focus",
   "search.exclude": {
     // The default ones:
     "**/node_modules": true,
