@@ -19,7 +19,8 @@
       },
       "complexity": {
         "noForEach": "off",
-        "noUselessThisAlias": "off"
+        "noUselessThisAlias": "off",
+        "noUselessConstructor": "off"
       },
       "performance": {
         "noDelete": "off"
@@ -41,7 +42,8 @@
         "noParameterAssign": "off",
         "noVar": "off",
         "noNonNullAssertion": "off",
-        "useSelfClosingElements": "off"
+        "useSelfClosingElements": "off",
+        "useNodejsImportProtocol": "off"
       }
     }
   },
