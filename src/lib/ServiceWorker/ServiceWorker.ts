@@ -14,7 +14,7 @@ export class ServiceWorker {
   }
 
   public static addOnInstalListener(onInstall: () => Promise<void>): void {
-    if (!ServiceWorker.isServiceWorkerEnabled()) return;
+    if (!ServiceWorker.isServiceWorkerFeatureEnabled()) return;
 
     ServiceWorker._self.addEventListener('install', (event: any) => {
       event.waitUntil(onInstall());
@@ -22,7 +22,7 @@ export class ServiceWorker {
   }
 
   public static addOnActivateListener(onActivate: () => Promise<any>): any {
-    if (!ServiceWorker.isServiceWorkerEnabled()) return;
+    if (!ServiceWorker.isServiceWorkerFeatureEnabled()) return;
 
     ServiceWorker._self.addEventListener('activate', (event: any) => {
       event.waitUntil(onActivate());
@@ -32,14 +32,14 @@ export class ServiceWorker {
   }
 
   public static addOnFetchListener(onFetch: (event: any) => Promise<Response | undefined>): void {
-    if (!ServiceWorker.isServiceWorkerEnabled()) return;
+    if (!ServiceWorker.isServiceWorkerFeatureEnabled()) return;
 
     ServiceWorker._self.addEventListener('fetch', (event: any) => {
       event.respondWith(onFetch(event));
     });
   }
 
-  public static isServiceWorkerEnabled(): boolean {
+  public static isServiceWorkerFeatureEnabled(): boolean {
     return 'serviceWorker' in navigator;
   }
 }

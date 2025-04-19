@@ -1,7 +1,7 @@
-import { isServiceWorkerEnabled } from '../../../common/utils/isServiceWorkerEnabled';
+import { isServiceWorkerFeatureEnabled } from '../../../common/utils/isServiceWorkerFeatureEnabled';
 
 export async function registerServiceWorker() {
-  if (!isServiceWorkerEnabled()) {
+  if (!isServiceWorkerFeatureEnabled()) {
     return console.warn('Service Worker is not supported in this browser.');
   }
 

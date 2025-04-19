@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { isCachesEnabled } from '../../common/utils/isCachesEnabled';
+import { isCachesEnabled } from '../../common/utils/isCachesFeatureEnabled';
 import Button from '../../components/controls/Button';
+import { indexDB } from '../../main';
 import { registerServiceWorker } from './utils/registerServiceWorker';
 
 const ON_DEMAND_CACHE = 'on-demand-cache';
+// const id = '1';
 
 export default function ServiceWorker() {
   const [isVisible, setIsVisible] = useState(false);
@@ -11,6 +13,49 @@ export default function ServiceWorker() {
 
   const onSaveClick = async () => {
     const response = await fetch('/heart-256x256.png');
+    const userResponse = await fetch('http://localhost:8000/users', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'tal',
+        age: 29,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-request-id': 'vite-react-template',
+      },
+      // credentials: 'include',
+    });
+    const user = await userResponse.json();
+    await indexDB.addRecord(user);
+
+    if (!response.ok) {
+      console.error('Failed to fetch resource:', response.statusText);
+      return;
+    }
+
+    if (isCachesEnabled()) cacheOnDemand(response);
+
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    setCachedImageUrl(objectUrl);
+  };
+
+  const onStoreDynamicContentClick = async () => {
+    const response = await fetch('/heart-256x256.png');
+    const userResponse = await fetch('http://localhost:8000/users', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'tal',
+        age: 29,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-request-id': 'vite-react-template',
+      },
+      // credentials: 'include',
+    });
+    const user = await userResponse.json();
+    await indexDB.addRecord(user);
 
     if (!response.ok) {
       console.error('Failed to fetch resource:', response.statusText);
@@ -65,14 +110,14 @@ export default function ServiceWorker() {
     <div className='size-full p-6 overflow-auto'>
       <div>Service Worker Tutorial</div>
 
-      <Button className='mt-4' onClick={() => setIsVisible(!isVisible)}>
-        {isVisible ? 'Hide' : 'Show'} PWA Install Prompt
-      </Button>
-
       {isVisible && <img src='/heart-256x256.png' alt='PWA Install Prompt' className='w-1/2 h-auto' />}
 
       <Button className='mt-4' onClick={onSaveClick}>
         Save
+      </Button>
+
+      <Button className='mt-4' onClick={onStoreDynamicContentClick}>
+        Store dynamic content
       </Button>
 
       {cachedImageUrl && (
