@@ -3,19 +3,23 @@ import { createRoot } from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router';
 import App from '@src/App';
+import { dbName, tableName } from './common/constants';
 import GlobalErrorBoundaryDevelopment from './components/ErrorBoundaries/ErrorBoundaryWithModalFallback';
 import ReactErrorOverlay from './components/ReactErrorOverlay';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
 import { initHttpClient } from './lib/HttpClient';
+import { IndexedDB } from './lib/IndexedDB';
 import { initSessionManager } from './lib/SessionManager';
 import DarkThemeProvider from './providers/DarkThemeProvider';
+import { createStore } from './store';
 import './common/bootstrap';
 import './index.css';
-import { createStore } from './store';
 
 const API_GATEWAY_URL = 'http://localhost:8000';
 
 const store = createStore({} as any);
+
+export let indexDB: IndexedDB;
 
 function Client() {
   return (
@@ -24,6 +28,11 @@ function Client() {
         asyncFn={async () => {
           initSessionManager();
           initHttpClient(API_GATEWAY_URL);
+
+          indexDB = new IndexedDB({ dbName, tableName });
+
+          await indexDB.init();
+
           console.log('Application is up and running!');
         }}
       >

@@ -11,8 +11,6 @@ export const API_URLS = {
   },
 };
 
-export const BASE_URL = '/base';
-
 export const REGEX = {
   alphaNumeric: /^[a-zA-Z0-9_]+$/,
   containsWhitespace: /\s/,
@@ -24,3 +22,8 @@ export const REGEX = {
   sso: /^[a-zA-Z0-9]{3,30}$/,
   partiallyValidCreditCard: /^(?!.*\s{2})([0-9][0-9\s]*)?$/,
 };
+
+export const dbName = 'vite-react-template';
+export const tableName = 'dynamic';
+
+export const BASE_URL = '/base';
