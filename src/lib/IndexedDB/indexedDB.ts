@@ -39,7 +39,7 @@ export class IndexedDB {
    * @description
    * Returns the id of the record, which can later be used to get record by ID.
    */
-  async addRecord(data: Record<string, any>): Promise<number | string> {
+  async addRecord(data: Record<string, any>): Promise<string | number> {
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
@@ -58,7 +58,7 @@ export class IndexedDB {
     });
   }
 
-  async getRecordById<T = any>(id: number): Promise<T | null> {
+  async getRecordById<T = any>(id: string | number): Promise<T | null> {
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
@@ -129,7 +129,7 @@ export class IndexedDB {
    * @description
    * This update behaves like a PUT request. It will update the record if it exists, or create a new one if it doesn't.
    */
-  async updateRecordById<T = any>(id: number, updatedData: Partial<T>): Promise<string> {
+  async updateRecordById<T = any>(id: string | number, updatedData: Partial<T>): Promise<string> {
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
@@ -145,7 +145,7 @@ export class IndexedDB {
     });
   }
 
-  async deleteRecordById(id: number): Promise<boolean> {
+  async deleteRecordById(id: string | number): Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
