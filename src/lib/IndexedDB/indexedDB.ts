@@ -30,7 +30,7 @@ export class IndexedDB {
 
       const request = indexedDB.open(this.dbName, this.version);
 
-      request.onupgradeneeded = this.createTableIfDoesntExist;
+      request.onupgradeneeded = this.createTableIfDoesntExist.bind(this);
       request.onsuccess = returnDbOnSuccess;
       request.onerror = handleInitError;
     });
