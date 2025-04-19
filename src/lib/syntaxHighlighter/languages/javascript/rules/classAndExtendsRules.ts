@@ -1,7 +1,8 @@
+import type { HLJSApi } from 'highlight.js';
 import { IDENT_RE } from '../constants';
 
 // ES6 classes
-function getClassAndExtendsRule(hljs) {
+function getClassAndExtendsRule(hljs: HLJSApi) {
   const { regex } = hljs;
 
   return {

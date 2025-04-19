@@ -1,6 +1,7 @@
+import type { HLJSApi } from 'highlight.js';
 import { SUBST } from '../constants';
 
-function getGraphQlRule(hljs) {
+function getGraphQlRule(hljs: HLJSApi) {
   return {
     begin: '.?gql`',
     end: '',

@@ -1,6 +1,7 @@
+import type { HLJSApi } from 'highlight.js';
 import { SUBST } from '../constants';
 
-function getCssRule(hljs) {
+function getCssRule(hljs: HLJSApi) {
   return {
     begin: '.?css`',
     end: '',

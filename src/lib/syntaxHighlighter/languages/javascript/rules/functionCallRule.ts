@@ -1,3 +1,4 @@
+import type { HLJSApi } from 'highlight.js';
 import { LOWERCASED_VARIABLE_RE } from '../constants';
 
 const FUNCTION_LIKE_GLOBALS = [
@@ -14,7 +15,7 @@ const FUNCTION_LIKE_GLOBALS = [
   'function',
 ].join('|');
 
-function getFunctionCallRule(hljs) {
+function getFunctionCallRule(hljs: HLJSApi) {
   const { regex } = hljs;
 
   const IGNORE_FUNCTION_LIKE_GLOBALS_RE = `(?<!${FUNCTION_LIKE_GLOBALS})`;

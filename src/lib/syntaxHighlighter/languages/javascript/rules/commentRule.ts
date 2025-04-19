@@ -1,6 +1,7 @@
+import type { HLJSApi } from 'highlight.js';
 import { IDENT_RE } from '../constants';
 
-function getCommentRule(hljs) {
+function getCommentRule(hljs: HLJSApi) {
   const JSDOC_COMMENT = hljs.COMMENT(/\/\*\*(?!\/)/, '\\*/', {
     relevance: 0,
     contains: [

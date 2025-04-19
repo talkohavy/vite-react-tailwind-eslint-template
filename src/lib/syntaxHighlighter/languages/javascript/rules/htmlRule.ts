@@ -1,6 +1,7 @@
+import type { HLJSApi } from 'highlight.js';
 import { SUBST } from '../constants';
 
-function getHtmlRule(hljs) {
+function getHtmlRule(hljs: HLJSApi) {
   return {
     begin: '.?html`',
     end: '',
