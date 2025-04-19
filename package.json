@@ -13,8 +13,10 @@
     "test": "jest",
     "typecheck": "tsc -p tsconfig.json",
     "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "npm run build:sw:dev && vite build",
+    "preview": "vite preview",
+    "build:sw": "export NODE_ENV=production && node ./build.config.js",
+    "build:sw:dev": "export NODE_ENV=development && node ./build.config.js"
   },
   "dependencies": {
     "@ark-ui/react": "^5.1.0",
@@ -52,6 +54,7 @@
     "@types/react-dom": "^19.0.3",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react-swc": "^3.8.0",
+    "esbuild": "^0.25.2",
     "eslint": "^9.20.1",
     "eslint-plugin-perfectionist": "^4.9.0",
     "eslint-plugin-react-compiler": "19.0.0-beta-b2e8e9c-20241220",
