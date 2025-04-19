@@ -52,7 +52,7 @@ export default function NumberInput(props: NumberInputProps) {
 
   return (
     <div className='flex gap-2'>
-      <Input value={value} setValue={setValue} placeholder={placeholder} />
+      <Input initialValue={value} onChange={setValue} placeholder={placeholder} />
 
       <div className='flex flex-col items-center justify-between p-0.5'>
         <button
