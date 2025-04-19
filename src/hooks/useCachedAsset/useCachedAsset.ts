@@ -6,6 +6,14 @@ type useCachedAssetProps = {
   isImage?: boolean;
 };
 
+/**
+ * @description
+ * The fetch-from-cache only happens once onload (or when the `assetUrl` changes).
+ * From that point, `data` is taken from the inner-state of the hook.
+ *
+ * You can set the state using `setData`,
+ * but that won't update the cache with the new value.
+ */
 export function useCachedAsset(props: useCachedAssetProps) {
   const { assetUrl, isImage } = props;
 
