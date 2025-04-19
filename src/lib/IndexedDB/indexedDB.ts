@@ -38,6 +38,9 @@ export class IndexedDB {
   /**
    * @description
    * Returns the id of the record, which can later be used to get record by ID.
+   *
+   * If `autoIncrement` is `false`, it can throw an error if a record
+   * with the same exact id already exists.
    */
   async addRecord(data: Record<string, any>): Promise<string | number> {
     return new Promise((resolve, reject) => {
@@ -46,6 +49,30 @@ export class IndexedDB {
       const transaction = this.db.transaction([this.tableName], 'readwrite');
       const tableClient = transaction.objectStore(this.tableName);
       const request = tableClient.add(data);
+
+      request.onsuccess = () => {
+        const result = request.result as number;
+        resolve(result);
+      };
+      request.onerror = (event: Event) => {
+        const errorMessage = (event.target as IDBRequest).error;
+        reject({ message: `Create failed: ${errorMessage}` });
+      };
+    });
+  }
+
+  /**
+   * @description
+   * Same as `addRecord`, only it does not throw an error if a record
+   * with the same exact id already exists. In such case, it overrides it.
+   */
+  async upsertRecord(data: Record<string, any>): Promise<string | number> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) return reject({ message: 'Database not initialized' });
+
+      const transaction = this.db.transaction([this.tableName], 'readwrite');
+      const tableClient = transaction.objectStore(this.tableName);
+      const request = tableClient.put(data);
 
       request.onsuccess = () => {
         const result = request.result as number;
