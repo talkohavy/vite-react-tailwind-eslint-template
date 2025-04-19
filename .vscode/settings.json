@@ -56,6 +56,7 @@
   "zenMode.hideActivityBar": true,
   "zenMode.hideLineNumbers": false,
   "zenMode.silentNotifications": true,
+  // "editor.minimap.autohide": true,
 
   // ------------------------------
   // Javascript & Typescript Rules:
