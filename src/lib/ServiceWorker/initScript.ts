@@ -1,9 +1,9 @@
 import { AssetManager } from './logic/AssetManager';
-import { ServiceWorker } from './ServiceWorker';
+import { MyServiceWorker } from './ServiceWorker';
 
 const assetManager = new AssetManager();
 
-ServiceWorker.getInstance(self);
-ServiceWorker.addOnInstalListener(assetManager.cacheStaticAssets);
-ServiceWorker.addOnActivateListener(assetManager.cleanUpOldCaches);
-ServiceWorker.addOnFetchListener(assetManager.cacheWithNetworkFallbackStrategy);
+MyServiceWorker.getInstance(self);
+MyServiceWorker.addOnInstalListener(assetManager.cacheStaticAssets);
+MyServiceWorker.addOnActivateListener(assetManager.cleanUpOldCaches);
+MyServiceWorker.addOnFetchListener(assetManager.cacheWithNetworkFallbackStrategy);
