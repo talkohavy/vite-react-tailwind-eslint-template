@@ -27,9 +27,9 @@ export class MyServiceWorker {
 
     MyServiceWorker._self.addEventListener('activate', (event: any) => {
       event.waitUntil(onActivate());
-    });
 
-    return MyServiceWorker._self.clients.claim();
+      return MyServiceWorker._self.clients.claim();
+    });
   }
 
   public static addOnFetchListener(onFetch: (event: any) => Promise<Response | undefined>): void {
