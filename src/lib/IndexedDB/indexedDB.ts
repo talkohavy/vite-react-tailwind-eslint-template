@@ -1,74 +1,87 @@
-interface IDBData {
-  id?: number; // id is optional since it will be auto-generated
-  [key: string]: any; // Additional properties
-}
+import type { IndexedDBProps } from './types';
 
 export class IndexedDB {
   private dbName: string;
   private tableName: string;
+  private recordId: string;
+  private autoIncrement: boolean;
   private version: number;
   private db: IDBDatabase | null;
 
-  constructor(dbName: string, tableName: string, version = 1) {
+  constructor(props: IndexedDBProps) {
+    const { dbName, tableName, recordId = 'id', autoIncrement, version = 1 } = props;
+
     this.dbName = dbName;
     this.tableName = tableName;
+    this.recordId = recordId;
+    this.autoIncrement = !!autoIncrement;
     this.version = version;
     this.db = null;
   }
 
-  async init(): Promise<IDBDatabase> {
+  async init(): Promise<this> {
     return new Promise((resolve, reject) => {
-      const returnDbOnSuccess = (event: Event) => {
-        this.db = (event.target as IDBOpenDBRequest).result;
-        resolve(this.db);
-      };
-
-      const handleInitError = (event: Event) => {
-        const { error } = event.target as IDBOpenDBRequest;
-        reject(`Failed to open database: ${error}`);
-      };
-
       const request = indexedDB.open(this.dbName, this.version);
 
       request.onupgradeneeded = this.createTableIfDoesntExist.bind(this);
-      request.onsuccess = returnDbOnSuccess;
-      request.onerror = handleInitError;
+      request.onsuccess = (event: Event) => {
+        this.db = (event.target as IDBOpenDBRequest).result;
+        resolve(this);
+      };
+      request.onerror = (event: Event) => {
+        const { error } = event.target as IDBOpenDBRequest;
+        reject({ message: `Failed to open database: ${error}` });
+      };
     });
   }
 
-  async addRecord(data: IDBData): Promise<number> {
+  /**
+   * @description
+   * Returns the id of the record, which can later be used to get record by ID.
+   */
+  async addRecord(data: Record<string, any>): Promise<number | string> {
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject('Database not initialized');
+      if (!this.db) return reject({ message: 'Database not initialized' });
 
       const transaction = this.db.transaction([this.tableName], 'readwrite');
       const tableClient = transaction.objectStore(this.tableName);
       const request = tableClient.add(data);
 
-      request.onsuccess = () => resolve(request.result as number);
-      request.onerror = (event: Event) => reject(`Create failed: ${(event.target as IDBRequest).error}`);
+      request.onsuccess = () => {
+        const result = request.result as number;
+        resolve(result);
+      };
+      request.onerror = (event: Event) => {
+        const errorMessage = (event.target as IDBRequest).error;
+        reject({ message: `Create failed: ${errorMessage}` });
+      };
     });
   }
 
-  async getRecordById(id: number): Promise<IDBData> {
+  async getRecordById<T = any>(id: number): Promise<T | null> {
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject('Database not initialized');
+      if (!this.db) return reject({ message: 'Database not initialized' });
 
       const transaction = this.db.transaction([this.tableName], 'readonly');
       const tableClient = transaction.objectStore(this.tableName);
       const request = tableClient.get(id);
 
       request.onsuccess = () => {
-        if (request.result) return resolve(request.result as IDBData);
+        const result = request.result as T;
+        if (result) return resolve(result);
 
-        return reject(`Item with id ${id} not found.`);
+        return resolve(null);
       };
-      request.onerror = (event: Event) => reject(`Read failed: ${(event.target as IDBRequest).error}`);
+      request.onerror = (event: Event) => {
+        const errorMessage = (event.target as IDBRequest).error;
+        reject({ message: `Read failed: ${errorMessage}` });
+      };
     });
   }
 
-  async getRecords(query: Partial<IDBData>): Promise<IDBData[]> {
+  async getRecords<T = any>(query: Partial<T>): Promise<Array<T>> {
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject('Database not initialized');
+      if (!this.db) return reject({ message: 'Database not initialized' });
 
       const transaction = this.db.transaction([this.tableName], 'readonly');
       const tableClient = transaction.objectStore(this.tableName);
@@ -76,34 +89,38 @@ export class IndexedDB {
       const request = tableClient.getAll();
 
       request.onsuccess = () => {
-        const result = request.result as IDBData[];
+        const result = request.result as Array<T>;
         // Filter results based on the query parameters
         const filteredResults = result.filter((item) =>
           // Ensure the query's key exists and matches the value
-          Object.keys(query).every((key) => query[key as keyof IDBData] === item[key as keyof IDBData]),
+          Object.keys(query).every((key) => query[key as keyof T] === item[key as keyof T]),
         );
 
         resolve(filteredResults);
       };
 
       request.onerror = (event: Event) => {
-        reject(`Find query failed: ${(event.target as IDBRequest).error}`);
+        const errorMessage = (event.target as IDBRequest).error;
+        reject({ message: `Find query failed: ${errorMessage}` });
       };
     });
   }
 
-  async getAll(): Promise<IDBData[]> {
+  async getAll<T = any>(): Promise<Array<T>> {
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject('Database not initialized');
+      if (!this.db) return reject({ message: 'Database not initialized' });
 
       const transaction = this.db.transaction([this.tableName], 'readonly');
       const tableClient = transaction.objectStore(this.tableName);
       const request = tableClient.getAll();
 
-      request.onsuccess = () => resolve(request.result as IDBData[]);
+      request.onsuccess = () => {
+        const result = request.result as Array<T>;
+        resolve(result);
+      };
       request.onerror = (event: Event) => {
         const { error } = event.target as IDBRequest;
-        reject(`Read all failed: ${error}`);
+        reject({ message: `Read all failed: ${error}` });
       };
     });
   }
@@ -112,9 +129,9 @@ export class IndexedDB {
    * @description
    * This update behaves like a PUT request. It will update the record if it exists, or create a new one if it doesn't.
    */
-  async updateRecordById(id: number, updatedData: IDBData): Promise<string> {
+  async updateRecordById<T = any>(id: number, updatedData: Partial<T>): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject('Database not initialized');
+      if (!this.db) return reject({ message: 'Database not initialized' });
 
       const transaction = this.db.transaction([this.tableName], 'readwrite');
       const tableClient = transaction.objectStore(this.tableName);
@@ -123,23 +140,24 @@ export class IndexedDB {
       request.onsuccess = () => resolve(`Item with id ${id} updated.`);
       request.onerror = (event: Event) => {
         const { error } = event.target as IDBRequest;
-        reject(`Update failed: ${error}`);
+        reject({ message: `Update failed: ${error}` });
       };
     });
   }
 
-  async deleteRecordById(id: number): Promise<string> {
+  async deleteRecordById(id: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject('Database not initialized');
+      if (!this.db) return reject({ message: 'Database not initialized' });
 
       const transaction = this.db.transaction([this.tableName], 'readwrite');
       const tableClient = transaction.objectStore(this.tableName);
       const request = tableClient.delete(id);
 
-      request.onsuccess = () => resolve(`Item with id ${id} deleted.`);
+      request.onsuccess = () => resolve(true);
       request.onerror = (event: Event) => {
         const { error } = event.target as IDBRequest;
-        reject(`Delete failed: ${error}`);
+        console.warn(error);
+        resolve(false);
       };
     });
   }
@@ -152,10 +170,13 @@ export class IndexedDB {
     return [];
   }
 
-  // List all object stores (tables) in the current database
+  /**
+   * @description
+   * List all object stores (tables) in the current database
+   */
   async listTables(): Promise<string[]> {
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject('Database not initialized');
+      if (!this.db) return reject({ message: 'Database not initialized' });
 
       const tableNames = Array.from(this.db.objectStoreNames);
       resolve(tableNames);
@@ -169,6 +190,6 @@ export class IndexedDB {
 
     if (isTableAlreadyExists) return;
 
-    db.createObjectStore(this.tableName, { keyPath: 'id', autoIncrement: true });
+    db.createObjectStore(this.tableName, { keyPath: this.recordId, autoIncrement: this.autoIncrement });
   }
 }
