@@ -41,6 +41,6 @@ export class MyServiceWorker {
   }
 
   public static isMyServiceWorkerFeatureEnabled(): boolean {
-    return 'MyServiceWorker' in navigator;
+    return 'ServiceWorker' in navigator;
   }
 }
