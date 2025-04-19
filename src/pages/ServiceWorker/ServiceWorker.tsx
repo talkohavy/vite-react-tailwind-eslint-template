@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { User } from './types';
 import Button from '../../components/controls/Button';
+import FallbackImage from '../../components/FallbackImage';
 import Image from '../../components/Image';
 import { useCachedAsset } from '../../hooks/useCachedAsset/useCachedAsset';
 import { useCachedContent } from '../../hooks/useCachedContent';
@@ -76,7 +77,7 @@ export default function ServiceWorker() {
           <div>Cached Image:</div>
 
           <Image src={cachedAsset as string} alt='Cached Resource' className='w-1/2 h-auto'>
-            <div className='shrink-0 size-32 flex justify-center items-center border rounded-md'>Image</div>
+            <FallbackImage />
           </Image>
         </div>
       )}
