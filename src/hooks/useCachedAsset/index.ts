@@ -1,0 +1,1 @@
+export { useCachedAsset } from './useCachedAsset';

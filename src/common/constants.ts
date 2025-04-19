@@ -23,6 +23,8 @@ export const REGEX = {
   partiallyValidCreditCard: /^(?!.*\s{2})([0-9][0-9\s]*)?$/,
 };
 
+export const ON_DEMAND_CACHE = 'on-demand-cache';
+
 export const dbName = 'vite-react-template';
 export const tableName = 'dynamic';
 
