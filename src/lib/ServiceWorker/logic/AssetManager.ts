@@ -6,24 +6,7 @@ export class AssetManager {
   async cacheStaticAssets() {
     const staticCache = await caches.open(STATIC_CACHE_NAME);
 
-    const manifest = [
-      '/',
-      '/index.html',
-      '/vite.svg',
-      '/main/Button-omu9TOoX.js',
-      '/main/app.worker-CNfNJUnC.js',
-      '/main/index-4eE04RDn.js',
-      '/main/index-B3dQYfP6.css',
-      '/main/index-BYJ2YQ0L.js',
-      '/main/index-CLo41o5m.js',
-      '/main/index-CNkW44am.js',
-      '/main/index-CYHV7gDG.js',
-      '/main/index-CbWa3dfm.js',
-      '/main/index-CjjH-qJD.css',
-      '/main/index-CpFIWtVZ.js',
-      '/main/index-D8J9BXga.js',
-      '/main/index-DpW0JFHX.js',
-    ];
+    const manifest = ['/', '/index.html', '/vite.svg'];
 
     await staticCache.addAll(manifest);
   }
