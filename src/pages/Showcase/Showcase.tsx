@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
+import CodeBlock from '../../components/CodeBlock';
 import Checkbox from '../../components/controls/Checkbox';
 import Tag from '../../components/controls/Checkbox/Tag';
 import ColorPicker from '../../components/controls/ColorPicker';
@@ -171,7 +172,36 @@ export default function RadixComponents() {
       </TooltipTrigger>
       <Tooltip groupId={tooltipUniqueId} place={Placement.Top} isClickable className='!p-3' />
 
-      <div className='h-[1000px] border shrink-0'></div>
+      <div>
+        <CodeBlock
+          language='typescript'
+          code={`'use strict'
+
+import { useMemo, useEffect } from 'react';
+import { convertReactPropsToRevealProps } from '../utils/convertReactPropsToRevealProps';
+
+const UPPER_CASE_CONST = 300;
+
+/**
+ * this is a JSDOC (shocking...)
+ */
+
+async function killMe2(arr: Array<any>) {
+    return void arr.pop();
+}
+
+class Person {
+    constructor(name){
+        super('kill me')
+        this.name = name;
+    }
+}`}
+        />
+      </div>
+
+      <div className='w-96 h-10'>
+        <CodeBlock code={'ls --name hello'} />
+      </div>
 
       {isScrollToTopVisible && (
         <button
