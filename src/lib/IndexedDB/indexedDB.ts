@@ -189,6 +189,23 @@ export class IndexedDB {
     });
   }
 
+  async clearAll(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) return reject({ message: 'Database not initialized' });
+
+      const transaction = this.db.transaction([this.tableName], 'readwrite');
+      const tableClient = transaction.objectStore(this.tableName);
+      const request = tableClient.clear();
+
+      request.onsuccess = () => resolve(true);
+      request.onerror = (event: Event) => {
+        const { error } = event.target as IDBRequest;
+        console.warn(error);
+        resolve(false);
+      };
+    });
+  }
+
   // List all databases (Browser support may vary)
   static async listDatabases(): Promise<IDBDatabaseInfo[]> {
     if ('databases' in indexedDB) return indexedDB.databases();
