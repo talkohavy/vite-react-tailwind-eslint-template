@@ -9,37 +9,7 @@
   background-color: rgb(248, 248, 248);
 }
 
+body[class*='dark'] .codeBlock,
 html[data-theme='dark'] .codeBlock {
   background-color: black;
-}
-
-.copyIconButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 36px;
-  height: 36px;
-  padding: 9px;
-  border-radius: 50%;
-  opacity: 0;
-  transition: all ease-in-out 0.2s;
-}
-
-.copyIconButton:hover {
-  background-color: rgba(37, 92, 231, 0.6);
-}
-
-.codeBlock:hover .copyIconButton {
-  opacity: 1;
-}
-
-.copied {
-  opacity: 1;
-}
-
-.copyIconButton.copied {
-  background-color: rgb(54, 174, 106);
 }
