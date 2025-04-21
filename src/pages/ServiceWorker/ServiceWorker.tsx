@@ -5,6 +5,7 @@ import FallbackImage from '../../components/FallbackImage';
 import Image from '../../components/Image';
 import { useCachedAsset } from '../../hooks/useCachedAsset/useCachedAsset';
 import { useCachedContent } from '../../hooks/useCachedContent';
+import { indexDB } from '../../main';
 import { cacheAssetOnDemand } from './logic/utils/cacheAssetOnDemand';
 import { cacheContentOnDemand } from './logic/utils/cacheContentOnDemand';
 import { fetchUserById } from './logic/utils/fetchUserById';
@@ -12,7 +13,7 @@ import { registerServiceWorker } from './logic/utils/registerServiceWorker';
 
 const id = 1;
 const assetUrl = '/heart-256x256.png';
-const isFreshData = false;
+const isFreshData = true;
 
 export default function ServiceWorker() {
   const { data: cachedAsset, setData: setCachedImageUrl } = useCachedAsset({
@@ -23,7 +24,13 @@ export default function ServiceWorker() {
   const thenNetworkCallback = useCallback(async (setData: (data: User) => void) => {
     const user = await fetchUserById(id);
 
-    if (!user) return;
+    if (!user) {
+      // Expand the check to confirm you actually got back a 404
+      // Also need to think what to do when with the currently deleted User.
+      // Should we use setData to do something?
+      await indexDB.deleteRecordById(id);
+      return;
+    }
 
     await cacheContentOnDemand(user);
     setData(user);
