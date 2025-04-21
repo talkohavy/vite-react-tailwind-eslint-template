@@ -11,6 +11,7 @@ const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
 const WebWorkerPage = lazy(() => import('./pages/WebWorker'));
 const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorker'));
+const PicturePage = lazy(() => import('./pages/PicturePage'));
 
 export const routes: Array<Route> = [
   {
@@ -65,5 +66,11 @@ export const routes: Array<Route> = [
     text: 'Redux Example',
     activeNames: ['/redux'],
     Component: ReduxExamplePage,
+  },
+  {
+    to: `${BASE_URL}/picture`,
+    text: 'Picture',
+    activeNames: ['/picture'],
+    Component: PicturePage,
   },
 ];
