@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { registerServiceWorker } from '../../logic/utils/registerServiceWorker';
 
-export default function RegisterServiceWorker() {
+export default function RegisterServiceWorkerTab() {
   useEffect(() => {
     // should essentially be called on main.tsx, but for the sake of this example, we are calling it here
     registerServiceWorker();
