@@ -2,13 +2,15 @@ import { type ReactNode, useState } from 'react';
 import type { RadioOption } from '../../components/controls/RadioGroup/types';
 import RadioTabs from '../../components/controls/RadioGroup/RadioTabs';
 import CacheAssetTab from './tabs/CacheAssetTab';
+import CacheContentTab from './tabs/CacheContentTab';
+import FullExampleTab from './tabs/FullExampleTab';
 import RegisterServiceWorkerTab from './tabs/RegisterServiceWorkerTab';
 
 const contentTabs: Array<RadioOption<() => ReactNode>> = [
   { value: 0, label: 'Register', item: RegisterServiceWorkerTab },
-  { value: 1, label: 'Example 2', item: CacheAssetTab },
-  { value: 2, label: 'Example 3', item: RegisterServiceWorkerTab },
-  { value: 3, label: 'Example 4', item: RegisterServiceWorkerTab },
+  { value: 1, label: 'Cache Asset', item: CacheAssetTab },
+  { value: 2, label: 'Cache Content', item: CacheContentTab },
+  { value: 3, label: 'Full Example', item: FullExampleTab },
 ];
 
 export default function ServiceWorker() {
