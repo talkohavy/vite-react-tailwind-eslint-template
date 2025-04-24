@@ -65,3 +65,9 @@ export type DeleteRecordByIdProps = {
 export type ClearAllProps = {
   tableName: string;
 };
+
+export type AddIndexToTableProps = {
+  tableName: string;
+  fieldName: string;
+  unique?: boolean;
+};

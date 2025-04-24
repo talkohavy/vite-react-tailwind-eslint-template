@@ -9,6 +9,7 @@ import type {
   UpdateRecordByIdProps,
   DeleteRecordByIdProps,
   ClearAllProps,
+  AddIndexToTableProps,
 } from './types';
 
 export class IndexedDB {
@@ -263,6 +264,48 @@ export class IndexedDB {
         const { error } = event.target as IDBRequest;
         console.warn(error);
         resolve(false);
+      };
+    });
+  }
+
+  /**
+   * @description
+   * Adds an index to a table based on a specified field.
+   *
+   * @returns {Promise<void>} A promise that resolves when the index is added.
+   */
+  async addIndexToTable(props: AddIndexToTableProps): Promise<void> {
+    const { tableName, fieldName, unique = false } = props;
+
+    if (!this.db) throw new Error('Database not initialized');
+
+    const version = this.db.version + 1;
+    this.db.close();
+
+    const request = indexedDB.open(this.dbName, version);
+
+    return new Promise((resolve, reject) => {
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+
+        if (!db.objectStoreNames.contains(tableName)) {
+          return reject(new Error(`Table ${tableName} does not exist`));
+        }
+
+        const transaction = db.transaction([tableName], 'readwrite');
+        const tableClient = transaction.objectStore(tableName);
+        tableClient.createIndex(fieldName, fieldName, { unique });
+        this.db = db;
+      };
+
+      request.onsuccess = (event: Event) => {
+        this.db = (event.target as IDBOpenDBRequest).result;
+        resolve();
+      };
+
+      request.onerror = (event: Event) => {
+        const { error } = event.target as IDBOpenDBRequest;
+        reject(new Error(`Failed to add index: ${error}`));
       };
     });
   }
