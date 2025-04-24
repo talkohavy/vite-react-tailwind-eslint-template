@@ -75,3 +75,18 @@ export type AddIndexToTableProps = {
   fieldName: string;
   unique?: boolean;
 };
+
+export type GetRecordsByIndexProps = {
+  /**
+   * The name of the table to query.
+   */
+  tableName: string;
+  /**
+   * The name of the index to query.
+   */
+  indexName: string;
+  /**
+   * The value to search for in the index.
+   */
+  value: any;
+};

@@ -10,6 +10,7 @@ import type {
   DeleteRecordByIdProps,
   ClearAllProps,
   AddIndexToTableProps,
+  GetRecordsByIndexProps,
 } from './types';
 
 export class IndexedDB {
@@ -310,6 +311,32 @@ export class IndexedDB {
       request.onerror = (event: Event) => {
         const { error } = event.target as IDBOpenDBRequest;
         reject(new Error(`Failed to add index: ${error}`));
+      };
+    });
+  }
+
+  /**
+   * @description
+   * Retrieves records from a table based on a specific indexed field.
+   */
+  async getRecordsByIndex<T = any>(props: GetRecordsByIndexProps): Promise<Array<T>> {
+    const { tableName, indexName, value } = props;
+
+    if (!this.db) throw new Error('Database not initialized');
+
+    const transaction = this.db.transaction([tableName], 'readonly');
+    const objectStore = transaction.objectStore(tableName);
+    const index = objectStore.index(indexName);
+
+    const request = index.getAll(value);
+
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => {
+        resolve(request.result as Array<T>);
+      };
+
+      request.onerror = () => {
+        reject(new Error(`Failed to retrieve records by index: ${request.error}`));
       };
     });
   }
