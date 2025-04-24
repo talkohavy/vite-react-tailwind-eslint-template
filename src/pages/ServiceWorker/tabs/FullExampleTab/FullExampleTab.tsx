@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import type { User } from '../../types';
+import { tableName } from '../../../../common/constants';
 import Button from '../../../../components/controls/Button';
 import FallbackImage from '../../../../components/FallbackImage';
 import Image from '../../../../components/Image';
@@ -28,7 +29,7 @@ export default function FullExampleTab() {
       // Expand the check to confirm you actually got back a 404
       // Also need to think what to do when with the currently deleted User.
       // Should we use setData to do something?
-      await indexDB.deleteRecordById(id);
+      await indexDB.deleteRecordById({ tableName, id });
       return;
     }
 

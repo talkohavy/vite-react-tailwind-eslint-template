@@ -1,20 +1,25 @@
-import type { IndexedDBProps } from './types';
+import type {
+  IndexedDBProps,
+  CreateTableProps,
+  AddRecordProps,
+  UpsertRecordProps,
+  GetRecordByIdProps,
+  GetRecordsProps,
+  GetAllProps,
+  UpdateRecordByIdProps,
+  DeleteRecordByIdProps,
+  ClearAllProps,
+} from './types';
 
 export class IndexedDB {
   private dbName: string;
-  private tableName: string;
-  private recordId: string;
-  private autoIncrement: boolean;
   private version: number;
   private db: IDBDatabase | null;
 
   constructor(props: IndexedDBProps) {
-    const { dbName, tableName, recordId = 'id', autoIncrement, version = 1 } = props;
+    const { dbName, version = 1 } = props;
 
     this.dbName = dbName;
-    this.tableName = tableName;
-    this.recordId = recordId;
-    this.autoIncrement = !!autoIncrement;
     this.version = version;
     this.db = null;
   }
@@ -23,7 +28,9 @@ export class IndexedDB {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.version);
 
-      request.onupgradeneeded = this.createTableIfDoesntExist.bind(this);
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        this.db = (event.target as IDBOpenDBRequest).result;
+      };
       request.onsuccess = (event: Event) => {
         this.db = (event.target as IDBOpenDBRequest).result;
         resolve(this);
@@ -37,17 +44,57 @@ export class IndexedDB {
 
   /**
    * @description
+   * Creates a new table in the database.
+   *
+   * @returns A promise that resolves when the table is created.
+   * @throws An error if the database is not initialized or if the table creation fails.
+   */
+  async createTable(props: CreateTableProps): Promise<void> {
+    const { tableName, recordId = 'id', autoIncrement = false } = props;
+
+    return new Promise((resolve, reject) => {
+      if (!this.db) return reject({ message: 'Database not initialized' });
+
+      const version = this.db.version + 1;
+      this.db.close();
+
+      const request = indexedDB.open(this.dbName, version);
+
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+
+        if (!db.objectStoreNames.contains(tableName)) {
+          db.createObjectStore(tableName, { keyPath: recordId, autoIncrement });
+        }
+      };
+
+      request.onsuccess = (event: Event) => {
+        this.db = (event.target as IDBOpenDBRequest).result;
+        resolve();
+      };
+
+      request.onerror = (event: Event) => {
+        const { error } = event.target as IDBOpenDBRequest;
+        reject({ message: `Failed to create table: ${error}` });
+      };
+    });
+  }
+
+  /**
+   * @description
    * Returns the id of the record, which can later be used to get record by ID.
    *
    * If `autoIncrement` is `false`, it can throw an error if a record
    * with the same exact id already exists.
    */
-  async addRecord(data: Record<string, any>): Promise<string | number> {
+  async addRecord(props: AddRecordProps): Promise<string | number> {
+    const { tableName, data } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readwrite');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readwrite');
+      const tableClient = transaction.objectStore(tableName);
       const request = tableClient.add(data);
 
       request.onsuccess = () => {
@@ -66,12 +113,14 @@ export class IndexedDB {
    * Same as `addRecord`, only it does not throw an error if a record
    * with the same exact id already exists. In such case, it overrides it.
    */
-  async upsertRecord(data: Record<string, any>): Promise<string | number> {
+  async upsertRecord(props: UpsertRecordProps): Promise<string | number> {
+    const { tableName, data } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readwrite');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readwrite');
+      const tableClient = transaction.objectStore(tableName);
       const request = tableClient.put(data);
 
       request.onsuccess = () => {
@@ -85,12 +134,14 @@ export class IndexedDB {
     });
   }
 
-  async getRecordById<T = any>(id: string | number): Promise<T | null> {
+  async getRecordById<T = any>(props: GetRecordByIdProps): Promise<T | null> {
+    const { tableName, id } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readonly');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readonly');
+      const tableClient = transaction.objectStore(tableName);
       const request = tableClient.get(id);
 
       request.onsuccess = () => {
@@ -106,12 +157,14 @@ export class IndexedDB {
     });
   }
 
-  async getRecords<T = any>(query: Partial<T>): Promise<Array<T>> {
+  async getRecords<T = any>(props: GetRecordsProps<T>): Promise<Array<T>> {
+    const { tableName, query } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readonly');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readonly');
+      const tableClient = transaction.objectStore(tableName);
 
       const request = tableClient.getAll();
 
@@ -133,12 +186,14 @@ export class IndexedDB {
     });
   }
 
-  async getAll<T = any>(): Promise<Array<T>> {
+  async getAll<T = any>(props: GetAllProps): Promise<Array<T>> {
+    const { tableName } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readonly');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readonly');
+      const tableClient = transaction.objectStore(tableName);
       const request = tableClient.getAll();
 
       request.onsuccess = () => {
@@ -156,12 +211,14 @@ export class IndexedDB {
    * @description
    * This update behaves like a PUT request. It will update the record if it exists, or create a new one if it doesn't.
    */
-  async updateRecordById<T = any>(id: string | number, updatedData: Partial<T>): Promise<string> {
+  async updateRecordById<T = any>(props: UpdateRecordByIdProps<T>): Promise<string> {
+    const { tableName, id, updatedData } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readwrite');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readwrite');
+      const tableClient = transaction.objectStore(tableName);
       const request = tableClient.put({ ...updatedData, id });
 
       request.onsuccess = () => resolve(`Item with id ${id} updated.`);
@@ -172,12 +229,14 @@ export class IndexedDB {
     });
   }
 
-  async deleteRecordById(id: string | number): Promise<boolean> {
+  async deleteRecordById(props: DeleteRecordByIdProps): Promise<boolean> {
+    const { tableName, id } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readwrite');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readwrite');
+      const tableClient = transaction.objectStore(tableName);
       const request = tableClient.delete(id);
 
       request.onsuccess = () => resolve(true);
@@ -189,12 +248,14 @@ export class IndexedDB {
     });
   }
 
-  async clearAll(): Promise<boolean> {
+  async clearAll(props: ClearAllProps): Promise<boolean> {
+    const { tableName } = props;
+
     return new Promise((resolve, reject) => {
       if (!this.db) return reject({ message: 'Database not initialized' });
 
-      const transaction = this.db.transaction([this.tableName], 'readwrite');
-      const tableClient = transaction.objectStore(this.tableName);
+      const transaction = this.db.transaction([tableName], 'readwrite');
+      const tableClient = transaction.objectStore(tableName);
       const request = tableClient.clear();
 
       request.onsuccess = () => resolve(true);
@@ -225,15 +286,5 @@ export class IndexedDB {
       const tableNames = Array.from(this.db.objectStoreNames);
       resolve(tableNames);
     });
-  }
-
-  private createTableIfDoesntExist(event: IDBVersionChangeEvent) {
-    const db = (event.target as IDBOpenDBRequest).result;
-
-    const isTableAlreadyExists = db.objectStoreNames.contains(this.tableName);
-
-    if (isTableAlreadyExists) return;
-
-    db.createObjectStore(this.tableName, { keyPath: this.recordId, autoIncrement: this.autoIncrement });
   }
 }

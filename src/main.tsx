@@ -29,9 +29,10 @@ function Client() {
           initSessionManager();
           initHttpClient(API_GATEWAY_URL);
 
-          indexDB = new IndexedDB({ dbName, tableName });
+          indexDB = new IndexedDB({ dbName });
 
           await indexDB.init();
+          await indexDB.createTable({ tableName, recordId: 'id' });
 
           console.log('Application is up and running!');
         }}

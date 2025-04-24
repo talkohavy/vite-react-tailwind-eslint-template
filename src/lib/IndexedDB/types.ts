@@ -1,5 +1,9 @@
 export type IndexedDBProps = {
   dbName: string;
+  version?: number;
+};
+
+export type CreateTableProps = {
   tableName: string;
   /**
    * The key which is used as the id to get a a record by.
@@ -21,5 +25,43 @@ export type IndexedDBProps = {
    * @default false
    */
   autoIncrement?: boolean;
-  version?: number;
+};
+
+export type AddRecordProps = {
+  tableName: string;
+  data: Record<string, any>;
+};
+
+export type UpsertRecordProps = {
+  tableName: string;
+  data: Record<string, any>;
+};
+
+export type GetRecordByIdProps = {
+  tableName: string;
+  id: string | number;
+};
+
+export type GetRecordsProps<T = any> = {
+  tableName: string;
+  query: Partial<T>;
+};
+
+export type GetAllProps = {
+  tableName: string;
+};
+
+export type UpdateRecordByIdProps<T = any> = {
+  tableName: string;
+  id: string | number;
+  updatedData: Partial<T>;
+};
+
+export type DeleteRecordByIdProps = {
+  tableName: string;
+  id: string | number;
+};
+
+export type ClearAllProps = {
+  tableName: string;
 };
