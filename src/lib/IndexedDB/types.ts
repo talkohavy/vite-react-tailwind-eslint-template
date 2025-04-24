@@ -25,6 +25,10 @@ export type CreateTableProps = {
    * @default false
    */
   autoIncrement?: boolean;
+  /**
+   * Optional indexes to create when the table is created.
+   */
+  indexes?: Array<{ name: string; fieldName: string | string[]; unique?: boolean }>;
 };
 
 export type AddRecordProps = {

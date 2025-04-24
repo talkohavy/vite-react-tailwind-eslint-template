@@ -45,27 +45,31 @@ export class IndexedDB {
 
   /**
    * @description
-   * Creates a new table in the database.
+   * Creates a new table in the database with optional indexes.
    *
    * @returns A promise that resolves when the table is created.
    * @throws An error if the database is not initialized or if the table creation fails.
    */
   async createTable(props: CreateTableProps): Promise<void> {
-    const { tableName, recordId = 'id', autoIncrement = false } = props;
+    const { tableName, recordId = 'id', autoIncrement = false, indexes = [] } = props;
+
+    if (!this.db) throw new Error('Database not initialized');
+
+    const version = this.db.version + 1;
+    this.db.close();
+
+    const request = indexedDB.open(this.dbName, version);
 
     return new Promise((resolve, reject) => {
-      if (!this.db) return reject({ message: 'Database not initialized' });
-
-      const version = this.db.version + 1;
-      this.db.close();
-
-      const request = indexedDB.open(this.dbName, version);
-
       request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
 
         if (!db.objectStoreNames.contains(tableName)) {
-          db.createObjectStore(tableName, { keyPath: recordId, autoIncrement });
+          const tableClient = db.createObjectStore(tableName, { keyPath: recordId, autoIncrement });
+
+          indexes.forEach(({ name, fieldName, unique = false }) => {
+            tableClient.createIndex(name, fieldName, { unique });
+          });
         }
       };
 
