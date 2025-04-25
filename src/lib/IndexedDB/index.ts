@@ -1,1 +1,1 @@
-export { IndexedDB } from './indexedDB';
+export { indexedDBClient, initIndexedDB } from './indexedDB';

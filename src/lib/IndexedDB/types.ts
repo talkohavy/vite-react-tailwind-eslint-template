@@ -1,9 +1,22 @@
-export type IndexedDBProps = {
+export type InitIndexedDB = {
   dbName: string;
+  /**
+   * The tables to create when the database is initialized.
+   * MUST be an array of at least one table.
+   *
+   * When you create an extra table, or an extra index,
+   * you need to increment the version number.
+   * That way, open tabs will be notified of the new version,
+   * and will be asked to refresh the page.
+   */
+  tables: Array<TableMetadata>;
+  /**
+   * @default 1
+   */
   version?: number;
 };
 
-export type CreateTableProps = {
+export type TableMetadata = {
   tableName: string;
   /**
    * The key which is used as the id to get a a record by.
@@ -25,10 +38,13 @@ export type CreateTableProps = {
    * @default false
    */
   autoIncrement?: boolean;
-  /**
-   * Optional indexes to create when the table is created.
-   */
-  indexes?: Array<{ name: string; fieldName: string | string[]; unique?: boolean }>;
+  indexes?: Array<IndexMetadata>;
+};
+
+export type IndexMetadata = {
+  indexName: string;
+  fieldName: string | string[];
+  unique?: boolean;
 };
 
 export type AddRecordProps = {
@@ -68,12 +84,6 @@ export type DeleteRecordByIdProps = {
 
 export type ClearAllProps = {
   tableName: string;
-};
-
-export type AddIndexToTableProps = {
-  tableName: string;
-  fieldName: string;
-  unique?: boolean;
 };
 
 export type GetRecordsByIndexProps = {

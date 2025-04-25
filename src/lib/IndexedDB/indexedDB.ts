@@ -1,6 +1,5 @@
 import type {
-  IndexedDBProps,
-  CreateTableProps,
+  InitIndexedDB,
   AddRecordProps,
   UpsertRecordProps,
   GetRecordByIdProps,
@@ -9,81 +8,15 @@ import type {
   UpdateRecordByIdProps,
   DeleteRecordByIdProps,
   ClearAllProps,
-  AddIndexToTableProps,
   GetRecordsByIndexProps,
 } from './types';
+import { IndexDBFactory } from './logic/IndexDBFactory';
 
-export class IndexedDB {
-  private dbName: string;
-  private version: number;
+class IndexedDBClient {
   private db: IDBDatabase | null;
 
-  constructor(props: IndexedDBProps) {
-    const { dbName, version = 1 } = props;
-
-    this.dbName = dbName;
-    this.version = version;
-    this.db = null;
-  }
-
-  async init(): Promise<this> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.version);
-
-      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-        this.db = (event.target as IDBOpenDBRequest).result;
-      };
-      request.onsuccess = (event: Event) => {
-        this.db = (event.target as IDBOpenDBRequest).result;
-        resolve(this);
-      };
-      request.onerror = (event: Event) => {
-        const { error } = event.target as IDBOpenDBRequest;
-        reject({ message: `Failed to open database: ${error}` });
-      };
-    });
-  }
-
-  /**
-   * @description
-   * Creates a new table in the database with optional indexes.
-   *
-   * @returns A promise that resolves when the table is created.
-   * @throws An error if the database is not initialized or if the table creation fails.
-   */
-  async createTable(props: CreateTableProps): Promise<void> {
-    const { tableName, recordId = 'id', autoIncrement = false, indexes = [] } = props;
-
-    if (!this.db) throw new Error('Database not initialized');
-
-    const version = this.db.version + 1;
-    this.db.close();
-
-    const request = indexedDB.open(this.dbName, version);
-
-    return new Promise((resolve, reject) => {
-      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-
-        if (!db.objectStoreNames.contains(tableName)) {
-          const tableClient = db.createObjectStore(tableName, { keyPath: recordId, autoIncrement });
-
-          indexes.forEach(({ name, fieldName, unique = false }) => {
-            tableClient.createIndex(name, fieldName, { unique });
-          });
-        }
-      };
-
-      request.onsuccess = (event: Event) => {
-        this.db = (event.target as IDBOpenDBRequest).result;
-        resolve();
-      };
-
-      request.onerror = (event: Event) => {
-        const { error } = event.target as IDBOpenDBRequest;
-        reject({ message: `Failed to create table: ${error}` });
-      };
-    });
+  constructor(db: IDBDatabase) {
+    this.db = db;
   }
 
   /**
@@ -275,48 +208,6 @@ export class IndexedDB {
 
   /**
    * @description
-   * Adds an index to a table based on a specified field.
-   *
-   * @returns {Promise<void>} A promise that resolves when the index is added.
-   */
-  async addIndexToTable(props: AddIndexToTableProps): Promise<void> {
-    const { tableName, fieldName, unique = false } = props;
-
-    if (!this.db) throw new Error('Database not initialized');
-
-    const version = this.db.version + 1;
-    this.db.close();
-
-    const request = indexedDB.open(this.dbName, version);
-
-    return new Promise((resolve, reject) => {
-      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-
-        if (!db.objectStoreNames.contains(tableName)) {
-          return reject(new Error(`Table ${tableName} does not exist`));
-        }
-
-        const transaction = db.transaction([tableName], 'readwrite');
-        const tableClient = transaction.objectStore(tableName);
-        tableClient.createIndex(fieldName, fieldName, { unique });
-        this.db = db;
-      };
-
-      request.onsuccess = (event: Event) => {
-        this.db = (event.target as IDBOpenDBRequest).result;
-        resolve();
-      };
-
-      request.onerror = (event: Event) => {
-        const { error } = event.target as IDBOpenDBRequest;
-        reject(new Error(`Failed to add index: ${error}`));
-      };
-    });
-  }
-
-  /**
-   * @description
    * Retrieves records from a table based on a specific indexed field.
    */
   async getRecordsByIndex<T = any>(props: GetRecordsByIndexProps): Promise<Array<T>> {
@@ -361,4 +252,18 @@ export class IndexedDB {
       resolve(tableNames);
     });
   }
+}
+
+export let indexedDBClient = {} as IndexedDBClient;
+
+export async function initIndexedDB(props: InitIndexedDB): Promise<void> {
+  const { dbName, tables, version = 1 } = props;
+
+  const indexDBFactory = new IndexDBFactory();
+
+  const idbDatabase = await indexDBFactory.initializeDB({ dbName, tables, version });
+
+  if (tables.length === 0) throw new Error('You must provide at least one table to create.');
+
+  indexedDBClient = new IndexedDBClient(idbDatabase);
 }
