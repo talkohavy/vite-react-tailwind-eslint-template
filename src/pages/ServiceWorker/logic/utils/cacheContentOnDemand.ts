@@ -1,9 +1,9 @@
 import { tableName } from '../../../../common/constants';
-import { indexDB } from '../../../../main';
+import { indexedDBClient } from '../../../../lib/IndexedDB';
 
 export async function cacheContentOnDemand(record: Record<string, any>) {
   try {
-    const result = await indexDB.upsertRecord({ tableName, data: record });
+    const result = await indexedDBClient.upsertRecord({ tableName, data: record });
 
     return result;
   } catch (error) {

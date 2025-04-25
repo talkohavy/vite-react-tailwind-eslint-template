@@ -6,7 +6,7 @@ import FallbackImage from '../../../../components/FallbackImage';
 import Image from '../../../../components/Image';
 import { useCachedAsset } from '../../../../hooks/useCachedAsset/useCachedAsset';
 import { useCachedContent } from '../../../../hooks/useCachedContent';
-import { indexDB } from '../../../../main';
+import { indexedDBClient } from '../../../../lib/IndexedDB';
 import { cacheAssetOnDemand } from '../../logic/utils/cacheAssetOnDemand';
 import { cacheContentOnDemand } from '../../logic/utils/cacheContentOnDemand';
 import { fetchUserById } from '../../logic/utils/fetchUserById';
@@ -29,7 +29,7 @@ export default function FullExampleTab() {
       // Expand the check to confirm you actually got back a 404
       // Also need to think what to do when with the currently deleted User.
       // Should we use setData to do something?
-      await indexDB.deleteRecordById({ tableName, id });
+      await indexedDBClient.deleteRecordById({ tableName, id });
       return;
     }
 
