@@ -1,3 +1,5 @@
+import type { TableMetadata } from '../lib/IndexedDB/types';
+
 export const LS_KEY_THEME = 'theme';
 export const LS_KEY_SEARCH_PARAMS = 'search-params';
 
@@ -26,6 +28,6 @@ export const REGEX = {
 export const ON_DEMAND_CACHE = 'on-demand-cache';
 
 export const dbName = 'vite-react-template';
-export const tableName = 'dynamic';
+export const tables: Array<TableMetadata> = [{ tableName: 'dynamic' }];
 
 export const BASE_URL = '/base';
