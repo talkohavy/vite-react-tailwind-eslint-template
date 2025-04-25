@@ -259,11 +259,11 @@ export let indexedDBClient = {} as IndexedDBClient;
 export async function initIndexedDB(props: InitIndexedDB): Promise<void> {
   const { dbName, tables, version = 1 } = props;
 
+  if (tables.length === 0) throw new Error('You must provide at least one table to create.');
+
   const indexDBFactory = new IndexDBFactory();
 
   const idbDatabase = await indexDBFactory.initializeDB({ dbName, tables, version });
-
-  if (tables.length === 0) throw new Error('You must provide at least one table to create.');
 
   indexedDBClient = new IndexedDBClient(idbDatabase);
 }
