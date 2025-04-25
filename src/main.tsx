@@ -27,7 +27,9 @@ function Client() {
           initSessionManager();
           initHttpClient(API_GATEWAY_URL);
 
-          await initIndexedDB({ dbName, tables, version: 2 });
+          const version = await fetchIndexedDBVersion();
+
+          await initIndexedDB({ dbName, tables, version });
 
           console.log('Application is up and running!');
         }}
@@ -52,3 +54,9 @@ root.render(<Client />);
 
 window.addEventListener('error', ({ error }) => ReactErrorOverlay(error));
 window.addEventListener('unhandledrejection', ({ reason }) => ReactErrorOverlay(reason));
+
+async function fetchIndexedDBVersion() {
+  const version = +(localStorage.getItem('version') as any) || 1;
+
+  return version;
+}
