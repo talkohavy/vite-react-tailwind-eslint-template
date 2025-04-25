@@ -11,8 +11,9 @@ export class IndexDBFactory {
     const { dbName, tables, version } = props;
 
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(dbName, version);
-
+      const request = indexedDB.open(dbName, version); // onupgradeneeded is called on one of 2 cases:
+      // 1. The database is created for the first time
+      // 2. The version number used on `indexedDB.open()` is higher than the current version of the database.
       request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
         this.db = db;
