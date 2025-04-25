@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { tableName } from '../common/constants';
+import { dynamicTableName } from '../common/constants';
 import { indexedDBClient } from '../lib/IndexedDB';
 
 type useCachedContentProps<T> = {
@@ -28,7 +28,7 @@ export function useCachedContent<T = any>(props: useCachedContentProps<T>) {
   useEffect(() => {
     async function loadCachedContentIfExists() {
       try {
-        const cachedRecord = (await indexedDBClient.getRecordById({ tableName, id })) as T | null;
+        const cachedRecord = (await indexedDBClient.getRecordById({ tableName: dynamicTableName, id })) as T | null;
 
         if (cachedRecord) setData(cachedRecord);
 

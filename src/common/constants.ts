@@ -28,6 +28,7 @@ export const REGEX = {
 export const ON_DEMAND_CACHE = 'on-demand-cache';
 
 export const dbName = 'vite-react-template';
-export const tables: Array<TableMetadata> = [{ tableName: 'dynamic' }];
+export const dynamicTableName = 'dynamic';
+export const tables: Array<TableMetadata> = [{ tableName: dynamicTableName }];
 
 export const BASE_URL = '/base';
