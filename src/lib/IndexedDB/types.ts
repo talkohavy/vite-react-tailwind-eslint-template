@@ -10,10 +10,7 @@ export type InitIndexedDB = {
    * and will be asked to refresh the page.
    */
   tables: Array<TableMetadata>;
-  /**
-   * @default 1
-   */
-  version?: number;
+  version: number;
 };
 
 export type TableMetadata = {
