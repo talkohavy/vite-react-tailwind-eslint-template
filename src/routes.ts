@@ -12,6 +12,7 @@ const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
 const WebWorkerPage = lazy(() => import('./pages/WebWorker'));
 const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorker'));
 const PicturePage = lazy(() => import('./pages/PicturePage'));
+const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
 
 export const routes: Array<Route> = [
   {
@@ -72,5 +73,11 @@ export const routes: Array<Route> = [
     text: 'Picture',
     activeNames: ['/picture'],
     Component: PicturePage,
+  },
+  {
+    to: `${BASE_URL}/indexed-db`,
+    text: 'IndexedDB',
+    activeNames: ['/indexed-db'],
+    Component: IndexedDBPage,
   },
 ];
