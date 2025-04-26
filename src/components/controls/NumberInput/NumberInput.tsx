@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import Input from '../Input';
+import InputBase from '../Input/InputBase';
 import { DELAY_BETWEEN_STEPS, DELAY_START_RUNNING } from './constants';
 
 type NumberInputProps = {
-  value: any;
+  value: number | string;
   setValue: (value: any) => void;
   step: number;
   placeholder?: string;
@@ -52,7 +52,7 @@ export default function NumberInput(props: NumberInputProps) {
 
   return (
     <div className='flex gap-2'>
-      <Input initialValue={value} onChange={setValue} placeholder={placeholder} />
+      <InputBase value={value.toString()} setValue={setValue} placeholder={placeholder} />
 
       <div className='flex flex-col items-center justify-between p-0.5'>
         <button
@@ -62,10 +62,11 @@ export default function NumberInput(props: NumberInputProps) {
           onMouseLeave={stopAdding}
           onTouchStart={startAdding}
           onTouchEnd={stopAdding}
-          className='flex size-4 items-center justify-center rounded-md bg-neutral-200 text-xs'
+          className='flex size-4 items-center justify-center rounded-md bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:active:bg-neutral-500 text-xs dark:text-white transition-colors'
         >
           ▲
         </button>
+
         <button
           type='button'
           onMouseDown={startSubtracting}
@@ -73,7 +74,7 @@ export default function NumberInput(props: NumberInputProps) {
           onMouseLeave={stopSubtracting}
           onTouchStart={startSubtracting}
           onTouchEnd={stopSubtracting}
-          className='flex size-4 items-center justify-center rounded-md bg-neutral-200 text-xs'
+          className='flex size-4 items-center justify-center rounded-md bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:active:bg-neutral-500 text-xs dark:text-white transition-colors'
         >
           ▼
         </button>
