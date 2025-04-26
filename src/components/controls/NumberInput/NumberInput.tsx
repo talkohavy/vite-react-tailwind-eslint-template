@@ -1,6 +1,9 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import InputBase from '../Input/InputBase';
+import { createIntegerNumbersOnlyRule } from '../Input/logic/rules/createIntegerNumbersOnlyRule';
 import { DELAY_BETWEEN_STEPS, DELAY_START_RUNNING } from './constants';
+
+const allowNumbersOnly = createIntegerNumbersOnlyRule(20);
 
 type NumberInputProps = {
   value: number | string;
@@ -50,9 +53,20 @@ export default function NumberInput(props: NumberInputProps) {
     clearInterval(intervalId);
   };
 
+  const onTargetValueChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { shouldChange, newValue } = allowNumbersOnly(e, e.target.value);
+
+      if (shouldChange) {
+        setValue(newValue);
+      }
+    },
+    [setValue],
+  );
+
   return (
     <div className='flex gap-2'>
-      <InputBase value={value.toString()} setValue={setValue} placeholder={placeholder} />
+      <InputBase value={value.toString()} setValue={onTargetValueChange} placeholder={placeholder} />
 
       <div className='flex flex-col items-center justify-between p-0.5'>
         <button
