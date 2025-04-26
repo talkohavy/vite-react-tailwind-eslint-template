@@ -33,7 +33,9 @@ export class IndexDBFactory {
           const db = (event.target as IDBOpenDBRequest).result;
           this.db = db;
 
-          this.handleUpgrade(tables);
+          const activeTransaction = (event.target as IDBOpenDBRequest).transaction!;
+
+          this.handleUpgrade(activeTransaction, tables);
         };
 
         request.onsuccess = (event: Event) => {
@@ -64,7 +66,7 @@ export class IndexDBFactory {
     });
   }
 
-  private handleUpgrade(tables: TableMetadata[]): void {
+  private handleUpgrade(activeTransaction: IDBTransaction, tables: TableMetadata[]): void {
     if (!this.db) throw new Error('Database not initialized');
 
     tables.forEach((table) => {
@@ -74,7 +76,7 @@ export class IndexDBFactory {
         const isTableAlreadyExists = this.isTableAlreadyExists(tableName);
 
         const tableClient: IDBObjectStore = isTableAlreadyExists
-          ? this.getTableClient(tableName)
+          ? this.getTableClientFromActiveTransaction(activeTransaction, tableName)
           : this.createNewTableClient({ tableName, recordId, autoIncrement });
 
         const filteredIndexes = indexes.filter(({ indexName }) => !tableClient.indexNames.contains(indexName));
@@ -122,11 +124,11 @@ export class IndexDBFactory {
     return this.db.objectStoreNames.contains(tableName);
   }
 
-  private getTableClient(tableName: string): IDBObjectStore {
+  private getTableClientFromActiveTransaction(activeTransaction: IDBTransaction, tableName: string): IDBObjectStore {
     if (!this.db) throw new Error('Database not initialized');
 
     try {
-      const tableClient = this.db.transaction([tableName], 'readwrite').objectStore(tableName);
+      const tableClient = activeTransaction.objectStore(tableName);
       return tableClient;
     } catch (error) {
       console.error(`Error getting table client for ${tableName}:`, error);
