@@ -1,68 +1,24 @@
-import { useCallback, useRef, useState } from 'react';
 import InputBase from '../Input/InputBase';
-import { createIntegerNumbersOnlyRule } from '../Input/logic/rules/createIntegerNumbersOnlyRule';
-import { DELAY_BETWEEN_STEPS, DELAY_START_RUNNING } from './constants';
+import { useNumberInputLogic } from './logic/useNumberInputLogic';
 
-const allowNumbersOnly = createIntegerNumbersOnlyRule(20);
-
-type NumberInputProps = {
+export type NumberInputProps = {
   value: number | string;
   setValue: (value: any) => void;
   step: number;
+  min?: number;
+  max?: number;
   placeholder?: string;
 };
 
 export default function NumberInput(props: NumberInputProps) {
-  const { value, setValue, step = 1, placeholder = '' } = props;
+  const { value, setValue, step = 1, min, max, placeholder = '' } = props;
 
-  const [intervalId, setIntervalId] = useState<any>(null);
-  const isAddingRef = useRef(false);
-  const isSubtractingRef = useRef(false);
-  const timeoutIdRef = useRef<any>(null);
-
-  const incrementValue = () => setValue((prev: any) => +prev + step);
-  const decrementValue = () => setValue((prev: any) => +prev - step);
-
-  const startAdding = () => {
-    incrementValue();
-
-    isAddingRef.current = true;
-    timeoutIdRef.current = setTimeout(() => {
-      setIntervalId(setInterval(incrementValue, DELAY_BETWEEN_STEPS));
-    }, DELAY_START_RUNNING);
-  };
-
-  const stopAdding = () => {
-    isAddingRef.current = false;
-    clearTimeout(timeoutIdRef.current);
-    clearInterval(intervalId);
-  };
-
-  const startSubtracting = () => {
-    decrementValue();
-
-    isSubtractingRef.current = true;
-    timeoutIdRef.current = setTimeout(() => {
-      setIntervalId(setInterval(decrementValue, DELAY_BETWEEN_STEPS));
-    }, DELAY_START_RUNNING);
-  };
-
-  const stopSubtracting = () => {
-    isSubtractingRef.current = false;
-    clearTimeout(timeoutIdRef.current);
-    clearInterval(intervalId);
-  };
-
-  const onTargetValueChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { shouldChange, newValue } = allowNumbersOnly(e, e.target.value);
-
-      if (shouldChange) {
-        setValue(newValue);
-      }
-    },
-    [setValue],
-  );
+  const { startAdding, stopAdding, startSubtracting, stopSubtracting, onTargetValueChange } = useNumberInputLogic({
+    setValue,
+    step,
+    min,
+    max,
+  });
 
   return (
     <div className='flex gap-2'>
