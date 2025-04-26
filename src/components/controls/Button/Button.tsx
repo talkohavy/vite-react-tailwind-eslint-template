@@ -4,11 +4,12 @@ import { twMerge } from 'tailwind-merge';
 type ButtonProps = PropsWithChildren<{
   onClick: () => void;
   className?: string;
+  disabled?: boolean;
 }>;
 // & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button(props: ButtonProps) {
-  const { children, onClick, className, ...rest } = props;
+  const { children, onClick, disabled, className, ...rest } = props;
 
   return (
     <button
@@ -18,6 +19,7 @@ export default function Button(props: ButtonProps) {
         'block cursor-pointer rounded-md hover:rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-500 active:rounded-xl focus:rounded-lg p-3',
         className,
       )}
+      disabled={disabled}
       {...rest}
     >
       {children}
