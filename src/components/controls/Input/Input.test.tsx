@@ -3,7 +3,7 @@ import { wrapInDebounce } from '@talkohavy/lodash';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Input from './Input';
-import { createNoLeadingOrTrailingSpacesRule } from './logic/rules';
+import { createNoLeadingOrTrailingSpacesRule } from './logic/rules/createNoLeadingOrTrailingSpacesRule';
 
 describe('Input', () => {
   it('should render', () => {
