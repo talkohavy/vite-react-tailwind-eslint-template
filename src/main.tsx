@@ -22,19 +22,19 @@ const store = createStore({} as any);
 function Client() {
   return (
     <StrictMode>
-      <SuspenseUntilReady
-        asyncFn={async () => {
-          initSessionManager();
-          initHttpClient(API_GATEWAY_URL);
+      <GlobalErrorBoundaryDevelopment isDevelopmentOnly>
+        <SuspenseUntilReady
+          asyncFn={async () => {
+            initSessionManager();
+            initHttpClient(API_GATEWAY_URL);
 
-          const version = await fetchIndexedDBVersion();
+            const version = await fetchIndexedDBVersion();
 
-          await initIndexedDB({ dbName, tables, version });
+            await initIndexedDB({ dbName, tables, version });
 
-          console.log('Application is up and running!');
-        }}
-      >
-        <GlobalErrorBoundaryDevelopment isDevelopmentOnly>
+            console.log('Application is up and running!');
+          }}
+        >
           <StoreProvider store={store}>
             <BrowserRouter>
               <DarkThemeProvider>
@@ -42,8 +42,8 @@ function Client() {
               </DarkThemeProvider>
             </BrowserRouter>
           </StoreProvider>
-        </GlobalErrorBoundaryDevelopment>
-      </SuspenseUntilReady>
+        </SuspenseUntilReady>
+      </GlobalErrorBoundaryDevelopment>
     </StrictMode>
   );
 }
