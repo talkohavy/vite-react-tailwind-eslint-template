@@ -8,8 +8,8 @@ export default function IndexedDBPage() {
       <div>Indexed DB</div>
 
       <Button
-        onClick={() => {
-          const result = indexedDBClient.getAll({ tableName: dynamicTableName });
+        onClick={async () => {
+          const result = await indexedDBClient.getAll({ tableName: dynamicTableName });
 
           console.log('result', result);
         }}
