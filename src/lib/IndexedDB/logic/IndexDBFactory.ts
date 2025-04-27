@@ -35,7 +35,8 @@ export class IndexDBFactory {
 
           const activeTransaction = (event.target as IDBOpenDBRequest).transaction!;
 
-          this.handleUpgrade(activeTransaction, tables);
+          this.deleteTablesNotInSchema(tables);
+          this.createOrUpdateTables(activeTransaction, tables);
         };
 
         request.onsuccess = (event: Event) => {
@@ -66,10 +67,25 @@ export class IndexDBFactory {
     });
   }
 
-  private handleUpgrade(activeTransaction: IDBTransaction, tables: TableMetadata[]): void {
+  private deleteTablesNotInSchema(tables: TableMetadata[]): void {
     if (!this.db) throw new Error('Database not initialized');
 
-    this.deleteTablesNotInSchema(tables);
+    const tableNames = tables.map((table) => table.tableName);
+    const existingTableNames = Array.from(this.db.objectStoreNames);
+    existingTableNames.forEach((existingTableName) => {
+      if (!tableNames.includes(existingTableName)) {
+        try {
+          console.log(`Deleting table ${existingTableName} as it's no longer needed`);
+          this.db?.deleteObjectStore(existingTableName);
+        } catch (error) {
+          console.error(`Error deleting table ${existingTableName}:`, error);
+        }
+      }
+    });
+  }
+
+  private createOrUpdateTables(activeTransaction: IDBTransaction, tables: TableMetadata[]): void {
+    if (!this.db) throw new Error('Database not initialized');
 
     tables.forEach((table) => {
       const { tableName, recordId = 'id', autoIncrement, indexes = [] } = table;
@@ -88,23 +104,6 @@ export class IndexDBFactory {
       } catch (error) {
         console.error(`Error processing table ${tableName}:`, error);
         // Continue with other tables instead of failing the entire upgrade.
-      }
-    });
-  }
-
-  private deleteTablesNotInSchema(tables: TableMetadata[]): void {
-    if (!this.db) throw new Error('Database not initialized');
-
-    const tableNames = tables.map((table) => table.tableName);
-    const existingTableNames = Array.from(this.db.objectStoreNames);
-    existingTableNames.forEach((existingTableName) => {
-      if (!tableNames.includes(existingTableName)) {
-        try {
-          console.log(`Deleting table ${existingTableName} as it's no longer needed`);
-          this.db?.deleteObjectStore(existingTableName);
-        } catch (error) {
-          console.error(`Error deleting table ${existingTableName}:`, error);
-        }
       }
     });
   }
