@@ -30,6 +30,14 @@ function Client() {
 
             const version = await fetchIndexedDBVersion();
 
+            if (version > 1) {
+              tables[1]!.indexes!.push({
+                indexName: 'nameIndex',
+                fieldName: 'name',
+                unique: false,
+              });
+            }
+
             await initIndexedDB({ dbName, tables, version });
 
             console.log('Application is up and running!');
@@ -55,6 +63,7 @@ root.render(<Client />);
 window.addEventListener('error', ({ error }) => ReactErrorOverlay(error));
 window.addEventListener('unhandledrejection', ({ reason }) => ReactErrorOverlay(reason));
 
+// Mock version update:
 async function fetchIndexedDBVersion() {
   const version = +(localStorage.getItem('version') as any) || 1;
 

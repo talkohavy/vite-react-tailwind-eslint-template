@@ -29,6 +29,13 @@ export const ON_DEMAND_CACHE = 'on-demand-cache';
 
 export const dbName = 'vite-react-template';
 export const dynamicTableName = 'dynamic';
-export const tables: Array<TableMetadata> = [{ tableName: dynamicTableName }];
+export const usersTableName = 'users';
+export const tables: Array<TableMetadata> = [
+  { tableName: dynamicTableName },
+  {
+    tableName: usersTableName,
+    indexes: [],
+  },
+];
 
 export const BASE_URL = '/base';
