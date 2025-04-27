@@ -1,22 +1,21 @@
-import { dynamicTableName } from '../../common/constants';
-import Button from '../../components/controls/Button';
-import { indexedDBClient } from '../../lib/IndexedDB';
+import { useState } from 'react';
+import type { Person } from './types';
+import AddNewPerson from './content/AddNewPerson';
+import GetAllPersons from './content/GetAllPersons';
+import GetOnePerson from './content/GetOnePerson';
 
 export default function IndexedDBPage() {
+  const [records, setRecords] = useState<Person[]>([]);
+
   return (
     <div className='size-full p-6 overflow-auto'>
-      <div>Indexed DB</div>
+      <div className='text-xl font-bold mb-4'>Indexed DB</div>
 
-      <Button
-        onClick={async () => {
-          const result = await indexedDBClient.getAll({ tableName: dynamicTableName });
+      <AddNewPerson setRecords={setRecords} />
 
-          console.log('result', result);
-        }}
-        className='mr-6'
-      >
-        Get all records from IndexedDB {dynamicTableName}
-      </Button>
+      <GetOnePerson />
+
+      <GetAllPersons records={records} setRecords={setRecords} />
     </div>
   );
 }
