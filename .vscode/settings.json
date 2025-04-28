@@ -157,8 +157,7 @@
       // "selection.background": "default",
       // "textLink.foreground": "default"
     },
-
-    "focusBorder": "#00000000",
+    // "focusBorder": "#00000000", // <--- don't make this transparent! It will make items in tree-view invisible upon traversing with the arrows.
     "editorGutter.modifiedBackground": "#00000000",
     "editorGutter.addedBackground": "#00000000",
     "editorGutter.deletedBackground": "#00000000",
