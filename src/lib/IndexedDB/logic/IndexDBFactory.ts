@@ -46,7 +46,7 @@ export class IndexDBFactory {
         };
 
         request.onsuccess = (event: Event) => {
-          this.db = (event.target as IDBOpenDBRequest).result;
+          this.db = (event.target as IDBOpenDBRequest).result; // <--- in case an upgrade didn't happen, we need to store the IDBDatabase for later use. i.e. the version number is the same.
 
           this.upgradeAttempts = 0; // <--- Reset upgrade attempts on success
 
