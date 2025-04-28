@@ -30,6 +30,12 @@ export class IndexDBFactory {
         request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
           console.log(`Upgrading database from version ${event.oldVersion} to ${event.newVersion}`);
 
+          if (event.oldVersion === 0) {
+            console.log('A new database was created.');
+          } else {
+            console.log('An existing database was upgraded.');
+          }
+
           const db = (event.target as IDBOpenDBRequest).result;
           this.db = db;
 

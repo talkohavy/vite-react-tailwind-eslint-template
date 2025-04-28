@@ -10,6 +10,17 @@ export type InitIndexedDB = {
    * and will be asked to refresh the page.
    */
   tables: Array<TableMetadata>;
+  /**
+   * Version number must be an INTEGER value greater than 0.
+   *
+   * If 0 is passed, an error will be thrown.
+   *
+   * It also means that you can't use a float, otherwise it will be converted to the closest
+   * lower integer and the transaction may not start. For example, don't use 2.4 as a version
+   * number: const request = indexedDB.open("MyTestDatabase", 2.4); // don't do this! The version will be rounded to 2.
+   *
+   * @default 1
+   */
   version: number;
 };
 
