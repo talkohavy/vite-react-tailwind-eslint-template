@@ -48,11 +48,11 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         setIsLoading(true);
         setIsError(false);
 
-        const { response, requestId } = await asyncFuncRef.current(funcProps);
+        const { data, requestInfo } = await asyncFuncRef.current(funcProps);
 
-        requestIdRef.current = requestId;
+        requestIdRef.current = requestInfo.requestId;
 
-        const updatedData = (transform ? transform(response) : response) as TransformType;
+        const updatedData = (transform ? transform(data) : data) as TransformType;
 
         setData(updatedData);
 
