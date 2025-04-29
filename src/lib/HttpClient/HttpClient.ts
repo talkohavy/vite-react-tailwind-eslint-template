@@ -67,6 +67,14 @@ export class HttpClient {
       [HttpHeaders.BROWSER_ID]: localStorageId,
       [HttpHeaders.TAB_ID]: sessionStorageId,
       ...additionalHeaders,
+    } as HeadersInit;
+
+    const requestInfo = {
+      url: fullTargetUrl,
+      method,
+      body,
+      headers,
+      requestId,
     };
 
     try {
@@ -84,6 +92,7 @@ export class HttpClient {
 
       if (error) {
         throw new HttpError({
+          message: error.message || 'An error occurred while processing the request',
           status: responseRaw.status,
           url: responseRaw.url,
           method,
@@ -95,7 +104,7 @@ export class HttpClient {
         });
       }
 
-      return { response, requestId };
+      return { data: response, requestInfo };
     } catch (error: any) {
       this.removeAbortControllerFromList(requestId);
 
@@ -122,7 +131,7 @@ export class HttpClient {
 
   private async parseJsonResponse(responseRaw: any): Promise<{ data?: any; error?: any }> {
     try {
-      if (!responseRaw.ok) return { error: true };
+      if (!responseRaw.ok) return { error: { message: 'Request failed' } };
 
       const response = await responseRaw.json();
       return { data: response };

@@ -23,6 +23,12 @@ export type ExecuteProps = {
 } & FetchOptions;
 
 export type HttpResponse<T = any> = {
-  response: T;
-  requestId: string;
+  data: T;
+  requestInfo: {
+    url: string;
+    method: HttpMethod;
+    body?: any;
+    headers: HeadersInit;
+    requestId: string;
+  };
 };
