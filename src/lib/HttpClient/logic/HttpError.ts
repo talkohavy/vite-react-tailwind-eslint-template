@@ -1,6 +1,7 @@
 import type { HttpMethod } from '../types';
 
 type HttpErrorConstructorProps = {
+  message: string;
   status: number;
   url: string;
   method: HttpMethod;
@@ -22,9 +23,9 @@ export class HttpError extends Error {
   type: string;
 
   constructor(props: HttpErrorConstructorProps) {
-    super();
+    const { message, status, url, method, requestBody, requestHeaders, responseHeaders, requestId, type } = props;
 
-    const { status, url, method, requestBody, requestHeaders, responseHeaders, requestId, type } = props;
+    super(message);
 
     this.status = status;
     this.url = url;
@@ -34,5 +35,9 @@ export class HttpError extends Error {
     this.responseHeaders = responseHeaders;
     this.requestId = requestId;
     this.type = type;
+
+    Object.defineProperty(this, 'name', { enumerable: true });
+    Object.defineProperty(this, 'message', { value: message, enumerable: true });
+    Object.defineProperty(this, 'stack', { enumerable: true });
   }
 }
