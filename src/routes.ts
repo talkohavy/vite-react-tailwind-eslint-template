@@ -10,7 +10,7 @@ const ServerCallPage = lazy(() => import('./pages/ServerCall'));
 const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
 const WebWorkerPage = lazy(() => import('./pages/WebWorker'));
-const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorker'));
+const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorkerPage'));
 const PicturePage = lazy(() => import('./pages/PicturePage'));
 const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
 

@@ -13,7 +13,7 @@ const contentTabs: Array<RadioOption<() => ReactNode>> = [
   { value: 3, label: 'Full Example', item: FullExampleTab },
 ];
 
-export default function ServiceWorker() {
+export default function ServiceWorkerPage() {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   const TabContent = contentTabs[selectedTabIndex]!.item!;
