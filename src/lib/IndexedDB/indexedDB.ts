@@ -34,13 +34,13 @@ class IndexedDBClient {
 
       const transaction = this.db.transaction([tableName], 'readwrite');
       const tableClient = transaction.objectStore(tableName);
-      const request = tableClient.add(data);
+      const addRequest = tableClient.add(data);
 
-      request.onsuccess = () => {
-        const result = request.result as number;
+      addRequest.onsuccess = () => {
+        const result = addRequest.result as number;
         resolve(result);
       };
-      request.onerror = (event: Event) => {
+      addRequest.onerror = (event: Event) => {
         const errorMessage = (event.target as IDBRequest).error;
         reject({ message: `Create failed: ${errorMessage}` });
       };
@@ -60,13 +60,13 @@ class IndexedDBClient {
 
       const transaction = this.db.transaction([tableName], 'readwrite');
       const tableClient = transaction.objectStore(tableName);
-      const request = tableClient.put(data);
+      const putRequest = tableClient.put(data);
 
-      request.onsuccess = () => {
-        const result = request.result as number;
+      putRequest.onsuccess = () => {
+        const result = putRequest.result as number;
         resolve(result);
       };
-      request.onerror = (event: Event) => {
+      putRequest.onerror = (event: Event) => {
         const errorMessage = (event.target as IDBRequest).error;
         reject({ message: `Create failed: ${errorMessage}` });
       };
@@ -81,46 +81,17 @@ class IndexedDBClient {
 
       const transaction = this.db.transaction([tableName], 'readonly');
       const tableClient = transaction.objectStore(tableName);
-      const request = tableClient.get(id);
+      const getRequest = tableClient.get(id);
 
-      request.onsuccess = () => {
-        const result = request.result as T;
+      getRequest.onsuccess = () => {
+        const result = getRequest.result as T;
         if (result) return resolve(result);
 
         return resolve(null);
       };
-      request.onerror = (event: Event) => {
+      getRequest.onerror = (event: Event) => {
         const errorMessage = (event.target as IDBRequest).error;
         reject({ message: `Read failed: ${errorMessage}` });
-      };
-    });
-  }
-
-  async getRecords<T = any>(props: GetRecordsProps<T>): Promise<Array<T>> {
-    const { tableName, query } = props;
-
-    return new Promise((resolve, reject) => {
-      if (!this.db) return reject({ message: 'Database not initialized' });
-
-      const transaction = this.db.transaction([tableName], 'readonly');
-      const tableClient = transaction.objectStore(tableName);
-
-      const request = tableClient.getAll();
-
-      request.onsuccess = () => {
-        const result = request.result as Array<T>;
-        // Filter results based on the query parameters
-        const filteredResults = result.filter((item) =>
-          // Ensure the query's key exists and matches the value
-          Object.keys(query).every((key) => query[key as keyof T] === item[key as keyof T]),
-        );
-
-        resolve(filteredResults);
-      };
-
-      request.onerror = (event: Event) => {
-        const errorMessage = (event.target as IDBRequest).error;
-        reject({ message: `Find query failed: ${errorMessage}` });
       };
     });
   }
@@ -133,15 +104,52 @@ class IndexedDBClient {
 
       const transaction = this.db.transaction([tableName], 'readonly');
       const tableClient = transaction.objectStore(tableName);
-      const request = tableClient.getAll();
+      const getAllRequest = tableClient.getAll() as IDBRequest<Array<T>>;
 
-      request.onsuccess = () => {
-        const result = request.result as Array<T>;
+      getAllRequest.onsuccess = () => {
+        const result = getAllRequest.result;
         resolve(result);
       };
-      request.onerror = (event: Event) => {
+      getAllRequest.onerror = (event: Event) => {
         const { error } = event.target as IDBRequest;
         reject({ message: `Read all failed: ${error}` });
+      };
+    });
+  }
+
+  /**
+   * @description
+   * **SLOW!**
+   *
+   * Try to avoid if you can, and use one of the other methods.
+   *
+   * Fetches all the records from the DB, and filters them using javascript.
+   */
+  async getRecordsByQuery<T = any>(props: GetRecordsProps<T>): Promise<Array<T>> {
+    const { tableName, query } = props;
+
+    return new Promise((resolve, reject) => {
+      if (!this.db) return reject({ message: 'Database not initialized' });
+
+      const transaction = this.db.transaction([tableName], 'readonly');
+      const tableClient = transaction.objectStore(tableName);
+
+      const getAllRequest = tableClient.getAll();
+
+      getAllRequest.onsuccess = () => {
+        const result = getAllRequest.result as Array<T>;
+        // Filter results based on the query parameters
+        const filteredResults = result.filter((item) =>
+          // Ensure the query's key exists and matches the value
+          Object.keys(query).every((key) => query[key as keyof T] === item[key as keyof T]),
+        );
+
+        resolve(filteredResults);
+      };
+
+      getAllRequest.onerror = (event: Event) => {
+        const errorMessage = (event.target as IDBRequest).error;
+        reject({ message: `Find query failed: ${errorMessage}` });
       };
     });
   }
