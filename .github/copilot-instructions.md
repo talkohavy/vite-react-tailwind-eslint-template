@@ -1,4 +1,4 @@
-Prefer async/await syntax over .then()/.cacth()
+Prefer async/await syntax over .then()/.catch()
 
 Prefer functional components over const components.
 
