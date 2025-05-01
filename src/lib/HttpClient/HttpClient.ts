@@ -20,10 +20,10 @@ export class HttpClient {
    * @description
    * `url` should be without the BASE_URL!
    *
-   * i.e. if the full url is "http://localhost:3000/users",
+   * i.e. if the full url is "http://localhost:8000/users",
    * then you should pass in only "/users".
    *
-   * The "http://localhost:3000" part is considered as BASE_URL, and is added automatically.
+   * The "http://localhost:8000" part is considered as BASE_URL, and is added automatically.
    */
   public get<TResponse = any>(url: string, options?: FetchOptions) {
     return this.execute<TResponse>({ url, method: HttpMethod.GET, ...options });
@@ -33,10 +33,10 @@ export class HttpClient {
    * @description
    * `url` should be without the BASE_URL!
    *
-   * i.e. if the full url is "http://localhost:3000/users",
+   * i.e. if the full url is "http://localhost:8000/users",
    * then you should pass in only "/users".
    *
-   * The "http://localhost:3000" part is considered as BASE_URL, and is added automatically.
+   * The "http://localhost:8000" part is considered as BASE_URL, and is added automatically.
    */
   public post<TResponse = any>(url: string, options?: FetchOptions) {
     return this.execute<TResponse>({ url, method: HttpMethod.POST, ...options });
