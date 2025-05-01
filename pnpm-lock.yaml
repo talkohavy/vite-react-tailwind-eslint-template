@@ -24,8 +24,8 @@ importers:
         specifier: ^2.5.1
         version: 2.5.1(react-redux@9.2.0(@types/react@19.0.8)(react@19.0.0)(redux@5.0.1))(react@19.0.0)
       '@talkohavy/lodash':
-        specifier: ^1.3.5
-        version: 1.3.5
+        specifier: ^1.4.0
+        version: 1.4.0
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -1930,8 +1930,8 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6
 
-  '@talkohavy/lodash@1.3.5':
-    resolution: {integrity: sha512-DI8nreEHUbaS4wfiL+wxadrKErjuE2yooZpeiBJWEi+/JLAyU25bMKDgH43CrZa/ExmvnqUoI99dSk3+3Y1B1Q==}
+  '@talkohavy/lodash@1.4.0':
+    resolution: {integrity: sha512-baxc0Zz5EOs2SzTKyPMclJBMy8WACBN7TBHLOZBDCtWiL1cnpuSMVHXc0MX4tabvTR9FwqAVslrPOJ0SsDwP3w==}
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -6718,7 +6718,7 @@ snapshots:
       tailwindcss: 4.0.6
       vite: 6.1.0(@types/node@22.13.4)(jiti@2.4.2)(lightningcss@1.29.1)(sass-embedded@1.85.0)(yaml@2.6.0)
 
-  '@talkohavy/lodash@1.3.5': {}
+  '@talkohavy/lodash@1.4.0': {}
 
   '@testing-library/dom@10.4.0':
     dependencies:
