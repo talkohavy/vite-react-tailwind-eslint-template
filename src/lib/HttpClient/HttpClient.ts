@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { uuid } from '../../common/utils/uuid';
 import { sessionManager } from '../SessionManager';
 import { HttpError } from './logic/HttpError';
 import { type ExecuteProps, type FetchOptions, HttpHeaders, HttpMethod, type HttpResponse } from './types';

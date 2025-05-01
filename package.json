@@ -36,8 +36,7 @@
     "react-router-dom": "^7.1.5",
     "react-tooltip": "^5.28.0",
     "tailwind": "^4.0.0",
-    "tailwind-merge": "^3.0.1",
-    "uuid": "^11.0.5"
+    "tailwind-merge": "^3.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
