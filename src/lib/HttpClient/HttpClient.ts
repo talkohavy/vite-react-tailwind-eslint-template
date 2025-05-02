@@ -1,7 +1,14 @@
 import { uuid } from '../../common/utils/uuid';
 import { sessionManager } from '../SessionManager';
 import { HttpError } from './logic/HttpError';
-import { type ExecuteProps, type FetchOptions, HttpHeaders, HttpMethod, type HttpResponse } from './types';
+import {
+  type ExecuteProps,
+  type FetchOptions,
+  HttpHeaders,
+  HttpMethod,
+  type HttpResponse,
+  type ResponseError,
+} from './types';
 
 export let httpClient: HttpClient;
 
@@ -60,14 +67,15 @@ export class HttpClient {
     const requestId = uuid();
     const signal = this.addAbortControllerToList(requestId);
     const fullTargetUrl = `${this._baseUrl}${url}`;
-    const { localStorageId, sessionStorageId } = sessionManager.getSessionIds();
-    const headers = {
-      'Content-Type': 'application/json',
-      [HttpHeaders.REQUEST_ID]: requestId,
-      [HttpHeaders.BROWSER_ID]: localStorageId,
-      [HttpHeaders.TAB_ID]: sessionStorageId,
-      ...additionalHeaders,
-    } as HeadersInit;
+    const headers = new Headers(additionalHeaders);
+    headers.append('Content-Type', 'application/json');
+    headers.append(HttpHeaders.REQUEST_ID, requestId);
+
+    if (sessionManager) {
+      const { localStorageId, sessionStorageId } = sessionManager.getSessionIds();
+      headers.append(HttpHeaders.BROWSER_ID, localStorageId!);
+      headers.append(HttpHeaders.TAB_ID, sessionStorageId!);
+    }
 
     const requestInfo = {
       url: fullTargetUrl,
@@ -78,9 +86,9 @@ export class HttpClient {
     };
 
     try {
-      const responseRaw = await fetch(fullTargetUrl, {
+      const response = await fetch(fullTargetUrl, {
         body: JSON.stringify(body),
-        headers: headers as HeadersInit,
+        headers,
         method,
         credentials: 'include' as RequestCredentials,
         signal,
@@ -88,23 +96,25 @@ export class HttpClient {
 
       this.removeAbortControllerFromList(requestId);
 
-      const { error, data: response } = await this.parseJsonResponse(responseRaw);
+      const { error, data } = await this.handleServerResponse(response);
 
       if (error) {
+        const { status, url, headers: responseHeaders, type } = response;
+
         throw new HttpError({
-          message: error.message || 'An error occurred while processing the request',
-          status: responseRaw.status,
-          url: responseRaw.url,
+          message: error.message,
+          status,
+          url,
           method,
           requestBody: body,
           requestHeaders: headers,
-          responseHeaders: responseRaw.headers,
+          responseHeaders,
           requestId,
-          type: responseRaw.type,
+          type,
         });
       }
 
-      return { data: response, requestInfo };
+      return { data, requestInfo };
     } catch (error: any) {
       this.removeAbortControllerFromList(requestId);
 
@@ -129,15 +139,44 @@ export class HttpClient {
     this.abortControllers.clear();
   }
 
-  private async parseJsonResponse(responseRaw: any): Promise<{ data?: any; error?: any }> {
+  private async handleServerResponse(responseRaw: any): Promise<{ data?: any; error?: ResponseError }> {
     try {
-      if (!responseRaw.ok) return { error: { message: 'Request failed' } };
+      const parsedBody = await this.parseResponseBody(responseRaw);
 
-      const response = await responseRaw.json();
-      return { data: response };
+      if (!responseRaw.ok) return this.handleNotOk(responseRaw.status, parsedBody);
+
+      return { data: parsedBody };
     } catch (error) {
-      return { error };
+      return {
+        error: {
+          message: 'Failed to process response',
+          status: responseRaw.status,
+          originalError: error,
+        },
+      };
     }
+  }
+
+  private async parseResponseBody(responseRaw: any): Promise<{ data?: any; error?: any }> {
+    const responseText = await responseRaw.text();
+    let parsedBody: any;
+
+    try {
+      // Only try to parse as JSON if there's content
+      parsedBody = responseText ? JSON.parse(responseText) : null;
+    } catch {
+      // If we can't parse as JSON, use the raw text
+      parsedBody = { message: responseText || 'No response body' };
+    }
+
+    return parsedBody;
+  }
+
+  private handleNotOk(statusCode: number, parsedBody: any): { error: ResponseError } {
+    const errorMessage =
+      parsedBody?.message || parsedBody?.error || (typeof parsedBody === 'string' ? parsedBody : 'Request failed');
+
+    return { error: { message: errorMessage, status: statusCode } };
   }
 
   private addAbortControllerToList(requestId: string) {

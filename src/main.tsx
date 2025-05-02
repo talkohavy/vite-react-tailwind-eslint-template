@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router';
 import App from '@src/App';
-import { dbName, tables } from './common/constants';
+import { API_GATEWAY_URL, dbName, tables } from './common/constants';
 import GlobalErrorBoundaryDevelopment from './components/ErrorBoundaries/ErrorBoundaryWithModalFallback';
 import ReactErrorOverlay from './components/ReactErrorOverlay';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
@@ -14,8 +14,6 @@ import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
 import './common/bootstrap';
 import './index.css';
-
-const API_GATEWAY_URL = 'http://localhost:8000';
 
 const store = createStore({} as any);
 

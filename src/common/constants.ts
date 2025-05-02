@@ -3,6 +3,8 @@ import type { TableMetadata } from '../lib/IndexedDB/types';
 export const LS_KEY_THEME = 'theme';
 export const LS_KEY_SEARCH_PARAMS = 'search-params';
 
+export const API_GATEWAY_URL = 'http://localhost:8000';
+
 export const API_URLS = {
   users_service: {
     loginWithCredentials: '/login',
