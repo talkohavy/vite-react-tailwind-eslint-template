@@ -1,16 +1,4 @@
-import type { HttpMethod } from '../types';
-
-type HttpErrorConstructorProps = {
-  message: string;
-  status: number;
-  url: string;
-  method: HttpMethod;
-  requestBody: any;
-  requestHeaders: any;
-  responseHeaders: any;
-  requestId: string;
-  type: string;
-};
+import type { HttpErrorConstructorProps, HttpMethod } from '../types';
 
 export class HttpError extends Error {
   status: number;
@@ -36,7 +24,7 @@ export class HttpError extends Error {
     this.requestId = requestId;
     this.type = type;
 
-    Object.defineProperty(this, 'name', { enumerable: true });
+    Object.defineProperty(this, 'name', { value: 'HttpError', enumerable: true });
     Object.defineProperty(this, 'message', { value: message, enumerable: true });
     Object.defineProperty(this, 'stack', { enumerable: true });
   }
