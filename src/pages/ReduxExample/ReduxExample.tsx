@@ -1,16 +1,23 @@
-import { useSelector } from 'react-redux';
-import { userDataSelector } from '../../store/slices/user/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { userDataIdSelector, userDataSelector } from '../../store/slices/user/selectors';
+import { updateUser } from '../../store/slices/user/slice';
 
-// import LoginModal from './LoginModal';
-// import { openLoginModal } from '../../store/slices/modals/actions';
-// import { isLoginModalOpenSelector } from '../../store/slices/modals/selectors';
-// import { loginToastMessageSelector } from '../../store/slices/toast/selectors';
+const userId = 0;
 
 export default function ReduxExamplePage() {
-  // const isLoginModalOpen = useSelector(isLoginModalOpenSelector);
-  // const loginToastMessage = useSelector(loginToastMessageSelector);
   const userData = useSelector(userDataSelector);
-  // const dispatch = useDispatch();
+  const userDataId = useSelector(userDataIdSelector);
+
+  const dispatch = useDispatch();
+
+  const onClick = () => {
+    // userId++;
+    dispatch(updateUser({ user: { id: userId }, isLogged: true }));
+  };
+
+  console.log('i rendered!');
+  console.log('userDataId', userDataId);
+  console.log('userData is:', userData);
 
   return (
     <div className='flex size-full flex-col items-start justify-start gap-6 p-6 dark:text-white'>
@@ -18,15 +25,15 @@ export default function ReduxExamplePage() {
 
       <button
         type='button'
-        // onClick={() => dispatch(openLoginModal())}
+        onClick={onClick}
         className='self-center rounded-lg border border-black bg-red-500 px-3 py-2 hover:bg-red-600'
       >
-        Open Login Modal
+        Click
       </button>
 
       {/* {loginToastMessage.isShowing && <div>{loginToastMessage.text}</div>} */}
 
-      <div>{userData && JSON.stringify(userData)}</div>
+      {/* <div>{userData && JSON.stringify(userData)}</div> */}
 
       {/* {isLoginModalOpen && <LoginModal />} */}
     </div>

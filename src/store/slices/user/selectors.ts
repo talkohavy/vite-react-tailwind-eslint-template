@@ -1,7 +1,7 @@
 import { State } from '@src/store';
 
-const isUserLoadingSelector = (state: State) => state.user.isLoading;
+export const isUserLoadingSelector = (state: State) => state.user.isLoading;
 
-const userDataSelector = (state: State) => state.user.data;
+export const userDataSelector = (state: State) => state.user.data;
 
-export { isUserLoadingSelector, userDataSelector };
+export const userDataIdSelector = (state: State) => state.user.data?.id;
