@@ -60,14 +60,15 @@ export class HttpClient {
     const requestId = uuid();
     const signal = this.addAbortControllerToList(requestId);
     const fullTargetUrl = `${this._baseUrl}${url}`;
-    const { localStorageId, sessionStorageId } = sessionManager.getSessionIds();
-    const headers = {
-      'Content-Type': 'application/json',
-      [HttpHeaders.REQUEST_ID]: requestId,
-      [HttpHeaders.BROWSER_ID]: localStorageId,
-      [HttpHeaders.TAB_ID]: sessionStorageId,
-      ...additionalHeaders,
-    } as HeadersInit;
+    const headers = new Headers(additionalHeaders);
+    headers.append('Content-Type', 'application/json');
+    headers.append(HttpHeaders.REQUEST_ID, requestId);
+
+    if (sessionManager) {
+      const { localStorageId, sessionStorageId } = sessionManager.getSessionIds();
+      headers.append(HttpHeaders.BROWSER_ID, localStorageId!);
+      headers.append(HttpHeaders.TAB_ID, sessionStorageId!);
+    }
 
     const requestInfo = {
       url: fullTargetUrl,
