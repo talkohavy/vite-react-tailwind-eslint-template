@@ -1,3 +1,5 @@
+import { SYNC_REQUESTS } from '../../common/constants';
+
 // NOTE! The name `ServiceWorker` is already taken
 export class MyServiceWorker {
   private static instance: MyServiceWorker;
@@ -31,6 +33,17 @@ export class MyServiceWorker {
   public static addOnFetchListener(onFetch: (event: any) => Promise<Response | undefined>): void {
     MyServiceWorker._self.addEventListener('fetch', (event: any) => {
       event.respondWith(onFetch(event));
+    });
+  }
+
+  public static addOnSyncListener(onSync: (event: any) => void): void {
+    MyServiceWorker._self.addEventListener('sync', (event: any) => {
+      if (event.tag !== SYNC_REQUESTS) {
+        console.error('No tag found for sync event');
+        return;
+      }
+
+      event.waitUntil(onSync(event));
     });
   }
 }

@@ -29,13 +29,21 @@ export const REGEX = {
 
 export const ON_DEMAND_CACHE = 'on-demand-cache';
 
+export const SYNC_REQUESTS = 'sync-requests';
+
 export const dbName = 'vite-react-template';
 export const dynamicTableName = 'dynamic';
 export const usersTableName = 'users';
+export const syncRequestsTableName = 'sync-requests';
 export const tables: Array<TableMetadata> = [
   { tableName: dynamicTableName },
   {
     tableName: usersTableName,
+    indexes: [],
+  },
+  {
+    tableName: syncRequestsTableName,
+    autoIncrement: true,
     indexes: [],
   },
 ];
