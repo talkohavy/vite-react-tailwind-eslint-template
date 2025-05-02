@@ -34,7 +34,7 @@ async function runBuild() {
   console.log(`${greenColor}- Step 2:${stopColor} build the output dir`);
 
   await build({
-    entryPoints: ['src/lib/ServiceWorker/initScript.ts'],
+    entryPoints: ['src/lib/ServiceWorker/initServiceWorker.ts'],
     bundle: true,
     outfile: 'src/public/sw.js',
     minify: isProd, // <--- defaults to `false`. should be `true` only in production.
