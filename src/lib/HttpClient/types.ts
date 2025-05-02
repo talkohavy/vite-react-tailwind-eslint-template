@@ -14,7 +14,7 @@ export enum HttpHeaders {
 
 export type FetchOptions = {
   body?: any;
-  headers?: Record<string, string | number | boolean>;
+  headers?: HeadersInit;
 };
 
 export type ExecuteProps = {
@@ -31,4 +31,22 @@ export type HttpResponse<T = any> = {
     headers: HeadersInit;
     requestId: string;
   };
+};
+
+export type HttpErrorConstructorProps = {
+  message: string;
+  status: number;
+  url: string;
+  method: HttpMethod;
+  requestBody: any;
+  requestHeaders: any;
+  responseHeaders: any;
+  requestId: string;
+  type: string;
+};
+
+export type ResponseError = {
+  message: string;
+  status: number;
+  originalError?: any;
 };
