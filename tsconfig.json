@@ -54,7 +54,7 @@
     // -----------------------------
     // Section 4: JavaScript Support
     // -----------------------------
-    "checkJs": true, // without it? this config file would not apply to js/jsx files. Enable error reporting in type-checked JavaScript files.
+    "checkJs": false, // without it? this config file would not apply to js/jsx files. Enable error reporting in type-checked JavaScript files.
     "maxNodeModuleJsDepth": 0, // Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'.
     // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
 
