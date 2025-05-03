@@ -2,6 +2,8 @@ Prefer async/await syntax over .then()/.catch()
 
 Prefer functional components over const components.
 
+Prefer using the `function` keyword to define functions rather than using arrow functions or `const` function expressions.
+
 Prefer typescript over javascript.
 
 Prefer `Array.forEach` over `for of`.
