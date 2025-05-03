@@ -26,7 +26,7 @@ export default function ServiceWorkerPage() {
         value={selectedTabIndex}
         setValue={setSelectedTabIndex}
         options={contentTabs}
-        className='flex gap-px'
+        className='flex gap-px overflow-auto shrink-0'
       />
 
       <TabContent />
