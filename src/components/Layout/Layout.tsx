@@ -12,7 +12,7 @@ export default function Layout(props: LayoutProps) {
     <div className='flex h-full flex-col items-start justify-start'>
       <Header />
 
-      <div className='flex size-full items-center justify-center overflow-auto'>
+      <div className='flex size-full items-center justify-start overflow-auto'>
         <Sidebar />
 
         <Main>{children}</Main>

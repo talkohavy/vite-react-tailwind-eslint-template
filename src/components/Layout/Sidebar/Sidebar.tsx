@@ -9,8 +9,8 @@ export default function Sidebar() {
   return (
     <nav
       className={clsx(
-        'relative flex h-full flex-col items-start justify-start bg-amber-50 p-10 shadow-md transition-all duration-300 dark:bg-slate-500',
-        isSidebarOpen ? 'w-xl' : 'w-4',
+        'relative flex h-full shrink-0 flex-col items-start justify-start bg-amber-50 p-10 shadow-md transition-all duration-300 dark:bg-slate-500',
+        isSidebarOpen ? 'w-72' : 'w-4',
       )}
     >
       <button
@@ -21,7 +21,11 @@ export default function Sidebar() {
         <DownArrow className={clsx('stroke-black', isSidebarOpen ? 'rotate-90' : 'rotate-270')} />
       </button>
 
-      {isSidebarOpen && <SideBarLinkList />}
+      <div
+        className={clsx('w-full opacity-0 transition-opacity duration-300 delay-300', isSidebarOpen && 'opacity-100')}
+      >
+        {isSidebarOpen && <SideBarLinkList />}
+      </div>
     </nav>
   );
 }
