@@ -5,6 +5,7 @@ import { useSubtracting } from './hooks/useSubtracting';
 import { isWithinRange } from './utils/isWithinRange';
 
 type useNumberInputLogicProps = {
+  value: number;
   setValue: (value: any) => void;
   step: number;
   min?: number;
@@ -12,7 +13,7 @@ type useNumberInputLogicProps = {
 };
 
 export function useNumberInputLogic(props: useNumberInputLogicProps) {
-  const { setValue, step, min, max } = props;
+  const { value, setValue, step, min, max } = props;
 
   // Invoked on user typing:
   const onTargetValueChange = useCallback(
@@ -21,15 +22,15 @@ export function useNumberInputLogic(props: useNumberInputLogicProps) {
       const shouldStillChange = shouldChange && isWithinRange({ newValue, min, max });
 
       if (shouldStillChange) {
-        setValue(newValue);
+        setValue(Number(newValue));
       }
     },
     [setValue, min, max],
   );
 
-  const { startAdding, stopAdding } = useAdding({ setValue, step, max });
+  const { startAdding, stopAdding } = useAdding({ value, setValue, step, max });
 
-  const { startSubtracting, stopSubtracting } = useSubtracting({ setValue, step, min });
+  const { startSubtracting, stopSubtracting } = useSubtracting({ value, setValue, step, min });
 
   return {
     onTargetValueChange,

@@ -7,6 +7,7 @@ import Checkbox from '../../components/controls/Checkbox';
 import Tag from '../../components/controls/Checkbox/Tag';
 import ColorPicker from '../../components/controls/ColorPicker';
 import Combobox from '../../components/controls/Combobox';
+import NumberInput from '../../components/controls/NumberInput';
 import RadioDots from '../../components/controls/RadioGroup/RadiosDots';
 import Select from '../../components/controls/Select';
 import Textarea from '../../components/controls/Textarea';
@@ -47,6 +48,7 @@ export default function RadixComponents() {
   const [progressBarValue, setProgressBarValue] = useState<number>(0);
   const [selectedRadio, setSelectedRadio] = useState<any>(null);
   const [textareaValue, setTextareaValue] = useState<string>('');
+  const [numberValue, setNumberValue] = useState<number>(0);
 
   const refElement = useRef<HTMLElement>({} as HTMLElement);
 
@@ -120,6 +122,8 @@ export default function RadixComponents() {
         <div>rgba color: {color.toString('rgba')}</div>
         <div>rgba color: {color.toString('hsla')}</div>
       </div>
+
+      <NumberInput value={numberValue} setValue={setNumberValue} min={0} max={12} />
 
       <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 

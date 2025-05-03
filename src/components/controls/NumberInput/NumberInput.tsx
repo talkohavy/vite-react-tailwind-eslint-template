@@ -2,7 +2,7 @@ import InputBase from '../Input/InputBase';
 import { useNumberInputLogic } from './logic/useNumberInputLogic';
 
 export type NumberInputProps = {
-  value: number | string;
+  value: number;
   setValue: (value: any) => void;
   step?: number;
   min?: number;
@@ -14,6 +14,7 @@ export default function NumberInput(props: NumberInputProps) {
   const { value, setValue, step = 1, min, max, placeholder = '' } = props;
 
   const { startAdding, stopAdding, startSubtracting, stopSubtracting, onTargetValueChange } = useNumberInputLogic({
+    value,
     setValue,
     step,
     min,

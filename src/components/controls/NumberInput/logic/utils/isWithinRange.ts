@@ -9,8 +9,8 @@ export function isWithinRange(props: IsWithinRangeProps) {
 
   if (newValue === '') return true;
 
-  const isHigherThanMin = min !== undefined && +newValue > min;
-  const isLowerThanMax = max !== undefined && +newValue < max;
+  const isHigherThanMin = min === undefined || +newValue >= min;
+  const isLowerThanMax = max === undefined || +newValue <= max;
   const isWithinRange = isHigherThanMin && isLowerThanMax;
 
   return isWithinRange;

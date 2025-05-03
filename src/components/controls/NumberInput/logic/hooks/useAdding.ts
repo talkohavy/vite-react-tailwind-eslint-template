@@ -2,33 +2,39 @@ import { useCallback, useRef, useState } from 'react';
 import { DELAY_BETWEEN_STEPS, DELAY_START_RUNNING } from '../constants';
 
 type UseAddingProps = {
+  value: number;
   setValue: (value: any) => void;
   step: number;
   max?: number;
 };
 
 export function useAdding(props: UseAddingProps) {
-  const { setValue, step, max } = props;
+  const { value, setValue, step, max } = props;
 
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const isAddingRef = useRef(false);
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
 
-  const incrementValue = useCallback(() => {
-    setValue((prev: any) => {
-      const newValue = +prev + step;
-      return max !== undefined && newValue > max ? max : newValue;
-    });
-  }, [setValue, step, max]);
+  const incrementValue = (iteration: number) => {
+    const newValue = value + step * iteration;
+    const updateValue = max !== undefined && newValue > max ? max : newValue;
+    setValue(updateValue);
+  };
 
-  const startAdding = useCallback(() => {
-    incrementValue();
+  const startAdding = () => {
+    let iteration = 1;
+    incrementValue(iteration);
 
     isAddingRef.current = true;
     timeoutIdRef.current = setTimeout(() => {
-      setIntervalId(setInterval(incrementValue, DELAY_BETWEEN_STEPS));
+      setIntervalId(
+        setInterval(() => {
+          iteration++;
+          incrementValue(iteration);
+        }, DELAY_BETWEEN_STEPS),
+      );
     }, DELAY_START_RUNNING);
-  }, [incrementValue]);
+  };
 
   const stopAdding = useCallback(() => {
     isAddingRef.current = false;
