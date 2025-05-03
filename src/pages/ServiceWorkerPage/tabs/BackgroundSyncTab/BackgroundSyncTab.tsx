@@ -15,6 +15,7 @@ export default function BackgroundSyncTab() {
     handleAgeChange,
     onSendDataClick,
     tryToSyncData,
+    data,
   } = useBackgroundSyncTabLogic();
 
   return (
@@ -53,6 +54,16 @@ export default function BackgroundSyncTab() {
         <Button onClick={onSendDataClick}>Send Data</Button>
 
         <Button onClick={tryToSyncData}>Try to sync</Button>
+      </div>
+
+      <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+        {data.map((user: any, index) => (
+          <div key={index} className='p-4 border rounded shadow-sm'>
+            <div className='font-medium'>Name: {user.name}</div>
+            <div>Email: {user.email}</div>
+            <div>Age: {user.age}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
