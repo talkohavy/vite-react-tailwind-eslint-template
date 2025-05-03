@@ -4,7 +4,7 @@ import { useNumberInputLogic } from './logic/useNumberInputLogic';
 export type NumberInputProps = {
   value: number | string;
   setValue: (value: any) => void;
-  step: number;
+  step?: number;
   min?: number;
   max?: number;
   placeholder?: string;
