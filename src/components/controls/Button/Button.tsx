@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type ButtonProps = PropsWithChildren<{
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   disabled?: boolean;
 }>;
