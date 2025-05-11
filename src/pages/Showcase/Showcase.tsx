@@ -2,6 +2,10 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
+import ToggleV1 from '../../components/beautiful/ToggleV1';
+import ToggleV2 from '../../components/beautiful/ToggleV2';
+import ToggleV3 from '../../components/beautiful/ToggleV3';
+import ToggleV4 from '../../components/beautiful/ToggleV4';
 import CodeBlock from '../../components/CodeBlock';
 import Checkbox from '../../components/controls/Checkbox';
 import Tag from '../../components/controls/Checkbox/Tag';
@@ -126,6 +130,10 @@ export default function RadixComponents() {
       <NumberInput value={numberValue} setValue={setNumberValue} min={0} max={12} />
 
       <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+      <ToggleV1 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+      <ToggleV2 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+      <ToggleV3 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
+      <ToggleV4 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
 
       <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Remember me?' />
 

@@ -1,23 +1,22 @@
 import clsx from 'clsx';
-import styles from './BasicToggleV2.module.css';
+import styles from './Toggle.module.css';
 
-type BasicToggleV2Props = {
+type ToggleProps = {
   isChecked: boolean;
   setIsChecked: (value: any) => void;
   disabled?: boolean;
   className?: string;
 };
 
-export default function BasicToggleV2(props: BasicToggleV2Props) {
+export default function Toggle(props: ToggleProps) {
   const { isChecked, setIsChecked, disabled, className } = props;
 
   return (
-    <label className={clsx(styles.toggleSwitch, className)}>
+    <label className={clsx(styles.switch, className)}>
       <input type='checkbox' checked={isChecked} onChange={setIsChecked} disabled={disabled} />
-
-      <div className={styles.toggleSwitchBackground}>
-        <div className={styles.toggleSwitchSlider} />
-      </div>
+      <span className={styles.radioButtonBg}>
+        <div className={styles.slider} />
+      </span>
     </label>
   );
 }

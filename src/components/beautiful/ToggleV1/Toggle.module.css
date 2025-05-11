@@ -1,4 +1,4 @@
-.basicToggleWrapper {
+.toggleWrapper {
   --height: 22px;
   --padding: calc(var(--height) / 11);
   --slider-size: calc(var(--height) - 2 * var(--padding) - 2px);
@@ -10,6 +10,7 @@
   cursor: pointer;
   transition: all 0.2s ease-out;
   background-color: #e9e9eb;
+  flex-shrink: 0;
 }
 
 .checkbox {
@@ -33,10 +34,10 @@
   background: white;
 }
 
-.basicToggleWrapper:has(.checkbox:checked) {
+.toggleWrapper:has(.checkbox:checked) {
   background-color: #34c759;
 }
 
-.basicToggleWrapper:has(.checkbox:checked) .roundBall {
+.toggleWrapper:has(.checkbox:checked) .roundBall {
   left: calc(100% - var(--slider-size) - var(--padding));
 }

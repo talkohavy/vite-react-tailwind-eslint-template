@@ -1,18 +1,18 @@
 import clsx from 'clsx';
-import styles from './BasicToggle.module.css';
+import styles from './Toggle.module.css';
 
-type BasicToggleProps = {
+type ToggleProps = {
   isChecked: boolean;
   setIsChecked: (value: any) => void;
   disabled?: boolean;
   className?: string;
 };
 
-export default function BasicToggle(props: BasicToggleProps) {
+export default function Toggle(props: ToggleProps) {
   const { isChecked, setIsChecked, disabled, className } = props;
 
   return (
-    <label className={clsx(styles.basicToggleWrapper, className)}>
+    <label className={clsx(styles.toggleWrapper, className)}>
       <input
         type='checkbox'
         checked={isChecked}

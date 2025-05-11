@@ -6,6 +6,7 @@
   display: inline-block;
   width: var(--width);
   height: calc(var(--width) / 2);
+  flex-shrink: 0;
   cursor: pointer;
 }
 
@@ -32,7 +33,7 @@
   background-color: #fff;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .toggleSwitch input[type='checkbox']:checked + .toggleSwitchBackground {
