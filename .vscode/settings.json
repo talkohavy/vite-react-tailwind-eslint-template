@@ -10,6 +10,7 @@
   "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.editor.editorActionsLocation": "default",
   // "workbench.list.horizontalScrolling": true,
+  // "search.mode": "newEditor",
   "explorer.autoReveal": true,
   "explorer.autoRevealExclude": {
     "**/node_modules": false, // <--- Finally!!! I've been looking for this! opens/reveals files in node_modules in explorer tree view.
@@ -70,6 +71,9 @@
   "typescript.preferences.importModuleSpecifier": "relative", // <--- defaults to "shortest"
   "typescript.preferences.importModuleSpecifierEnding": "auto", // <--- defaults to "auto"
   "typescript.updateImportsOnFileMove.enabled": "always", // <--- defaults to "prompt"
+
+  // "typescript.validate.enable": true,
+  // "typescript.tsserver.experimental.enableProjectDiagnostics": true,
 
   // ----------------
   // Work Tree Rules:
