@@ -11,6 +11,7 @@ import Checkbox from '../../components/controls/Checkbox';
 import Tag from '../../components/controls/Checkbox/Tag';
 import ColorPicker from '../../components/controls/ColorPicker';
 import Combobox from '../../components/controls/Combobox';
+import Input from '../../components/controls/Input';
 import NumberInput from '../../components/controls/NumberInput';
 import RadioDots from '../../components/controls/RadioGroup/RadiosDots';
 import Select from '../../components/controls/Select';
@@ -40,6 +41,7 @@ const options: Array<SelectOption> = [
 export default function RadixComponents() {
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false);
   const tooltipUniqueId = useId();
+  const [inputValue, setInputValue] = useState('');
   const [bookmarksChecked, setBookmarksChecked] = useState(true);
   const [urlsChecked, setUrlsChecked] = useState(false);
   const [person, setPerson] = useState('colm');
@@ -91,6 +93,8 @@ export default function RadixComponents() {
           <DownArrow className='size-3' />
         </button>
       )}
+
+      <Input initialValue={inputValue} onChange={setInputValue} placeholder='Enter name' />
 
       <RadioDots
         options={[
