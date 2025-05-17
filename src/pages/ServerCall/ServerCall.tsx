@@ -1,35 +1,47 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import Button from '../../components/controls/Button';
 import { httpClient } from '../../lib/HttpClient';
 
 export default function ServerCall() {
   const [data, setData] = useState<any>();
   const [error, setError] = useState<any>();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await httpClient.get('/');
+  const fetchUsers = async () => {
+    try {
+      const { data } = await httpClient.get('/users');
+      console.log('response is:', data);
 
-        console.log('response is:', response);
-
-        setData(response);
-      } catch (error) {
-        setError(error);
-      }
+      setData('data loaded successfully!');
+    } catch (error) {
+      setError(error);
     }
+  };
 
-    fetchData();
-  }, []);
+  const createUser = async () => {
+    try {
+      const { data } = await httpClient.post('/users', {
+        body: {
+          name: 'John Doe',
+          email: 'talkohavy@example.com',
+        },
+      });
+
+      console.log('response is:', data);
+    } catch (error) {
+      setError(error);
+    }
+  };
 
   return (
-    <div className='w-full p-4'>
-      <div>hello world</div>
-
-      <hr />
-      <br />
-
+    <div className='flex flex-col gap-6 size-full p-4'>
       <div>data: {data && JSON.stringify(data)}</div>
       <div>error: {error?.message}</div>
+
+      <div className='flex gap-2'>
+        <Button onClick={fetchUsers}>Fetch Users</Button>
+
+        <Button onClick={createUser}>Create User</Button>
+      </div>
     </div>
   );
 }
