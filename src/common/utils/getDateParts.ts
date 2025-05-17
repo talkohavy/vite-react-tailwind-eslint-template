@@ -1,31 +1,3 @@
-enum DateParts {
-  Day = 'day',
-  DayPeriod = 'dayPeriod',
-  Era = 'era',
-  Hour = 'hour',
-  Literal = 'literal',
-  Minute = 'minute',
-  Month = 'month',
-  Second = 'second',
-  TimeZoneName = 'timeZoneName',
-  Weekday = 'weekday',
-  Year = 'year',
-}
-
-type DateByParts = {
-  day: any;
-  dayPeriod: any;
-  era: any;
-  hour: any;
-  literal: any;
-  minute: any;
-  month: any;
-  second: any;
-  timeZoneName: any;
-  weekday: any;
-  year: any;
-};
-
 type Options = {
   localeMatcher?: 'best fit' | 'lookup' | undefined;
   weekday?: 'long' | 'short' | 'narrow' | undefined;
@@ -58,13 +30,16 @@ export function getDateParts(date: Date, options = {} as Options) {
 
   const partsAsArray = formatter.formatToParts(date.getTime());
 
-  const partsAsObject = partsAsArray.reduce((acc, currentItem) => {
-    if (currentItem.type !== DateParts.Literal) {
-      acc[currentItem.type as DateParts] = currentItem.value;
-    }
+  const partsAsObject = partsAsArray.reduce(
+    (acc, currentItem) => {
+      if (currentItem.type !== 'literal') {
+        acc[currentItem.type as keyof Intl.DateTimeFormatPartTypesRegistry] = currentItem.value;
+      }
 
-    return acc;
-  }, {} as DateByParts);
+      return acc;
+    },
+    {} as { [K in keyof Intl.DateTimeFormatPartTypesRegistry]: string | undefined },
+  );
 
   return partsAsObject;
 }
