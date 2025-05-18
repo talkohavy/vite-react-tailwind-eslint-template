@@ -1,9 +1,10 @@
-import type { HttpErrorConstructorProps, HttpMethod } from '../types';
+import type { HttpErrorConstructorProps } from '../types';
+import type { HttpMethodValues } from './constants';
 
 export class HttpError extends Error {
   status: number;
   url: string;
-  method: HttpMethod;
+  method: HttpMethodValues;
   requestBody: any;
   requestHeaders: any;
   responseHeaders: any;

@@ -1,14 +1,8 @@
+import type { ExecuteProps, FetchOptions, HttpResponse, ResponseError } from './types';
 import { uuid } from '../../common/utils/uuid';
 import { sessionManager } from '../SessionManager';
+import { HttpHeaders, HttpMethod } from './logic/constants';
 import { HttpError } from './logic/HttpError';
-import {
-  type ExecuteProps,
-  type FetchOptions,
-  HttpHeaders,
-  HttpMethod,
-  type HttpResponse,
-  type ResponseError,
-} from './types';
 
 export let httpClient: HttpClient;
 

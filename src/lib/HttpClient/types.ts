@@ -1,16 +1,4 @@
-export enum HttpMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  PATCH = 'PATCH',
-  DELETE = 'DELETE',
-}
-
-export enum HttpHeaders {
-  REQUEST_ID = 'x-request-id',
-  BROWSER_ID = 'x-browser-id',
-  TAB_ID = 'x-tab-id',
-}
+import type { HttpMethodValues } from './logic/constants';
 
 export type FetchOptions = {
   body?: any;
@@ -19,14 +7,14 @@ export type FetchOptions = {
 
 export type ExecuteProps = {
   url: string;
-  method: HttpMethod;
+  method: HttpMethodValues;
 } & FetchOptions;
 
 export type HttpResponse<T = any> = {
   data: T;
   requestInfo: {
     url: string;
-    method: HttpMethod;
+    method: HttpMethodValues;
     body?: any;
     headers: HeadersInit;
     requestId: string;
@@ -37,7 +25,7 @@ export type HttpErrorConstructorProps = {
   message: string;
   status: number;
   url: string;
-  method: HttpMethod;
+  method: HttpMethodValues;
   requestBody: any;
   requestHeaders: any;
   responseHeaders: any;
