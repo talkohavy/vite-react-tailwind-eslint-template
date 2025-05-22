@@ -1,7 +1,8 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
 import type { SelectOption } from '../../components/controls/Select/types';
+import FancyProgressBar from '../../components/beautiful/FancyProgressBar';
 import ToggleV1 from '../../components/beautiful/ToggleV1';
 import ToggleV2 from '../../components/beautiful/ToggleV2';
 import ToggleV3 from '../../components/beautiful/ToggleV3';
@@ -19,8 +20,8 @@ import Textarea from '../../components/controls/Textarea';
 import Toggle from '../../components/controls/Toggle';
 import DatePicker from '../../components/DatePicker';
 import DropdownMenu from '../../components/DropdownMenu';
-import LinearProgressBar from '../../components/LinearProgressBar';
 import PinInput from '../../components/PinInput';
+import ProgressBar from '../../components/ProgressBar';
 import DownArrow from '../../components/svgs/DownArrow';
 import Tooltip from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
@@ -28,6 +29,7 @@ import { Placement } from '../../components/Tooltip/types';
 import { useIsCloseToEdge } from '../../hooks/useIsCloseToEdge';
 import { useScrollToEdge } from '../../hooks/useScrollToEdge';
 import DropdownMenuContent from './components/DropdownMenuContent';
+import { useRunningProgress } from './components/useRunningProgress';
 
 const opt = Array.from(Array(4).keys()).map((_, index) => ({ value: index || 'a', label: index.toString() }));
 
@@ -51,10 +53,10 @@ export default function RadixComponents() {
   const [color, setColor] = useState(() => parseColor('hsl(20, 100%, 50%)'));
   const [date, setDate] = useState([parseDate('2022-01-01')]);
   const [pinInput, setPinInput] = useState<string>('');
-  const [progressBarValue, setProgressBarValue] = useState<number>(0);
   const [selectedRadio, setSelectedRadio] = useState<any>(null);
   const [textareaValue, setTextareaValue] = useState<string>('');
   const [numberValue, setNumberValue] = useState<number>(0);
+  const { progressBarValue } = useRunningProgress();
 
   const refElement = useRef<HTMLElement>({} as HTMLElement);
 
@@ -66,12 +68,6 @@ export default function RadixComponents() {
 
   const { isVisible: isScrollToTopVisible, onScroll: onScrollToTop } = useIsCloseToEdge({ to: 'top' });
   const { scrollToEdge: scrollToTop } = useScrollToEdge({ refElement: refElement, to: 'top' });
-
-  useEffect(() => {
-    setTimeout(() => setProgressBarValue(10), 1000);
-    setTimeout(() => setProgressBarValue(40), 4000);
-    setTimeout(() => setProgressBarValue(100), 6000);
-  }, []);
 
   console.log('pinInput is:', pinInput);
 
@@ -105,7 +101,9 @@ export default function RadixComponents() {
         setValue={setSelectedRadio}
       />
 
-      <LinearProgressBar className='shrink-0 h-12 w-full' completed={progressBarValue} />
+      <ProgressBar completed={progressBarValue} className='shrink-0 h-12 w-full' />
+
+      <FancyProgressBar completed={progressBarValue} className='shrink-0 h-12 w-full' />
 
       <PinInput
         pinLength={4}
