@@ -4,7 +4,7 @@ import { calcGapBetweenWindowCeilingAndContainerCeiling } from './utils/calcGapB
 import { calcGapBetweenWindowFloorAndBottom } from './utils/calcGapBetweenWindowFloorAndBottom';
 type UseIsCloseToEdgeProps = {
   to: 'top' | 'bottom';
-  initialIsVisible?: boolean;
+  initialState?: boolean;
   thresholdGap?: number;
   delayMs?: number;
 }; /**
@@ -35,9 +35,9 @@ type UseIsCloseToEdgeProps = {
  * default delay, and pass a different value to `delayMs`.
  */
 export function useIsCloseToEdge(props: UseIsCloseToEdgeProps) {
-  const { to, initialIsVisible, thresholdGap = 60, delayMs = 100 } = props ?? {};
+  const { to, initialState, thresholdGap = 60, delayMs = 100 } = props ?? {};
 
-  const [isVisible, setIsVisible] = useState(initialIsVisible);
+  const [isCloseToEdge, setIsCloseToEdge] = useState(initialState);
 
   const onScroll = useCallback(
     // eslint-disable-next-line
@@ -49,12 +49,12 @@ export function useIsCloseToEdge(props: UseIsCloseToEdgeProps) {
 
       const actualGap = calcGapFunc({ clientHeight, scrollHeight, scrollTop });
 
-      if (actualGap > thresholdGap && !isVisible) return setIsVisible(true);
+      if (actualGap < thresholdGap && !isCloseToEdge) return setIsCloseToEdge(true);
 
-      if (actualGap <= thresholdGap && isVisible) return setIsVisible(false);
+      if (actualGap >= thresholdGap && isCloseToEdge) return setIsCloseToEdge(false);
     }, delayMs),
-    [isVisible],
+    [isCloseToEdge],
   );
 
-  return { isVisible, onScroll };
+  return { isCloseToEdge, onScroll };
 }

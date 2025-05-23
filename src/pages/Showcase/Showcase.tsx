@@ -60,13 +60,13 @@ export default function RadixComponents() {
 
   const refElement = useRef<HTMLElement>({} as HTMLElement);
 
-  const { isVisible: isScrollToBottomVisible, onScroll: onScrollToBottom } = useIsCloseToEdge({
+  const { isCloseToEdge: isCloseToBottom, onScroll: onScrollToBottom } = useIsCloseToEdge({
     to: 'bottom',
-    initialIsVisible: true,
+    initialState: true,
   });
   const { scrollToEdge: scrollToBottom } = useScrollToEdge({ refElement: refElement, to: 'bottom' });
 
-  const { isVisible: isScrollToTopVisible, onScroll: onScrollToTop } = useIsCloseToEdge({ to: 'top' });
+  const { isCloseToEdge: isCloseToTop, onScroll: onScrollToTop } = useIsCloseToEdge({ to: 'top' });
   const { scrollToEdge: scrollToTop } = useScrollToEdge({ refElement: refElement, to: 'top' });
 
   console.log('pinInput is:', pinInput);
@@ -80,7 +80,7 @@ export default function RadixComponents() {
       }}
       className='flex flex-col gap-10 items-start size-full p-6 overflow-auto'
     >
-      {isScrollToBottomVisible && (
+      {!isCloseToBottom && (
         <button
           type='button'
           onClick={scrollToBottom}
@@ -217,7 +217,7 @@ class Person {
         <CodeBlock code={'ls --name hello'} />
       </div>
 
-      {isScrollToTopVisible && (
+      {!isCloseToTop && (
         <button
           type='button'
           onClick={scrollToTop}
