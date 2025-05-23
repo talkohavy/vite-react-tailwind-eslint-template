@@ -22,7 +22,7 @@
     "**/bower_components": true,
     "**/*.code-search": true
   },
-  "files.associations": { "*.json": "jsonc", "*.svg": "html" },
+  "files.associations": { "*.json": "jsonc", "*.svg": "html", "*.code-snippets": "jsonc" },
   "editor.colorDecorators": true, // <--- Controls whether the editor should render the inline color decorators and color picker.
   "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
   "editor.gotoLocation.multipleDefinitions": "goto", // <--- I FOUND IT!!!! No more peeking !!! default value was peek
