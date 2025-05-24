@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { QueryParamsRecord, QueryParamValue } from './types';
+import type { QueryParamValue } from './types';
 import { QueryStringComposer } from './logic/QueryStringComposer';
 
 export function useQueryParams() {
-  const [queryParams, setQueryParams] = useState<QueryParamsRecord>(() => {
+  const [queryParams, setQueryParams] = useState<Record<string, any>>(() => {
     return new QueryStringComposer(window.location.search).parseQueryParams();
   });
 

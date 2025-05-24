@@ -1,4 +1,4 @@
-import type { QueryParamsRecord, QueryParamValue } from '../types';
+import type { QueryParamValue } from '../types';
 
 export class QueryStringComposer {
   private searchParams: URLSearchParams;
@@ -31,7 +31,7 @@ export class QueryStringComposer {
    * @example
    * parseQueryParams(window.location.search);
    */
-  parseQueryParams(): QueryParamsRecord {
+  parseQueryParams(): Record<string, any> {
     const paramsObject: Record<string, string[]> = {};
 
     // Group all values by key to handle arrays
@@ -43,7 +43,7 @@ export class QueryStringComposer {
     });
 
     // Process values to convert types and handle arrays
-    const result: QueryParamsRecord = {};
+    const result: Record<string, any> = {};
     Object.entries(paramsObject).forEach(([key, values]) => {
       // If there's only one value, don't create an array
       if (values.length === 1) {
