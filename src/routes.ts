@@ -14,6 +14,7 @@ const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorkerPage'));
 const PicturePage = lazy(() => import('./pages/PicturePage'));
 const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
 const GetCookiesPage = lazy(() => import('./pages/GetCookiesPage'));
+const QueryParamsPage = lazy(() => import('./pages/QueryParamsPage'));
 const PushNotificationsPage = lazy(() => import('./pages/PushNotificationsPage'));
 
 export const routes: Array<Route> = [
@@ -87,6 +88,12 @@ export const routes: Array<Route> = [
     text: 'Push Notifications',
     activeNames: ['/push-notifications'],
     Component: PushNotificationsPage,
+  },
+  {
+    to: `${BASE_URL}/query-params`,
+    text: 'Query Params',
+    activeNames: ['/query-params'],
+    Component: QueryParamsPage,
   },
   {
     to: `${BASE_URL}/get-cookies`,
