@@ -49,7 +49,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
 ) {
   const { asyncFunc, transform, isManual, onSuccess, onError, dependencies = [] } = props;
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(!isManual);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState(undefined as TransformType);
 
