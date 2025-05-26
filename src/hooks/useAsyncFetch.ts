@@ -5,13 +5,13 @@ import { httpClient } from '../lib/HttpClient';
 type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
   asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
   /**
-   * Should be a memoed function.
-   */
-  transform?: (data: ReturnType) => TransformType;
-  /**
    * @default false
    */
   isManual?: boolean;
+  /**
+   * Should be a memoed function.
+   */
+  transform?: (data: ReturnType) => TransformType;
   /**
    * Should be a memoed function.
    */
@@ -20,12 +20,16 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    * Should be a memoed function.
    */
   onError?: (error: any) => void;
+  /**
+   * What changes should execute another fetch?
+   */
+  dependencies?: any[];
 };
 
 export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   props: useAsyncFetchProps<ReturnType, TransformType>,
 ) {
-  const { asyncFunc, transform, isManual, onSuccess, onError } = props;
+  const { asyncFunc, transform, isManual, onSuccess, onError, dependencies = [] } = props;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -71,20 +75,17 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   );
 
   // MUST come before the refetch useEffect! Otherwise, an outgoing request would immediately terminate.
-  useEffect(
-    () => () => {
-      if (requestIdRef.current) {
-        httpClient.abortRequestById(requestIdRef.current);
-      }
-    },
-    [],
-  );
+  useEffect(() => {
+    return () => {
+      if (requestIdRef.current) httpClient.abortRequestById(requestIdRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (isManual) return;
 
     fetchData();
-  }, [fetchData, isManual]);
+  }, [fetchData, isManual, ...dependencies]);
 
   return { isLoading, isError, data, fetchData };
 }
