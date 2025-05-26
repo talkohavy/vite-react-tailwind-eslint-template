@@ -3,6 +3,24 @@ import type { HttpResponse } from '../lib/HttpClient/types';
 import { httpClient } from '../lib/HttpClient';
 
 type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
+  /**
+   * @description
+   * Doesn't need to be a memoed function!
+   *
+   * A new request will NOT be invoked upon a new reference.
+   * But please keep it in sync with `dependencies` prop to make sure that
+   * the request is properly invoked and only when needed.
+   *
+   * @example
+   * const { data, isError, isLoading } = useAsyncFetch({
+   *   asyncFunc: () => {
+   *     return httpClient.get<GalleryResponseDto>(
+   *       `/user-service/users?page=${page}&view=${viewType}&limit=${ITEMS_PER_PAGE}`,
+   *     );
+   *   },
+   *   dependencies: [page, viewType],
+   * });
+   */
   asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
   /**
    * @default false
