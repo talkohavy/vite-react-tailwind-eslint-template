@@ -23,6 +23,11 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    */
   asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
   /**
+   * When set to `true`, the fetch will not be invoked automatically.
+   * You can invoke it manually by calling the `fetchData` function returned from the hook.
+   *
+   * You can also look at `isManual` as `isDisabled`, and have it toggled accordingly.
+   *
    * @default false
    */
   isManual?: boolean;
