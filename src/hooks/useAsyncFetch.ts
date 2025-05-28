@@ -23,14 +23,22 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    */
   asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
   /**
-   * When set to `true`, the fetch will not be invoked automatically.
-   * You can invoke it manually by calling the `fetchData` function returned from the hook.
+   * `isAutoFetch` is set to `true` by default.
    *
-   * You can also look at `isManual` as `isDisabled`, and have it toggled accordingly.
+   * When `true`, fetch will be invoked automatically.
    *
-   * @default false
+   * There are two ways to use this property:
+   *
+   * 1. If you want full manual control, you can set this to `false`,
+   * and use the `fetchData` function returned from the hook.
+   *
+   * 2. If you want fetching enabled intermittently, you can toggle `isAutoFetch`.
+   *
+   * Whether this property is set to `true` or `false`, you can still use the `fetchData` function.
+   *
+   * @default true
    */
-  isManual?: boolean;
+  isAutoFetch?: boolean;
   /**
    * Should be a memoed function.
    */
@@ -52,9 +60,9 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
 export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   props: useAsyncFetchProps<ReturnType, TransformType>,
 ) {
-  const { asyncFunc, transform, isManual, onSuccess, onError, dependencies = [] } = props;
+  const { asyncFunc, transform, isAutoFetch = true, onSuccess, onError, dependencies = [] } = props;
 
-  const [isLoading, setIsLoading] = useState(!isManual);
+  const [isLoading, setIsLoading] = useState(isAutoFetch);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState(undefined as TransformType);
 
@@ -105,10 +113,10 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   }, []);
 
   useEffect(() => {
-    if (isManual) return;
+    if (!isAutoFetch) return;
 
     fetchData();
-  }, [fetchData, isManual, ...dependencies]);
+  }, [fetchData, isAutoFetch, ...dependencies]);
 
   return { isLoading, isError, data, fetchData };
 }
