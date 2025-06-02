@@ -18,12 +18,23 @@ const config = {
   quoteProps: 'as-needed', // only add quotes around object properties where required
   overrides: [
     {
-      files: ['*.mts', '*.cts', '*.ts', '*.d.ts', '*.js', '*.jsx'],
+      files: ['*.ts', '*.tsx', '*.js', '*.jsx', '*.cts', '*.mts', '*.d.ts'],
       options: { parser: 'typescript' },
     },
     {
       files: ['*.json'],
       options: { parser: 'json' },
+    },
+    {
+      files: ['*.html'],
+      options: { parser: 'html' },
+    },
+    {
+      files: ['*.yaml'],
+      options: {
+        // This is needed in order to NOT brake Helm template syntax
+        bracketSpacing: false,
+      },
     },
   ],
 };
