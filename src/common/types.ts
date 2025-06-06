@@ -1,5 +1,5 @@
 import type { LazyExoticComponent, ReactNode } from 'react';
-import type { HttpMethod } from '../lib/HttpClient/types';
+import type { HttpMethodValues } from '../lib/HttpClient';
 
 export type Route = {
   to: string;
@@ -21,7 +21,7 @@ export type RequestDetails = {
    */
   url: string;
   options: {
-    method: HttpMethod;
+    method: HttpMethodValues;
     headers?: {
       [key: string]: string;
     };

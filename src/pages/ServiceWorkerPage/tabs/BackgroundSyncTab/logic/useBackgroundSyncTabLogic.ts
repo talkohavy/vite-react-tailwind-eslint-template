@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { RequestDetails } from '../../../../../common/types';
 import { isBackgroundSyncFeatureEnabled } from '../../../../../common/utils/isBackgroundSyncFeatureEnabled';
-import { httpClient } from '../../../../../lib/HttpClient';
-import { HttpMethod } from '../../../../../lib/HttpClient/types';
+import { HttpMethod, httpClient } from '../../../../../lib/HttpClient';
 import { fireSyncEvent } from '../../../logic/utils/fireSyncEvent';
 import { sendDataLater, sendDataNow } from './sendData';
 import { useFormValues } from './useFormValues';
