@@ -16,18 +16,45 @@ const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
 const GetCookiesPage = lazy(() => import('./pages/GetCookiesPage'));
 const QueryParamsPage = lazy(() => import('./pages/QueryParamsPage'));
 const PushNotificationsPage = lazy(() => import('./pages/PushNotificationsPage'));
+// Home tab components
+const Overview = lazy(() => import('./pages/Home/tabs/Overview'));
+const Analytics = lazy(() => import('./pages/Home/tabs/Analytics'));
+const Settings = lazy(() => import('./pages/Home/tabs/Settings'));
 
 export const routes: Array<Route> = [
   {
-    to: '/*',
+    to: '/',
     hideFromSidebar: true,
     Component: RedirectToHome,
   } as Route,
   {
-    to: BASE_URL,
+    to: `${BASE_URL}/home`,
     text: 'Home',
-    activeNames: [BASE_URL, `${BASE_URL}/analytics`, `${BASE_URL}/settings`, `${BASE_URL}/overview`],
+    activeNames: [BASE_URL, `${BASE_URL}/home/`, `${BASE_URL}/home/analytics`, `${BASE_URL}/home/settings`],
     Component: HomePage,
+    children: [
+      {
+        to: '',
+        // to: `${BASE_URL}/home/overview`,
+        text: 'Overview',
+        activeNames: [BASE_URL],
+        Component: Overview,
+      },
+      {
+        to: 'analytics',
+        // to: `${BASE_URL}/home/analytics`,
+        text: 'Analytics',
+        activeNames: [`${BASE_URL}/analytics`],
+        Component: Analytics,
+      },
+      {
+        to: 'settings',
+        // to: `${BASE_URL}/home/settings`,
+        text: 'Settings',
+        activeNames: [`${BASE_URL}/settings`],
+        Component: Settings,
+      },
+    ],
   },
   {
     to: `${BASE_URL}/showcase`,

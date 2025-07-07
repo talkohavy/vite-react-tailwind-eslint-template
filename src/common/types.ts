@@ -7,6 +7,7 @@ export type Route = {
   activeNames: Array<string>;
   Component: (() => any) | LazyExoticComponent<() => ReactNode>;
   hideFromSidebar?: boolean;
+  children?: Array<Route>;
 };
 
 export type RequestDetails = {
