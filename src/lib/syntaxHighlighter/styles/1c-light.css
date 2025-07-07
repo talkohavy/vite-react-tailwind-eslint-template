@@ -20,10 +20,10 @@
   /* default */
 }
 
-/* purposely ignored */
 .hljs-formula,
 .hljs-attr,
 .hljs-property {
+  /* purposely ignored */
 }
 
 .hljs-comment {

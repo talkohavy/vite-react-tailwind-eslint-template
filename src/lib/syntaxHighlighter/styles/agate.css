@@ -112,11 +112,12 @@
   color: #333;
 }
 
-/* Purposely ignored */
 .hljs-operator,
 .hljs-params,
 .hljs-property,
-.hljs-punctuation {}
+.hljs-punctuation {
+  /* Purposely ignored */
+}
 
 .hljs-subst {
   color: #fff;
