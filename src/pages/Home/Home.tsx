@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioGroup/RadioTabs/RadioTabs';
+import DisplayWithUseLocation from './content/DisplayWithUseLocation';
+import DisplayWithWindowLocation from './content/DisplayWithWindowLocation';
+import { getInitialTabValue } from './logic/utils/getInitialValue';
+import IframeTestComponent from './my-iframe';
 
 const Tabs = {
   Overview: '',
@@ -37,7 +41,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className='size-full overflow-auto'>
+    <div className='size-full flex flex-col gap-6 overflow-auto'>
       {/* Tab Navigation */}
       <div className='border-b border-gray-200 dark:border-gray-600 px-6 pt-6'>
         <RadioTabs
@@ -51,16 +55,15 @@ export default function HomePage() {
       <div className='size-full'>
         <Outlet />
       </div>
+
+      <div className='h-96 flex justify-between items-center gap-4 rounded-lg'>
+        <DisplayWithWindowLocation />
+        <DisplayWithUseLocation />
+      </div>
+
+      <div className='h-[424px] shrink-0'>
+        <IframeTestComponent />
+      </div>
     </div>
   );
-}
-
-function getInitialTabValue(): string {
-  const pathParts = window.location.pathname.split('/');
-  // Find the index of 'home' in the path, then get the next segment as the tab
-  const homeIndex = pathParts.findIndex((part) => part === 'home');
-  if (homeIndex !== -1 && pathParts.length > homeIndex + 1) {
-    return pathParts[homeIndex + 1]!;
-  }
-  return '';
 }
