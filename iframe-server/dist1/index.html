@@ -60,6 +60,16 @@
           font-size: 0.9em;
           opacity: 0.7;
       }
+
+      p {
+        padding: 0;
+        margin: 0;
+      }
+
+      .info p {
+        text-align: left;
+        margin-bottom: 4px;
+      }
     </style>
   </head>
 
@@ -73,6 +83,15 @@
       <div class="info">
         <p>Current URL: <span id="currentUrl"></span></p>
         <p>Parent exists: <span id="parentExists"></span></p>
+        <p>Href: <span id="href"></span></p>
+        <p>Origin: <span id="origin"></span></p>
+        <p>Protocol: <span id="protocol"></span></p>
+        <p>Host: <span id="host"></span></p>
+        <p>Hostname: <span id="hostname"></span></p>
+        <p>Port: <span id="port"></span></p>
+        <p>Pathname: <span id="pathname"></span></p>
+        <p>Search: <span id="search"></span></p>
+        <p>Hash: <span id="hash"></span></p>
       </div>
     </div>
 
@@ -91,6 +110,17 @@
 
       // Check if this is running in an iframe
       document.getElementById('parentExists').textContent = window.parent !== window ? 'Yes (in iframe)' : 'No (standalone)';
+
+      // Display URL components
+      document.getElementById('href').textContent = window.location.href;
+      document.getElementById('origin').textContent = window.location.origin;
+      document.getElementById('protocol').textContent = window.location.protocol;
+      document.getElementById('host').textContent = window.location.host;
+      document.getElementById('hostname').textContent = window.location.hostname;
+      document.getElementById('port').textContent = window.location.port || '(default)';
+      document.getElementById('pathname').textContent = window.location.pathname;
+      document.getElementById('search').textContent = window.location.search || '(none)';
+      document.getElementById('hash').textContent = window.location.hash || '(none)';
 
       // Log iframe behavior for learning
       console.log('Iframe Test Page Loaded');

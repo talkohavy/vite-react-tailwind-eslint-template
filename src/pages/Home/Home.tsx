@@ -68,7 +68,7 @@ export default function HomePage() {
         <DisplayWithUseLocation />
       </div>
 
-      <div className='h-[424px] shrink-0'>
+      <div className='h-[900px] shrink-0'>
         <IframeTestComponent />
       </div>
     </div>
