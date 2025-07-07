@@ -12,7 +12,9 @@
         "noDebugger": "off"
       },
       "correctness": {
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "off",
+        "noUnusedImports": "off",
+        "noUnusedVariables": "off"
       },
       "complexity": {
         "noForEach": "off",

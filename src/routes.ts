@@ -19,14 +19,14 @@ const PushNotificationsPage = lazy(() => import('./pages/PushNotificationsPage')
 
 export const routes: Array<Route> = [
   {
-    to: '/',
+    to: '/*',
     hideFromSidebar: true,
     Component: RedirectToHome,
   } as Route,
   {
     to: BASE_URL,
     text: 'Home',
-    activeNames: [BASE_URL, `${BASE_URL}/home`],
+    activeNames: [BASE_URL, `${BASE_URL}/analytics`, `${BASE_URL}/settings`, `${BASE_URL}/overview`],
     Component: HomePage,
   },
   {
