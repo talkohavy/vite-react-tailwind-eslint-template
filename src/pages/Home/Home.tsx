@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioGroup/RadioTabs/RadioTabs';
 import DisplayWithUseLocation from './content/DisplayWithUseLocation';
@@ -30,8 +30,15 @@ const tabOptions = [
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
+
+  // Update currentTabValue when the URL changes (e.g., browser back/forward)
+  useEffect(() => {
+    const newTabValue = getInitialTabValue();
+    setCurrentTabValue(newTabValue);
+  }, [location.pathname]);
 
   function handleTabChange(tabValue: string) {
     setCurrentTabValue(tabValue);
