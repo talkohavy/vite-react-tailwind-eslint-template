@@ -65,7 +65,7 @@ export default function IframeTestComponent(props: IframeTestComponentProps) {
       src={iframeUrl}
       title='Iframe Test'
       onLoad={onIframeLoad}
-      sandbox='allow-same-origin allow-scripts allow-navigation allow-forms'
+      sandbox='allow-same-origin allow-scripts allow-top-navigation allow-forms'
       className='w-full h-full border-0'
     />
   );
