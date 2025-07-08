@@ -66,7 +66,7 @@ export default function IframeTestComponent(props: IframeTestComponentProps) {
       title='Iframe Test'
       onLoad={onIframeLoad}
       // sandbox='allow-same-origin allow-forms allow-scripts allow-top-navigation-by-user-activation'
-      className='w-full h-full border-0'
+      className='w-[90%] mx-auto h-full border-4 border-red-500 rounded-2xl'
     />
   );
 }

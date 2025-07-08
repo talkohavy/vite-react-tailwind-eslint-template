@@ -2,6 +2,16 @@ export default function Analytics() {
   return (
     <div className='p-6'>
       <h2 className='text-2xl font-bold mb-4'>Analytics</h2>
+
+      <a
+        href='http://localhost:3000/base/home/analytics'
+        target='_blank'
+        rel='noopener'
+        className='text-blue-600 hover:underline hover:text-red-500'
+      >
+        http://localhost:3000/base/home/analytics
+      </a>
+
       <p className='text-gray-600 dark:text-gray-300 mb-6'>View detailed analytics and performance metrics.</p>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
