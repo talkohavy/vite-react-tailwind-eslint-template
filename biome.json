@@ -3,6 +3,13 @@
   "files": {
     "experimentalScannerIgnores": ["dist", "sw.js"]
   },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -50,8 +57,7 @@
         "noUnusedTemplateLiteral": "error",
         "useNumberNamespace": "error",
         "noInferrableTypes": "error",
-        "noUselessElse": "error",
-        "useImportType": "off"
+        "noUselessElse": "error"
       }
     }
   },
