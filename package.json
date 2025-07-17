@@ -34,9 +34,7 @@
     "react-redux": "^9.2.0",
     "react-router": "^7.7.0",
     "react-router-dom": "^7.7.0",
-    "react-tooltip": "^5.29.1",
-    "tailwind": "^4.0.0",
-    "tailwind-merge": "^3.3.1"
+    "react-tooltip": "^5.29.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.1",
@@ -65,6 +63,7 @@
     "json-easy-strip": "^1.0.6",
     "prettier": "^3.6.2",
     "sass-embedded": "^1.89.2",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3",
