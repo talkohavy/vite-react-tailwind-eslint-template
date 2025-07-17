@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint';
 export default [
   {
     // when an `ignores` key is used without any other keys in the configuration object, then it acts as global `ignores`.
-    ignores: ['dist'],
+    ignores: ['dist', 'iframe-server'],
   },
   { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
   pluginJs.configs.recommended,
