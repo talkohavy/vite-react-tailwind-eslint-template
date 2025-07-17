@@ -34,8 +34,3 @@ declare module '*.scss' {
   const content: Record<string, string>;
   export default content;
 }
-
-declare module '@tailwindcss/vite' {
-  function tailwindcss(options?: any): any;
-  export default tailwindcss;
-}
