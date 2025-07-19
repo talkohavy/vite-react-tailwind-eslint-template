@@ -15,7 +15,7 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    * const { data, isError, isLoading } = useAsyncFetch({
    *   asyncFunc: () => {
    *     return httpClient.get<GalleryResponseDto>(
-   *       `/user-service/users?page=${page}&view=${viewType}&limit=${ITEMS_PER_PAGE}`,
+   *       `/users-service/users?page=${page}&view=${viewType}&limit=${ITEMS_PER_PAGE}`,
    *     );
    *   },
    *   dependencies: [page, viewType],
@@ -31,6 +31,7 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    *
    * 1. If you want full manual control, you can set this to `false`,
    * and use the `fetchData` function returned from the hook.
+   * Note that `isLoading` & `isError` would still be updated correctly.
    *
    * 2. If you want fetching enabled intermittently, you can toggle `isAutoFetch`.
    *
@@ -53,6 +54,10 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
   onError?: (error: any) => void;
   /**
    * What changes should execute another fetch?
+   *
+   * Defaults to "on component mount", which means it only happens once.
+   *
+   * @default []
    */
   dependencies?: any[];
 };
