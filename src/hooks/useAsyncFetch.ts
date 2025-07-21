@@ -23,6 +23,9 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    */
   asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
   /**
+   * **IMPORTANT NOTE! Passing undefined will qualify as `true`!!! Be sure to do !!flag to avoid weird situations.**
+   *
+   *
    * `isAutoFetch` is set to `true` by default.
    *
    * When `true`, fetch will be invoked automatically.
