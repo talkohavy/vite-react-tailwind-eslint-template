@@ -24,7 +24,8 @@
       "correctness": {
         "useExhaustiveDependencies": "off",
         "noUnusedImports": "off",
-        "noUnusedVariables": "off"
+        "noUnusedVariables": "off",
+        "noInnerDeclarations": "off"
       },
       "complexity": {
         "noForEach": "off",
