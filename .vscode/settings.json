@@ -1,5 +1,19 @@
 {
   "workbench.colorTheme": "Default Dark Modern", // "Light"
+
+  // -----------
+  // Font Sizes:
+  // -----------
+  "editor.fontSize": 18,
+  "debug.console.fontSize": 16,
+  "terminal.integrated.fontSize": 16,
+  "editor.suggestFontSize": 18,
+  "gitlens.currentLine.fontSize": 18,
+  "editor.inlayHints.fontSize": 46, 
+  "gitlens.blame.fontSize": 46,
+  "markdown.preview.fontSize": 46,
+  "editor.codeLensFontSize": 46,
+
   // -------------------
   // Basic Editor Rules:
   // -------------------
@@ -224,7 +238,6 @@
   "terminal.integrated.enablePersistentSessions": false, // defaults to "true".
   "terminal.integrated.persistentSessionReviveProcess": "never", // defaults to "onExit".
   "terminal.integrated.mouseWheelZoom": false, // <--- default to false.
-  "terminal.integrated.fontSize": 18, // <--- defaults to 12.
   // "terminal.integrated.cursorBlinking": false, // <--- defaults to "false".
   // "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’|", // defaults to  ()[]{}',\"`─‘’|
   // "terminal.integrated.scrollback": 1000, // <--- defaults to 1000 lines backwards
