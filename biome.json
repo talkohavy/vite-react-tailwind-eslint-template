@@ -19,7 +19,8 @@
         "noGlobalIsNan": "off",
         "noAssignInExpressions": "off",
         "noArrayIndexKey": "off",
-        "noDebugger": "off"
+        "noDebugger": "off",
+        "noDoubleEquals": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off",
