@@ -17,14 +17,13 @@ const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
 const GetCookiesPage = lazy(() => import('./pages/GetCookiesPage'));
 const QueryParamsPage = lazy(() => import('./pages/QueryParamsPage'));
 const PushNotificationsPage = lazy(() => import('./pages/PushNotificationsPage'));
+const OutletTabsPage = lazy(() => import('./pages/OutletTabsPage'));
+const IFramePage = lazy(() => import('./pages/IFramePage'));
 
 // Mini-pages/tabs
-const Overview = lazy(() => import('./pages/IFramePage/tabs/Overview'));
-const Analytics = lazy(() => import('./pages/IFramePage/tabs/Analytics'));
-const Settings = lazy(() => import('./pages/IFramePage/tabs/Settings'));
-// const Overview = lazy(() => import('./pages/IFramePage/tabs/Overview'));
-// const Analytics = lazy(() => import('./pages/IFramePage/tabs/Analytics'));
-// const Settings = lazy(() => import('./pages/IFramePage/tabs/Settings'));
+const Overview = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
+const Analytics = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
+const Settings = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 
 export const routes: Array<Route> = [
   {
@@ -37,26 +36,6 @@ export const routes: Array<Route> = [
     text: 'Home',
     activeNames: [BASE_URL, `${BASE_URL}/home/`, `${BASE_URL}/home/analytics`, `${BASE_URL}/home/settings`],
     Component: HomePage,
-    children: [
-      {
-        to: '',
-        text: 'Overview',
-        activeNames: [BASE_URL],
-        Component: Overview,
-      },
-      {
-        to: 'analytics',
-        text: 'Analytics',
-        activeNames: [`${BASE_URL}/analytics`],
-        Component: Analytics,
-      },
-      {
-        to: 'settings',
-        text: 'Settings',
-        activeNames: [`${BASE_URL}/settings`],
-        Component: Settings,
-      },
-    ],
   },
   {
     to: `${BASE_URL}/showcase`,
@@ -131,10 +110,36 @@ export const routes: Array<Route> = [
     Component: GetCookiesPage,
   },
   {
+    to: `${BASE_URL}/outlet`,
+    text: 'Outlet Tabs',
+    activeNames: [BASE_URL, `${BASE_URL}/outlet/`, `${BASE_URL}/outlet/analytics`, `${BASE_URL}/outlet/settings`],
+    Component: IFramePage,
+    children: [
+      {
+        to: '',
+        text: 'Overview',
+        activeNames: [BASE_URL],
+        Component: Overview,
+      },
+      {
+        to: 'analytics',
+        text: 'Analytics',
+        activeNames: [`${BASE_URL}/analytics`],
+        Component: Analytics,
+      },
+      {
+        to: 'settings',
+        text: 'Settings',
+        activeNames: [`${BASE_URL}/settings`],
+        Component: Settings,
+      },
+    ],
+  },
+  {
     to: `${BASE_URL}/iframe`,
     text: 'IFrame',
     activeNames: [BASE_URL, `${BASE_URL}/iframe/`, `${BASE_URL}/iframe/analytics`, `${BASE_URL}/iframe/settings`],
-    Component: HomePage,
+    Component: OutletTabsPage,
     children: [
       {
         to: '',
