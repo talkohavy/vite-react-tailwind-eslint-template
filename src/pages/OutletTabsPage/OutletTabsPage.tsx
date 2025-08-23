@@ -40,7 +40,7 @@ export default function OutletTabsPage() {
   function handleTabChange(tabValue: string) {
     setCurrentTabValue(tabValue);
 
-    const targetPath = `${BASE_URL}/home/${tabValue}`;
+    const targetPath = `${BASE_URL}/outlet/${tabValue}`;
     navigate(targetPath);
   }
 

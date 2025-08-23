@@ -34,7 +34,7 @@ export const routes: Array<Route> = [
   {
     to: `${BASE_URL}/home`,
     text: 'Home',
-    activeNames: [BASE_URL, `${BASE_URL}/home/`, `${BASE_URL}/home/analytics`, `${BASE_URL}/home/settings`],
+    activeNames: [BASE_URL, `${BASE_URL}/home/`],
     Component: HomePage,
   },
   {
@@ -113,24 +113,24 @@ export const routes: Array<Route> = [
     to: `${BASE_URL}/outlet`,
     text: 'Outlet Tabs',
     activeNames: [BASE_URL, `${BASE_URL}/outlet/`, `${BASE_URL}/outlet/analytics`, `${BASE_URL}/outlet/settings`],
-    Component: IFramePage,
+    Component: OutletTabsPage,
     children: [
       {
         to: '',
         text: 'Overview',
-        activeNames: [BASE_URL],
+        activeNames: [],
         Component: Overview,
       },
       {
         to: 'analytics',
         text: 'Analytics',
-        activeNames: [`${BASE_URL}/analytics`],
+        activeNames: [],
         Component: Analytics,
       },
       {
         to: 'settings',
         text: 'Settings',
-        activeNames: [`${BASE_URL}/settings`],
+        activeNames: [],
         Component: Settings,
       },
     ],
@@ -139,7 +139,7 @@ export const routes: Array<Route> = [
     to: `${BASE_URL}/iframe`,
     text: 'IFrame',
     activeNames: [BASE_URL, `${BASE_URL}/iframe/`, `${BASE_URL}/iframe/analytics`, `${BASE_URL}/iframe/settings`],
-    Component: OutletTabsPage,
+    Component: IFramePage,
     children: [
       {
         to: '',
