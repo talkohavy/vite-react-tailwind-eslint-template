@@ -23,6 +23,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.8.2
         version: 2.8.2(react-redux@9.2.0(@types/react@19.1.8)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
+      '@talkohavy/filters':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@talkohavy/lodash':
         specifier: ^1.4.1
         version: 1.4.1
@@ -2008,6 +2011,9 @@ packages:
     resolution: {integrity: sha512-RHYhrR3hku0MJFRV+fN2gNbDNEh3dwKvY8XJvTxCSXeMOsCRSr+uKvDWQcbizrHgjML6ZmTE5OwMrl5wKcujCw==}
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7
+
+  '@talkohavy/filters@2.0.0':
+    resolution: {integrity: sha512-Qlh3FX4mll8ziD7P1emdzsIkWhJSAT+/BLG4BzexIpKdQX2Nm8DaAKqlK97HIuvn0uEmgJ6GajQx/tgnCePU0w==}
 
   '@talkohavy/lodash@1.4.1':
     resolution: {integrity: sha512-8z8Rg4K/oWK6sq4AT2l+ze+7KIHzpSz6CfxSFCNo/xIGyBi//OF02d7MQ110amjEFc/oK7z6lsKzog4I45z0iw==}
@@ -6500,6 +6506,8 @@ snapshots:
       '@tailwindcss/oxide': 4.1.11
       tailwindcss: 4.1.11
       vite: 7.0.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.89.2)
+
+  '@talkohavy/filters@2.0.0': {}
 
   '@talkohavy/lodash@1.4.1': {}
 
