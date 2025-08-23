@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioGroup/RadioTabs/RadioTabs';
+import DisplayWithUseLocation from './content/DisplayWithUseLocation';
+import DisplayWithWindowLocation from './content/DisplayWithWindowLocation';
 import { getInitialTabValue } from './logic/utils/getInitialValue';
+import IframeTestComponent from './my-iframe';
 
 const Tabs = {
   Overview: '',
@@ -25,7 +28,7 @@ const tabOptions = [
   },
 ];
 
-export default function HomePage() {
+export default function IFramePage() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -58,6 +61,15 @@ export default function HomePage() {
 
       <div className='size-full'>
         <Outlet />
+      </div>
+
+      <div className='h-96 flex justify-between items-center gap-4 rounded-lg'>
+        <DisplayWithWindowLocation />
+        <DisplayWithUseLocation />
+      </div>
+
+      <div className='h-[900px] shrink-0'>
+        <IframeTestComponent />
       </div>
     </div>
   );

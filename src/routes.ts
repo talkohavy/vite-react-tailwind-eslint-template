@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import type { Route } from './common/types';
 import { BASE_URL } from './common/constants';
 
+// Main pages
 const RedirectToHome = lazy(() => import('./pages/RedirectToHome'));
 const HomePage = lazy(() => import('./pages/Home'));
 const ReduxExamplePage = lazy(() => import('./pages/ReduxExample'));
@@ -16,10 +17,14 @@ const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
 const GetCookiesPage = lazy(() => import('./pages/GetCookiesPage'));
 const QueryParamsPage = lazy(() => import('./pages/QueryParamsPage'));
 const PushNotificationsPage = lazy(() => import('./pages/PushNotificationsPage'));
-// Home tab components
-const Overview = lazy(() => import('./pages/Home/tabs/Overview'));
-const Analytics = lazy(() => import('./pages/Home/tabs/Analytics'));
-const Settings = lazy(() => import('./pages/Home/tabs/Settings'));
+
+// Mini-pages/tabs
+const Overview = lazy(() => import('./pages/IFramePage/tabs/Overview'));
+const Analytics = lazy(() => import('./pages/IFramePage/tabs/Analytics'));
+const Settings = lazy(() => import('./pages/IFramePage/tabs/Settings'));
+// const Overview = lazy(() => import('./pages/IFramePage/tabs/Overview'));
+// const Analytics = lazy(() => import('./pages/IFramePage/tabs/Analytics'));
+// const Settings = lazy(() => import('./pages/IFramePage/tabs/Settings'));
 
 export const routes: Array<Route> = [
   {
@@ -35,21 +40,18 @@ export const routes: Array<Route> = [
     children: [
       {
         to: '',
-        // to: `${BASE_URL}/home/overview`,
         text: 'Overview',
         activeNames: [BASE_URL],
         Component: Overview,
       },
       {
         to: 'analytics',
-        // to: `${BASE_URL}/home/analytics`,
         text: 'Analytics',
         activeNames: [`${BASE_URL}/analytics`],
         Component: Analytics,
       },
       {
         to: 'settings',
-        // to: `${BASE_URL}/home/settings`,
         text: 'Settings',
         activeNames: [`${BASE_URL}/settings`],
         Component: Settings,
@@ -127,5 +129,31 @@ export const routes: Array<Route> = [
     text: 'Get Cookies',
     activeNames: [`${BASE_URL}/get-cookies`],
     Component: GetCookiesPage,
+  },
+  {
+    to: `${BASE_URL}/iframe`,
+    text: 'IFrame',
+    activeNames: [BASE_URL, `${BASE_URL}/iframe/`, `${BASE_URL}/iframe/analytics`, `${BASE_URL}/iframe/settings`],
+    Component: HomePage,
+    children: [
+      {
+        to: '',
+        text: 'Overview',
+        activeNames: [BASE_URL],
+        Component: Overview,
+      },
+      {
+        to: 'analytics',
+        text: 'Analytics',
+        activeNames: [`${BASE_URL}/analytics`],
+        Component: Analytics,
+      },
+      {
+        to: 'settings',
+        text: 'Settings',
+        activeNames: [`${BASE_URL}/settings`],
+        Component: Settings,
+      },
+    ],
   },
 ];
