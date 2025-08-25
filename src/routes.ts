@@ -20,6 +20,8 @@ const PushNotificationsPage = lazy(() => import('./pages/PushNotificationsPage')
 const OutletTabsPage = lazy(() => import('./pages/OutletTabsPage'));
 const IFramePage = lazy(() => import('./pages/IFramePage'));
 const MasterFilterPage = lazy(() => import('./pages/MasterFilterPage'));
+const QueryPage = lazy(() => import('./pages/QueryPage'));
+const QueryShowcase = lazy(() => import('./pages/QueryShowcase'));
 
 // Mini-pages/tabs
 const Overview = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -167,5 +169,17 @@ export const routes: Array<Route> = [
     text: 'Master Filter',
     activeNames: [`${BASE_URL}/filters`],
     Component: MasterFilterPage,
+  },
+  {
+    to: `${BASE_URL}/query`,
+    text: 'Query Language',
+    activeNames: [`${BASE_URL}/query`],
+    Component: QueryPage,
+  },
+  {
+    to: `${BASE_URL}/query-showcase`,
+    text: 'Query Showcase',
+    activeNames: [`${BASE_URL}/query-showcase`],
+    Component: QueryShowcase,
   },
 ];
