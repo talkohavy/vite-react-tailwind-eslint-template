@@ -33,18 +33,24 @@ export class ContextAnalyzer {
     const currentToken = this.findTokenAtPosition(tokens, cursorPosition);
     const previousToken = this.findPreviousToken(tokens, cursorPosition);
     const nextToken = this.findNextToken(tokens, cursorPosition);
+    const expectedTypes = this.determineExpectedTypes(tokens, cursorPosition);
+    const isInQuotes = this.isPositionInQuotes(query, cursorPosition);
+    const canInsertOperator = this.canInsertOperator(tokens, cursorPosition);
+    const canInsertGrouping = this.canInsertGrouping(tokens, cursorPosition);
+    const incompleteValue = this.extractIncompleteValue(query, cursorPosition);
+    const syntaxErrors = this.getSyntaxErrors(query);
 
     const context: CompletionContext = {
       cursorPosition,
       currentToken,
       previousToken,
       nextToken,
-      expectedTypes: this.determineExpectedTypes(tokens, cursorPosition),
-      isInQuotes: this.isPositionInQuotes(query, cursorPosition),
-      canInsertOperator: this.canInsertOperator(tokens, cursorPosition),
-      canInsertGrouping: this.canInsertGrouping(tokens, cursorPosition),
-      incompleteValue: this.extractIncompleteValue(query, cursorPosition),
-      syntaxErrors: this.getSyntaxErrors(query),
+      expectedTypes,
+      isInQuotes,
+      canInsertOperator,
+      canInsertGrouping,
+      incompleteValue,
+      syntaxErrors,
     };
 
     return context;

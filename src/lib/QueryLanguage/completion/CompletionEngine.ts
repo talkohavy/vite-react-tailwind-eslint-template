@@ -41,7 +41,7 @@ export class CompletionEngine {
     const allSuggestions: CompletionItem[] = [];
 
     context.expectedTypes.forEach((type) => {
-      const suggestions = this.generateSuggestionsForType(type, context.incompleteValue, context);
+      const suggestions = this.generateSuggestionsForType(type, context.incompleteValue, context, query);
       allSuggestions.push(...suggestions);
     });
 
@@ -79,21 +79,22 @@ export class CompletionEngine {
     type: CompletionItemType,
     input: string,
     context: CompletionContext,
+    query: string,
   ): CompletionItem[] {
-    const contextInfo = this.extractContextInfo(context);
+    const contextInfo = this.extractContextInfo(context, query);
     return this.suggestionRanker.generateSuggestions(type, input, contextInfo);
   }
 
   /**
    * Extracts relevant context information for suggestion generation
    */
-  private extractContextInfo(context: CompletionContext): { key?: string } {
+  private extractContextInfo(context: CompletionContext, query: string): { key?: string } {
     // Try to find the current key for value completions
     let currentKey: string | undefined;
 
-    if (context.previousToken?.type === 'COLON') {
+    if (context.currentToken?.type === 'COLON') {
       // Look for the identifier before the colon
-      currentKey = this.findKeyBeforeColon(context);
+      currentKey = this.findKeyBeforeColon(context, query);
     }
 
     return { key: currentKey };
@@ -102,13 +103,13 @@ export class CompletionEngine {
   /**
    * Finds the key identifier before a colon token
    */
-  private findKeyBeforeColon(context: CompletionContext): string | undefined {
+  private findKeyBeforeColon(context: CompletionContext, query: string): string | undefined {
     // This is a simplified implementation - in a more complex scenario,
     // we might need to parse backwards through the token stream
-    if (context.previousToken?.type === 'COLON') {
+    if (context.currentToken?.type === 'COLON') {
       // Look for identifier token positions - this would need actual token stream analysis
       // For now, we'll implement a basic string-based approach
-      return this.extractKeyFromQuery(context);
+      return this.extractKeyFromQuery(context, query);
     }
     return undefined;
   }
@@ -116,13 +117,51 @@ export class CompletionEngine {
   /**
    * Extracts the key from the query string using simple parsing
    */
-  private extractKeyFromQuery(_context: CompletionContext): string | undefined {
-    // Simple approach: look backwards from cursor for "key:" pattern
+  private extractKeyFromQuery(context: CompletionContext, query: string): string | undefined {
+    // Look backwards from cursor position to find the key before the colon
+    const cursorPosition = context.cursorPosition;
 
-    // This is a simplified implementation - a full implementation would
-    // properly parse the token stream to find the associated key
-    // For now, we'll return undefined and rely on configuration
-    return undefined;
+    // Find the colon position - look backwards from cursor
+    let colonPosition = -1;
+    for (let i = cursorPosition - 1; i >= 0; i--) {
+      if (query[i] === ':') {
+        colonPosition = i;
+        break;
+      }
+    }
+
+    if (colonPosition === -1) {
+      return undefined;
+    }
+
+    // Look backwards from the colon to find the key
+    let keyStart = colonPosition - 1;
+    let keyEnd = colonPosition;
+
+    // Skip whitespace before the colon
+    while (keyStart >= 0 && query[keyStart] && /\s/.test(query[keyStart]!)) {
+      keyStart--;
+    }
+
+    if (keyStart < 0) {
+      return undefined;
+    }
+
+    keyEnd = keyStart + 1;
+
+    // Find the start of the key (alphanumeric and underscore)
+    while (keyStart >= 0 && query[keyStart] && /[a-zA-Z0-9_]/.test(query[keyStart]!)) {
+      keyStart--;
+    }
+
+    keyStart++; // Move to the first character of the key
+
+    if (keyStart >= keyEnd) {
+      return undefined;
+    }
+
+    const key = query.substring(keyStart, keyEnd).trim();
+    return key.length > 0 ? key : undefined;
   }
 
   /**
