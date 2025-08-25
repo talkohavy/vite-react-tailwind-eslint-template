@@ -39,6 +39,7 @@ export type {
   LexerOptions,
 
   // Auto-Completion Types
+  CompletionContextType,
   CompletionContext,
   CompletionItem,
   CompletionItemType,
@@ -104,6 +105,11 @@ export {
 export { QueryParser } from './parser/QueryParser';
 export { QueryLexer } from './lexer/QueryLexer';
 export { TokenStream } from './lexer/TokenStream';
+
+// Auto-completion components
+export { CompletionEngine } from './completion/CompletionEngine';
+export { ContextAnalyzer } from './completion/ContextAnalyzer';
+export { SuggestionRanker } from './completion/SuggestionRanker';
 
 // Utility functions
 export * from './utils/ASTBuilder';

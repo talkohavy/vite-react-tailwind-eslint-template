@@ -138,14 +138,30 @@ export interface ParseError {
 // =============================================================================
 
 /**
- * Context for auto-completion suggestions
+ * Simple context type for basic completion
  */
-export type CompletionContext =
+export type CompletionContextType =
   | 'key' // Expecting a key name
   | 'value' // Expecting a value after colon
   | 'operator' // Expecting AND/OR after complete condition
   | 'grouping' // Can start parentheses group
   | 'unknown'; // Unable to determine context
+
+/**
+ * Detailed context for auto-completion analysis
+ */
+export interface CompletionContext {
+  cursorPosition: number;
+  currentToken?: Token;
+  previousToken?: Token;
+  nextToken?: Token;
+  expectedTypes: CompletionItemType[];
+  isInQuotes: boolean;
+  canInsertOperator: boolean;
+  canInsertGrouping: boolean;
+  incompleteValue: string;
+  syntaxErrors: string[];
+}
 
 /**
  * Auto-completion suggestion
