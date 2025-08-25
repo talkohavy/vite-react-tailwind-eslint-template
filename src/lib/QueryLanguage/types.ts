@@ -5,6 +5,8 @@
  * parser, auto-completion engine, and related components.
  */
 
+import type { TokenTypeValues } from './lexer/logic/constants';
+
 // =============================================================================
 // AST (Abstract Syntax Tree) Types
 // =============================================================================
@@ -87,25 +89,10 @@ export type Comparator = ':' | '>' | '<' | '>=' | '<=' | '!=' | '~';
 // =============================================================================
 
 /**
- * Token types produced by the lexer
- */
-export type TokenType =
-  | 'IDENTIFIER'
-  | 'QUOTED_STRING'
-  | 'COLON'
-  | 'AND'
-  | 'OR'
-  | 'LPAREN'
-  | 'RPAREN'
-  | 'WHITESPACE'
-  | 'EOF'
-  | 'INVALID';
-
-/**
  * Token structure from lexical analysis
  */
 export interface Token {
-  type: TokenType;
+  type: TokenTypeValues;
   value: string;
   position: Position;
 }
@@ -129,7 +116,7 @@ export interface ParseResult {
 export interface ParseError {
   message: string;
   position: Position;
-  expectedTokens?: TokenType[];
+  expectedTokens?: TokenTypeValues[];
   recoverable: boolean;
 }
 

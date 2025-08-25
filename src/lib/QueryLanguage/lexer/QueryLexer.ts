@@ -6,7 +6,7 @@
  * operators, and special characters.
  */
 
-import type { Token, TokenType, LexerOptions } from '../types';
+import type { Token, LexerOptions } from '../types';
 import {
   BOOLEAN_OPERATORS,
   IDENTIFIER_PATTERN,
@@ -15,6 +15,7 @@ import {
   DEFAULT_LEXER_OPTIONS,
   SPECIAL_CHARS,
 } from '../constants';
+import { TokenTypes, type TokenTypeValues } from './logic/constants';
 
 /**
  * QueryLexer tokenizes input strings according to the query language grammar
@@ -49,7 +50,7 @@ export class QueryLexer {
     }
 
     // Add EOF token
-    tokens.push(this.createToken('EOF', '', this.position, this.position));
+    tokens.push(this.createToken(TokenTypes.EOF, '', this.position, this.position));
 
     return tokens;
   }
@@ -79,15 +80,15 @@ export class QueryLexer {
     switch (char) {
       case SPECIAL_CHARS.COLON:
         this.advance();
-        return this.createToken('COLON', char, start, this.position);
+        return this.createToken(TokenTypes.Colon, char, start, this.position);
 
       case SPECIAL_CHARS.LPAREN:
         this.advance();
-        return this.createToken('LPAREN', char, start, this.position);
+        return this.createToken(TokenTypes.LeftParenthesis, char, start, this.position);
 
       case SPECIAL_CHARS.RPAREN:
         this.advance();
-        return this.createToken('RPAREN', char, start, this.position);
+        return this.createToken(TokenTypes.RightParenthesis, char, start, this.position);
     }
 
     // Handle identifiers and keywords
@@ -97,7 +98,7 @@ export class QueryLexer {
 
     // Unknown character - create invalid token
     this.advance();
-    return this.createToken('INVALID', char, start, this.position);
+    return this.createToken(TokenTypes.Invalid, char, start, this.position);
   }
 
   /**
@@ -108,26 +109,26 @@ export class QueryLexer {
       this.advance();
     }
 
-    const value = this.input.slice(start, this.position);
-    return this.createToken('WHITESPACE', value, start, this.position);
+    const allWhitespaces = this.input.slice(start, this.position);
+    return this.createToken(TokenTypes.Whitespace, allWhitespaces, start, this.position);
   }
 
   /**
    * Scan quoted string (single or double quotes)
    */
   private scanQuotedString(start: number): Token {
-    const quote = this.currentChar();
-    this.advance(); // Skip opening quote
+    const openingQuote = this.currentChar();
+    this.advance(); // <--- Skip the opening quote
 
     let value = '';
     let escaped = false;
 
     while (!this.isAtEnd()) {
-      const char = this.currentChar();
+      const nextChar = this.currentChar();
 
       if (escaped) {
         // Handle escape sequences
-        switch (char) {
+        switch (nextChar) {
           case 'n':
             value += '\n';
             break;
@@ -147,23 +148,23 @@ export class QueryLexer {
             value += "'";
             break;
           default:
-            value += char;
+            value += nextChar;
         }
         escaped = false;
-      } else if (char === '\\') {
+      } else if (nextChar === '\\') {
         escaped = true;
-      } else if (char === quote) {
-        this.advance(); // Skip closing quote
-        return this.createToken('QUOTED_STRING', value, start, this.position);
+      } else if (nextChar === openingQuote) {
+        this.advance(); // <--- Skip closing quote
+        return this.createToken(TokenTypes.QuotedString, value, start, this.position);
       } else {
-        value += char;
+        value += nextChar;
       }
 
       this.advance();
     }
 
-    // Unterminated string - return invalid token
-    return this.createToken('INVALID', this.input.slice(start, this.position), start, this.position);
+    // string was opened, but never closed! return invalid token
+    return this.createToken(TokenTypes.Invalid, this.input.slice(start, this.position), start, this.position);
   }
 
   /**
@@ -174,30 +175,30 @@ export class QueryLexer {
       this.advance();
     }
 
-    const value = this.input.slice(start, this.position);
-    const tokenType = this.getIdentifierTokenType(value);
+    const valueToTokenize = this.input.slice(start, this.position);
+    const tokenType = this.getIdentifierTokenType(valueToTokenize);
 
-    return this.createToken(tokenType, value, start, this.position);
+    return this.createToken(tokenType, valueToTokenize, start, this.position);
   }
 
   /**
    * Determine token type for identifier (keyword or regular identifier)
    */
-  private getIdentifierTokenType(value: string): TokenType {
+  private getIdentifierTokenType(value: string): TokenTypeValues {
     // Check if it's a boolean operator
     const normalizedValue = this.options.caseSensitiveOperators ? value : value.toUpperCase();
 
     if (BOOLEAN_OPERATORS[normalizedValue]) {
-      return normalizedValue === 'AND' ? 'AND' : 'OR';
+      return normalizedValue === TokenTypes.AND ? TokenTypes.AND : TokenTypes.OR;
     }
 
-    return 'IDENTIFIER';
+    return TokenTypes.Identifier;
   }
 
   /**
    * Create a token with position information
    */
-  private createToken(type: TokenType, value: string, start: number, end: number): Token {
+  private createToken(type: TokenTypeValues, value: string, start: number, end: number): Token {
     return {
       type,
       value,
