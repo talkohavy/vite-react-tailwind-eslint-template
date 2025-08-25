@@ -29,7 +29,6 @@ export type {
   Comparator,
 
   // Token Types
-  TokenType,
   Token,
 
   // Parser Types
@@ -71,7 +70,6 @@ export {
   QUOTED_STRING_PATTERN,
   WHITESPACE_PATTERN,
   BOOLEAN_OPERATOR_PATTERN,
-  TOKEN_PATTERNS,
 
   // Error Messages and Codes
   ERROR_MESSAGES,

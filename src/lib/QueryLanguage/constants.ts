@@ -6,7 +6,6 @@
  */
 
 import type { BooleanOperator, Comparator } from './types';
-import { TokenTypes, type TokenTypeValues } from './lexer/logic/constants';
 
 // =============================================================================
 // Grammar Constants
@@ -77,20 +76,6 @@ export const BOOLEAN_OPERATOR_PATTERN = /^(AND|OR)$/i;
 // =============================================================================
 // Token Patterns
 // =============================================================================
-
-/**
- * Token patterns for lexical analysis
- * Order matters - more specific patterns should come first
- */
-export const TOKEN_PATTERNS: Array<{ pattern: RegExp; type: TokenTypeValues }> = [
-  { pattern: /^(['"])((?:\\.|(?!\1)[^\\])*)\1/, type: TokenTypes.QuotedString },
-  { pattern: /^(AND|OR)\b/i, type: TokenTypes.AND }, // Will be refined in lexer
-  { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*/, type: TokenTypes.Identifier },
-  { pattern: /^:/, type: TokenTypes.Colon },
-  { pattern: /^\(/, type: TokenTypes.LeftParenthesis },
-  { pattern: /^\)/, type: TokenTypes.RightParenthesis },
-  { pattern: /^\s+/, type: TokenTypes.Whitespace },
-];
 
 // =============================================================================
 // Error Messages
@@ -196,6 +181,7 @@ export const SPECIAL_CHARS = {
   TAB: '\t',
   NEWLINE: '\n',
   CARRIAGE_RETURN: '\r',
+  INCLUDES: '~',
 } as const;
 
 /**

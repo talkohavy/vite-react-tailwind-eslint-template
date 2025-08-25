@@ -5,10 +5,12 @@ export const TokenTypes = {
   Invalid: 'INVALID',
   LeftParenthesis: 'LEFT_PARENTHESIS',
   RightParenthesis: 'RIGHT_PARENTHESIS',
-  Identifier: 'IDENTIFIER',
+  Key: 'KEY',
+  Value: 'VALUE',
   EOF: 'EOF',
   AND: 'AND',
   OR: 'OR',
+  Comparator: 'COMPARATOR',
 } as const;
 
 type TokenTypesType = typeof TokenTypes;

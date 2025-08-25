@@ -26,6 +26,7 @@ export class QueryLexer {
   private line = 1;
   private column = 1;
   private options: LexerOptions;
+  private previousToken: Token | null = null;
 
   constructor(input: string, options: Partial<LexerOptions> = {}) {
     this.input = input;
@@ -37,15 +38,20 @@ export class QueryLexer {
    */
   tokenize(): Token[] {
     const tokens: Token[] = [];
+    this.previousToken = null; // Reset last token
 
     while (!this.isAtEnd()) {
       const token = this.nextToken();
       if (token) {
         // Skip whitespace tokens if configured to ignore them
-        if (this.options.ignoreWhitespace && token.type === 'WHITESPACE') {
+        if (this.options.ignoreWhitespace && token.type === TokenTypes.Whitespace) {
           continue;
         }
         tokens.push(token);
+        // Update last token (skip whitespace for context)
+        if (token.type !== TokenTypes.Whitespace) {
+          this.previousToken = token;
+        }
       }
     }
 
@@ -76,6 +82,11 @@ export class QueryLexer {
       return this.scanQuotedString(start);
     }
 
+    // Handle comparison operators (multi-character first)
+    if (['><!'].includes(char)) {
+      return this.scanComparisonOperator(start);
+    }
+
     // Handle special characters
     switch (char) {
       case SPECIAL_CHARS.COLON:
@@ -89,11 +100,15 @@ export class QueryLexer {
       case SPECIAL_CHARS.RPAREN:
         this.advance();
         return this.createToken(TokenTypes.RightParenthesis, char, start, this.position);
+
+      case SPECIAL_CHARS.INCLUDES:
+        this.advance();
+        return this.createToken(TokenTypes.Comparator, char, start, this.position);
     }
 
     // Handle identifiers and keywords
     if (this.isIdentifierStart(char)) {
-      return this.scanIdentifier(start);
+      return this.scanKeyValueAndOr(start);
     }
 
     // Unknown character - create invalid token
@@ -168,10 +183,32 @@ export class QueryLexer {
   }
 
   /**
+   * Scan comparison operators (<=, >=, !=, <, >)
+   */
+  private scanComparisonOperator(start: number): Token {
+    const char = this.currentChar();
+    this.advance();
+
+    // Check for two-character operators
+    const nextChar = this.currentChar();
+    if (nextChar === '=') {
+      this.advance();
+      return this.createToken(TokenTypes.Comparator, `${char}${nextChar}`, start, this.position);
+    }
+
+    // Check for Invalid combination ('!' without '=')
+    if (char === '!') {
+      return this.createToken(TokenTypes.Invalid, char, start, this.position);
+    }
+
+    return this.createToken(TokenTypes.Comparator, char, start, this.position);
+  }
+
+  /**
    * Scan identifier or keyword
    */
-  private scanIdentifier(start: number): Token {
-    while (!this.isAtEnd() && this.isIdentifierPart(this.currentChar())) {
+  private scanKeyValueAndOr(start: number): Token {
+    while (!this.isAtEnd() && this.isPartOfIdentifier(this.currentChar())) {
       this.advance();
     }
 
@@ -182,7 +219,7 @@ export class QueryLexer {
   }
 
   /**
-   * Determine token type for identifier (keyword or regular identifier)
+   * Determine token type for identifier (keyword, key, or value)
    */
   private getIdentifierTokenType(value: string): TokenTypeValues {
     // Check if it's a boolean operator
@@ -192,7 +229,44 @@ export class QueryLexer {
       return normalizedValue === TokenTypes.AND ? TokenTypes.AND : TokenTypes.OR;
     }
 
-    return TokenTypes.Identifier;
+    // Determine if this identifier should be a KEY or VALUE based on context
+    return this.determineKeyOrValue();
+  }
+
+  /**
+   * Determine if the current identifier should be classified as KEY or VALUE
+   * based on the previous token type
+   */
+  private determineKeyOrValue(): TokenTypeValues {
+    // If first token in the query - must be a key
+    if (!this.previousToken) return TokenTypes.Key;
+
+    const previousTokenType = this.previousToken.type;
+
+    // If previous token was opening parenthesis, AND, or OR, this must be a key
+    if (
+      previousTokenType === TokenTypes.LeftParenthesis ||
+      previousTokenType === TokenTypes.AND ||
+      previousTokenType === TokenTypes.OR
+    ) {
+      return TokenTypes.Key;
+    }
+
+    // If previous token was a comparison operator, this must be a value
+    if (this.isComparisonOperator(previousTokenType)) return TokenTypes.Value;
+
+    // WARNING! You should never get here!!!
+    // If previous token was a key, this could be a value (for colon-less syntax)
+    // or another key if there was a boolean operator in between
+    // For now, default to key since we expect explicit operators
+    return TokenTypes.Key;
+  }
+
+  /**
+   * Check if a token type is a comparison operator
+   */
+  private isComparisonOperator(tokenType: TokenTypeValues): boolean {
+    return tokenType === TokenTypes.Comparator;
   }
 
   /**
@@ -259,7 +333,7 @@ export class QueryLexer {
   /**
    * Check if character can be part of an identifier
    */
-  private isIdentifierPart(char: string): boolean {
+  private isPartOfIdentifier(char: string): boolean {
     return /[a-zA-Z0-9_]/.test(char);
   }
 
@@ -281,6 +355,7 @@ export class QueryLexer {
     this.position = 0;
     this.line = 1;
     this.column = 1;
+    this.previousToken = null;
   }
 
   /**
