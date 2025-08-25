@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
-import type { CompletionItem } from '../../lib/QueryLanguage/types';
+import type { CompletionItem, KeyConfig } from '../../lib/QueryLanguage/types';
 import { CompletionEngine } from '../../lib/QueryLanguage/completion/CompletionEngine';
 import { QueryParser } from '../../lib/QueryLanguage/parser/QueryParser';
 import CompletionDropdown from './CompletionDropdown';
@@ -15,6 +15,7 @@ type QueryInputProps = {
   className?: string;
   testId?: string;
   availableKeys?: string[];
+  keyConfigs?: KeyConfig[];
   showValidation?: boolean;
   onValidationChange?: (isValid: boolean, errors: string[]) => void;
 };
@@ -29,6 +30,7 @@ export default function QueryInput(props: QueryInputProps) {
     className,
     testId = 'query-input',
     availableKeys = [],
+    keyConfigs = [],
     showValidation = true,
     onValidationChange,
   } = props;
@@ -48,9 +50,10 @@ export default function QueryInput(props: QueryInputProps) {
   useEffect(() => {
     if (!completionEngineRef.current) {
       completionEngineRef.current = new CompletionEngine();
-      const keyConfigs = availableKeys.map((key) => ({ name: key }));
+      // Use keyConfigs if provided, otherwise convert availableKeys to simple KeyConfig objects
+      const keys = keyConfigs.length > 0 ? keyConfigs : availableKeys.map((key) => ({ name: key }));
       completionEngineRef.current.updateConfig({
-        keys: keyConfigs,
+        keys,
         caseSensitive: false,
         maxSuggestions: 10,
       });
@@ -64,14 +67,15 @@ export default function QueryInput(props: QueryInputProps) {
   // Update available keys when they change
   useEffect(() => {
     if (completionEngineRef.current) {
-      const keyConfigs = availableKeys.map((key) => ({ name: key }));
+      // Use keyConfigs if provided, otherwise convert availableKeys to simple KeyConfig objects
+      const keys = keyConfigs.length > 0 ? keyConfigs : availableKeys.map((key) => ({ name: key }));
       completionEngineRef.current.updateConfig({
-        keys: keyConfigs,
+        keys,
         caseSensitive: false,
         maxSuggestions: 10,
       });
     }
-  }, [availableKeys]);
+  }, [availableKeys, keyConfigs]);
 
   // Validate query and update completions when value or cursor position changes
   useEffect(() => {

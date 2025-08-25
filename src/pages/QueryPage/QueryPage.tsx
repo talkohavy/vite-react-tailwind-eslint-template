@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import type { KeyConfig } from '../../lib/QueryLanguage/types';
 import { QueryInput } from '../../components/QueryInput';
 
 export default function QueryPage() {
@@ -6,18 +7,137 @@ export default function QueryPage() {
   const [isValid, setIsValid] = useState(true);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const availableKeys = [
-    'name',
-    'email',
-    'status',
-    'category',
-    'department',
-    'role',
-    'location',
-    'priority',
-    'assignee',
-    'created',
-    'updated',
+  const keyConfigs: KeyConfig[] = [
+    {
+      name: 'name',
+      description: 'User full name',
+      valueType: 'string',
+      values: [
+        { value: 'John Doe', description: 'Software Engineer' },
+        { value: 'Jane Smith', description: 'Product Manager' },
+        { value: 'Mike Johnson', description: 'UI/UX Designer' },
+        { value: 'Sarah Wilson', description: 'Data Scientist' },
+        { value: 'Alex Chen', description: 'DevOps Engineer' },
+      ],
+    },
+    {
+      name: 'email',
+      description: 'User email address',
+      valueType: 'string',
+      values: [
+        { value: 'john.doe@company.com', description: "John Doe's email" },
+        { value: 'jane.smith@company.com', description: "Jane Smith's email" },
+        { value: 'mike.johnson@company.com', description: "Mike Johnson's email" },
+        { value: 'sarah.wilson@company.com', description: "Sarah Wilson's email" },
+        { value: 'alex.chen@company.com', description: "Alex Chen's email" },
+      ],
+    },
+    {
+      name: 'status',
+      description: 'Account status',
+      valueType: 'enum',
+      values: [
+        { value: 'active', description: 'User is currently active' },
+        { value: 'inactive', description: 'User account is inactive' },
+        { value: 'pending', description: 'Account pending approval' },
+        { value: 'suspended', description: 'Account is suspended' },
+        { value: 'archived', description: 'Account is archived' },
+      ],
+    },
+    {
+      name: 'category',
+      description: 'Task or item category',
+      valueType: 'enum',
+      values: [
+        { value: 'urgent', description: 'Requires immediate attention' },
+        { value: 'normal', description: 'Standard priority' },
+        { value: 'low', description: 'Can be addressed later' },
+        { value: 'feature', description: 'New feature request' },
+        { value: 'bug', description: 'Bug report or issue' },
+      ],
+    },
+    {
+      name: 'department',
+      description: 'Department or team',
+      valueType: 'enum',
+      values: [
+        { value: 'engineering', description: 'Software Engineering team' },
+        { value: 'design', description: 'UI/UX Design team' },
+        { value: 'product', description: 'Product Management team' },
+        { value: 'marketing', description: 'Marketing team' },
+        { value: 'sales', description: 'Sales team' },
+        { value: 'support', description: 'Customer Support team' },
+      ],
+    },
+    {
+      name: 'role',
+      description: 'Job role or position',
+      valueType: 'enum',
+      values: [
+        { value: 'manager', description: 'Team manager' },
+        { value: 'senior', description: 'Senior level position' },
+        { value: 'mid', description: 'Mid-level position' },
+        { value: 'junior', description: 'Junior level position' },
+        { value: 'intern', description: 'Internship position' },
+        { value: 'contractor', description: 'Contract worker' },
+      ],
+    },
+    {
+      name: 'location',
+      description: 'Office location or region',
+      valueType: 'enum',
+      values: [
+        { value: 'san-francisco', description: 'San Francisco, CA' },
+        { value: 'new-york', description: 'New York, NY' },
+        { value: 'austin', description: 'Austin, TX' },
+        { value: 'seattle', description: 'Seattle, WA' },
+        { value: 'remote', description: 'Remote worker' },
+        { value: 'london', description: 'London, UK' },
+      ],
+    },
+    {
+      name: 'priority',
+      description: 'Task priority level',
+      valueType: 'enum',
+      values: [
+        { value: 'critical', description: 'Critical - fix immediately' },
+        { value: 'high', description: 'High priority' },
+        { value: 'medium', description: 'Medium priority' },
+        { value: 'low', description: 'Low priority' },
+      ],
+    },
+    {
+      name: 'assignee',
+      description: 'Person assigned to task',
+      valueType: 'string',
+      values: [
+        { value: 'john@company.com', description: 'John Doe' },
+        { value: 'jane@company.com', description: 'Jane Smith' },
+        { value: 'mike@company.com', description: 'Mike Johnson' },
+        { value: 'sarah@company.com', description: 'Sarah Wilson' },
+        { value: 'alex@company.com', description: 'Alex Chen' },
+      ],
+    },
+    {
+      name: 'created',
+      description: 'Creation date',
+      valueType: 'date',
+      values: [
+        { value: '2024-01-01', description: 'January 1st, 2024' },
+        { value: '2024-06-01', description: 'June 1st, 2024' },
+        { value: '2024-12-01', description: 'December 1st, 2024' },
+      ],
+    },
+    {
+      name: 'updated',
+      description: 'Last update date',
+      valueType: 'date',
+      values: [
+        { value: '2024-08-01', description: 'August 1st, 2024' },
+        { value: '2024-08-15', description: 'August 15th, 2024' },
+        { value: '2024-08-25', description: 'August 25th, 2024' },
+      ],
+    },
   ];
 
   const handleValidationChange = useCallback((valid: boolean, validationErrors: string[]) => {
@@ -39,8 +159,11 @@ export default function QueryPage() {
     'name: "John Doe"',
     'status: active AND category: urgent',
     'department: engineering OR role: manager',
-    '(priority: high OR priority: critical) AND assignee: "jane@example.com"',
-    'created: "2024-01-01" AND status: completed',
+    '(priority: critical OR priority: high) AND assignee: "john@company.com"',
+    'created: "2024-01-01" AND status: active',
+    'location: remote AND department: engineering',
+    'role: senior OR role: manager',
+    'email: "jane.smith@company.com" AND status: active',
   ];
 
   return (
@@ -48,8 +171,8 @@ export default function QueryPage() {
       <div className='mb-8'>
         <h1 className='text-3xl font-bold text-gray-900 mb-4'>Query Language Demo</h1>
         <p className='text-gray-600 mb-6'>
-          Try typing in the query input below. The auto-completion engine will suggest keys, operators, and provide
-          real-time validation. Use syntax like: <code>key: value AND (key: value OR key: value)</code>
+          Try typing in the query input below. The auto-completion engine will suggest keys, values, operators, and
+          provide real-time validation. Use syntax like: <code>key: value AND (key: value OR key: value)</code>
         </p>
       </div>
 
@@ -62,7 +185,7 @@ export default function QueryPage() {
             <QueryInput
               value={query}
               onChange={setQuery}
-              availableKeys={availableKeys}
+              keyConfigs={keyConfigs}
               placeholder='Type a query... (e.g., name: John)'
               showValidation={true}
               onValidationChange={handleValidationChange}
@@ -146,12 +269,34 @@ export default function QueryPage() {
 
         {/* Available Keys */}
         <div className='bg-white rounded-lg border border-gray-200 p-6'>
-          <h2 className='text-xl font-semibold text-gray-900 mb-4'>Available Keys</h2>
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
-            {availableKeys.map((key) => (
-              <span key={key} className='px-3 py-1 bg-blue-100 text-blue-800 rounded-md text-sm font-medium'>
-                {key}
-              </span>
+          <h2 className='text-xl font-semibold text-gray-900 mb-4'>Available Keys & Values</h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+            {keyConfigs.map((keyConfig) => (
+              <div key={keyConfig.name} className='border border-gray-200 rounded-lg p-4'>
+                <div className='flex items-center gap-2 mb-2'>
+                  <span className='px-3 py-1 bg-blue-100 text-blue-800 rounded-md text-sm font-medium'>
+                    {keyConfig.name}
+                  </span>
+                  <span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded'>{keyConfig.valueType}</span>
+                </div>
+                {keyConfig.description && <p className='text-sm text-gray-600 mb-2'>{keyConfig.description}</p>}
+                {keyConfig.values && keyConfig.values.length > 0 && (
+                  <div>
+                    <div className='text-xs font-medium text-gray-700 mb-1'>Sample Values:</div>
+                    <div className='space-y-1'>
+                      {keyConfig.values.slice(0, 3).map((value, idx) => (
+                        <div key={idx} className='text-xs'>
+                          <code className='bg-gray-100 px-1 rounded text-gray-800'>{value.value}</code>
+                          {value.description && <span className='ml-1 text-gray-500'>- {value.description}</span>}
+                        </div>
+                      ))}
+                      {keyConfig.values.length > 3 && (
+                        <div className='text-xs text-gray-500'>... and {keyConfig.values.length - 3} more values</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>

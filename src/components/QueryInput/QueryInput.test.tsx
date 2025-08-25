@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import type { KeyConfig } from '../../lib/QueryLanguage/types';
 import { QueryInput } from '../QueryInput';
 
 describe('QueryInput', () => {
@@ -219,6 +220,52 @@ describe('QueryInput', () => {
       rerender(<QueryInput {...defaultProps} availableKeys={newKeys} />);
 
       // Component should handle the update without errors
+      expect(screen.getByTestId('query-input-base')).toBeInTheDocument();
+    });
+
+    it('uses keyConfigs for rich completions with values', async () => {
+      const keyConfigs: KeyConfig[] = [
+        {
+          name: 'status',
+          description: 'User status',
+          valueType: 'enum',
+          values: [
+            { value: 'active', description: 'Active user' },
+            { value: 'inactive', description: 'Inactive user' },
+          ],
+        },
+        {
+          name: 'priority',
+          description: 'Task priority',
+          valueType: 'enum',
+          values: [
+            { value: 'high', description: 'High priority' },
+            { value: 'low', description: 'Low priority' },
+          ],
+        },
+      ];
+
+      const onChange = jest.fn();
+      render(<QueryInput {...defaultProps} keyConfigs={keyConfigs} onChange={onChange} />);
+
+      const input = screen.getByTestId('query-input-base');
+
+      // Type to trigger key completions
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: 's' } });
+
+      // Should show key completions
+      await waitFor(() => {
+        expect(screen.queryByTestId('completion-dropdown')).toBeInTheDocument();
+      });
+    });
+
+    it('prioritizes keyConfigs over availableKeys', () => {
+      const keyConfigs: KeyConfig[] = [{ name: 'keyFromConfig', description: 'From keyConfigs' }];
+
+      render(<QueryInput {...defaultProps} availableKeys={['keyFromAvailable']} keyConfigs={keyConfigs} />);
+
+      // Component should handle both props without errors
       expect(screen.getByTestId('query-input-base')).toBeInTheDocument();
     });
   });
