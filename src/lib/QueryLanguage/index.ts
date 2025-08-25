@@ -100,14 +100,13 @@ export {
   EXAMPLE_KEY_CONFIGS,
 } from './constants';
 
-// Core components (will be implemented in future phases)
-// export { QueryParser } from './parser/QueryParser';
-// export { CompletionEngine } from './completion/CompletionEngine';
-// export { QueryLexer } from './lexer/QueryLexer';
-// export { QueryValidator } from './validation/QueryValidator';
+// Core components
+export { QueryParser } from './parser/QueryParser';
+export { QueryLexer } from './lexer/QueryLexer';
+export { TokenStream } from './lexer/TokenStream';
 
-// Utility functions (will be implemented in future phases)
-// export { parseQuery, validateQuery, getCompletions } from './utils';
+// Utility functions
+export * from './utils/ASTBuilder';
 
 /**
  * Query Language Library Version
