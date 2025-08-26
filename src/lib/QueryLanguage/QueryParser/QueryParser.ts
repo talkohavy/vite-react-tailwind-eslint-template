@@ -7,9 +7,9 @@
 
 import type { ParseResult, ParseError, ParserOptions, Expression, BooleanOperator } from '../types';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
-import { TokenTypes } from '../lexer/logic/constants';
-import { QueryLexer } from '../lexer/QueryLexer';
-import { TokenStream } from '../lexer/TokenStream';
+import { TokenTypes } from '../QueryLexer/logic/constants';
+import { QueryLexer } from '../QueryLexer/QueryLexer';
+import { TokenStream } from '../QueryLexer/TokenStream';
 import {
   createQuery,
   createBooleanExpression,

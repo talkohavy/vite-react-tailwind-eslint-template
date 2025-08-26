@@ -101,8 +101,8 @@ export {
 
 // Core components
 export { QueryParser } from './QueryParser/QueryParser';
-export { QueryLexer } from './lexer/QueryLexer';
-export { TokenStream } from './lexer/TokenStream';
+export { QueryLexer } from './QueryLexer/QueryLexer';
+export { TokenStream } from './QueryLexer/TokenStream';
 
 // Auto-completion components
 export { CompletionEngine } from './completion/CompletionEngine';

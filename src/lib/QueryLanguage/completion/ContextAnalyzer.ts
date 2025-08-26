@@ -8,7 +8,7 @@
 
 import type { CompletionContext, Token, CompletionItemType } from '../types';
 import { BOOLEAN_OPERATORS } from '../constants';
-import { QueryLexer } from '../lexer/QueryLexer';
+import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { QueryParser } from '../QueryParser/QueryParser';
 
 /**

@@ -5,7 +5,7 @@
  * parser, auto-completion engine, and related components.
  */
 
-import type { TokenTypeValues } from './lexer/logic/constants';
+import type { TokenTypeValues } from './QueryLexer/logic/constants';
 
 // =============================================================================
 // AST (Abstract Syntax Tree) Types
