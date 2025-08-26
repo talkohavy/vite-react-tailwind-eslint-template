@@ -57,7 +57,7 @@ export class TokenStream {
   /**
    * Check if the current token matches the expected type
    */
-  match(expectedType: TokenTypeValues): boolean {
+  isCurrentAMatchWith(expectedType: TokenTypeValues): boolean {
     const token = this.current();
     return token ? token.type === expectedType : false;
   }

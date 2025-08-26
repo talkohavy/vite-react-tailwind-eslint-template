@@ -148,7 +148,7 @@ export class QueryParser {
     this.skipWhitespace();
 
     // Handle grouped expressions
-    if (this.tokens.match(TokenTypes.LeftParenthesis)) {
+    if (this.tokens.isCurrentAMatchWith(TokenTypes.LeftParenthesis)) {
       return this.parseGroupExpression();
     }
 
@@ -171,7 +171,7 @@ export class QueryParser {
 
     this.skipWhitespace();
 
-    if (!this.tokens.match(TokenTypes.RightParenthesis)) {
+    if (!this.tokens.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
       this.addError(ERROR_MESSAGES.EXPECTED_CLOSING_PAREN, expression.position, ERROR_CODES.UNBALANCED_PARENS);
       return expression; // Return what we have for error recovery
     }
@@ -187,7 +187,7 @@ export class QueryParser {
   private parseCondition(): Expression | null {
     // Expect identifier for key
     debugger;
-    if (!this.tokens.match(TokenTypes.Key)) {
+    if (!this.tokens.isCurrentAMatchWith(TokenTypes.Key)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_KEY, token?.position || createPosition(0, 0), ERROR_CODES.MISSING_TOKEN);
       return null;
@@ -197,7 +197,7 @@ export class QueryParser {
     this.skipWhitespace();
 
     // Expect colon
-    if (!this.tokens.match(TokenTypes.Colon)) {
+    if (!this.tokens.isCurrentAMatchWith(TokenTypes.Colon)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_COLON, token?.position || keyToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
