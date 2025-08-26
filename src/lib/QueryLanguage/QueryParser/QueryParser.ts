@@ -208,7 +208,7 @@ export class QueryParser {
 
     // Expect value (identifier or quoted string)
     debugger;
-    if (!this.tokens.matchAny(TokenTypes.Key, 'QUOTED_STRING')) {
+    if (!this.tokens.matchAny(TokenTypes.Key, TokenTypes.QuotedString)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_VALUE, token?.position || colonToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
@@ -218,7 +218,7 @@ export class QueryParser {
 
     // Extract actual value from token
     let value: string;
-    if (valueToken.type === 'QUOTED_STRING') {
+    if (valueToken.type === TokenTypes.QuotedString) {
       value = valueToken.value; // Already extracted by lexer
     } else {
       value = valueToken.value;
