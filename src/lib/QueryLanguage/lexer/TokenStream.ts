@@ -7,7 +7,7 @@
  */
 
 import type { Token } from '../types';
-import type { TokenTypeValues } from './logic/constants';
+import { TokenTypes, type TokenTypeValues } from './logic/constants';
 
 /**
  * TokenStream manages a sequence of tokens with cursor positioning
@@ -29,13 +29,6 @@ export class TokenStream {
   }
 
   /**
-   * Get the next token without advancing the position
-   */
-  peek(offset = 1): Token | null {
-    return this.tokens[this.position + offset] || null;
-  }
-
-  /**
    * Consume and return the current token, advancing the position
    */
   consume(): Token | null {
@@ -44,17 +37,6 @@ export class TokenStream {
       this.position++;
     }
     return token;
-  }
-
-  /**
-   * Consume the current token if it matches the expected type
-   */
-  consumeIf(expectedType: TokenTypeValues): Token | null {
-    const token = this.current();
-    if (token && token.type === expectedType) {
-      return this.consume();
-    }
-    return null;
   }
 
   /**
@@ -112,85 +94,7 @@ export class TokenStream {
    */
   isAtEnd(): boolean {
     const token = this.current();
-    return !token || token.type === 'EOF';
-  }
-
-  /**
-   * Get the current position in the token stream
-   */
-  getPosition(): number {
-    return this.position;
-  }
-
-  /**
-   * Set the position in the token stream (for backtracking)
-   */
-  setPosition(position: number): void {
-    this.position = Math.max(0, Math.min(position, this.tokens.length));
-  }
-
-  /**
-   * Save the current position for potential backtracking
-   */
-  savePosition(): number {
-    return this.position;
-  }
-
-  /**
-   * Restore a previously saved position
-   */
-  restorePosition(savedPosition: number): void {
-    this.setPosition(savedPosition);
-  }
-
-  /**
-   * Get all remaining tokens from current position
-   */
-  remaining(): Token[] {
-    return this.tokens.slice(this.position);
-  }
-
-  /**
-   * Get all tokens from the stream
-   */
-  getAllTokens(): Token[] {
-    return [...this.tokens];
-  }
-
-  /**
-   * Get the number of tokens in the stream
-   */
-  length(): number {
-    return this.tokens.length;
-  }
-
-  /**
-   * Create a new TokenStream with a subset of tokens
-   */
-  slice(start: number, end?: number): TokenStream {
-    return new TokenStream(this.tokens.slice(start, end));
-  }
-
-  /**
-   * Find the next token of the specified type
-   */
-  findNext(tokenType: TokenTypeValues, startOffset = 0): Token | null {
-    for (let i = this.position + startOffset; i < this.tokens.length; i++) {
-      const token = this.tokens[i];
-      if (token?.type === tokenType) {
-        return token;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Get a string representation of the current state (useful for debugging)
-   */
-  toString(): string {
-    const nextTokens = this.tokens.slice(this.position, this.position + 3);
-    const tokenStrings = nextTokens.map((t) => `${t.type}(${t.value})`);
-    return `TokenStream[${this.position}/${this.tokens.length}]: ${tokenStrings.join(' ')}`;
+    return !token || token.type === TokenTypes.EOF;
   }
 
   /**
@@ -205,4 +109,100 @@ export class TokenStream {
       isAtEnd: this.isAtEnd(),
     };
   }
+
+  // /**
+  //  * Get the next token without advancing the position
+  //  */
+  // peek(offset = 1): Token | null {
+  //   return this.tokens[this.position + offset] || null;
+  // }
+
+  // /**
+  //  * Consume the current token if it matches the expected type
+  //  */
+  // consumeIf(expectedType: TokenTypeValues): Token | null {
+  //   const token = this.current();
+  //   if (token && token.type === expectedType) {
+  //     return this.consume();
+  //   }
+  //   return null;
+  // }
+
+  // /**
+  //  * Get the current position in the token stream
+  //  */
+  // getPosition(): number {
+  //   return this.position;
+  // }
+
+  // /**
+  //  * Set the position in the token stream (for backtracking)
+  //  */
+  // setPosition(position: number): void {
+  //   this.position = Math.max(0, Math.min(position, this.tokens.length));
+  // }
+
+  // /**
+  //  * Save the current position for potential backtracking
+  //  */
+  // savePosition(): number {
+  //   return this.position;
+  // }
+
+  // /**
+  //  * Restore a previously saved position
+  //  */
+  // restorePosition(savedPosition: number): void {
+  //   this.setPosition(savedPosition);
+  // }
+
+  // /**
+  //  * Get all remaining tokens from current position
+  //  */
+  // remaining(): Token[] {
+  //   return this.tokens.slice(this.position);
+  // }
+
+  // /**
+  //  * Get all tokens from the stream
+  //  */
+  // getAllTokens(): Token[] {
+  //   return [...this.tokens];
+  // }
+
+  // /**
+  //  * Get the number of tokens in the stream
+  //  */
+  // length(): number {
+  //   return this.tokens.length;
+  // }
+
+  // /**
+  //  * Create a new TokenStream with a subset of tokens
+  //  */
+  // slice(start: number, end?: number): TokenStream {
+  //   return new TokenStream(this.tokens.slice(start, end));
+  // }
+
+  // /**
+  //  * Find the next token of the specified type
+  //  */
+  // findNext(tokenType: TokenTypeValues, startOffset = 0): Token | null {
+  //   for (let i = this.position + startOffset; i < this.tokens.length; i++) {
+  //     const token = this.tokens[i];
+  //     if (token?.type === tokenType) {
+  //       return token;
+  //     }
+  //   }
+  //   return null;
+  // }
+
+  // /**
+  //  * Get a string representation of the current state (useful for debugging)
+  //  */
+  // toString(): string {
+  //   const nextTokens = this.tokens.slice(this.position, this.position + 3);
+  //   const tokenStrings = nextTokens.map((t) => `${t.type}(${t.value})`);
+  //   return `TokenStream[${this.position}/${this.tokens.length}]: ${tokenStrings.join(' ')}`;
+  // }
 }
