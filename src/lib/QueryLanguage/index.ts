@@ -100,7 +100,7 @@ export {
 } from './constants';
 
 // Core components
-export { QueryParser } from './parser/QueryParser';
+export { QueryParser } from './QueryParser/QueryParser';
 export { QueryLexer } from './lexer/QueryLexer';
 export { TokenStream } from './lexer/TokenStream';
 

@@ -9,7 +9,7 @@
 import type { CompletionContext, Token, CompletionItemType } from '../types';
 import { BOOLEAN_OPERATORS } from '../constants';
 import { QueryLexer } from '../lexer/QueryLexer';
-import { QueryParser } from '../parser/QueryParser';
+import { QueryParser } from '../QueryParser/QueryParser';
 
 /**
  * Analyzes the current context for auto-completion

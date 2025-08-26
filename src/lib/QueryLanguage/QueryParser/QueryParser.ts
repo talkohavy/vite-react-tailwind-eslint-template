@@ -7,6 +7,7 @@
 
 import type { ParseResult, ParseError, ParserOptions, Expression, BooleanOperator } from '../types';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
+import { TokenTypes } from '../lexer/logic/constants';
 import { QueryLexer } from '../lexer/QueryLexer';
 import { TokenStream } from '../lexer/TokenStream';
 import {
@@ -147,7 +148,7 @@ export class QueryParser {
     this.skipWhitespace();
 
     // Handle grouped expressions
-    if (this.tokens.match('LPAREN')) {
+    if (this.tokens.match(TokenTypes.LeftParenthesis)) {
       return this.parseGroupExpression();
     }
 
@@ -159,7 +160,7 @@ export class QueryParser {
    * Parse grouped expression (parentheses)
    */
   private parseGroupExpression(): Expression | null {
-    const startToken = this.tokens.expect('LPAREN');
+    const startToken = this.tokens.expect(TokenTypes.LeftParenthesis);
     this.skipWhitespace();
 
     const expression = this.parseExpression();
@@ -170,7 +171,7 @@ export class QueryParser {
 
     this.skipWhitespace();
 
-    if (!this.tokens.match('RPAREN')) {
+    if (!this.tokens.match(TokenTypes.RightParenthesis)) {
       this.addError(ERROR_MESSAGES.EXPECTED_CLOSING_PAREN, expression.position, ERROR_CODES.UNBALANCED_PARENS);
       return expression; // Return what we have for error recovery
     }
@@ -185,7 +186,8 @@ export class QueryParser {
    */
   private parseCondition(): Expression | null {
     // Expect identifier for key
-    if (!this.tokens.match('IDENTIFIER')) {
+    debugger;
+    if (!this.tokens.match(TokenTypes.Key)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_KEY, token?.position || createPosition(0, 0), ERROR_CODES.MISSING_TOKEN);
       return null;
@@ -205,7 +207,8 @@ export class QueryParser {
     this.skipWhitespace();
 
     // Expect value (identifier or quoted string)
-    if (!this.tokens.matchAny('IDENTIFIER', 'QUOTED_STRING')) {
+    debugger;
+    if (!this.tokens.matchAny(TokenTypes.Key, 'QUOTED_STRING')) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_VALUE, token?.position || colonToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
@@ -236,12 +239,18 @@ export class QueryParser {
     const token = this.tokens.current();
     if (!token) return false;
 
-    if (operator === 'AND') {
-      return token.type === 'AND' || (token.type === 'IDENTIFIER' && token.value.toUpperCase() === 'AND');
+    if (operator === TokenTypes.AND) {
+      debugger;
+      return (
+        token.type === TokenTypes.AND || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.AND)
+      );
     }
 
-    if (operator === 'OR') {
-      return token.type === 'OR' || (token.type === 'IDENTIFIER' && token.value.toUpperCase() === 'OR');
+    if (operator === TokenTypes.OR) {
+      debugger;
+      return (
+        token.type === TokenTypes.OR || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.OR)
+      );
     }
 
     return false;
