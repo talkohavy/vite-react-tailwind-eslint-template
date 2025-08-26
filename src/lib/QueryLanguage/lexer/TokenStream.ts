@@ -6,7 +6,8 @@
  * position tracking.
  */
 
-import type { Token, TokenType } from '../types';
+import type { Token } from '../types';
+import type { TokenTypeValues } from './logic/constants';
 
 /**
  * TokenStream manages a sequence of tokens with cursor positioning
@@ -48,7 +49,7 @@ export class TokenStream {
   /**
    * Consume the current token if it matches the expected type
    */
-  consumeIf(expectedType: TokenType): Token | null {
+  consumeIf(expectedType: TokenTypeValues): Token | null {
     const token = this.current();
     if (token && token.type === expectedType) {
       return this.consume();
@@ -60,7 +61,7 @@ export class TokenStream {
    * Consume the current token and expect it to be of the specified type
    * Throws an error if the token doesn't match
    */
-  expect(expectedType: TokenType): Token {
+  expect(expectedType: TokenTypeValues): Token {
     const token = this.current();
     if (!token) {
       throw new Error(`Expected ${expectedType} but reached end of input`);
@@ -74,7 +75,7 @@ export class TokenStream {
   /**
    * Check if the current token matches the expected type
    */
-  match(expectedType: TokenType): boolean {
+  match(expectedType: TokenTypeValues): boolean {
     const token = this.current();
     return token ? token.type === expectedType : false;
   }
@@ -82,7 +83,7 @@ export class TokenStream {
   /**
    * Check if any of the expected types match the current token
    */
-  matchAny(...expectedTypes: TokenType[]): boolean {
+  matchAny(...expectedTypes: TokenTypeValues[]): boolean {
     const token = this.current();
     if (!token) return false;
     return expectedTypes.includes(token.type);
@@ -91,7 +92,7 @@ export class TokenStream {
   /**
    * Skip tokens of specified types (useful for whitespace)
    */
-  skip(...tokenTypes: TokenType[]): void {
+  skip(...tokenTypes: TokenTypeValues[]): void {
     while (this.current() && tokenTypes.includes(this.current()!.type)) {
       this.advance();
     }
@@ -173,7 +174,7 @@ export class TokenStream {
   /**
    * Find the next token of the specified type
    */
-  findNext(tokenType: TokenType, startOffset = 0): Token | null {
+  findNext(tokenType: TokenTypeValues, startOffset = 0): Token | null {
     for (let i = this.position + startOffset; i < this.tokens.length; i++) {
       const token = this.tokens[i];
       if (token?.type === tokenType) {
