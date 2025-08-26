@@ -2,11 +2,11 @@
  * Unit tests for QueryLexer
  */
 
-import type { TokenType } from '../types';
+import { TokenTypes, type TokenTypeValues } from './logic/constants';
 import { QueryLexer } from './QueryLexer';
 
 describe('QueryLexer', () => {
-  function testTokenization(input: string, expected: Array<{ type: TokenType; value: string }>) {
+  function testTokenization(input: string, expected: Array<{ type: TokenTypeValues; value: string }>) {
     const lexer = new QueryLexer(input, { ignoreWhitespace: true });
     const tokens = lexer.tokenize();
 
@@ -23,15 +23,15 @@ describe('QueryLexer', () => {
 
   describe('basic tokenization', () => {
     test('should tokenize simple identifier', () => {
-      testTokenization('status', [{ type: 'IDENTIFIER', value: 'status' }]);
+      testTokenization('status', [{ type: TokenTypes.Key, value: 'status' }]);
     });
 
     test('should tokenize simple condition', () => {
       const input = 'status: active';
-      const expected: Array<{ type: TokenType; value: string }> = [
-        { type: 'IDENTIFIER', value: 'status' },
-        { type: 'COLON', value: ':' },
-        { type: 'IDENTIFIER', value: 'active' },
+      const expected: Array<{ type: TokenTypeValues; value: string }> = [
+        { type: TokenTypes.Key, value: 'status' },
+        { type: TokenTypes.Colon, value: ':' },
+        { type: TokenTypes.Value, value: 'active' },
       ];
 
       testTokenization(input, expected);
@@ -39,14 +39,14 @@ describe('QueryLexer', () => {
 
     test('should tokenize boolean expression', () => {
       const input = 'status: active AND role: admin';
-      const expected: Array<{ type: TokenType; value: string }> = [
-        { type: 'IDENTIFIER', value: 'status' },
-        { type: 'COLON', value: ':' },
-        { type: 'IDENTIFIER', value: 'active' },
-        { type: 'AND', value: 'AND' },
-        { type: 'IDENTIFIER', value: 'role' },
-        { type: 'COLON', value: ':' },
-        { type: 'IDENTIFIER', value: 'admin' },
+      const expected: Array<{ type: TokenTypeValues; value: string }> = [
+        { type: TokenTypes.Key, value: 'status' },
+        { type: TokenTypes.Colon, value: ':' },
+        { type: TokenTypes.Value, value: 'active' },
+        { type: TokenTypes.AND, value: 'AND' },
+        { type: TokenTypes.Key, value: 'role' },
+        { type: TokenTypes.Colon, value: ':' },
+        { type: TokenTypes.Value, value: 'admin' },
       ];
 
       testTokenization(input, expected);
@@ -58,7 +58,7 @@ describe('QueryLexer', () => {
       const lexer = new QueryLexer('"hello world"');
       const tokens = lexer.tokenize();
 
-      expect(tokens[0]?.type).toBe('QUOTED_STRING');
+      expect(tokens[0]?.type).toBe(TokenTypes.QuotedString);
       expect(tokens[0]?.value).toBe('hello world');
     });
   });
