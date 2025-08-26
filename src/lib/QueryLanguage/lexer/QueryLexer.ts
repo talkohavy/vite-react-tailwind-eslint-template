@@ -253,20 +253,13 @@ export class QueryLexer {
     }
 
     // If previous token was a comparison operator, this must be a value
-    if (this.isComparisonOperator(previousTokenType)) return TokenTypes.Value;
+    if ([TokenTypes.Comparator, TokenTypes.Colon].includes(previousTokenType as any)) return TokenTypes.Value;
 
     // WARNING! You should never get here!!!
     // If previous token was a key, this could be a value (for colon-less syntax)
     // or another key if there was a boolean operator in between
     // For now, default to key since we expect explicit operators
     return TokenTypes.Key;
-  }
-
-  /**
-   * Check if a token type is a comparison operator
-   */
-  private isComparisonOperator(tokenType: TokenTypeValues): boolean {
-    return tokenType === TokenTypes.Comparator;
   }
 
   /**
