@@ -25,6 +25,8 @@
     // ----------------------
     // Debug React in VSCode:
     // ----------------------
+    // Run the frontend code as you normall do.
+    // Then, run this debugger configuration. It would open a new Chrome window and attach to it.
     {
       "type": "chrome",
       "request": "launch",
