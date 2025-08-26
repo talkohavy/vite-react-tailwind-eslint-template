@@ -214,13 +214,7 @@ export class QueryParser {
 
     const valueToken = this.tokens.consume()!;
 
-    // Extract actual value from token
-    let value: string;
-    if (valueToken.type === TokenTypes.QuotedString) {
-      value = valueToken.value; // Already extracted by lexer
-    } else {
-      value = valueToken.value;
-    }
+    const value: string = valueToken.value;
 
     return createCondition(
       keyToken.value,
