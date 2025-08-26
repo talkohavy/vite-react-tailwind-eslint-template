@@ -208,7 +208,7 @@ export class QueryParser {
 
     // Expect value (identifier or quoted string)
     debugger;
-    if (!this.tokens.matchAny(TokenTypes.Key, TokenTypes.QuotedString)) {
+    if (!this.tokens.matchAny(TokenTypes.Value, TokenTypes.QuotedString)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_VALUE, token?.position || colonToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
