@@ -186,7 +186,6 @@ export class QueryParser {
    */
   private parseCondition(): Expression | null {
     // Expect identifier for key
-    debugger;
     if (!this.tokens.isCurrentAMatchWith(TokenTypes.Key)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_KEY, token?.position || createPosition(0, 0), ERROR_CODES.MISSING_TOKEN);
@@ -207,7 +206,6 @@ export class QueryParser {
     this.skipWhitespace();
 
     // Expect value (identifier or quoted string)
-    debugger;
     if (!this.tokens.matchAny(TokenTypes.Value, TokenTypes.QuotedString)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_VALUE, token?.position || colonToken.position, ERROR_CODES.MISSING_TOKEN);
@@ -240,14 +238,12 @@ export class QueryParser {
     if (!token) return false;
 
     if (operator === TokenTypes.AND) {
-      debugger;
       return (
         token.type === TokenTypes.AND || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.AND)
       );
     }
 
     if (operator === TokenTypes.OR) {
-      debugger;
       return (
         token.type === TokenTypes.OR || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.OR)
       );
