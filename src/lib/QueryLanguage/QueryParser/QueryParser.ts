@@ -102,7 +102,7 @@ export class QueryParser {
     let left = this.parseAndExpression();
     if (!left) return null;
 
-    while (this.matchOperator('OR')) {
+    while (this.matchOperator(TokenTypes.OR)) {
       const operatorToken = this.tokens.consume()!;
       this.skipWhitespace();
 
@@ -112,7 +112,7 @@ export class QueryParser {
         return left;
       }
 
-      left = createBooleanExpression('OR', left, right, mergePositions(left.position, right.position));
+      left = createBooleanExpression(TokenTypes.OR, left, right, mergePositions(left.position, right.position));
     }
 
     return left;
@@ -125,7 +125,7 @@ export class QueryParser {
     let left = this.parsePrimaryExpression();
     if (!left) return null;
 
-    while (this.matchOperator('AND')) {
+    while (this.matchOperator(TokenTypes.AND)) {
       const operatorToken = this.tokens.consume()!;
       this.skipWhitespace();
 
@@ -135,7 +135,7 @@ export class QueryParser {
         return left;
       }
 
-      left = createBooleanExpression('AND', left, right, mergePositions(left.position, right.position));
+      left = createBooleanExpression(TokenTypes.AND, left, right, mergePositions(left.position, right.position));
     }
 
     return left;
@@ -197,7 +197,7 @@ export class QueryParser {
     this.skipWhitespace();
 
     // Expect colon
-    if (!this.tokens.match('COLON')) {
+    if (!this.tokens.match(TokenTypes.Colon)) {
       const token = this.tokens.current();
       this.addError(ERROR_MESSAGES.EXPECTED_COLON, token?.position || keyToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
@@ -260,7 +260,7 @@ export class QueryParser {
    * Skip whitespace tokens
    */
   private skipWhitespace(): void {
-    this.tokens.skip('WHITESPACE');
+    this.tokens.skip(TokenTypes.Whitespace);
   }
 
   /**
