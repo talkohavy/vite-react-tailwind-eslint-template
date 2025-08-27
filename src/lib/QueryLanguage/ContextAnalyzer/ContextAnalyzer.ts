@@ -61,29 +61,38 @@ export class ContextAnalyzer {
    * Finds the token at the given position
    */
   private findTokenAtPosition(tokens: Token[], position: number): Token | undefined {
-    return tokens.find((token) => position >= token.position.start && position <= token.position.end);
+    const foundToken = tokens.find((token) => position >= token.position.start && position <= token.position.end);
+
+    return foundToken;
   }
 
   /**
    * Finds the previous non-whitespace token
    */
   private findPreviousToken(tokens: Token[], position: number): Token | undefined {
-    const precedingTokens = tokens.filter((token) => token.position.end < position && token.type !== 'WHITESPACE');
-    return precedingTokens[precedingTokens.length - 1];
+    const precedingTokens = tokens.filter(
+      (token) => token.position.end < position && token.type !== TokenTypes.Whitespace,
+    );
+
+    const previousToken = precedingTokens[precedingTokens.length - 1];
+
+    return previousToken;
   }
 
   /**
    * Finds the next non-whitespace token
    */
   private findNextToken(tokens: Token[], position: number): Token | undefined {
-    return tokens.find((token) => token.position.start > position && token.type !== 'WHITESPACE');
+    const foundToken = tokens.find((token) => token.position.start > position && token.type !== TokenTypes.Whitespace);
+
+    return foundToken;
   }
 
   /**
    * Determines what types of completions are expected at the current position
    */
   private determineExpectedTypes(tokens: Token[], position: number): CompletionItemType[] {
-    const nonWhitespaceTokens = tokens.filter((token) => token.type !== 'WHITESPACE');
+    const nonWhitespaceTokens = tokens.filter((token) => token.type !== TokenTypes.Whitespace);
 
     if (nonWhitespaceTokens.length === 0) {
       // Empty query - expect key or opening parenthesis
@@ -189,7 +198,10 @@ export class ContextAnalyzer {
     const previousToken = this.findPreviousToken(tokens, position);
     if (!previousToken) return false;
 
-    return this.isTokenAValue(tokens, previousToken) || previousToken.type === 'RPAREN';
+    const canInsertOperator =
+      this.isTokenAValue(tokens, previousToken) || previousToken.type === TokenTypes.RightParenthesis;
+
+    return canInsertOperator;
   }
 
   /**
@@ -202,7 +214,10 @@ export class ContextAnalyzer {
     if (!previousToken) return true;
 
     // Can insert after operators or opening parenthesis
-    return Object.keys(BOOLEAN_OPERATORS).includes(previousToken.value) || previousToken.type === 'LPAREN';
+    const canInsert =
+      Object.keys(BOOLEAN_OPERATORS).includes(previousToken.value) || previousToken.type === TokenTypes.LeftParenthesis;
+
+    return canInsert;
   }
 
   /**
@@ -243,6 +258,9 @@ export class ContextAnalyzer {
    */
   private getSyntaxErrors(query: string): string[] {
     const parseResult = this.parser.parse(query);
-    return parseResult.errors.map((error) => error.message);
+
+    const syntaxErrors = parseResult.errors.map((error) => error.message);
+
+    return syntaxErrors;
   }
 }
