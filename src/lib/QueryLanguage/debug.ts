@@ -2,7 +2,7 @@
  * Debug script for completion engine
  */
 
-import { CompletionEngine } from './completion/CompletionEngine';
+import { CompletionEngine } from './ContextAnalyzer/CompletionEngine';
 
 const engine = new CompletionEngine({
   keys: [

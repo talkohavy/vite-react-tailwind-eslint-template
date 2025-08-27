@@ -6,7 +6,7 @@
  */
 
 import type { CompletionConfig } from '../types';
-import { CompletionEngine } from '../completion/CompletionEngine';
+import { CompletionEngine } from '../ContextAnalyzer/CompletionEngine';
 
 // Example 1: Basic Setup
 console.log('=== Auto-Completion Engine Examples ===\n');

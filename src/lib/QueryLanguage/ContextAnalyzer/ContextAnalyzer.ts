@@ -8,6 +8,7 @@
 
 import type { CompletionContext, Token, CompletionItemType } from '../types';
 import { BOOLEAN_OPERATORS } from '../constants';
+import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { QueryParser } from '../QueryParser/QueryParser';
 
@@ -112,12 +113,12 @@ export class ContextAnalyzer {
     }
 
     // After opening parenthesis - expect key or another opening parenthesis
-    if (lastToken.type === 'LPAREN') {
+    if (lastToken.type === TokenTypes.LeftParenthesis) {
       return ['key', 'grouping'];
     }
 
     // After an identifier that's not a value - expect operator
-    if (lastToken.type === 'IDENTIFIER') {
+    if (lastToken.type === TokenTypes.Key) {
       return ['operator'];
     }
 
@@ -128,17 +129,8 @@ export class ContextAnalyzer {
   /**
    * Checks if a specific token is a value based on its context in the token array
    */
-  private isTokenAValue(tokens: Token[], token: Token): boolean {
-    if (token.type === 'QUOTED_STRING') return true;
-
-    if (token.type === 'IDENTIFIER') {
-      // Check if this identifier follows a colon
-      const tokenIndex = tokens.indexOf(token);
-      if (tokenIndex > 0) {
-        const previousToken = tokens[tokenIndex - 1];
-        return previousToken?.type === 'COLON';
-      }
-    }
+  private isTokenAValue(_tokens: Token[], token: Token): boolean {
+    if ([TokenTypes.Value, TokenTypes.QuotedString].includes(token.type as any)) return true;
 
     return false;
   }
