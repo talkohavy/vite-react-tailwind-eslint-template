@@ -134,7 +134,7 @@ console.log(`   Query: "${complexQuery}"`);
 console.log(`   Cursor Position: ${contextInfo.cursorPosition}`);
 console.log(`   Expected Types: ${contextInfo.expectedTypes.join(', ')}`);
 console.log(`   Can Insert Operator: ${contextInfo.canInsertOperator}`);
-console.log(`   Can Insert Grouping: ${contextInfo.canInsertGrouping}`);
+console.log(`   Can Start New Group: ${contextInfo.canStartNewGroup}`);
 console.log(`   Is In Quotes: ${contextInfo.isInQuotes}`);
 console.log(`   Incomplete Value: "${contextInfo.incompleteValue}"`);
 console.log(`   Syntax Errors: ${contextInfo.syntaxErrors.length > 0 ? contextInfo.syntaxErrors.join(', ') : 'None'}`);

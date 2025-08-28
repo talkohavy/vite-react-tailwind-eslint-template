@@ -5,6 +5,7 @@
  * parser, auto-completion engine, and related components.
  */
 
+import type { ContextTypeValues } from './ContextAnalyzer/logic/constants';
 import type { TokenTypeValues } from './QueryLexer/logic/constants';
 
 // =============================================================================
@@ -142,10 +143,10 @@ export interface CompletionContext {
   currentToken?: Token;
   previousToken?: Token;
   nextToken?: Token;
-  expectedTypes: CompletionItemType[];
+  expectedTypes: ContextTypeValues[];
   isInQuotes: boolean;
   canInsertOperator: boolean;
-  canInsertGrouping: boolean;
+  canStartNewGroup: boolean;
   incompleteValue: string;
   syntaxErrors: string[];
 }
@@ -155,16 +156,11 @@ export interface CompletionContext {
  */
 export interface CompletionItem {
   text: string;
-  type: CompletionItemType;
+  type: ContextTypeValues;
   description?: string;
   insertText?: string;
   priority: number;
 }
-
-/**
- * Types of completion items
- */
-export type CompletionItemType = 'key' | 'value' | 'operator' | 'grouping' | 'keyword';
 
 /**
  * Configuration for auto-completion

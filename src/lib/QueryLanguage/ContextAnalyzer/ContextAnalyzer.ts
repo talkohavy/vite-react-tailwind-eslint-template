@@ -6,12 +6,12 @@
  * the user is currently positioned.
  */
 
-import type { CompletionContext, Token, CompletionItemType } from '../types';
+import type { CompletionContext, Token } from '../types';
 import { BOOLEAN_OPERATORS } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { QueryParser } from '../QueryParser/QueryParser';
-import { ContextTypes } from './logic/constants';
+import { ContextTypes, type ContextTypeValues } from './logic/constants';
 
 /**
  * Analyzes the current context for auto-completion
@@ -35,7 +35,7 @@ export class ContextAnalyzer {
     const expectedTypes = this.determineExpectedTypes(tokens, cursorPosition);
     const isInQuotes = this.isPositionInQuotes(query, cursorPosition);
     const canInsertOperator = this.canInsertOperator(tokens, cursorPosition);
-    const canInsertGrouping = this.canInsertGrouping(tokens, cursorPosition);
+    const canStartNewGroup = this.getCanStartNewGroup(tokens, cursorPosition);
     const incompleteValue = this.extractIncompleteValue(query, cursorPosition);
     const syntaxErrors = this.getSyntaxErrors(query);
 
@@ -47,7 +47,7 @@ export class ContextAnalyzer {
       expectedTypes,
       isInQuotes,
       canInsertOperator,
-      canInsertGrouping,
+      canStartNewGroup,
       incompleteValue,
       syntaxErrors,
     };
@@ -104,16 +104,6 @@ export class ContextAnalyzer {
       return [ContextTypes.Key, ContextTypes.Grouping];
     }
 
-    // After a colon - expect value
-    if (lastToken.type === TokenTypes.Colon) {
-      return [ContextTypes.Value];
-    }
-
-    // After a value - expect boolean operator or closing parenthesis
-    if (this.isTokenAValue(nonWhitespaceTokens, lastToken)) {
-      return [ContextTypes.Operator, ContextTypes.Grouping];
-    }
-
     // After AND/OR - expect key or opening parenthesis
     if (Object.keys(BOOLEAN_OPERATORS).includes(lastToken.value)) {
       return [ContextTypes.Key, ContextTypes.Grouping];
@@ -122,6 +112,16 @@ export class ContextAnalyzer {
     // After opening parenthesis - expect key or another opening parenthesis
     if (lastToken.type === TokenTypes.LeftParenthesis) {
       return [ContextTypes.Key, ContextTypes.Grouping];
+    }
+
+    // After a colon - expect value
+    if (lastToken.type === TokenTypes.Colon) {
+      return [ContextTypes.Value];
+    }
+
+    // After a value - expect boolean operator or closing parenthesis
+    if (this.isValueToken(nonWhitespaceTokens, lastToken)) {
+      return [ContextTypes.Operator, ContextTypes.Grouping, ContextTypes.Value]; // <--- Value is expected because it could be a partial value
     }
 
     // After an identifier that's not a value - expect operator
@@ -136,7 +136,7 @@ export class ContextAnalyzer {
   /**
    * Checks if a specific token is a value based on its context in the token array
    */
-  private isTokenAValue(_tokens: Token[], token: Token): boolean {
+  private isValueToken(_tokens: Token[], token: Token): boolean {
     if ([TokenTypes.Value, TokenTypes.QuotedString].includes(token.type as any)) return true;
 
     return false;
@@ -197,25 +197,25 @@ export class ContextAnalyzer {
     if (!previousToken) return false;
 
     const canInsertOperator =
-      this.isTokenAValue(tokens, previousToken) || previousToken.type === TokenTypes.RightParenthesis;
+      this.isValueToken(tokens, previousToken) || previousToken.type === TokenTypes.RightParenthesis;
 
     return canInsertOperator;
   }
 
   /**
-   * Determines if grouping (parentheses) can be inserted at the current position
+   * Determines if grouping (left parentheses) can be inserted at the current position
    */
-  private canInsertGrouping(tokens: Token[], position: number): boolean {
+  private getCanStartNewGroup(tokens: Token[], position: number): boolean {
     const previousToken = this.findPreviousToken(tokens, position);
 
     // Can insert at beginning
     if (!previousToken) return true;
 
     // Can insert after operators or opening parenthesis
-    const canInsert =
+    const canStartNewGroup =
       Object.keys(BOOLEAN_OPERATORS).includes(previousToken.value) || previousToken.type === TokenTypes.LeftParenthesis;
 
-    return canInsert;
+    return canStartNewGroup;
   }
 
   /**

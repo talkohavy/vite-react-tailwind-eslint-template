@@ -135,7 +135,7 @@ export const DEFAULT_MAX_SUGGESTIONS = 10;
 export const DEFAULT_COMPLETION_CONFIG = {
   keys: [],
   caseSensitive: false,
-  fuzzyMatch: true,
+  fuzzyMatch: false,
   maxSuggestions: DEFAULT_MAX_SUGGESTIONS,
 } as const;
 

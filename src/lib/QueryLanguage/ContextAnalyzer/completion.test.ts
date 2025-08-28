@@ -259,7 +259,7 @@ describe('CompletionEngine', () => {
       expect(context).toHaveProperty('expectedTypes');
       expect(context).toHaveProperty('isInQuotes');
       expect(context).toHaveProperty('canInsertOperator');
-      expect(context).toHaveProperty('canInsertGrouping');
+      expect(context).toHaveProperty('canStartNewGroup');
     });
 
     it('should detect syntax errors', () => {

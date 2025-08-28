@@ -6,7 +6,9 @@
  * auto-completion suggestions based on the current query state.
  */
 
-import type { CompletionItem, CompletionConfig, CompletionContext, CompletionItemType } from '../types';
+import type { CompletionItem, CompletionConfig, CompletionContext } from '../types';
+import type { ContextTypeValues } from './logic/constants';
+import { TokenTypes } from '../QueryLexer/logic/constants';
 import { ContextAnalyzer } from './ContextAnalyzer';
 import { SuggestionRanker } from './SuggestionRanker';
 
@@ -47,7 +49,8 @@ export class CompletionEngine {
 
     // Remove duplicates and sort by priority
     const uniqueSuggestions = this.removeDuplicates(allSuggestions);
-    return this.sortByPriority(uniqueSuggestions);
+    const uniqueSortedSuggestions = this.sortByPriority(uniqueSuggestions);
+    return uniqueSortedSuggestions;
   }
 
   /**
@@ -76,13 +79,15 @@ export class CompletionEngine {
    * Generates suggestions for a specific completion type
    */
   private generateSuggestionsForType(
-    type: CompletionItemType,
+    type: ContextTypeValues,
     input: string,
     context: CompletionContext,
     query: string,
   ): CompletionItem[] {
     const contextInfo = this.extractContextInfo(context, query);
-    return this.suggestionRanker.generateSuggestions(type, input, contextInfo);
+    const generatedSuggestions = this.suggestionRanker.generateSuggestions(type, input, contextInfo);
+
+    return generatedSuggestions;
   }
 
   /**
@@ -92,26 +97,12 @@ export class CompletionEngine {
     // Try to find the current key for value completions
     let currentKey: string | undefined;
 
-    if (context.currentToken?.type === 'COLON') {
-      // Look for the identifier before the colon
-      currentKey = this.findKeyBeforeColon(context, query);
+    if ([context.previousToken?.type, context.currentToken?.type].includes(TokenTypes.Colon)) {
+      // Look for the identifier before the colon/value
+      currentKey = this.extractKeyFromQuery(context, query);
     }
 
     return { key: currentKey };
-  }
-
-  /**
-   * Finds the key identifier before a colon token
-   */
-  private findKeyBeforeColon(context: CompletionContext, query: string): string | undefined {
-    // This is a simplified implementation - in a more complex scenario,
-    // we might need to parse backwards through the token stream
-    if (context.currentToken?.type === 'COLON') {
-      // Look for identifier token positions - this would need actual token stream analysis
-      // For now, we'll implement a basic string-based approach
-      return this.extractKeyFromQuery(context, query);
-    }
-    return undefined;
   }
 
   /**
@@ -123,6 +114,7 @@ export class CompletionEngine {
 
     // Find the colon position - look backwards from cursor
     let colonPosition = -1;
+
     for (let i = cursorPosition - 1; i >= 0; i--) {
       if (query[i] === ':') {
         colonPosition = i;
@@ -169,11 +161,11 @@ export class CompletionEngine {
    */
   private removeDuplicates(suggestions: CompletionItem[]): CompletionItem[] {
     const seen = new Set<string>();
+
     return suggestions.filter((suggestion) => {
       const key = `${suggestion.type}:${suggestion.text}`;
-      if (seen.has(key)) {
-        return false;
-      }
+      if (seen.has(key)) return false;
+
       seen.add(key);
       return true;
     });
@@ -222,7 +214,7 @@ export class CompletionEngine {
     query: string,
     cursorPosition: number,
   ): {
-    contextType: CompletionItemType[];
+    contextType: ContextTypeValues[];
     suggestionCount: number;
     hasErrors: boolean;
   } {

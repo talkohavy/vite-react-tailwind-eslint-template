@@ -6,7 +6,8 @@
  * priority-based ranking.
  */
 
-import type { CompletionItem, CompletionItemType, CompletionConfig } from '../types';
+import type { CompletionItem, CompletionConfig } from '../types';
+import { ContextTypes, type ContextTypeValues } from './logic/constants';
 
 /**
  * Ranks and filters completion suggestions
@@ -21,28 +22,27 @@ export class SuggestionRanker {
   /**
    * Generates completion suggestions for a given type and input
    */
-  public generateSuggestions(type: CompletionItemType, input: string, context?: { key?: string }): CompletionItem[] {
+  public generateSuggestions(type: ContextTypeValues, input: string, context?: { key?: string }): CompletionItem[] {
     let suggestions: CompletionItem[] = [];
 
     switch (type) {
-      case 'key':
+      case ContextTypes.Key:
         suggestions = this.generateKeySuggestions(input);
         break;
-      case 'value':
+      case ContextTypes.Value:
         suggestions = this.generateValueSuggestions(input, context?.key);
         break;
-      case 'operator':
+      case ContextTypes.Operator:
         suggestions = this.generateOperatorSuggestions(input);
         break;
-      case 'grouping':
+      case ContextTypes.Grouping:
         suggestions = this.generateGroupingSuggestions(input);
-        break;
-      case 'keyword':
-        suggestions = this.generateKeywordSuggestions(input);
         break;
     }
 
-    return this.rankAndFilter(suggestions, input);
+    const rankedFilteredSuggestions = this.rankAndFilter(suggestions, input);
+
+    return rankedFilteredSuggestions;
   }
 
   /**
@@ -51,7 +51,7 @@ export class SuggestionRanker {
   private generateKeySuggestions(input: string): CompletionItem[] {
     return this.config.keys.map((keyConfig) => ({
       text: keyConfig.name,
-      type: 'key' as const,
+      type: ContextTypes.Key,
       description: keyConfig.description,
       insertText: keyConfig.name,
       priority: this.calculatePriority(keyConfig.name, input),
@@ -67,13 +67,15 @@ export class SuggestionRanker {
     const keyConfig = this.config.keys.find((k) => k.name === key);
     if (!keyConfig?.values) return [];
 
-    return keyConfig.values.map((valueConfig) => ({
+    const valueSuggestions = keyConfig.values.map((valueConfig) => ({
       text: valueConfig.value,
-      type: 'value' as const,
+      type: ContextTypes.Value,
       description: valueConfig.description,
       insertText: this.shouldQuoteValue(valueConfig.value) ? `"${valueConfig.value}"` : valueConfig.value,
       priority: this.calculatePriority(valueConfig.value, input),
     }));
+
+    return valueSuggestions;
   }
 
   /**
@@ -87,7 +89,7 @@ export class SuggestionRanker {
 
     return operators.map((op) => ({
       text: op.text,
-      type: 'operator' as const,
+      type: ContextTypes.Operator,
       description: op.description,
       insertText: ` ${op.text} `,
       priority: this.calculatePriority(op.text, input),
@@ -105,28 +107,10 @@ export class SuggestionRanker {
 
     return groupings.map((grouping) => ({
       text: grouping.text,
-      type: 'grouping' as const,
+      type: ContextTypes.Grouping,
       description: grouping.description,
       insertText: grouping.text,
       priority: this.calculatePriority(grouping.text, input),
-    }));
-  }
-
-  /**
-   * Generates keyword completion suggestions
-   */
-  private generateKeywordSuggestions(input: string): CompletionItem[] {
-    const keywords = [
-      { text: 'true', description: 'Boolean true value' },
-      { text: 'false', description: 'Boolean false value' },
-    ];
-
-    return keywords.map((keyword) => ({
-      text: keyword.text,
-      type: 'keyword' as const,
-      description: keyword.description,
-      insertText: keyword.text,
-      priority: this.calculatePriority(keyword.text, input),
     }));
   }
 
