@@ -11,6 +11,7 @@ import { BOOLEAN_OPERATORS } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { QueryParser } from '../QueryParser/QueryParser';
+import { ContextTypes } from './logic/constants';
 
 /**
  * Analyzes the current context for auto-completion
@@ -93,43 +94,43 @@ export class ContextAnalyzer {
 
     if (nonWhitespaceTokens.length === 0) {
       // Empty query - expect key or opening parenthesis
-      return ['key', 'grouping'];
+      return [ContextTypes.Key, ContextTypes.Grouping];
     }
 
     // Find the last token before or at the cursor position
     const lastToken = this.findLastTokenBeforePosition(nonWhitespaceTokens, position);
 
     if (!lastToken) {
-      return ['key', 'grouping'];
+      return [ContextTypes.Key, ContextTypes.Grouping];
     }
 
     // After a colon - expect value
-    if (lastToken.type === 'COLON') {
-      return ['value'];
+    if (lastToken.type === TokenTypes.Colon) {
+      return [ContextTypes.Value];
     }
 
     // After a value - expect boolean operator or closing parenthesis
     if (this.isTokenAValue(nonWhitespaceTokens, lastToken)) {
-      return ['operator', 'grouping'];
+      return [ContextTypes.Operator, ContextTypes.Grouping];
     }
 
     // After AND/OR - expect key or opening parenthesis
     if (Object.keys(BOOLEAN_OPERATORS).includes(lastToken.value)) {
-      return ['key', 'grouping'];
+      return [ContextTypes.Key, ContextTypes.Grouping];
     }
 
     // After opening parenthesis - expect key or another opening parenthesis
     if (lastToken.type === TokenTypes.LeftParenthesis) {
-      return ['key', 'grouping'];
+      return [ContextTypes.Key, ContextTypes.Grouping];
     }
 
     // After an identifier that's not a value - expect operator
     if ([TokenTypes.Key, TokenTypes.RightParenthesis].includes(lastToken.type as any)) {
-      return ['operator'];
+      return [ContextTypes.Operator, ContextTypes.Key]; // <--- Key is expected because it could be a partial key
     }
 
     // Default case
-    return ['key', 'operator', 'grouping'];
+    return [];
   }
 
   /**
