@@ -36,6 +36,7 @@ export class QueryLexer {
    * Tokenize the entire input string
    */
   tokenize(input: string): Token[] {
+    this.reset();
     this.input = input;
 
     const tokens: Token[] = [];
