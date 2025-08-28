@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 import type { CompletionItem, KeyConfig } from '../../lib/QueryLanguage/types';
 import { CompletionEngine } from '../../lib/QueryLanguage/ContextAnalyzer/CompletionEngine';
+import { ContextTypes } from '../../lib/QueryLanguage/ContextAnalyzer/logic/constants';
 import { QueryParser } from '../../lib/QueryLanguage/QueryParser/QueryParser';
 import CompletionDropdown from './CompletionDropdown';
 import QueryInputBase from './QueryInputBase';
@@ -150,13 +151,17 @@ export default function QueryInput(props: QueryInputProps) {
   function handleCompletionSelect(completion: CompletionItem) {
     if (!inputRef.current) return;
 
-    const insertText = completion.insertText || completion.text;
-
-    // Simple insertion at cursor position
+    const insertText = `${completion.insertText || completion.text}${completion.type === ContextTypes.Value ? ' ' : ''}`;
     const beforeCursor = value.substring(0, cursorPosition);
     const afterCursor = value.substring(cursorPosition);
-    const newValue = beforeCursor + insertText + afterCursor;
-    const newCursorPosition = cursorPosition + insertText.length;
+
+    // Remove the partially typed word before the cursor
+    // Match last word (alphanumeric/underscore) before cursor
+    const partialWord = beforeCursor.match(/([a-zA-Z0-9_]*)$/)?.[0] ?? '';
+    const partialWordStart = cursorPosition - partialWord.length;
+
+    const newValue = value.substring(0, partialWordStart) + insertText + afterCursor;
+    const newCursorPosition = partialWordStart + insertText.length;
 
     onChange(newValue);
     setShowDropdown(false);
