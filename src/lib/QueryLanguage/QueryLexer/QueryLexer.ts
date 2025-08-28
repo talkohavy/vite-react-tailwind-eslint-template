@@ -40,7 +40,6 @@ export class QueryLexer {
     this.input = input;
 
     const tokens: Token[] = [];
-    this.previousToken = null; // Reset last token
 
     while (!this.isAtEnd()) {
       const token = this.nextToken();
