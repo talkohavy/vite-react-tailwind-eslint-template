@@ -16,11 +16,9 @@ import { QueryParser } from '../QueryParser/QueryParser';
  * Analyzes the current context for auto-completion
  */
 export class ContextAnalyzer {
-  private lexer: QueryLexer;
   private parser: QueryParser;
 
   constructor() {
-    this.lexer = new QueryLexer('', {}); // Initialize with empty string
     this.parser = new QueryParser();
   }
 
@@ -29,8 +27,7 @@ export class ContextAnalyzer {
    */
   public analyzeContext(query: string, cursorPosition: number): CompletionContext {
     // Reinitialize lexer with the actual query
-    this.lexer = new QueryLexer(query, {});
-    const tokens = this.lexer.tokenize();
+    const tokens = new QueryLexer(query, {}).tokenize();
     const currentToken = this.findTokenAtPosition(tokens, cursorPosition);
     const previousToken = this.findPreviousToken(tokens, cursorPosition);
     const nextToken = this.findNextToken(tokens, cursorPosition);
