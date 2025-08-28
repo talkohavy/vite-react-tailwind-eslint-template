@@ -156,7 +156,7 @@ export const DEFAULT_PARSER_OPTIONS = {
  * Default lexer options
  */
 export const DEFAULT_LEXER_OPTIONS = {
-  ignoreWhitespace: true,
+  ignoreWhitespace: false,
   caseSensitiveOperators: false,
 } as const;
 

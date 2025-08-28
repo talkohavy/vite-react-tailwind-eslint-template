@@ -21,22 +21,23 @@ import { TokenTypes, type TokenTypeValues } from './logic/constants';
  * QueryLexer tokenizes input strings according to the query language grammar
  */
 export class QueryLexer {
-  private input: string;
+  private input = '';
   private position = 0;
   private line = 1;
   private column = 1;
   private options: LexerOptions;
   private previousToken: Token | null = null;
 
-  constructor(input: string, options: Partial<LexerOptions> = {}) {
-    this.input = input;
+  constructor(options: Partial<LexerOptions> = {}) {
     this.options = { ...DEFAULT_LEXER_OPTIONS, ...options };
   }
 
   /**
    * Tokenize the entire input string
    */
-  tokenize(): Token[] {
+  tokenize(input: string): Token[] {
+    this.input = input;
+
     const tokens: Token[] = [];
     this.previousToken = null; // Reset last token
 

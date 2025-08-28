@@ -24,9 +24,12 @@ const QueryPage = lazy(() => import('./pages/QueryPage'));
 const QueryShowcase = lazy(() => import('./pages/QueryShowcase'));
 
 // Mini-pages/tabs
-const Overview = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
-const Analytics = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
-const Settings = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
+const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
+const AnalyticsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
+const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
+const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
+const ContextAnalyzerTab = lazy(() => import('./pages/QueryPage/tabs/ContextAnalyzerTab'));
+const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
 
 export const routes: Array<Route> = [
   {
@@ -122,19 +125,19 @@ export const routes: Array<Route> = [
         to: '',
         text: 'Overview',
         activeNames: [],
-        Component: Overview,
+        Component: OverviewTab,
       },
       {
         to: 'analytics',
         text: 'Analytics',
         activeNames: [],
-        Component: Analytics,
+        Component: AnalyticsTab,
       },
       {
         to: 'settings',
         text: 'Settings',
         activeNames: [],
-        Component: Settings,
+        Component: SettingsTab,
       },
     ],
   },
@@ -148,19 +151,19 @@ export const routes: Array<Route> = [
         to: '',
         text: 'Overview',
         activeNames: [],
-        Component: Overview,
+        Component: OverviewTab,
       },
       {
         to: 'analytics',
         text: 'Analytics',
         activeNames: [],
-        Component: Analytics,
+        Component: AnalyticsTab,
       },
       {
         to: 'settings',
         text: 'Settings',
         activeNames: [],
-        Component: Settings,
+        Component: SettingsTab,
       },
     ],
   },
@@ -171,10 +174,35 @@ export const routes: Array<Route> = [
     Component: MasterFilterPage,
   },
   {
-    to: `${BASE_URL}/query`,
+    to: `${BASE_URL}/query-language`,
     text: 'Query Language',
-    activeNames: [`${BASE_URL}/query`],
+    activeNames: [
+      `${BASE_URL}/query-language/`,
+      `${BASE_URL}/query-language/lexer`,
+      `${BASE_URL}/query-language/context-analyzer`,
+      `${BASE_URL}/query-language/query-parser`,
+    ],
     Component: QueryPage,
+    children: [
+      {
+        to: 'lexer',
+        text: 'Lexer',
+        activeNames: [],
+        Component: LexerTab,
+      },
+      {
+        to: 'context-analyzer',
+        text: 'Context Analyzer',
+        activeNames: [],
+        Component: ContextAnalyzerTab,
+      },
+      {
+        to: 'query-parser',
+        text: 'Query Parser',
+        activeNames: [],
+        Component: QueryLanguageTab,
+      },
+    ],
   },
   {
     to: `${BASE_URL}/query-showcase`,
