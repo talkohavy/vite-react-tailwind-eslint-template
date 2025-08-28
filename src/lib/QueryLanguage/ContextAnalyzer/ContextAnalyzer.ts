@@ -124,7 +124,7 @@ export class ContextAnalyzer {
     }
 
     // After an identifier that's not a value - expect operator
-    if (lastToken.type === TokenTypes.Key) {
+    if ([TokenTypes.Key, TokenTypes.RightParenthesis].includes(lastToken.type as any)) {
       return ['operator'];
     }
 
