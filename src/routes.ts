@@ -28,6 +28,7 @@ const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
 const AnalyticsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
 const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
+const TokenStreamTab = lazy(() => import('./pages/QueryPage/tabs/TokenStreamTab'));
 const ContextAnalyzerTab = lazy(() => import('./pages/QueryPage/tabs/ContextAnalyzerTab'));
 const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
 
@@ -179,6 +180,7 @@ export const routes: Array<Route> = [
     activeNames: [
       `${BASE_URL}/query-language/`,
       `${BASE_URL}/query-language/lexer`,
+      `${BASE_URL}/query-language/token-stream`,
       `${BASE_URL}/query-language/context-analyzer`,
       `${BASE_URL}/query-language/query-parser`,
     ],
@@ -189,6 +191,12 @@ export const routes: Array<Route> = [
         text: 'Lexer',
         activeNames: [],
         Component: LexerTab,
+      },
+      {
+        to: 'token-stream',
+        text: 'Token Stream',
+        activeNames: [],
+        Component: TokenStreamTab,
       },
       {
         to: 'context-analyzer',
