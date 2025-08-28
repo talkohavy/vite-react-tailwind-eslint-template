@@ -345,18 +345,11 @@ export class QueryLexer {
   /**
    * Reset lexer to beginning of input
    */
-  reset(): void {
+  private reset(): void {
     this.position = 0;
     this.line = 1;
     this.column = 1;
     this.previousToken = null;
-  }
-
-  /**
-   * Get remaining input from current position
-   */
-  getRemainingInput(): string {
-    return this.input.slice(this.position);
   }
 
   /**
