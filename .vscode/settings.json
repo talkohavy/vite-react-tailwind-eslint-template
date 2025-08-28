@@ -8,11 +8,11 @@
   "debug.console.fontSize": 16,
   "terminal.integrated.fontSize": 16,
   "editor.suggestFontSize": 18,
-  "gitlens.currentLine.fontSize": 18,
+  "gitlens.currentLine.fontSize": 15, // <--- git blame
   "editor.inlayHints.fontSize": 46,
   "gitlens.blame.fontSize": 46,
   "markdown.preview.fontSize": 46,
-  "editor.codeLensFontSize": 46,
+  "editor.codeLensFontSize": 16, // <--- conflict resolution: "Accept Current" | "No Changes Accepted" | "Remove Stashed Changes" | "Remove Incoming Changes"
 
   // -------------------
   // Basic Editor Rules:
