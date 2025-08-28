@@ -26,10 +26,12 @@ export class QueryParser {
   private tokens: TokenStream;
   private errors: ParseError[] = [];
   private options: ParserOptions;
+  private lexer: QueryLexer;
 
   constructor(options: Partial<ParserOptions> = {}) {
     this.options = { ...DEFAULT_PARSER_OPTIONS, ...options };
     this.tokens = new TokenStream([]);
+    this.lexer = new QueryLexer();
   }
 
   /**
@@ -41,8 +43,7 @@ export class QueryParser {
 
     try {
       // Tokenize input
-      const lexer = new QueryLexer(input);
-      const tokenList = lexer.tokenize();
+      const tokenList = this.lexer.tokenize(input);
       this.tokens = new TokenStream(tokenList);
 
       // Skip leading whitespace
