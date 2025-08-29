@@ -16,12 +16,19 @@ import type {
   Comparator,
 } from '../types';
 
+export const AstTypes = {
+  Query: 'query',
+  Boolean: 'boolean',
+  Condition: 'condition',
+  Group: 'group',
+} as const;
+
 /**
  * Create a query expression (root node)
  */
 export function createQuery(expression: Expression, position: Position): QueryExpression {
   return {
-    type: 'query',
+    type: AstTypes.Query,
     expression,
     position,
   };
@@ -37,7 +44,7 @@ export function createBooleanExpression(
   position: Position,
 ): BooleanExpression {
   return {
-    type: 'boolean',
+    type: AstTypes.Boolean,
     operator,
     left,
     right,
@@ -55,7 +62,7 @@ export function createCondition(
   position: Position,
 ): ConditionExpression {
   return {
-    type: 'condition',
+    type: AstTypes.Condition,
     key,
     comparator,
     value,
@@ -68,7 +75,7 @@ export function createCondition(
  */
 export function createGroup(expression: Expression, position: Position): GroupExpression {
   return {
-    type: 'group',
+    type: AstTypes.Group,
     expression,
     position,
   };
@@ -129,17 +136,17 @@ export function validateNode(node: Expression): boolean {
 
   // Type-specific validation
   switch (node.type) {
-    case 'boolean': {
+    case AstTypes.Boolean: {
       const boolNode = node as BooleanExpression;
       return !!(boolNode.operator && boolNode.left && boolNode.right);
     }
 
-    case 'condition': {
+    case AstTypes.Condition: {
       const condNode = node as ConditionExpression;
       return !!(condNode.key && condNode.comparator && typeof condNode.value === 'string');
     }
 
-    case 'group': {
+    case AstTypes.Group: {
       const groupNode = node as GroupExpression;
       return !!groupNode.expression;
     }
@@ -174,13 +181,13 @@ export function nodesOverlap(node1: Expression, node2: Expression): boolean {
  */
 export function calculateDepth(node: Expression): number {
   switch (node.type) {
-    case 'condition':
+    case AstTypes.Condition:
       return 1;
 
-    case 'group':
+    case AstTypes.Group:
       return 1 + calculateDepth((node as GroupExpression).expression);
 
-    case 'boolean': {
+    case AstTypes.Boolean: {
       const boolNode = node as BooleanExpression;
       return 1 + Math.max(calculateDepth(boolNode.left), calculateDepth(boolNode.right));
     }
@@ -195,13 +202,13 @@ export function calculateDepth(node: Expression): number {
  */
 export function countNodes(node: Expression): number {
   switch (node.type) {
-    case 'condition':
+    case AstTypes.Condition:
       return 1;
 
-    case 'group':
+    case AstTypes.Group:
       return 1 + countNodes((node as GroupExpression).expression);
 
-    case 'boolean': {
+    case AstTypes.Boolean: {
       const boolNode = node as BooleanExpression;
       return 1 + countNodes(boolNode.left) + countNodes(boolNode.right);
     }
@@ -219,15 +226,15 @@ export function extractConditions(node: Expression): ConditionExpression[] {
 
   function traverse(current: Expression): void {
     switch (current.type) {
-      case 'condition':
+      case AstTypes.Condition:
         conditions.push(current as ConditionExpression);
         break;
 
-      case 'group':
+      case AstTypes.Group:
         traverse((current as GroupExpression).expression);
         break;
 
-      case 'boolean': {
+      case AstTypes.Boolean: {
         const boolNode = current as BooleanExpression;
         traverse(boolNode.left);
         traverse(boolNode.right);
@@ -264,17 +271,17 @@ export function transform(node: Expression, transformer: (node: Expression) => E
     let transformed: Expression;
 
     switch (current.type) {
-      case 'condition':
+      case AstTypes.Condition:
         transformed = current;
         break;
 
-      case 'group': {
+      case AstTypes.Group: {
         const groupNode = current as GroupExpression;
         transformed = createGroup(transformRecursive(groupNode.expression), groupNode.position);
         break;
       }
 
-      case 'boolean': {
+      case AstTypes.Boolean: {
         const boolNode = current as BooleanExpression;
         transformed = createBooleanExpression(
           boolNode.operator,
