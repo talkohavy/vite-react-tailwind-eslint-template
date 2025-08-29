@@ -60,7 +60,7 @@ export type {
 export {
   // Grammar Constants
   BOOLEAN_OPERATORS,
-  COMPARATORS,
+  Comparators,
   SUPPORTED_COMPARATORS,
   OPERATOR_PRECEDENCE,
 

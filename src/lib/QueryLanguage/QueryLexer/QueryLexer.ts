@@ -9,11 +9,14 @@
 import type { Token, LexerOptions } from '../types';
 import {
   BOOLEAN_OPERATORS,
-  IDENTIFIER_PATTERN,
+  KEY_PATTERN,
+  VALUE_PATTERN,
   QUOTED_STRING_PATTERN,
   WHITESPACE_PATTERN,
   DEFAULT_LEXER_OPTIONS,
   SPECIAL_CHARS,
+  ComparatorBeginnings,
+  type ComparatorBeginningKeys,
 } from '../constants';
 import { TokenTypes, type TokenTypeValues } from './logic/constants';
 
@@ -26,7 +29,12 @@ export class QueryLexer {
   private line = 1;
   private column = 1;
   private options: LexerOptions;
-  private previousToken: Token | null = null;
+  /**
+   * Never a whitespace token! We skip those.
+   */
+  // private previousToken: Token | null = null;
+  // private isWhitespaceExistsAfterPrevious = false;
+  // private unclosedLeftParenthesisCount = 0;
 
   constructor(options: Partial<LexerOptions> = {}) {
     this.options = { ...DEFAULT_LEXER_OPTIONS, ...options };
@@ -49,10 +57,6 @@ export class QueryLexer {
           continue;
         }
         tokens.push(token);
-        // Update last token (skip whitespace for context)
-        if (token.type !== TokenTypes.Whitespace) {
-          this.previousToken = token;
-        }
       }
     }
 
@@ -66,67 +70,79 @@ export class QueryLexer {
    * Get the next token from the input
    */
   private nextToken(): Token | null {
-    if (this.isAtEnd()) {
-      return null;
-    }
+    if (this.isAtEnd()) return null;
 
     const start = this.position;
     const char = this.currentChar();
 
     // Handle whitespace
-    if (this.isWhitespace(char)) {
-      return this.scanWhitespace(start);
+    if (this.getIsWhitespace(char)) {
+      const whitespacesToken = this.scanWhitespace(start);
+      return whitespacesToken;
+    }
+
+    // Handle comparison operators (multi-character first)
+    if (ComparatorBeginnings[char as ComparatorBeginningKeys]) {
+      const comparatorToken = this.scanComparisonOperator(start);
+      return comparatorToken;
+    }
+
+    // Handle a valid COLON char (that comes after a Key)
+    if (char === SPECIAL_CHARS.COLON) {
+      this.advance();
+
+      const colonToken = this.createToken(TokenTypes.Colon, char, start, this.position);
+
+      return colonToken;
     }
 
     // Handle quoted strings
     if (char === SPECIAL_CHARS.SINGLE_QUOTE || char === SPECIAL_CHARS.DOUBLE_QUOTE) {
-      return this.scanQuotedString(start);
+      const quotedStringToken = this.scanQuotedString(start);
+      return quotedStringToken;
     }
 
-    // Handle comparison operators (multi-character first)
-    if (['><!'].includes(char)) {
-      return this.scanComparisonOperator(start);
+    // Handle Parentheses
+    if (char === SPECIAL_CHARS.LPAREN) {
+      this.advance();
+
+      const leftParenthesisToken = this.createToken(TokenTypes.LeftParenthesis, char, start, this.position);
+
+      return leftParenthesisToken;
     }
 
-    // Handle special characters
-    switch (char) {
-      case SPECIAL_CHARS.COLON:
-        this.advance();
-        return this.createToken(TokenTypes.Colon, char, start, this.position);
+    // Handle Right Parenthesis
+    if (char === SPECIAL_CHARS.RPAREN) {
+      this.advance();
 
-      case SPECIAL_CHARS.LPAREN:
-        this.advance();
-        return this.createToken(TokenTypes.LeftParenthesis, char, start, this.position);
+      const rightParenthesisToken = this.createToken(TokenTypes.RightParenthesis, char, start, this.position);
 
-      case SPECIAL_CHARS.RPAREN:
-        this.advance();
-        return this.createToken(TokenTypes.RightParenthesis, char, start, this.position);
-
-      case SPECIAL_CHARS.INCLUDES:
-        this.advance();
-        return this.createToken(TokenTypes.Comparator, char, start, this.position);
+      return rightParenthesisToken;
     }
 
-    // Handle identifiers and keywords
+    // Handle Word
     if (this.isIdentifierStart(char)) {
-      return this.scanKeyValueAndOr(start);
+      const keyToken = this.scanWord(start);
+      return keyToken;
     }
 
     // Unknown character - create invalid token
     this.advance();
-    return this.createToken(TokenTypes.Invalid, char, start, this.position);
+    const invalidToken = this.createToken(TokenTypes.Invalid, char, start, this.position);
+    return invalidToken;
   }
 
   /**
    * Scan whitespace characters
    */
   private scanWhitespace(start: number): Token {
-    while (!this.isAtEnd() && this.isWhitespace(this.currentChar())) {
+    while (!this.isAtEnd() && this.getIsWhitespace(this.currentChar())) {
       this.advance();
     }
 
-    const allWhitespaces = this.input.slice(start, this.position);
-    return this.createToken(TokenTypes.Whitespace, allWhitespaces, start, this.position);
+    const allWhitespacesValue = this.input.slice(start, this.position);
+    const allWhitespacesToken = this.createToken(TokenTypes.Whitespace, allWhitespacesValue, start, this.position);
+    return allWhitespacesToken;
   }
 
   /**
@@ -171,7 +187,8 @@ export class QueryLexer {
         escaped = true;
       } else if (nextChar === openingQuote) {
         this.advance(); // <--- Skip closing quote
-        return this.createToken(TokenTypes.QuotedString, value, start, this.position);
+        const quotedStringToken = this.createToken(TokenTypes.QuotedString, value, start, this.position);
+        return quotedStringToken;
       } else {
         value += nextChar;
       }
@@ -180,7 +197,10 @@ export class QueryLexer {
     }
 
     // string was opened, but never closed! return invalid token
-    return this.createToken(TokenTypes.Invalid, this.input.slice(start, this.position), start, this.position);
+    const invalidQuotedStringValue = this.input.slice(start, this.position);
+    const invalidToken = this.createToken(TokenTypes.Invalid, invalidQuotedStringValue, start, this.position);
+
+    return invalidToken;
   }
 
   /**
@@ -194,73 +214,54 @@ export class QueryLexer {
     const nextChar = this.currentChar();
     if (nextChar === '=') {
       this.advance();
-      return this.createToken(TokenTypes.Comparator, `${char}${nextChar}`, start, this.position);
+      const comparatorValue = `${char}${nextChar}`;
+      const comparatorToken = this.createToken(TokenTypes.Comparator, comparatorValue, start, this.position);
+      return comparatorToken;
     }
 
-    // Check for Invalid combination ('!' without '=')
-    if (char === '!') {
-      return this.createToken(TokenTypes.Invalid, char, start, this.position);
+    // Assume valid single-character operator (< or >)
+    let tokenType: TokenTypeValues = TokenTypes.Comparator;
+
+    // Check for Invalid combination ('!' without '=' , or '=' alone)
+    if (char === '!' || char === '=') {
+      tokenType = TokenTypes.Invalid;
     }
 
-    return this.createToken(TokenTypes.Comparator, char, start, this.position);
+    const comparatorToken = this.createToken(tokenType, char, start, this.position);
+
+    return comparatorToken;
   }
 
   /**
-   * Scan identifier or keyword
+   * Scan word (could be one of: key / value / AND / OR
    */
-  private scanKeyValueAndOr(start: number): Token {
+  private scanWord(start: number): Token {
     while (!this.isAtEnd() && this.isPartOfIdentifier(this.currentChar())) {
       this.advance();
     }
 
-    const valueToTokenize = this.input.slice(start, this.position);
-    const tokenType = this.getIdentifierTokenType(valueToTokenize);
+    const wordValue = this.input.slice(start, this.position);
+    const normalizedTokenValue = this.options.caseSensitiveOperators ? wordValue : wordValue.toUpperCase();
 
-    return this.createToken(tokenType, valueToTokenize, start, this.position);
+    if (BOOLEAN_OPERATORS[normalizedTokenValue]) {
+      const logicalOperatorToken = this.scanLogicalOperator(start, wordValue);
+      return logicalOperatorToken;
+    }
+
+    const workToken = this.createToken(TokenTypes.Identifier, wordValue, start, this.position);
+
+    return workToken;
   }
 
   /**
-   * Determine token type for identifier (keyword, key, or value)
+   * Scan word (could be one of: key / value / AND / OR
    */
-  private getIdentifierTokenType(value: string): TokenTypeValues {
-    // Check if it's a boolean operator
-    const normalizedValue = this.options.caseSensitiveOperators ? value : value.toUpperCase();
+  private scanLogicalOperator(start: number, tokenValue: string): Token {
+    const logicalOperatorTokenType = tokenValue === TokenTypes.AND ? TokenTypes.AND : TokenTypes.OR;
 
-    if (BOOLEAN_OPERATORS[normalizedValue]) {
-      return normalizedValue === TokenTypes.AND ? TokenTypes.AND : TokenTypes.OR;
-    }
+    const logicalOperatorToken = this.createToken(logicalOperatorTokenType, tokenValue, start, this.position);
 
-    // Determine if this identifier should be a KEY or VALUE based on context
-    return this.determineKeyOrValue();
-  }
-
-  /**
-   * Determine if the current identifier should be classified as KEY or VALUE
-   * based on the previous token type
-   */
-  private determineKeyOrValue(): TokenTypeValues {
-    // If first token in the query - must be a key
-    if (!this.previousToken) return TokenTypes.Key;
-
-    const previousTokenType = this.previousToken.type;
-
-    // If previous token was opening parenthesis, AND, or OR, this must be a key
-    if (
-      previousTokenType === TokenTypes.LeftParenthesis ||
-      previousTokenType === TokenTypes.AND ||
-      previousTokenType === TokenTypes.OR
-    ) {
-      return TokenTypes.Key;
-    }
-
-    // If previous token was a comparison operator, this must be a value
-    if ([TokenTypes.Comparator, TokenTypes.Colon].includes(previousTokenType as any)) return TokenTypes.Value;
-
-    // WARNING! You should never get here!!!
-    // If previous token was a key, this could be a value (for colon-less syntax)
-    // or another key if there was a boolean operator in between
-    // For now, default to key since we expect explicit operators
-    return TokenTypes.Key;
+    return logicalOperatorToken;
   }
 
   /**
@@ -313,7 +314,7 @@ export class QueryLexer {
   /**
    * Check if character is whitespace
    */
-  private isWhitespace(char: string): boolean {
+  private getIsWhitespace(char: string): boolean {
     return WHITESPACE_PATTERN.test(char);
   }
 
@@ -321,11 +322,11 @@ export class QueryLexer {
    * Check if character can start an identifier
    */
   private isIdentifierStart(char: string): boolean {
-    return /[a-zA-Z_]/.test(char);
+    return /[a-zA-Z0-9_]/.test(char);
   }
 
   /**
-   * Check if character can be part of an identifier
+   * Check if character can be part of an identifier (key / value)
    */
   private isPartOfIdentifier(char: string): boolean {
     return /[a-zA-Z0-9_]/.test(char);
@@ -349,14 +350,20 @@ export class QueryLexer {
     this.position = 0;
     this.line = 1;
     this.column = 1;
-    this.previousToken = null;
   }
 
   /**
-   * Validate if a string could be a valid identifier
+   * Validate if a string could be a valid value
    */
-  static isValidIdentifier(value: string): boolean {
-    return IDENTIFIER_PATTERN.test(value);
+  static isValidValue(value: string): boolean {
+    return VALUE_PATTERN.test(value);
+  }
+
+  /**
+   * Validate if a string could be a valid key
+   */
+  static isValidKey(value: string): boolean {
+    return KEY_PATTERN.test(value);
   }
 
   /**

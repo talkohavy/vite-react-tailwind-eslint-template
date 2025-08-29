@@ -26,15 +26,34 @@ export const BOOLEAN_OPERATORS: Record<string, BooleanOperator> = {
 /**
  * Comparison operators supported by the query language
  */
-export const COMPARATORS: Record<string, Comparator> = {
-  ':': ':',
+// export const COMPARATORS: Record<string, Comparator> = {
+export const Comparators = {
   '>': '>',
   '<': '<',
   '>=': '>=',
   '<=': '<=',
   '!=': '!=',
-  '~': '~',
+  '==': '==',
+  // ':': ':',
+  // '~': '~',
 } as const;
+
+type TypeOfComparator = typeof Comparators;
+export type ComparatorKeys = keyof TypeOfComparator;
+export type ComparatorValues = TypeOfComparator[ComparatorKeys];
+
+export const ComparatorBeginnings = {
+  '>': '>',
+  '<': '<',
+  '=': '=',
+  '!': '!',
+  // ':': ':',
+  // '~': '~',
+} as const;
+
+type TypeOfComparatorBeginnings = typeof ComparatorBeginnings;
+export type ComparatorBeginningKeys = keyof TypeOfComparatorBeginnings;
+export type ComparatorBeginningValues = TypeOfComparatorBeginnings[ComparatorBeginningKeys];
 
 /**
  * Currently supported comparators (phase 1 only supports equals)
@@ -57,6 +76,8 @@ export const OPERATOR_PRECEDENCE: Record<BooleanOperator, number> = {
  * Pattern for valid identifiers (keys and unquoted values)
  */
 export const IDENTIFIER_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+export const KEY_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+export const VALUE_PATTERN = /^[a-zA-Z0-9_]+$/;
 
 /**
  * Pattern for quoted strings (single or double quotes)
