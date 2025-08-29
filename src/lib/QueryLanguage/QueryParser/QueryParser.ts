@@ -49,12 +49,14 @@ export class QueryParser {
 
       // Parse the expression
       const expression = this.parseExpression();
+
       if (!expression) {
         return { success: false, errors: this.errors };
       }
 
       // Check for unexpected tokens at end
       this.skipWhitespace();
+
       if (!this.tokenStream.isAtEnd()) {
         const token = this.tokenStream.current();
         if (token) {
