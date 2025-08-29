@@ -41,7 +41,9 @@ export class QueryParser {
 
       // Check for empty input
       if (this.tokenStream.isAtEnd()) {
-        this.addError(ERROR_MESSAGES.EMPTY_QUERY, ASTBuilder.createPosition(0, 0), ERROR_CODES.EMPTY_EXPRESSION);
+        const errorEmptyInputPosition = ASTBuilder.createPosition(0, 0);
+        this.addError(ERROR_MESSAGES.EMPTY_QUERY, errorEmptyInputPosition, ERROR_CODES.EMPTY_EXPRESSION);
+
         return { success: false, errors: this.errors };
       }
 
@@ -60,8 +62,8 @@ export class QueryParser {
         }
       }
 
-      // Create query AST
-      const queryAST = ASTBuilder.createQuery(expression, ASTBuilder.createPosition(0, input.length));
+      const queryPosition = ASTBuilder.createPosition(0, input.length);
+      const queryAST = ASTBuilder.createQuery(expression, queryPosition);
 
       return {
         success: this.errors.length === 0,
@@ -69,9 +71,10 @@ export class QueryParser {
         errors: this.errors,
       };
     } catch (error) {
+      const errorPosition = ASTBuilder.createPosition(0, input.length);
       this.addError(
         error instanceof Error ? error.message : 'Unknown parsing error',
-        ASTBuilder.createPosition(0, input.length),
+        errorPosition,
         ERROR_CODES.SYNTAX_ERROR,
       );
 
@@ -97,58 +100,53 @@ export class QueryParser {
    * Parse OR expressions (lowest precedence)
    */
   private parseOrExpression(): Expression | null {
-    let left = this.parseAndExpression();
-    if (!left) return null;
+    let leftAST = this.parseAndExpression();
+    if (!leftAST) return null;
 
     while (this.matchOperator(TokenTypes.OR)) {
       const operatorToken = this.tokenStream.consume()!;
       this.skipWhitespace();
 
-      const right = this.parseAndExpression();
-      if (!right) {
+      const rightAST = this.parseAndExpression();
+
+      if (!rightAST) {
         this.addError(ERROR_MESSAGES.EXPECTED_VALUE, operatorToken.position, ERROR_CODES.MISSING_TOKEN);
-        return left;
+        return leftAST;
       }
 
-      left = ASTBuilder.createBooleanExpression(
-        TokenTypes.OR,
-        left,
-        right,
-        ASTBuilder.mergePositions(left.position, right.position),
-      );
+      const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
+      leftAST = ASTBuilder.createBooleanExpression(TokenTypes.OR, leftAST, rightAST, leftPosition);
     }
 
-    return left;
+    return leftAST;
   }
 
   /**
    * Parse AND expressions (higher precedence than OR)
    */
   private parseAndExpression(): Expression | null {
-    let left = this.parsePrimaryExpression();
-    if (!left) return null;
+    let leftAST = this.parsePrimaryExpression();
+    if (!leftAST) return null;
 
     this.skipWhitespace();
 
     while (this.matchOperator(TokenTypes.AND)) {
       const operatorToken = this.tokenStream.consume()!;
+
       this.skipWhitespace();
 
-      const right = this.parsePrimaryExpression();
-      if (!right) {
+      const rightAST = this.parsePrimaryExpression();
+
+      if (!rightAST) {
         this.addError(ERROR_MESSAGES.EXPECTED_VALUE, operatorToken.position, ERROR_CODES.MISSING_TOKEN);
-        return left;
+        return leftAST;
       }
 
-      left = ASTBuilder.createBooleanExpression(
-        TokenTypes.AND,
-        left,
-        right,
-        ASTBuilder.mergePositions(left.position, right.position),
-      );
+      const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
+      leftAST = ASTBuilder.createBooleanExpression(TokenTypes.AND, leftAST, rightAST, leftPosition);
     }
 
-    return left;
+    return leftAST;
   }
 
   /**
@@ -192,7 +190,10 @@ export class QueryParser {
 
     const endToken = this.tokenStream.consume()!;
 
-    return ASTBuilder.createGroup(expression, ASTBuilder.mergePositions(startToken.position, endToken.position));
+    const groupPosition = ASTBuilder.mergePositions(startToken.position, endToken.position);
+    const groupAST = ASTBuilder.createGroup(expression, groupPosition);
+
+    return groupAST;
   }
 
   /**
@@ -202,11 +203,13 @@ export class QueryParser {
     // Expect identifier for key
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.Key)) {
       const token = this.tokenStream.current();
+
       this.addError(
         ERROR_MESSAGES.EXPECTED_KEY,
         token?.position || ASTBuilder.createPosition(0, 0),
         ERROR_CODES.MISSING_TOKEN,
       );
+
       return null;
     }
 
@@ -234,15 +237,15 @@ export class QueryParser {
 
     const value: string = valueToken.value;
 
-    const mergedPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);
-    const condition = ASTBuilder.createCondition(
+    const conditionPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);
+    const conditionAST = ASTBuilder.createCondition(
       keyToken.value,
       ':', // Currently only support equals
       value,
-      mergedPosition,
+      conditionPosition,
     );
 
-    return condition;
+    return conditionAST;
   }
 
   /**

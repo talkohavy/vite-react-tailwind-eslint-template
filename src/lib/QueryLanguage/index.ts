@@ -41,7 +41,6 @@ export type {
   CompletionContextType,
   CompletionContext,
   CompletionItem,
-  CompletionItemType,
   CompletionConfig,
   KeyConfig,
   ValueConfig,
