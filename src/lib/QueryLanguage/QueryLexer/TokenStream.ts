@@ -25,7 +25,8 @@ export class TokenStream {
    * Get the current token without advancing the position
    */
   current(): Token | null {
-    return this.tokens[this.position] || null;
+    const currentToken = this.tokens[this.position] || null;
+    return currentToken;
   }
 
   /**
@@ -45,12 +46,15 @@ export class TokenStream {
    */
   expect(expectedType: TokenTypeValues): Token {
     const token = this.current();
+
     if (!token) {
       throw new Error(`Expected ${expectedType} but reached end of input`);
     }
+
     if (token.type !== expectedType) {
       throw new Error(`Expected ${expectedType} but got ${token.type} at position ${token.position.start}`);
     }
+
     return this.consume()!;
   }
 
@@ -59,7 +63,9 @@ export class TokenStream {
    */
   isCurrentAMatchWith(expectedType: TokenTypeValues): boolean {
     const token = this.current();
-    return token ? token.type === expectedType : false;
+    const isMatch = token ? token.type === expectedType : false;
+
+    return isMatch;
   }
 
   /**
@@ -67,15 +73,19 @@ export class TokenStream {
    */
   matchAny(...expectedTypes: TokenTypeValues[]): boolean {
     const token = this.current();
+
     if (!token) return false;
-    return expectedTypes.includes(token.type);
+
+    const isMatchAny = expectedTypes.includes(token.type);
+
+    return isMatchAny;
   }
 
   /**
    * Skip tokens of specified types (useful for whitespace)
    */
   skip(...tokenTypes: TokenTypeValues[]): void {
-    while (this.current() && tokenTypes.includes(this.current()!.type)) {
+    while (tokenTypes.includes(this.current()!.type)) {
       this.advance();
     }
   }
@@ -94,7 +104,10 @@ export class TokenStream {
    */
   isAtEnd(): boolean {
     const token = this.current();
-    return !token || token.type === TokenTypes.EOF;
+
+    const isEnd = !token || token.type === TokenTypes.EOF;
+
+    return isEnd;
   }
 
   /**
