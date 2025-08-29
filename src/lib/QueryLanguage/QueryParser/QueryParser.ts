@@ -126,6 +126,8 @@ export class QueryParser {
     let left = this.parsePrimaryExpression();
     if (!left) return null;
 
+    this.skipWhitespace();
+
     while (this.matchOperator(TokenTypes.AND)) {
       const operatorToken = this.tokens.consume()!;
       this.skipWhitespace();
