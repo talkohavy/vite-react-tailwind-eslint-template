@@ -10,48 +10,38 @@ import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constant
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../QueryLexer/TokenStream';
-import {
-  createQuery,
-  createBooleanExpression,
-  createCondition,
-  createGroup,
-  createPosition,
-  mergePositions,
-} from '../utils/ASTBuilder';
+import { ASTBuilder } from '../utils/ASTBuilder';
 
 /**
  * QueryParser parses query strings into Abstract Syntax Trees
  */
 export class QueryParser {
-  private tokens: TokenStream;
+  private tokenStream: TokenStream = new TokenStream([]);
   private errors: ParseError[] = [];
   private options: ParserOptions;
-  private lexer: QueryLexer;
+  private queryLexer: QueryLexer;
 
   constructor(options: Partial<ParserOptions> = {}) {
     this.options = { ...DEFAULT_PARSER_OPTIONS, ...options };
-    this.tokens = new TokenStream([]);
-    this.lexer = new QueryLexer();
+    this.queryLexer = new QueryLexer();
   }
 
   /**
    * Parse a query string into an AST
    */
   parse(input: string): ParseResult {
-    // Reset state
-    this.errors = [];
-
     try {
+      this.reset();
+
       // Tokenize input
-      const tokenList = this.lexer.tokenize(input);
-      this.tokens = new TokenStream(tokenList);
+      this.tokenStream = new TokenStream(this.queryLexer.tokenize(input));
 
       // Skip leading whitespace
       this.skipWhitespace();
 
       // Check for empty input
-      if (this.tokens.isAtEnd()) {
-        this.addError(ERROR_MESSAGES.EMPTY_QUERY, createPosition(0, 0), ERROR_CODES.EMPTY_EXPRESSION);
+      if (this.tokenStream.isAtEnd()) {
+        this.addError(ERROR_MESSAGES.EMPTY_QUERY, ASTBuilder.createPosition(0, 0), ERROR_CODES.EMPTY_EXPRESSION);
         return { success: false, errors: this.errors };
       }
 
@@ -63,15 +53,15 @@ export class QueryParser {
 
       // Check for unexpected tokens at end
       this.skipWhitespace();
-      if (!this.tokens.isAtEnd()) {
-        const token = this.tokens.current();
+      if (!this.tokenStream.isAtEnd()) {
+        const token = this.tokenStream.current();
         if (token) {
           this.addError(ERROR_MESSAGES.UNEXPECTED_TOKEN, token.position, ERROR_CODES.UNEXPECTED_TOKEN);
         }
       }
 
       // Create query AST
-      const queryAST = createQuery(expression, createPosition(0, input.length));
+      const queryAST = ASTBuilder.createQuery(expression, ASTBuilder.createPosition(0, input.length));
 
       return {
         success: this.errors.length === 0,
@@ -81,12 +71,19 @@ export class QueryParser {
     } catch (error) {
       this.addError(
         error instanceof Error ? error.message : 'Unknown parsing error',
-        createPosition(0, input.length),
+        ASTBuilder.createPosition(0, input.length),
         ERROR_CODES.SYNTAX_ERROR,
       );
 
       return { success: false, errors: this.errors };
     }
+  }
+
+  /**
+   * Reset parser state
+   */
+  private reset(): void {
+    this.errors = [];
   }
 
   /**
@@ -104,7 +101,7 @@ export class QueryParser {
     if (!left) return null;
 
     while (this.matchOperator(TokenTypes.OR)) {
-      const operatorToken = this.tokens.consume()!;
+      const operatorToken = this.tokenStream.consume()!;
       this.skipWhitespace();
 
       const right = this.parseAndExpression();
@@ -113,7 +110,12 @@ export class QueryParser {
         return left;
       }
 
-      left = createBooleanExpression(TokenTypes.OR, left, right, mergePositions(left.position, right.position));
+      left = ASTBuilder.createBooleanExpression(
+        TokenTypes.OR,
+        left,
+        right,
+        ASTBuilder.mergePositions(left.position, right.position),
+      );
     }
 
     return left;
@@ -129,7 +131,7 @@ export class QueryParser {
     this.skipWhitespace();
 
     while (this.matchOperator(TokenTypes.AND)) {
-      const operatorToken = this.tokens.consume()!;
+      const operatorToken = this.tokenStream.consume()!;
       this.skipWhitespace();
 
       const right = this.parsePrimaryExpression();
@@ -138,7 +140,12 @@ export class QueryParser {
         return left;
       }
 
-      left = createBooleanExpression(TokenTypes.AND, left, right, mergePositions(left.position, right.position));
+      left = ASTBuilder.createBooleanExpression(
+        TokenTypes.AND,
+        left,
+        right,
+        ASTBuilder.mergePositions(left.position, right.position),
+      );
     }
 
     return left;
@@ -151,19 +158,23 @@ export class QueryParser {
     this.skipWhitespace();
 
     // Handle grouped expressions
-    if (this.tokens.isCurrentAMatchWith(TokenTypes.LeftParenthesis)) {
-      return this.parseGroupExpression();
+    if (this.tokenStream.isCurrentAMatchWith(TokenTypes.LeftParenthesis)) {
+      const groupExpression = this.parseGroupExpression();
+
+      return groupExpression;
     }
 
     // Handle conditions
-    return this.parseCondition();
+    const parsedCondition = this.parseCondition();
+
+    return parsedCondition;
   }
 
   /**
    * Parse grouped expression (parentheses)
    */
   private parseGroupExpression(): Expression | null {
-    const startToken = this.tokens.expect(TokenTypes.LeftParenthesis);
+    const startToken = this.tokenStream.expect(TokenTypes.LeftParenthesis);
     this.skipWhitespace();
 
     const expression = this.parseExpression();
@@ -174,14 +185,14 @@ export class QueryParser {
 
     this.skipWhitespace();
 
-    if (!this.tokens.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
+    if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
       this.addError(ERROR_MESSAGES.EXPECTED_CLOSING_PAREN, expression.position, ERROR_CODES.UNBALANCED_PARENS);
       return expression; // Return what we have for error recovery
     }
 
-    const endToken = this.tokens.consume()!;
+    const endToken = this.tokenStream.consume()!;
 
-    return createGroup(expression, mergePositions(startToken.position, endToken.position));
+    return ASTBuilder.createGroup(expression, ASTBuilder.mergePositions(startToken.position, endToken.position));
   }
 
   /**
@@ -189,61 +200,71 @@ export class QueryParser {
    */
   private parseCondition(): Expression | null {
     // Expect identifier for key
-    if (!this.tokens.isCurrentAMatchWith(TokenTypes.Key)) {
-      const token = this.tokens.current();
-      this.addError(ERROR_MESSAGES.EXPECTED_KEY, token?.position || createPosition(0, 0), ERROR_CODES.MISSING_TOKEN);
+    if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.Key)) {
+      const token = this.tokenStream.current();
+      this.addError(
+        ERROR_MESSAGES.EXPECTED_KEY,
+        token?.position || ASTBuilder.createPosition(0, 0),
+        ERROR_CODES.MISSING_TOKEN,
+      );
       return null;
     }
 
-    const keyToken = this.tokens.consume()!;
+    const keyToken = this.tokenStream.consume()!;
     this.skipWhitespace();
 
     // Expect colon
-    if (!this.tokens.isCurrentAMatchWith(TokenTypes.Colon)) {
-      const token = this.tokens.current();
+    if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.Colon)) {
+      const token = this.tokenStream.current();
       this.addError(ERROR_MESSAGES.EXPECTED_COLON, token?.position || keyToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
     }
 
-    const colonToken = this.tokens.consume()!;
+    const colonToken = this.tokenStream.consume()!;
     this.skipWhitespace();
 
     // Expect value (identifier or quoted string)
-    if (!this.tokens.matchAny(TokenTypes.Value, TokenTypes.QuotedString)) {
-      const token = this.tokens.current();
+    if (!this.tokenStream.matchAny(TokenTypes.Value, TokenTypes.QuotedString)) {
+      const token = this.tokenStream.current();
       this.addError(ERROR_MESSAGES.EXPECTED_VALUE, token?.position || colonToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
     }
 
-    const valueToken = this.tokens.consume()!;
+    const valueToken = this.tokenStream.consume()!;
 
     const value: string = valueToken.value;
 
-    return createCondition(
+    const mergedPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);
+    const condition = ASTBuilder.createCondition(
       keyToken.value,
       ':', // Currently only support equals
       value,
-      mergePositions(keyToken.position, valueToken.position),
+      mergedPosition,
     );
+
+    return condition;
   }
 
   /**
    * Check if current token matches a boolean operator
    */
   private matchOperator(operator: BooleanOperator): boolean {
-    const token = this.tokens.current();
+    const token = this.tokenStream.current();
     if (!token) return false;
 
     if (operator === TokenTypes.AND) {
-      return (
-        token.type === TokenTypes.AND || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.AND)
-      );
+      const isAndOperator =
+        token.type === TokenTypes.AND ||
+        (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.AND);
+
+      return isAndOperator;
     }
 
     if (operator === TokenTypes.OR) {
-      return (
-        token.type === TokenTypes.OR || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.OR)
-      );
+      const isOrOperator =
+        token.type === TokenTypes.OR || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.OR);
+
+      return isOrOperator;
     }
 
     return false;
@@ -253,7 +274,7 @@ export class QueryParser {
    * Skip whitespace tokens
    */
   private skipWhitespace(): void {
-    this.tokens.skip(TokenTypes.Whitespace);
+    this.tokenStream.skip(TokenTypes.Whitespace);
   }
 
   /**
@@ -284,16 +305,8 @@ export class QueryParser {
    * Get current parsing position for debugging
    */
   private getCurrentPosition(): number {
-    const token = this.tokens.current();
+    const token = this.tokenStream.current();
     return token?.position.start || 0;
-  }
-
-  /**
-   * Reset parser state
-   */
-  reset(): void {
-    this.errors = [];
-    this.tokens = new TokenStream([]);
   }
 
   /**
@@ -301,10 +314,10 @@ export class QueryParser {
    */
   getDebugInfo(): object {
     return {
-      currentToken: this.tokens.current(),
+      currentToken: this.tokenStream.current(),
       position: this.getCurrentPosition(),
       errors: this.errors,
-      tokenStream: this.tokens.getDebugInfo(),
+      tokenStream: this.tokenStream.getDebugInfo(),
     };
   }
 
