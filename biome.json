@@ -31,7 +31,8 @@
       "complexity": {
         "noForEach": "off",
         "noUselessThisAlias": "off",
-        "noUselessConstructor": "off"
+        "noUselessConstructor": "off",
+        "noStaticOnlyClass": "off"
       },
       "performance": {
         "noDelete": "off"
