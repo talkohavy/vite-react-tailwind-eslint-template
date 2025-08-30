@@ -29,6 +29,7 @@ const AnalyticsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'))
 const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
 const TokenStreamTab = lazy(() => import('./pages/QueryPage/tabs/TokenStreamTab'));
+const QueryParserTab = lazy(() => import('./pages/QueryPage/tabs/QueryParserTab'));
 const ContextAnalyzerTab = lazy(() => import('./pages/QueryPage/tabs/ContextAnalyzerTab'));
 const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
 
@@ -181,8 +182,9 @@ export const routes: Array<Route> = [
       `${BASE_URL}/query-language/`,
       `${BASE_URL}/query-language/lexer`,
       `${BASE_URL}/query-language/token-stream`,
-      `${BASE_URL}/query-language/context-analyzer`,
       `${BASE_URL}/query-language/query-parser`,
+      `${BASE_URL}/query-language/context-analyzer`,
+      `${BASE_URL}/query-language/query-language`,
     ],
     Component: QueryPage,
     children: [
@@ -199,14 +201,20 @@ export const routes: Array<Route> = [
         Component: TokenStreamTab,
       },
       {
+        to: 'query-parser',
+        text: 'Query Parser',
+        activeNames: [],
+        Component: QueryParserTab,
+      },
+      {
         to: 'context-analyzer',
         text: 'Context Analyzer',
         activeNames: [],
         Component: ContextAnalyzerTab,
       },
       {
-        to: 'query-parser',
-        text: 'Query Parser',
+        to: 'query-language',
+        text: 'Query Language',
         activeNames: [],
         Component: QueryLanguageTab,
       },

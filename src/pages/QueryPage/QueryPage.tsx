@@ -7,8 +7,10 @@ import { getInitialTabValue } from './logic/utils/getInitialValue';
 
 const Tabs = {
   Lexer: 'lexer',
-  ContextAnalyzer: 'context-analyzer',
+  TokenStream: 'token-stream',
   QueryParser: 'query-parser',
+  ContextAnalyzer: 'context-analyzer',
+  QueryLanguage: 'query-language',
 } as const;
 
 const tabOptions = [
@@ -17,12 +19,20 @@ const tabOptions = [
     label: 'Lexer',
   },
   {
-    value: Tabs.ContextAnalyzer,
-    label: 'Context Analyzer',
+    value: Tabs.TokenStream,
+    label: 'Token Stream',
   },
   {
     value: Tabs.QueryParser,
     label: 'Query Parser',
+  },
+  {
+    value: Tabs.ContextAnalyzer,
+    label: 'Context Analyzer',
+  },
+  {
+    value: Tabs.QueryLanguage,
+    label: 'Query Language',
   },
 ];
 
