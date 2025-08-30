@@ -109,6 +109,7 @@ export const ERROR_MESSAGES = {
   EXPECTED_VALUE: 'Expected value after comparator',
   EXPECTED_EXPRESSION_AFTER_AND: "Expected expression after 'AND'",
   EXPECTED_EXPRESSION_AFTER_OR: "Expected expression after 'OR'",
+  EXPECTED_EXPRESSION_IN_PARENTHESES: 'Expected expression inside parentheses',
   EXPECTED_OPERATOR: "Expected 'AND' or 'OR'",
   EXPECTED_CLOSING_PAREN: 'Expected closing parenthesis',
   UNEXPECTED_END: 'Unexpected end of input',

@@ -199,7 +199,7 @@ export class QueryParser {
     const expression = this.parseExpression();
 
     if (!expression) {
-      this.addError(ERROR_MESSAGES.EXPECTED_VALUE, startToken.position, ERROR_CODES.MISSING_TOKEN);
+      this.addError(ERROR_MESSAGES.EXPECTED_EXPRESSION_IN_PARENTHESES, startToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
     }
 
