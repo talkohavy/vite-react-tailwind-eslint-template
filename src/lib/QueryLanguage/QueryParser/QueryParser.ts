@@ -5,7 +5,7 @@
  * handling operator precedence, error recovery, and AST generation.
  */
 
-import type { ParseResult, ParseError, ParserOptions, Expression, BooleanOperator } from '../types';
+import type { ParseResult, ParseError, ParserOptions, Expression, Comparator } from '../types';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
@@ -50,9 +50,7 @@ export class QueryParser {
       // Parse the expression
       const expression = this.parseExpression();
 
-      if (!expression) {
-        return { success: false, errors: this.errors };
-      }
+      if (!expression) return { success: false, errors: this.errors };
 
       // Check for unexpected tokens at end
       this.skipWhitespace();
@@ -95,7 +93,8 @@ export class QueryParser {
    * Parse an expression (handles operator precedence)
    */
   private parseExpression(): Expression | null {
-    return this.parseOrExpression();
+    const expression = this.parseOrExpression();
+    return expression;
   }
 
   /**
@@ -103,9 +102,10 @@ export class QueryParser {
    */
   private parseOrExpression(): Expression | null {
     let leftAST = this.parseAndExpression();
+
     if (!leftAST) return null;
 
-    while (this.matchOperator(TokenTypes.OR)) {
+    while (this.matchLogicalOperatorOR()) {
       const operatorToken = this.tokenStream.consume()!;
       this.skipWhitespace();
 
@@ -128,11 +128,12 @@ export class QueryParser {
    */
   private parseAndExpression(): Expression | null {
     let leftAST = this.parsePrimaryExpression();
+
     if (!leftAST) return null;
 
     this.skipWhitespace();
 
-    while (this.matchOperator(TokenTypes.AND)) {
+    while (this.matchLogicalOperatorAND()) {
       const operatorToken = this.tokenStream.consume()!;
 
       this.skipWhitespace();
@@ -175,9 +176,11 @@ export class QueryParser {
    */
   private parseGroupExpression(): Expression | null {
     const startToken = this.tokenStream.expect(TokenTypes.LeftParenthesis);
+
     this.skipWhitespace();
 
     const expression = this.parseExpression();
+
     if (!expression) {
       this.addError(ERROR_MESSAGES.EXPECTED_VALUE, startToken.position, ERROR_CODES.MISSING_TOKEN);
       return null;
@@ -203,12 +206,15 @@ export class QueryParser {
    */
   private parseCondition(): Expression | null {
     // Expect identifier for key
-    if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.Key)) {
-      const token = this.tokenStream.current();
+    const currentToken = this.tokenStream.current();
 
+    const isValidKeyToken =
+      this.tokenStream.isCurrentAMatchWith(TokenTypes.Identifier) && !/^\d/.test(currentToken!.value);
+
+    if (!isValidKeyToken) {
       this.addError(
         ERROR_MESSAGES.EXPECTED_KEY,
-        token?.position || ASTBuilder.createPosition(0, 0),
+        currentToken?.position || ASTBuilder.createPosition(0, 0),
         ERROR_CODES.MISSING_TOKEN,
       );
 
@@ -216,34 +222,46 @@ export class QueryParser {
     }
 
     const keyToken = this.tokenStream.consume()!;
+
     this.skipWhitespace();
 
-    // Expect colon
-    if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.Colon)) {
+    // Expect comparator
+    if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
       const token = this.tokenStream.current();
-      this.addError(ERROR_MESSAGES.EXPECTED_COLON, token?.position || keyToken.position, ERROR_CODES.MISSING_TOKEN);
+      this.addError(
+        ERROR_MESSAGES.EXPECTED_COMPARATOR,
+        token?.position || keyToken.position,
+        ERROR_CODES.MISSING_TOKEN,
+      );
       return null;
     }
 
-    const colonToken = this.tokenStream.consume()!;
+    const comparatorToken = this.tokenStream.consume()!;
+
     this.skipWhitespace();
 
     // Expect value (identifier or quoted string)
-    if (!this.tokenStream.matchAny(TokenTypes.Value, TokenTypes.QuotedString)) {
-      const token = this.tokenStream.current();
-      this.addError(ERROR_MESSAGES.EXPECTED_VALUE, token?.position || colonToken.position, ERROR_CODES.MISSING_TOKEN);
+    if (!this.tokenStream.matchAny(TokenTypes.Identifier, TokenTypes.QuotedString)) {
+      const valueToken = this.tokenStream.current();
+
+      this.addError(
+        ERROR_MESSAGES.EXPECTED_VALUE,
+        valueToken?.position || comparatorToken.position,
+        ERROR_CODES.MISSING_TOKEN,
+      );
+
       return null;
     }
 
     const valueToken = this.tokenStream.consume()!;
 
-    const value: string = valueToken.value;
+    const comparatorValue = comparatorToken.value as Comparator;
 
     const conditionPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);
     const conditionAST = ASTBuilder.createCondition(
       keyToken.value,
-      ':', // Currently only support equals
-      value,
+      comparatorValue,
+      valueToken.value,
       conditionPosition,
     );
 
@@ -253,33 +271,35 @@ export class QueryParser {
   /**
    * Check if current token matches a boolean operator
    */
-  private matchOperator(operator: BooleanOperator): boolean {
+  private matchLogicalOperatorAND(): boolean {
     const token = this.tokenStream.current();
+
     if (!token) return false;
 
-    if (operator === TokenTypes.AND) {
-      const isAndOperator =
-        token.type === TokenTypes.AND ||
-        (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.AND);
+    const isAndOperator = token.type === TokenTypes.AND;
 
       return isAndOperator;
     }
 
-    if (operator === TokenTypes.OR) {
-      const isOrOperator =
-        token.type === TokenTypes.OR || (token.type === TokenTypes.Key && token.value.toUpperCase() === TokenTypes.OR);
+  /**
+   * Check if current token matches a boolean operator
+   */
+  private matchLogicalOperatorOR(): boolean {
+    const token = this.tokenStream.current();
+
+    if (!token) return false;
+
+    const isOrOperator = token.type === TokenTypes.OR;
 
       return isOrOperator;
-    }
-
-    return false;
   }
 
   /**
    * Skip whitespace tokens
    */
-  private skipWhitespace(): void {
-    this.tokenStream.skip(TokenTypes.Whitespace);
+  private skipWhitespace(): boolean {
+    const wasSkipped = this.tokenStream.skip(TokenTypes.Whitespace);
+    return wasSkipped;
   }
 
   /**
