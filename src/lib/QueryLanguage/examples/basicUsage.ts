@@ -61,8 +61,7 @@ export function basicLexerExample() {
   const query = 'status: "active user" AND (role: admin OR role: moderator)';
   console.log(`Query: ${query}\n`);
 
-  const lexer = new QueryLexer(query);
-  const tokens = lexer.tokenize();
+  const tokens = new QueryLexer().tokenize(query);
 
   console.log('🔤 Tokens:');
   tokens.forEach((token, index) => {
@@ -102,38 +101,6 @@ export function errorHandlingExample() {
       });
     } else {
       console.log('⚠️  Unexpectedly parsed successfully');
-    }
-
-    console.log('');
-  });
-}
-
-/**
- * Context determination for auto-completion
- */
-export function contextDeterminationExample() {
-  console.log('=== Query Language Parser - Context Determination ===\n');
-
-  const parser = new QueryParser();
-
-  const partialQueries = [
-    '', // Should suggest keys
-    'status: ', // Should suggest values
-    'status: active ', // Should suggest operators
-    'status: active AND ', // Should suggest keys
-    '(status: active ', // Should suggest operators
-  ];
-
-  partialQueries.forEach((query, index) => {
-    console.log(`Context Example ${index + 1}: "${query || '[empty]'}"`);
-
-    const result = parser.parsePartial(query);
-
-    console.log(`   Context: ${result.context}`);
-    console.log(`   Errors: ${result.errors.length}`);
-
-    if (result.ast) {
-      console.log(`   Partial AST: ${result.ast.type}`);
     }
 
     console.log('');
@@ -185,7 +152,6 @@ export function runAllExamples() {
   basicParserExample();
   basicLexerExample();
   errorHandlingExample();
-  contextDeterminationExample();
   performanceExample();
 
   console.log('🎉 Phase 2 implementation complete!');
@@ -201,7 +167,6 @@ export default {
   basicParserExample,
   basicLexerExample,
   errorHandlingExample,
-  contextDeterminationExample,
   performanceExample,
   runAllExamples,
 };

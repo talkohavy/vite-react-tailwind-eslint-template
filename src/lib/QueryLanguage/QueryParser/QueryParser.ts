@@ -374,66 +374,6 @@ export class QueryParser {
   }
 
   /**
-   * Parse a partial expression (useful for auto-completion)
-   */
-  parsePartial(input: string): {
-    ast?: Expression;
-    errors: ParseError[];
-    context: 'key' | 'value' | 'operator' | 'unknown';
-  } {
-    // Store original options and temporarily allow partial parse
-    const originalOptions = this.options;
-    this.options = { ...this.options, allowPartialParse: true };
-
-    try {
-      const result = this.parse(input);
-      const context = this.determineContext(input);
-
-      return {
-        ast: result.ast?.expression,
-        errors: result.errors,
-        context,
-      };
-    } finally {
-      this.options = originalOptions;
-    }
-  }
-
-  /**
-   * Determine the parsing context for auto-completion
-   */
-  private determineContext(input: string): 'key' | 'value' | 'operator' | 'unknown' {
-    const trimmed = input.trim();
-
-    // Empty or only whitespace - expect key
-    if (!trimmed) {
-      return 'key';
-    }
-
-    // Ends with colon and optional whitespace - expect value
-    if (/:\s*$/.test(trimmed)) {
-      return 'value';
-    }
-
-    // Ends with complete condition - expect operator
-    if (/\w+\s*:\s*(?:\w+|"[^"]*"|'[^']*')\s*$/.test(trimmed)) {
-      return 'operator';
-    }
-
-    // After AND/OR - expect key
-    if (/(?:AND|OR)\s*$/i.test(trimmed)) {
-      return 'key';
-    }
-
-    // After opening parenthesis - expect key
-    if (/\(\s*$/.test(trimmed)) {
-      return 'key';
-    }
-
-    return 'unknown';
-  }
-
-  /**
    * Validate syntax without full parsing (faster for validation-only scenarios)
    */
   validateSyntax(input: string): { valid: boolean; errors: ParseError[] } {

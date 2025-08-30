@@ -258,7 +258,6 @@ export interface FieldDefinition {
  * Options for parser configuration
  */
 export interface ParserOptions {
-  allowPartialParse: boolean;
   maxErrors: number;
   trackPositions: boolean;
 }

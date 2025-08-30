@@ -149,26 +149,6 @@ describe('QueryParser', () => {
     });
   });
 
-  describe('partial parsing', () => {
-    test('should determine context for completion', () => {
-      const result = parser.parsePartial('status: ');
-
-      expect(result.context).toBe('value');
-    });
-
-    test('should determine operator context', () => {
-      const result = parser.parsePartial('status: active ');
-
-      expect(result.context).toBe('operator');
-    });
-
-    test('should determine key context', () => {
-      const result = parser.parsePartial('status: active AND ');
-
-      expect(result.context).toBe('key');
-    });
-  });
-
   describe('syntax validation', () => {
     test('should validate correct syntax', () => {
       const result = parser.validateSyntax('status: active AND role: admin');

@@ -173,7 +173,6 @@ export const DEFAULT_COMPLETION_CONFIG = {
  * Default parser options
  */
 export const DEFAULT_PARSER_OPTIONS = {
-  allowPartialParse: true,
   maxErrors: 10,
   trackPositions: true,
 } as const;
