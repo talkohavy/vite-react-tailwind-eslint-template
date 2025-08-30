@@ -107,6 +107,8 @@ export const ERROR_MESSAGES = {
   EXPECTED_COLON: "Expected ':' after key",
   EXPECTED_COMPARATOR: 'Expected comparator (i.e. :,<,>,=) after key',
   EXPECTED_VALUE: "Expected value after ':'",
+  EXPECTED_EXPRESSION_AFTER_AND: "Expected expression after 'AND'",
+  EXPECTED_EXPRESSION_AFTER_OR: "Expected expression after 'OR'",
   EXPECTED_OPERATOR: "Expected 'AND' or 'OR'",
   EXPECTED_CLOSING_PAREN: 'Expected closing parenthesis',
   UNEXPECTED_END: 'Unexpected end of input',
@@ -114,6 +116,7 @@ export const ERROR_MESSAGES = {
   INVALID_IDENTIFIER: 'Invalid identifier',
   INVALID_OPERATOR: 'Invalid operator',
   EMPTY_QUERY: 'Empty query',
+  EMPTY_PARENTHESES: 'Empty parentheses not allowed',
   INVALID_SYNTAX: 'Invalid syntax',
 } as const;
 

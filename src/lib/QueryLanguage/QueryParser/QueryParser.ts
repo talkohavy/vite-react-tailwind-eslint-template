@@ -109,12 +109,17 @@ export class QueryParser {
       const operatorToken = this.tokenStream.consume()!;
       this.skipWhitespace();
 
-      const rightAST = this.parseAndExpression();
+      // Check if we're at end of input after OR
+      if (this.tokenStream.isAtEnd()) {
+        const errorPosition = this.getPositionAfterToken(operatorToken);
 
-      if (!rightAST) {
-        this.addError(ERROR_MESSAGES.EXPECTED_VALUE, operatorToken.position, ERROR_CODES.MISSING_TOKEN);
+        this.addError(ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_OR, errorPosition, ERROR_CODES.MISSING_TOKEN);
         return leftAST;
       }
+
+      const rightAST = this.parseAndExpression();
+
+      if (!rightAST) return leftAST;
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(TokenTypes.OR, leftAST, rightAST, leftPosition);
@@ -138,12 +143,17 @@ export class QueryParser {
 
       this.skipWhitespace();
 
-      const rightAST = this.parsePrimaryExpression();
+      // Check if we're at end of input after AND
+      if (this.tokenStream.isAtEnd()) {
+        const errorPosition = this.getPositionAfterToken(operatorToken);
 
-      if (!rightAST) {
-        this.addError(ERROR_MESSAGES.EXPECTED_VALUE, operatorToken.position, ERROR_CODES.MISSING_TOKEN);
+        this.addError(ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_AND, errorPosition, ERROR_CODES.MISSING_TOKEN);
         return leftAST;
       }
+
+      const rightAST = this.parsePrimaryExpression();
+
+      if (!rightAST) return leftAST;
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(TokenTypes.AND, leftAST, rightAST, leftPosition);
@@ -179,6 +189,13 @@ export class QueryParser {
 
     this.skipWhitespace();
 
+    // Check for empty parentheses
+    if (this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
+      this.addError(ERROR_MESSAGES.EMPTY_PARENTHESES, startToken.position, ERROR_CODES.EMPTY_EXPRESSION);
+      this.tokenStream.consume(); // consume the closing paren
+      return null;
+    }
+
     const expression = this.parseExpression();
 
     if (!expression) {
@@ -209,7 +226,7 @@ export class QueryParser {
     const currentToken = this.tokenStream.current();
 
     const isValidKeyToken =
-      this.tokenStream.isCurrentAMatchWith(TokenTypes.Identifier) && !/^\d/.test(currentToken!.value);
+      currentToken && this.tokenStream.isCurrentAMatchWith(TokenTypes.Identifier) && !/^\d/.test(currentToken.value);
 
     if (!isValidKeyToken) {
       this.addError(
@@ -332,6 +349,16 @@ export class QueryParser {
   private getCurrentPosition(): number {
     const token = this.tokenStream.current();
     return token?.position.start || 0;
+  }
+
+  /**
+   * Get position after a token for error reporting
+   */
+  private getPositionAfterToken(token: any): { start: number; end: number } {
+    return {
+      start: token.position.end,
+      end: token.position.end,
+    };
   }
 
   /**
