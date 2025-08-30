@@ -278,8 +278,8 @@ export class QueryParser {
 
     const isAndOperator = token.type === TokenTypes.AND;
 
-      return isAndOperator;
-    }
+    return isAndOperator;
+  }
 
   /**
    * Check if current token matches a boolean operator
@@ -291,7 +291,7 @@ export class QueryParser {
 
     const isOrOperator = token.type === TokenTypes.OR;
 
-      return isOrOperator;
+    return isOrOperator;
   }
 
   /**
