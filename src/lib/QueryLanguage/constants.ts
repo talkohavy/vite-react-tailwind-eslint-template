@@ -106,7 +106,7 @@ export const ERROR_MESSAGES = {
   EXPECTED_KEY: 'Expected key name',
   EXPECTED_COLON: "Expected ':' after key",
   EXPECTED_COMPARATOR: 'Expected comparator (i.e. :,<,>,=) after key',
-  EXPECTED_VALUE: "Expected value after ':'",
+  EXPECTED_VALUE: 'Expected value after comparator',
   EXPECTED_EXPRESSION_AFTER_AND: "Expected expression after 'AND'",
   EXPECTED_EXPRESSION_AFTER_OR: "Expected expression after 'OR'",
   EXPECTED_OPERATOR: "Expected 'AND' or 'OR'",
