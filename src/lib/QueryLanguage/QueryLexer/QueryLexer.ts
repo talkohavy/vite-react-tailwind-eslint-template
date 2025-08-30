@@ -241,10 +241,10 @@ export class QueryLexer {
     }
 
     const wordValue = this.input.slice(start, this.position);
-    const normalizedTokenValue = this.options.caseSensitiveOperators ? wordValue : wordValue.toUpperCase();
+    const uppercaseValue = this.options.caseSensitiveOperators ? wordValue : wordValue.toUpperCase();
 
-    if (BOOLEAN_OPERATORS[normalizedTokenValue]) {
-      const logicalOperatorToken = this.scanLogicalOperator(start, wordValue);
+    if (BOOLEAN_OPERATORS[uppercaseValue]) {
+      const logicalOperatorToken = this.scanLogicalOperator(start, uppercaseValue, wordValue);
       return logicalOperatorToken;
     }
 
@@ -254,10 +254,10 @@ export class QueryLexer {
   }
 
   /**
-   * Scan word (could be one of: key / value / AND / OR
+   * Scan word (could be one of: AND / OR
    */
-  private scanLogicalOperator(start: number, tokenValue: string): Token {
-    const logicalOperatorTokenType = tokenValue === TokenTypes.AND ? TokenTypes.AND : TokenTypes.OR;
+  private scanLogicalOperator(start: number, uppercaseValue: string, tokenValue: string): Token {
+    const logicalOperatorTokenType = uppercaseValue === TokenTypes.AND ? TokenTypes.AND : TokenTypes.OR;
 
     const logicalOperatorToken = this.createToken(logicalOperatorTokenType, tokenValue, start, this.position);
 
