@@ -28,7 +28,7 @@ export class ContextAnalyzer {
    */
   public analyzeContext(query: string, cursorPosition: number): CompletionContext {
     // Reinitialize lexer with the actual query
-    const tokens = new QueryLexer(query, {}).tokenize();
+    const tokens = new QueryLexer({}).tokenize(query);
     const currentToken = this.findTokenAtPosition(tokens, cursorPosition);
     const previousToken = this.findPreviousToken(tokens, cursorPosition);
     const nextToken = this.findNextToken(tokens, cursorPosition);
