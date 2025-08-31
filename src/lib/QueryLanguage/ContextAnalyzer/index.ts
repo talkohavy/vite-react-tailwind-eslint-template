@@ -13,11 +13,4 @@ export { ContextAnalyzer } from './ContextAnalyzer';
 export { SuggestionRanker } from './SuggestionRanker';
 
 // Re-export types for convenience
-export type {
-  CompletionItem,
-  CompletionConfig,
-  CompletionContext,
-  CompletionItemType,
-  KeyConfig,
-  ValueConfig,
-} from '../types';
+export type { CompletionItem, CompletionConfig, CompletionContext, KeyConfig, ValueConfig } from '../types';

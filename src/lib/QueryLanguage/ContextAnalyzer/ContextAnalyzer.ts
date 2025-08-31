@@ -6,38 +6,34 @@
  * the user is currently positioned.
  */
 
-import type { CompletionContext, Token } from '../types';
+import type { CompletionContext, ParseResult, Token } from '../types';
+import type { AnalyzeContextProps } from './ContextAnalyzer.interface';
 import { BOOLEAN_OPERATORS } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
-import { QueryLexer } from '../QueryLexer/QueryLexer';
-import { QueryParser } from '../QueryParser/QueryParser';
 import { ContextTypes, type ContextTypeValues } from './logic/constants';
 
 /**
  * Analyzes the current context for auto-completion
  */
 export class ContextAnalyzer {
-  private parser: QueryParser;
-
-  constructor() {
-    this.parser = new QueryParser();
-  }
+  constructor(private readonly tokens: Token[]) {}
 
   /**
    * Analyzes the completion context at a given cursor position
    */
-  public analyzeContext(query: string, cursorPosition: number): CompletionContext {
+  public analyzeContext(props: AnalyzeContextProps): CompletionContext {
+    const { parseResult, cursorPosition, originalQuery } = props;
+
     // Reinitialize lexer with the actual query
-    const tokens = new QueryLexer({}).tokenize(query);
-    const currentToken = this.findTokenAtPosition(tokens, cursorPosition);
-    const previousToken = this.findPreviousToken(tokens, cursorPosition);
-    const nextToken = this.findNextToken(tokens, cursorPosition);
-    const expectedTypes = this.determineExpectedTypes(tokens, cursorPosition);
-    const isInQuotes = this.isPositionInQuotes(query, cursorPosition);
-    const canInsertOperator = this.canInsertOperator(tokens, cursorPosition);
-    const canStartNewGroup = this.getCanStartNewGroup(tokens, cursorPosition);
-    const incompleteValue = this.extractIncompleteValue(query, cursorPosition);
-    const syntaxErrors = this.getSyntaxErrors(query);
+    const currentToken = this.findTokenAtPosition(this.tokens, cursorPosition);
+    const previousToken = this.findPreviousToken(this.tokens, cursorPosition);
+    const nextToken = this.findNextToken(this.tokens, cursorPosition);
+    const expectedTypes = this.determineExpectedTypes(this.tokens, cursorPosition);
+    const isInQuotes = this.isPositionInQuotes(currentToken);
+    const canInsertOperator = this.canInsertOperator(this.tokens, cursorPosition);
+    const canStartNewGroup = this.getCanStartNewGroup(this.tokens, cursorPosition);
+    const incompleteValue = this.extractIncompleteValue(originalQuery, cursorPosition);
+    const syntaxErrors = this.getSyntaxErrors(parseResult);
 
     const context: CompletionContext = {
       cursorPosition,
@@ -89,7 +85,7 @@ export class ContextAnalyzer {
   /**
    * Determines what types of completions are expected at the current position
    */
-  private determineExpectedTypes(tokens: Token[], position: number): CompletionItemType[] {
+  private determineExpectedTypes(tokens: Token[], position: number): ContextTypeValues[] {
     const nonWhitespaceTokens = tokens.filter((token) => token.type !== TokenTypes.Whitespace);
 
     if (nonWhitespaceTokens.length === 0) {
@@ -114,6 +110,11 @@ export class ContextAnalyzer {
       return [ContextTypes.Key, ContextTypes.Grouping];
     }
 
+    // After an identifier that's not a value - expect operator
+    if (lastToken.type === TokenTypes.RightParenthesis) {
+      return [ContextTypes.Operator, ContextTypes.Grouping];
+    }
+
     // After a colon - expect value
     if (lastToken.type === TokenTypes.Colon) {
       return [ContextTypes.Value];
@@ -125,7 +126,7 @@ export class ContextAnalyzer {
     }
 
     // After an identifier that's not a value - expect operator
-    if ([TokenTypes.Key, TokenTypes.RightParenthesis].includes(lastToken.type as any)) {
+    if (lastToken.type === TokenTypes.Identifier) {
       return [ContextTypes.Operator, ContextTypes.Key]; // <--- Key is expected because it could be a partial key
     }
 
@@ -137,7 +138,7 @@ export class ContextAnalyzer {
    * Checks if a specific token is a value based on its context in the token array
    */
   private isValueToken(_tokens: Token[], token: Token): boolean {
-    if ([TokenTypes.Value, TokenTypes.QuotedString].includes(token.type as any)) return true;
+    if ([TokenTypes.Identifier, TokenTypes.QuotedString].includes(token.type as any)) return true;
 
     return false;
   }
@@ -169,24 +170,12 @@ export class ContextAnalyzer {
   /**
    * Checks if the cursor position is within quotes
    */
-  private isPositionInQuotes(query: string, position: number): boolean {
-    let inQuotes = false;
-    let quoteChar: string | null = null;
+  private isPositionInQuotes(currentToken: Token | undefined): boolean {
+    // If there's no current token, we're not in quotes
+    if (!currentToken) return false;
 
-    for (let i = 0; i < Math.min(position, query.length); i++) {
-      const char = query[i];
-      if ((char === '"' || char === "'") && query[i - 1] !== '\\') {
-        if (!inQuotes) {
-          inQuotes = true;
-          quoteChar = char;
-        } else if (char === quoteChar) {
-          inQuotes = false;
-          quoteChar = null;
-        }
-      }
-    }
-
-    return inQuotes;
+    // Check if the current token is a quoted string
+    return currentToken.type === TokenTypes.QuotedString;
   }
 
   /**
@@ -254,10 +243,8 @@ export class ContextAnalyzer {
   /**
    * Gets syntax errors from parsing the query
    */
-  private getSyntaxErrors(query: string): string[] {
-    const parseResult = this.parser.parse(query);
-
-    const syntaxErrors = parseResult.errors.map((error) => error.message);
+  private getSyntaxErrors(parseResult: ParseResult): string[] {
+    const syntaxErrors = parseResult.errors.map((error: any) => error.message);
 
     return syntaxErrors;
   }
