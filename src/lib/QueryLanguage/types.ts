@@ -145,10 +145,12 @@ export interface CompletionContext {
   nextToken?: Token;
   expectedTypes: ContextTypeValues[];
   isInQuotes: boolean;
-  canInsertOperator: boolean;
+  canInsertLogicalOperator: boolean;
+  canInsertComparator: boolean;
   canStartNewGroup: boolean;
   incompleteValue: string;
   syntaxErrors: string[];
+  isPartiallyCorrect: boolean;
 }
 
 /**

@@ -8,13 +8,9 @@
 
 import type { CompletionContext, ParseResult, Token } from '../types';
 import type { AnalyzeContextProps } from './ContextAnalyzer.interface';
-import { BOOLEAN_OPERATORS } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { ContextTypes, type ContextTypeValues } from './logic/constants';
 
-/**
- * Analyzes the current context for auto-completion
- */
 export class ContextAnalyzer {
   constructor(private readonly tokens: Token[]) {}
 
@@ -24,16 +20,37 @@ export class ContextAnalyzer {
   public analyzeContext(props: AnalyzeContextProps): CompletionContext {
     const { parseResult, cursorPosition, originalQuery } = props;
 
-    // Reinitialize lexer with the actual query
-    const currentToken = this.findTokenAtPosition(this.tokens, cursorPosition);
-    const previousToken = this.findPreviousToken(this.tokens, cursorPosition);
-    const nextToken = this.findNextToken(this.tokens, cursorPosition);
-    const expectedTypes = this.determineExpectedTypes(this.tokens, cursorPosition);
+    const currentTokenIndex = this.findLastTokenBeforePosition(cursorPosition);
+
+    const isPartiallyCorrect = this.isQueryCorrectUpToPosition(currentTokenIndex);
+
+    const currentToken = this.tokens[currentTokenIndex];
+
+    const isCurrentTokenAValue = this.getIsValueToken(currentTokenIndex);
+    const isPreviousTokenAValue = !isCurrentTokenAValue && this.getIsValueToken(currentTokenIndex - 1);
+    const isCurrentTokenAKey = this.getIsKeyToken(currentTokenIndex);
+    const isPreviousTokenAKey = !isCurrentTokenAKey && this.getIsKeyToken(currentTokenIndex - 1);
+
     const isInQuotes = this.isPositionInQuotes(currentToken);
-    const canInsertOperator = this.canInsertOperator(this.tokens, cursorPosition);
-    const canStartNewGroup = this.getCanStartNewGroup(this.tokens, cursorPosition);
+    const canInsertLogicalOperator = this.canInsertOperator(currentTokenIndex);
+    const canInsertComparator = this.canInsertComparator(currentTokenIndex);
+    const canStartNewGroup = this.getCanStartNewGroup(currentTokenIndex);
     const incompleteValue = this.extractIncompleteValue(originalQuery, cursorPosition);
     const syntaxErrors = this.getSyntaxErrors(parseResult);
+
+    const { token: previousToken } = this.getPreviousToken(currentTokenIndex);
+    const { token: nextToken } = this.getNextToken(currentTokenIndex);
+
+    const expectedTypes = isPartiallyCorrect
+      ? this.determineExpectedTypes({
+          currentToken,
+          previousToken,
+          isCurrentTokenAValue,
+          isCurrentTokenAKey,
+          isPreviousTokenAValue,
+          isPreviousTokenAKey,
+        })
+      : [];
 
     const context: CompletionContext = {
       cursorPosition,
@@ -42,7 +59,9 @@ export class ContextAnalyzer {
       nextToken,
       expectedTypes,
       isInQuotes,
-      canInsertOperator,
+      isPartiallyCorrect,
+      canInsertLogicalOperator,
+      canInsertComparator,
       canStartNewGroup,
       incompleteValue,
       syntaxErrors,
@@ -52,111 +71,171 @@ export class ContextAnalyzer {
   }
 
   /**
-   * Finds the token at the given position
-   */
-  private findTokenAtPosition(tokens: Token[], position: number): Token | undefined {
-    const foundToken = tokens.find((token) => position >= token.position.start && position <= token.position.end);
-
-    return foundToken;
-  }
-
-  /**
-   * Finds the previous non-whitespace token
-   */
-  private findPreviousToken(tokens: Token[], position: number): Token | undefined {
-    const precedingTokens = tokens.filter(
-      (token) => token.position.end < position && token.type !== TokenTypes.Whitespace,
-    );
-
-    const previousToken = precedingTokens[precedingTokens.length - 1];
-
-    return previousToken;
-  }
-
-  /**
-   * Finds the next non-whitespace token
-   */
-  private findNextToken(tokens: Token[], position: number): Token | undefined {
-    const foundToken = tokens.find((token) => token.position.start > position && token.type !== TokenTypes.Whitespace);
-
-    return foundToken;
-  }
-
-  /**
    * Determines what types of completions are expected at the current position
    */
-  private determineExpectedTypes(tokens: Token[], position: number): ContextTypeValues[] {
-    const nonWhitespaceTokens = tokens.filter((token) => token.type !== TokenTypes.Whitespace);
+  private determineExpectedTypes(props: {
+    currentToken: Token | undefined;
+    previousToken: Token | undefined;
+    isCurrentTokenAValue: boolean;
+    isCurrentTokenAKey: boolean;
+    isPreviousTokenAValue: boolean;
+    isPreviousTokenAKey: boolean;
+  }): ContextTypeValues[] {
+    const {
+      currentToken,
+      previousToken,
+      isCurrentTokenAKey: isOnKey,
+      isCurrentTokenAValue: isOnValue,
+      isPreviousTokenAValue,
+      isPreviousTokenAKey,
+    } = props;
 
-    if (nonWhitespaceTokens.length === 0) {
-      // Empty query - expect key or opening parenthesis
-      return [ContextTypes.Key, ContextTypes.Grouping];
+    const previousTokenType = previousToken?.type;
+    const currentTokenType = currentToken?.type;
+
+    /**
+     * if(isOnKey) -> expect key
+     * if(isOnValue || isOnColon) -> expect value
+     * if(isOnLogicalOperator) -> expect AND,OR
+     * if(isOnComparator) -> expect comparator
+     * if(isOnLeftParenthesis) expect key,(
+     * if(isOnRightParenthesis) expect AND,OR,)
+     * if(isOnWhitespace){
+     *    isAfterKey -> expect comparator
+     *    isAfterValue -> expect AND,OR,)
+     *    isAfterLogicalOperator -> expect Key,(
+     *    isAfterComparator -> expect Value
+     *    isAfterLeftParenthesis -> expect key,(
+     *    isAfterRightParenthesis -> expect AND,OR,)
+     * }
+     */
+
+    if (isOnKey) {
+      return [ContextTypes.Key];
     }
 
-    // Find the last token before or at the cursor position
-    const lastToken = this.findLastTokenBeforePosition(nonWhitespaceTokens, position);
-
-    if (!lastToken) {
-      return [ContextTypes.Key, ContextTypes.Grouping];
-    }
-
-    // After AND/OR - expect key or opening parenthesis
-    if (Object.keys(BOOLEAN_OPERATORS).includes(lastToken.value)) {
-      return [ContextTypes.Key, ContextTypes.Grouping];
-    }
-
-    // After opening parenthesis - expect key or another opening parenthesis
-    if (lastToken.type === TokenTypes.LeftParenthesis) {
-      return [ContextTypes.Key, ContextTypes.Grouping];
-    }
-
-    // After an identifier that's not a value - expect operator
-    if (lastToken.type === TokenTypes.RightParenthesis) {
-      return [ContextTypes.Operator, ContextTypes.Grouping];
-    }
-
-    // After a colon - expect value
-    if (lastToken.type === TokenTypes.Colon) {
+    const isOnColon = currentTokenType === TokenTypes.Colon;
+    if (isOnValue || isOnColon) {
       return [ContextTypes.Value];
     }
 
-    // After a value - expect boolean operator or closing parenthesis
-    if (this.isValueToken(nonWhitespaceTokens, lastToken)) {
-      return [ContextTypes.Operator, ContextTypes.Grouping, ContextTypes.Value]; // <--- Value is expected because it could be a partial value
+    const isOnLogicalOperator = [TokenTypes.AND, TokenTypes.OR].includes(currentTokenType as any);
+    if (isOnLogicalOperator) {
+      return [ContextTypes.LogicalOperator];
     }
 
-    // After an identifier that's not a value - expect operator
-    if (lastToken.type === TokenTypes.Identifier) {
-      return [ContextTypes.Operator, ContextTypes.Key]; // <--- Key is expected because it could be a partial key
+    const isOnComparator = currentTokenType === TokenTypes.Comparator;
+    if (isOnComparator) {
+      return [ContextTypes.Comparator];
     }
 
-    // Default case
+    const isOnLeftParenthesis = currentTokenType === TokenTypes.LeftParenthesis;
+    if (isOnLeftParenthesis) {
+      return [ContextTypes.Key, ContextTypes.LeftParenthesis];
+    }
+
+    const isOnRightParenthesis = currentTokenType === TokenTypes.RightParenthesis;
+    if (isOnRightParenthesis) {
+      return [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis];
+    }
+
+    const isOnWhitespace = currentTokenType === TokenTypes.Whitespace;
+    if (!isOnWhitespace) {
+      // If we're not on whitespace and none of the above matched, return empty
+      return [];
+    }
+
+    const isAfterKey = isPreviousTokenAKey;
+    if (isAfterKey) {
+      return [ContextTypes.Comparator];
+    }
+
+    const isAfterValue = previousTokenType === TokenTypes.QuotedString || isPreviousTokenAValue;
+    if (isAfterValue) {
+      return [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis];
+    }
+
+    const isAfterLogicalOperator = [TokenTypes.AND, TokenTypes.OR].includes(previousTokenType as any);
+    if (isAfterLogicalOperator) {
+      return [ContextTypes.Key, ContextTypes.LeftParenthesis];
+    }
+
+    const isAfterComparator = previousTokenType === TokenTypes.Comparator;
+    const isAfterColon = previousTokenType === TokenTypes.Colon;
+    if (isAfterComparator || isAfterColon) {
+      return [ContextTypes.Value];
+    }
+
+    const isAfterLeftParenthesis = previousTokenType === TokenTypes.LeftParenthesis;
+    if (isAfterLeftParenthesis) {
+      return [ContextTypes.Key, ContextTypes.LeftParenthesis];
+    }
+
+    const isAfterRightParenthesis = previousTokenType === TokenTypes.RightParenthesis;
+    if (isAfterRightParenthesis) {
+      return [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis];
+    }
+
     return [];
   }
 
   /**
    * Checks if a specific token is a value based on its context in the token array
    */
-  private isValueToken(_tokens: Token[], token: Token): boolean {
-    if ([TokenTypes.Identifier, TokenTypes.QuotedString].includes(token.type as any)) return true;
+  private getIsValueToken(tokenIndex: number): boolean {
+    const currentToken = this.tokens[tokenIndex];
 
-    return false;
+    if (currentToken?.type !== TokenTypes.Identifier) return false;
+
+    tokenIndex--;
+
+    while (tokenIndex >= 0 && this.tokens[tokenIndex]!.type === TokenTypes.Whitespace) {
+      tokenIndex--;
+    }
+
+    const previousTokenType = this.tokens[tokenIndex]?.type;
+
+    const isValueToken = [TokenTypes.Colon, TokenTypes.Comparator].includes(previousTokenType as any);
+
+    return isValueToken;
+  }
+
+  private getIsKeyToken(tokenIndex: number): boolean {
+    const currentToken = this.tokens[tokenIndex];
+
+    if (currentToken?.type !== TokenTypes.Identifier) return false;
+
+    tokenIndex--;
+
+    while (tokenIndex >= 0 && this.tokens[tokenIndex]!.type === TokenTypes.Whitespace) {
+      tokenIndex--;
+    }
+
+    // First identifier in the query is always a key
+    if (!this.tokens[tokenIndex]) return true;
+
+    const previousTokenType = this.tokens[tokenIndex]?.type;
+    const isKeyToken = [TokenTypes.LeftParenthesis, TokenTypes.Comparator].includes(previousTokenType as any);
+
+    return isKeyToken;
   }
 
   /**
    * Finds the last token before or at the given position
    */
-  private findLastTokenBeforePosition(tokens: Token[], position: number): Token | undefined {
-    let lastToken: Token | undefined;
+  private findLastTokenBeforePosition(position: number): number {
+    let lastTokenIndex = -1;
 
-    for (const token of tokens) {
+    for (let index = 0; index < this.tokens.length; index++) {
+      const token = this.tokens[index]!;
+
       // Only consider tokens that end before the cursor position
       if (token.position.end < position) {
-        lastToken = token;
+        lastTokenIndex = index;
       } else if (token.position.start <= position && position <= token.position.end) {
         // If cursor is within a token, consider this token only if it's not at the start
         if (position > token.position.start) {
-          lastToken = token;
+          lastTokenIndex = index;
         }
         break;
       } else {
@@ -164,7 +243,7 @@ export class ContextAnalyzer {
       }
     }
 
-    return lastToken;
+    return lastTokenIndex;
   }
 
   /**
@@ -181,28 +260,54 @@ export class ContextAnalyzer {
   /**
    * Determines if an operator can be inserted at the current position
    */
-  private canInsertOperator(tokens: Token[], position: number): boolean {
-    const previousToken = this.findPreviousToken(tokens, position);
+  private canInsertOperator(currentTokenIndex: number): boolean {
+    if (currentTokenIndex - 1 < 0) return false;
+
+    const previousToken = this.tokens[currentTokenIndex - 1];
+
     if (!previousToken) return false;
 
-    const canInsertOperator =
-      this.isValueToken(tokens, previousToken) || previousToken.type === TokenTypes.RightParenthesis;
+    // const canInsertOperator =
+    //   this.getIsValueToken({ currentToken: tokens[0], previousToken }) ||
+    //   previousToken.type === TokenTypes.RightParenthesis;
+    const canInsertOperator = false;
 
     return canInsertOperator;
   }
 
   /**
+   * Determines if an operator can be inserted at the current position
+   */
+  private canInsertComparator(currentTokenIndex: number): boolean {
+    if (currentTokenIndex - 1 < 0) return false;
+
+    const previousToken = this.tokens[currentTokenIndex - 1];
+
+    if (!previousToken) return false;
+
+    const canInsertComparator = false;
+    // const canInsertComparator =
+    //   this.getIsValueToken({ currentToken: tokens[0], previousToken }) ||
+    //   previousToken.type === TokenTypes.RightParenthesis;
+
+    return canInsertComparator;
+  }
+
+  /**
    * Determines if grouping (left parentheses) can be inserted at the current position
    */
-  private getCanStartNewGroup(tokens: Token[], position: number): boolean {
-    const previousToken = this.findPreviousToken(tokens, position);
+  private getCanStartNewGroup(currentTokenIndex: number): boolean {
+    if (currentTokenIndex - 1 < 0) return false;
 
-    // Can insert at beginning
+    const previousToken = this.tokens[currentTokenIndex - 1];
+
+    // You CAN insert a new group at the beginning!
     if (!previousToken) return true;
 
     // Can insert after operators or opening parenthesis
     const canStartNewGroup =
-      Object.keys(BOOLEAN_OPERATORS).includes(previousToken.value) || previousToken.type === TokenTypes.LeftParenthesis;
+      [TokenTypes.AND, TokenTypes.OR].includes(previousToken.type as any) ||
+      previousToken.type === TokenTypes.LeftParenthesis;
 
     return canStartNewGroup;
   }
@@ -237,7 +342,9 @@ export class ContextAnalyzer {
       }
     }
 
-    return beforeCursor.substring(start) + afterCursor.substring(0, end);
+    const incompleteValue = beforeCursor.substring(start) + afterCursor.substring(0, end);
+
+    return incompleteValue;
   }
 
   /**
@@ -247,5 +354,53 @@ export class ContextAnalyzer {
     const syntaxErrors = parseResult.errors.map((error: any) => error.message);
 
     return syntaxErrors;
+  }
+
+  /**
+   * @returns the next token that is not a whitespace
+   */
+  private getNextToken(tokenIndex: number): { token: Token | undefined; wasWhitespaceSkipped: boolean } {
+    let wasWhitespaceSkipped = false;
+
+    if (tokenIndex + 1 >= this.tokens.length) {
+      return { token: undefined, wasWhitespaceSkipped };
+    }
+
+    // Skip whitespace tokens
+    while (tokenIndex + 1 < this.tokens.length && this.tokens[tokenIndex + 1]!.type === TokenTypes.Whitespace) {
+      tokenIndex++;
+      wasWhitespaceSkipped = true;
+    }
+
+    return { token: this.tokens[tokenIndex + 1], wasWhitespaceSkipped };
+  }
+
+  /**
+   * @returns the previous token that is not a whitespace
+   */
+  private getPreviousToken(tokenIndex: number): { token: Token | undefined; wasWhitespaceSkipped: boolean } {
+    let wasWhitespaceSkipped = false;
+
+    if (tokenIndex - 1 < 0) {
+      return { token: undefined, wasWhitespaceSkipped };
+    }
+
+    // Skip whitespace tokens
+    while (tokenIndex - 1 >= 0 && this.tokens[tokenIndex - 1]!.type === TokenTypes.Whitespace) {
+      tokenIndex--;
+      wasWhitespaceSkipped = true;
+    }
+
+    return { token: this.tokens[tokenIndex - 1], wasWhitespaceSkipped };
+  }
+
+  private isQueryCorrectUpToPosition(tokenIndex: number): boolean {
+    for (let i = 0; i <= tokenIndex; i++) {
+      const token = this.tokens[i]!;
+      if (token.type === TokenTypes.Invalid) {
+        return false;
+      }
+    }
+    return true;
   }
 }

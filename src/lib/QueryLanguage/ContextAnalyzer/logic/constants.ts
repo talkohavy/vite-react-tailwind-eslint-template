@@ -1,8 +1,10 @@
 export const ContextTypes = {
-  Operator: 'operator',
-  Grouping: 'grouping',
   Key: 'key',
   Value: 'value',
+  LogicalOperator: 'operator',
+  Comparator: 'comparator',
+  LeftParenthesis: 'left-parenthesis',
+  RightParenthesis: 'right-parenthesis',
 } as const;
 
 type TypeOfContextType = typeof ContextTypes;
