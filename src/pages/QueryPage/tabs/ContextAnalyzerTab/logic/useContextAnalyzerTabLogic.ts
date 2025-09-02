@@ -25,13 +25,20 @@ export default function useContextAnalyzerTabLogic() {
 
   const tokens = lexer.tokenize(query);
   const result = queryParser.parse(query);
-  const context = new ContextAnalyzer(tokens).analyzeContext({
+  const contextResults = new ContextAnalyzer(tokens).analyzeContext({
     cursorPosition,
     originalQuery: '',
     parseResult: result,
   });
 
-  console.log('context is:', context);
-
-  return { inputRef, query, cursorPosition, handleInputChange, handleCursorPositionChange, result, tokens };
+  return {
+    inputRef,
+    query,
+    cursorPosition,
+    handleInputChange,
+    handleCursorPositionChange,
+    result,
+    tokens,
+    contextResults,
+  };
 }

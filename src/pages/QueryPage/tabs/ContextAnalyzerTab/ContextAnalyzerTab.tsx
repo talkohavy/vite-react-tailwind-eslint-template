@@ -2,8 +2,16 @@ import Input from '../../../../components/controls/Input';
 import useContextAnalyzerTabLogic from './logic/useContextAnalyzerTabLogic';
 
 export default function ContextAnalyzerTab() {
-  const { inputRef, query, handleInputChange, handleCursorPositionChange, cursorPosition, result, tokens } =
-    useContextAnalyzerTabLogic();
+  const {
+    inputRef,
+    query,
+    handleInputChange,
+    handleCursorPositionChange,
+    cursorPosition,
+    result,
+    tokens,
+    contextResults,
+  } = useContextAnalyzerTabLogic();
 
   return (
     <div className='p-6 max-w-4xl mx-auto bg-black'>
@@ -27,7 +35,21 @@ export default function ContextAnalyzerTab() {
             />
           </div>
 
-          <div>Position: {cursorPosition}</div>
+          <div>
+            <div>Position: {cursorPosition}</div>
+            <div>cursorPosition: {contextResults.cursorPosition}</div>
+            <div>canInsertOperator: {contextResults.canInsertLogicalOperator ? 'yes' : 'no'}</div>
+            <div>canStartNewGroup: {contextResults.canStartNewGroup ? 'yes' : 'no'}</div>
+            <div>isPartiallyCorrect: {contextResults.isPartiallyCorrect ? 'yes' : 'no'}</div>
+            <div>
+              expectedTypes:{' '}
+              {contextResults.expectedTypes.map((type, index) => (
+                <div key={index}>{type}</div>
+              ))}
+            </div>
+            <div>incompleteValue: {contextResults.incompleteValue}</div>
+            <div>isInQuotes: {contextResults.isInQuotes ? 'yes' : 'no'}</div>
+          </div>
 
           <div>
             {result && (
