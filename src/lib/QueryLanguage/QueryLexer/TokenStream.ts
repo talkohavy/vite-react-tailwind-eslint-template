@@ -84,10 +84,10 @@ export class TokenStream {
   /**
    * Skip tokens of specified types (useful for whitespace)
    */
-  skip(...tokenTypes: TokenTypeValues[]): boolean {
+  skipWhitespaces(): boolean {
     let wasSkipped = false;
 
-    while (tokenTypes.includes(this.current()!.type)) {
+    while (this.current()!.type === TokenTypes.Whitespace) {
       this.advance();
       wasSkipped = true;
     }
