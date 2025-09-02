@@ -1,22 +1,9 @@
-import { useState } from 'react';
 import Input from '../../../../components/controls/Input';
-import { ContextAnalyzer, QueryLexer, QueryParser } from '../../../../lib/QueryLanguage';
-
-const lexer = new QueryLexer();
-const queryParser = new QueryParser();
+import useContextAnalyzerTabLogic from './logic/useContextAnalyzerTabLogic';
 
 export default function ContextAnalyzerTab() {
-  const [query, setQuery] = useState('');
-
-  const tokens = lexer.tokenize(query);
-  const result = queryParser.parse(query);
-  const context = new ContextAnalyzer(tokens).analyzeContext({
-    cursorPosition: 1,
-    originalQuery: '',
-    parseResult: result,
-  });
-
-  console.log('context is:', context);
+  const { inputRef, query, handleInputChange, handleCursorPositionChange, cursorPosition, result, tokens } =
+    useContextAnalyzerTabLogic();
 
   return (
     <div className='p-6 max-w-4xl mx-auto bg-black'>
@@ -31,8 +18,16 @@ export default function ContextAnalyzerTab() {
           <h2 className='text-xl font-semibold text-gray-900 mb-4'>Enter Query</h2>
 
           <div className='space-y-4'>
-            <Input initialValue={query} onChange={setQuery} placeholder='Type a query...' />
+            <Input
+              ref={inputRef}
+              initialValue={query}
+              onChange={handleInputChange}
+              onSelect={handleCursorPositionChange}
+              placeholder='Type a query...'
+            />
           </div>
+
+          <div>Position: {cursorPosition}</div>
 
           <div>
             {result && (
