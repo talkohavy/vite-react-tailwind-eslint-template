@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type InputBaseProps = {
@@ -7,6 +8,7 @@ type InputBaseProps = {
   type?: 'text' | 'password';
   value: string;
   setValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelect?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: React.HTMLInputTypeAttribute;
   autoFocus?: boolean;
   disabled?: boolean;
@@ -14,14 +16,26 @@ type InputBaseProps = {
   testId?: string;
 };
 
-export default function InputBase(props: InputBaseProps) {
-  const { type = 'text', value, setValue, placeholder = '', disabled, autoFocus, className, testId = '' } = props;
+function InputBaseToForward(props: InputBaseProps, ref: React.Ref<HTMLInputElement>) {
+  const {
+    type = 'text',
+    value,
+    setValue,
+    onSelect,
+    placeholder = '',
+    disabled,
+    autoFocus,
+    className,
+    testId = '',
+  } = props;
 
   return (
     <input
+      ref={ref}
       type={type}
       value={value}
       onChange={setValue}
+      onSelect={onSelect}
       placeholder={placeholder}
       disabled={disabled}
       autoFocus={autoFocus}
@@ -30,3 +44,7 @@ export default function InputBase(props: InputBaseProps) {
     />
   );
 }
+
+const InputBase = forwardRef(InputBaseToForward);
+
+export default InputBase;
