@@ -37,7 +37,7 @@ export class QueryParser {
       this.tokenStream = new TokenStream(this.queryLexer.tokenize(input));
 
       // Skip leading whitespace
-      this.skipWhitespace();
+      this.tokenStream.skipWhitespaces();
 
       // Check for empty input
       if (this.tokenStream.isAtEnd()) {
@@ -53,7 +53,7 @@ export class QueryParser {
       if (!expression) return { success: false, errors: this.errors };
 
       // Check for unexpected tokens at end
-      this.skipWhitespace();
+      this.tokenStream.skipWhitespaces();
 
       if (!this.tokenStream.isAtEnd()) {
         const token = this.tokenStream.current();
@@ -107,7 +107,7 @@ export class QueryParser {
 
     while (this.matchLogicalOperatorOR()) {
       const operatorToken = this.tokenStream.consume()!;
-      this.skipWhitespace();
+      this.tokenStream.skipWhitespaces();
 
       // Check if we're at end of input after OR
       if (this.tokenStream.isAtEnd()) {
@@ -136,12 +136,12 @@ export class QueryParser {
 
     if (!leftAST) return null;
 
-    this.skipWhitespace();
+    this.tokenStream.skipWhitespaces();
 
     while (this.matchLogicalOperatorAND()) {
       const operatorToken = this.tokenStream.consume()!;
 
-      this.skipWhitespace();
+      this.tokenStream.skipWhitespaces();
 
       // Check if we're at end of input after AND
       if (this.tokenStream.isAtEnd()) {
@@ -166,7 +166,7 @@ export class QueryParser {
    * Parse primary expressions (conditions and groups)
    */
   private parsePrimaryExpression(): Expression | null {
-    this.skipWhitespace();
+    this.tokenStream.skipWhitespaces();
 
     // Handle grouped expressions
     if (this.tokenStream.isCurrentAMatchWith(TokenTypes.LeftParenthesis)) {
@@ -187,7 +187,7 @@ export class QueryParser {
   private parseGroupExpression(): Expression | null {
     const startToken = this.tokenStream.expect(TokenTypes.LeftParenthesis);
 
-    this.skipWhitespace();
+    this.tokenStream.skipWhitespaces();
 
     // Check for empty parentheses
     if (this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
@@ -203,7 +203,7 @@ export class QueryParser {
       return null;
     }
 
-    this.skipWhitespace();
+    this.tokenStream.skipWhitespaces();
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
       this.addError(ERROR_MESSAGES.EXPECTED_CLOSING_PAREN, expression.position, ERROR_CODES.UNBALANCED_PARENS);
@@ -240,7 +240,7 @@ export class QueryParser {
 
     const keyToken = this.tokenStream.consume()!;
 
-    this.skipWhitespace();
+    this.tokenStream.skipWhitespaces();
 
     // Expect comparator
     if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
@@ -255,7 +255,7 @@ export class QueryParser {
 
     const comparatorToken = this.tokenStream.consume()!;
 
-    this.skipWhitespace();
+    this.tokenStream.skipWhitespaces();
 
     // Expect value (identifier or quoted string)
     if (!this.tokenStream.matchAny(TokenTypes.Identifier, TokenTypes.QuotedString)) {
@@ -309,14 +309,6 @@ export class QueryParser {
     const isOrOperator = token.type === TokenTypes.OR;
 
     return isOrOperator;
-  }
-
-  /**
-   * Skip whitespace tokens
-   */
-  private skipWhitespace(): boolean {
-    const wasSkipped = this.tokenStream.skip(TokenTypes.Whitespace);
-    return wasSkipped;
   }
 
   /**
