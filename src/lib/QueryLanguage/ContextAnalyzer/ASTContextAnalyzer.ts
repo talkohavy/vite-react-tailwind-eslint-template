@@ -43,6 +43,7 @@ export class ASTContextAnalyzer {
     // Determine various insertion capabilities
     const canInsertLogicalOperator = this.canInsertLogicalOperator(expectedTypes);
     const canInsertComparator = this.canInsertComparator(expectedTypes);
+    const canInsertValue = this.canInsertValue(expectedTypes);
     const canStartNewGroup = this.canStartNewGroup(expectedTypes);
 
     // Check if query is partially correct up to cursor position
@@ -56,6 +57,7 @@ export class ASTContextAnalyzer {
       isPartiallyCorrect,
       canInsertLogicalOperator,
       canInsertComparator,
+      canInsertValue,
       canStartNewGroup,
       incompleteValue,
       syntaxErrors,
@@ -518,6 +520,13 @@ export class ASTContextAnalyzer {
    */
   private canInsertComparator(expectedTypes: ContextTypeValues[]): boolean {
     return expectedTypes.includes(ContextTypes.Comparator);
+  }
+
+  /**
+   * Determines if values can be inserted
+   */
+  private canInsertValue(expectedTypes: ContextTypeValues[]): boolean {
+    return expectedTypes.includes(ContextTypes.Value);
   }
 
   /**

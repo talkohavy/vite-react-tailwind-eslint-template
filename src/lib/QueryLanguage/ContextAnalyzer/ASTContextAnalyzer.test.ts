@@ -28,6 +28,7 @@ describe('ASTContextAnalyzer', () => {
 
       expect(result.expectedTypes).toContain('key');
       expect(result.canStartNewGroup).toBe(true);
+      expect(result.canInsertValue).toBe(false);
       expect(result.isPartiallyCorrect).toBe(true);
     });
 
@@ -49,6 +50,7 @@ describe('ASTContextAnalyzer', () => {
       });
 
       expect(result.expectedTypes.length).toBeGreaterThan(0);
+      expect(result.canInsertValue).toBe(false);
       expect(result.isPartiallyCorrect).toBe(true);
     });
 
@@ -137,6 +139,28 @@ describe('ASTContextAnalyzer', () => {
 
       expect(result.incompleteValue).toBe('age=');
       expect(result.expectedTypes).toContain('comparator');
+    });
+
+    it('should indicate canInsertValue when expecting a value', () => {
+      const tokens = [createToken(TokenTypes.Identifier, 'name', 0, 4), createToken(TokenTypes.Colon, ':', 4, 5)];
+      const analyzer = new ASTContextAnalyzer(tokens);
+
+      const result = analyzer.analyzeContext({
+        parseResult: createMockParseResult([
+          {
+            message: 'Expected value',
+            position: { start: 5, end: 5 },
+            expectedTokens: [TokenTypes.Identifier, TokenTypes.QuotedString],
+            recoverable: true,
+          },
+        ]),
+        cursorPosition: 5,
+        originalQuery: 'name:',
+      });
+
+      expect(result.canInsertValue).toBe(true);
+      expect(result.canInsertComparator).toBe(false);
+      expect(result.canInsertLogicalOperator).toBe(false);
     });
   });
 
