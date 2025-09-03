@@ -38,6 +38,7 @@ export default function ContextAnalyzerTab() {
           <div>
             <div>Position: {cursorPosition}</div>
             <div>cursorPosition: {contextResults.cursorPosition}</div>
+            <div>canInsertValue: {contextResults.canInsertValue ? 'yes' : 'no'}</div>
             <div>canInsertLogicalOperator: {contextResults.canInsertLogicalOperator ? 'yes' : 'no'}</div>
             <div>canInsertComparator: {contextResults.canInsertComparator ? 'yes' : 'no'}</div>
             <div>canStartNewGroup: {contextResults.canStartNewGroup ? 'yes' : 'no'}</div>
