@@ -7,16 +7,16 @@
  */
 
 import type { CompletionItem, CompletionConfig, CompletionContext } from '../types';
+import type { ASTContextAnalyzer } from './ASTContextAnalyzer';
 import type { ContextTypeValues } from './logic/constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
-import { ContextAnalyzer } from './ContextAnalyzer';
 import { SuggestionRanker } from './SuggestionRanker';
 
 /**
  * Main auto-completion engine
  */
 export class CompletionEngine {
-  private contextAnalyzer: ContextAnalyzer;
+  private contextAnalyzer: ASTContextAnalyzer;
   private suggestionRanker: SuggestionRanker;
   private config: CompletionConfig;
 

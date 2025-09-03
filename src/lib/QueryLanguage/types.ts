@@ -141,8 +141,6 @@ export type CompletionContextType =
 export interface CompletionContext {
   cursorPosition: number;
   currentToken?: Token;
-  previousToken?: Token;
-  nextToken?: Token;
   expectedTypes: ContextTypeValues[];
   isInQuotes: boolean;
   canInsertLogicalOperator: boolean;

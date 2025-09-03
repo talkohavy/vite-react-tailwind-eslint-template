@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ContextAnalyzer, QueryLexer, QueryParser } from '../../../../../lib/QueryLanguage';
+import { ASTContextAnalyzer, QueryLexer, QueryParser } from '../../../../../lib/QueryLanguage';
 
 const lexer = new QueryLexer();
 const queryParser = new QueryParser();
@@ -25,9 +25,9 @@ export default function useContextAnalyzerTabLogic() {
 
   const tokens = lexer.tokenize(query);
   const result = queryParser.parse(query);
-  const contextResults = new ContextAnalyzer(tokens).analyzeContext({
+  const contextResults = new ASTContextAnalyzer(tokens).analyzeContext({
     cursorPosition,
-    originalQuery: '',
+    originalQuery: query,
     parseResult: result,
   });
 

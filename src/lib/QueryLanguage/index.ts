@@ -105,7 +105,7 @@ export { TokenStream } from './QueryLexer/TokenStream';
 
 // Auto-completion components
 export { CompletionEngine } from './ContextAnalyzer/CompletionEngine';
-export { ContextAnalyzer } from './ContextAnalyzer/ContextAnalyzer';
+export { ASTContextAnalyzer } from './ContextAnalyzer/ASTContextAnalyzer';
 export { SuggestionRanker } from './ContextAnalyzer/SuggestionRanker';
 
 // Utility functions
