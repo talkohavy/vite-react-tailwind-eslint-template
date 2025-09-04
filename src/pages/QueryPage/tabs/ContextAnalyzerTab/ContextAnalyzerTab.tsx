@@ -35,16 +35,66 @@ export default function ContextAnalyzerTab() {
             />
           </div>
 
-          <div>
+          <div className='mt-4 flex flex-col gap-2'>
             <div>Position: {cursorPosition}</div>
             <div>cursorPosition: {contextResults.cursorPosition}</div>
-            <div>canInsertKey: {contextResults.canInsertKey ? 'yes' : 'no'}</div>
-            <div>canInsertValue: {contextResults.canInsertValue ? 'yes' : 'no'}</div>
-            <div>canInsertLogicalOperator: {contextResults.canInsertLogicalOperator ? 'yes' : 'no'}</div>
-            <div>canInsertComparator: {contextResults.canInsertComparator ? 'yes' : 'no'}</div>
-            <div>canStartNewGroup: {contextResults.canStartNewGroup ? 'yes' : 'no'}</div>
-            <div>isPartiallyCorrect: {contextResults.isPartiallyCorrect ? 'yes' : 'no'}</div>
-            <div className='flex justify-center items-center gap-2'>
+            <div className='flex items-center gap-2'>
+              canInsertKey:{' '}
+              {contextResults.canInsertKey ? (
+                <div className='bg-green-400 p-1 rounded w-fit'>yes</div>
+              ) : (
+                <div className='bg-red-400 p-1 rounded w-fit'>no</div>
+              )}
+            </div>
+            <div className='flex items-center gap-2'>
+              canInsertValue:{' '}
+              {contextResults.canInsertValue ? (
+                <div className='bg-green-400 p-1 rounded w-fit'>yes</div>
+              ) : (
+                <div className='bg-red-400 p-1 rounded w-fit'>no</div>
+              )}
+            </div>
+            <div className='flex items-center gap-2'>
+              isInQuotes:{' '}
+              {contextResults.isInQuotes ? (
+                <div className='bg-green-400 p-1 rounded w-fit'>yes</div>
+              ) : (
+                <div className='bg-red-400 p-1 rounded w-fit'>no</div>
+              )}
+            </div>
+            <div className='flex items-center gap-2'>
+              canInsertLogicalOperator:{' '}
+              {contextResults.canInsertLogicalOperator ? (
+                <div className='bg-green-400 p-1 rounded w-fit'>yes</div>
+              ) : (
+                <div className='bg-red-400 p-1 rounded w-fit'>no</div>
+              )}
+            </div>
+            <div className='flex items-center gap-2'>
+              canInsertComparator:{' '}
+              {contextResults.canInsertComparator ? (
+                <div className='bg-green-400 p-1 rounded w-fit'>yes</div>
+              ) : (
+                <div className='bg-red-400 p-1 rounded w-fit'>no</div>
+              )}
+            </div>
+            <div className='flex items-center gap-2'>
+              canStartNewGroup:{' '}
+              {contextResults.canStartNewGroup ? (
+                <div className='bg-green-400 p-1 rounded w-fit'>yes</div>
+              ) : (
+                <div className='bg-red-400 p-1 rounded w-fit'>no</div>
+              )}
+            </div>
+            <div className='flex items-center gap-2'>
+              isPartiallyCorrect:{' '}
+              {contextResults.isPartiallyCorrect ? (
+                <div className='bg-green-400 p-1 rounded w-fit'>yes</div>
+              ) : (
+                <div className='bg-red-400 p-1 rounded w-fit'>no</div>
+              )}
+            </div>
+            <div className='flex justify-start items-center gap-2'>
               expectedTypes:{' '}
               {contextResults.expectedTypes.map((type, index) => (
                 <div key={index} className='p-1 bg-amber-100 rounded-md text-black'>
@@ -53,7 +103,6 @@ export default function ContextAnalyzerTab() {
               ))}
             </div>
             <div>incompleteValue: {contextResults.incompleteValue}</div>
-            <div>isInQuotes: {contextResults.isInQuotes ? 'yes' : 'no'}</div>
           </div>
 
           <div>
