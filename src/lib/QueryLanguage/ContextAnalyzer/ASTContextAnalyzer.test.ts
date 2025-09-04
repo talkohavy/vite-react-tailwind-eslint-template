@@ -29,6 +29,7 @@ describe('ASTContextAnalyzer', () => {
       expect(result.expectedTypes).toContain('key');
       expect(result.canStartNewGroup).toBe(true);
       expect(result.canInsertValue).toBe(false);
+      expect(result.canInsertKey).toBe(true);
       expect(result.isPartiallyCorrect).toBe(true);
     });
 
@@ -159,6 +160,37 @@ describe('ASTContextAnalyzer', () => {
       });
 
       expect(result.canInsertValue).toBe(true);
+      expect(result.canInsertComparator).toBe(false);
+      expect(result.canInsertLogicalOperator).toBe(false);
+      expect(result.canInsertKey).toBe(true); // Identifier can be key or value
+    });
+
+    it('should indicate canInsertKey when expecting a key after logical operator', () => {
+      const tokens = [
+        createToken(TokenTypes.Identifier, 'name', 0, 4),
+        createToken(TokenTypes.Colon, ':', 4, 5),
+        createToken(TokenTypes.QuotedString, '"john"', 5, 11),
+        createToken(TokenTypes.Whitespace, ' ', 11, 12),
+        createToken(TokenTypes.AND, 'AND', 12, 15),
+        createToken(TokenTypes.Whitespace, ' ', 15, 16),
+      ];
+      const analyzer = new ASTContextAnalyzer(tokens);
+
+      const result = analyzer.analyzeContext({
+        parseResult: createMockParseResult([
+          {
+            message: 'Expected key',
+            position: { start: 16, end: 16 },
+            expectedTokens: [TokenTypes.Identifier, TokenTypes.LeftParenthesis],
+            recoverable: true,
+          },
+        ]),
+        cursorPosition: 16,
+        originalQuery: 'name:"john" AND ',
+      });
+
+      expect(result.canInsertKey).toBe(true);
+      expect(result.canInsertValue).toBe(true); // Identifier can be key or value in error cases
       expect(result.canInsertComparator).toBe(false);
       expect(result.canInsertLogicalOperator).toBe(false);
     });

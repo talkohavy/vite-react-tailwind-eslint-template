@@ -145,6 +145,7 @@ export interface CompletionContext {
   isInQuotes: boolean;
   canInsertLogicalOperator: boolean;
   canInsertComparator: boolean;
+  canInsertKey: boolean;
   canInsertValue: boolean;
   canStartNewGroup: boolean;
   incompleteValue: string;

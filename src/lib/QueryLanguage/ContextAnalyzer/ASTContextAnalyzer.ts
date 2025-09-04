@@ -43,6 +43,7 @@ export class ASTContextAnalyzer {
     // Determine various insertion capabilities
     const canInsertLogicalOperator = this.canInsertLogicalOperator(expectedTypes);
     const canInsertComparator = this.canInsertComparator(expectedTypes);
+    const canInsertKey = this.canInsertKey(expectedTypes);
     const canInsertValue = this.canInsertValue(expectedTypes);
     const canStartNewGroup = this.canStartNewGroup(expectedTypes);
 
@@ -57,6 +58,7 @@ export class ASTContextAnalyzer {
       isPartiallyCorrect,
       canInsertLogicalOperator,
       canInsertComparator,
+      canInsertKey,
       canInsertValue,
       canStartNewGroup,
       incompleteValue,
@@ -527,6 +529,13 @@ export class ASTContextAnalyzer {
    */
   private canInsertValue(expectedTypes: ContextTypeValues[]): boolean {
     return expectedTypes.includes(ContextTypes.Value);
+  }
+
+  /**
+   * Determines if keys can be inserted
+   */
+  private canInsertKey(expectedTypes: ContextTypeValues[]): boolean {
+    return expectedTypes.includes(ContextTypes.Key);
   }
 
   /**
