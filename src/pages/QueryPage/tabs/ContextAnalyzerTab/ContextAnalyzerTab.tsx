@@ -43,10 +43,12 @@ export default function ContextAnalyzerTab() {
             <div>canInsertComparator: {contextResults.canInsertComparator ? 'yes' : 'no'}</div>
             <div>canStartNewGroup: {contextResults.canStartNewGroup ? 'yes' : 'no'}</div>
             <div>isPartiallyCorrect: {contextResults.isPartiallyCorrect ? 'yes' : 'no'}</div>
-            <div>
+            <div className='flex justify-center items-center gap-2'>
               expectedTypes:{' '}
               {contextResults.expectedTypes.map((type, index) => (
-                <div key={index}>{type}</div>
+                <div key={index} className='p-1 bg-amber-100 rounded-md text-black'>
+                  {type}
+                </div>
               ))}
             </div>
             <div>incompleteValue: {contextResults.incompleteValue}</div>
