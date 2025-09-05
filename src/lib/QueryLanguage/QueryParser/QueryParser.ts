@@ -6,8 +6,9 @@
  */
 
 import type { ParseResult, ParseError, ParserOptions, Expression, Comparator } from '../types';
+import type { AddErrorProps } from './QueryParserinterface';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
-import { TokenTypes } from '../QueryLexer/logic/constants';
+import { TokenTypes, type TokenTypeValues } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../QueryLexer/TokenStream';
 import { ASTBuilder } from '../utils/ASTBuilder';
@@ -42,7 +43,12 @@ export class QueryParser {
       // Check for empty input
       if (this.tokenStream.isAtEnd()) {
         const errorEmptyInputPosition = ASTBuilder.createPosition(0, 0);
-        this.addError(ERROR_MESSAGES.EMPTY_QUERY, errorEmptyInputPosition, ERROR_CODES.EMPTY_EXPRESSION);
+        this.addError({
+          message: ERROR_MESSAGES.EMPTY_QUERY,
+          position: errorEmptyInputPosition,
+          code: ERROR_CODES.EMPTY_EXPRESSION,
+          expectedTokens: [TokenTypes.Key, TokenTypes.LeftParenthesis],
+        });
 
         return { success: false, errors: this.errors };
       }
@@ -58,7 +64,12 @@ export class QueryParser {
       if (!this.tokenStream.isAtEnd()) {
         const token = this.tokenStream.current();
         if (token) {
-          this.addError(ERROR_MESSAGES.UNEXPECTED_TOKEN, token.position, ERROR_CODES.UNEXPECTED_TOKEN);
+          this.addError({
+            message: ERROR_MESSAGES.UNEXPECTED_TOKEN,
+            position: token.position,
+            code: ERROR_CODES.UNEXPECTED_TOKEN,
+            expectedTokens: [TokenTypes.AND, TokenTypes.OR, TokenTypes.EOF],
+          });
         }
       }
 
@@ -72,11 +83,11 @@ export class QueryParser {
       };
     } catch (error) {
       const errorPosition = ASTBuilder.createPosition(0, input.length);
-      this.addError(
-        error instanceof Error ? error.message : 'Unknown parsing error',
-        errorPosition,
-        ERROR_CODES.SYNTAX_ERROR,
-      );
+      this.addError({
+        message: error instanceof Error ? error.message : 'Unknown parsing error',
+        position: errorPosition,
+        code: ERROR_CODES.SYNTAX_ERROR,
+      });
 
       return { success: false, errors: this.errors };
     }
@@ -107,13 +118,24 @@ export class QueryParser {
 
     while (this.matchLogicalOperatorOR()) {
       const operatorToken = this.tokenStream.consume()!;
-      this.tokenStream.skipWhitespaces();
+
+      const hasSkipped = this.tokenStream.skipWhitespaces();
 
       // Check if we're at end of input after OR
       if (this.tokenStream.isAtEnd()) {
         const errorPosition = this.getPositionAfterToken(operatorToken);
 
-        this.addError(ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_OR, errorPosition, ERROR_CODES.MISSING_TOKEN);
+        const expectedTokens: TokenTypeValues[] = [];
+        if (hasSkipped) {
+          expectedTokens.push(TokenTypes.Key, TokenTypes.LeftParenthesis);
+        }
+
+        this.addError({
+          message: ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_OR,
+          position: errorPosition,
+          code: ERROR_CODES.MISSING_TOKEN,
+          expectedTokens,
+        });
         return leftAST;
       }
 
@@ -136,7 +158,7 @@ export class QueryParser {
 
     if (!leftAST) return null;
 
-    this.tokenStream.skipWhitespaces();
+    const wasSkipped = this.tokenStream.skipWhitespaces();
 
     while (this.matchLogicalOperatorAND()) {
       const operatorToken = this.tokenStream.consume()!;
@@ -147,7 +169,17 @@ export class QueryParser {
       if (this.tokenStream.isAtEnd()) {
         const errorPosition = this.getPositionAfterToken(operatorToken);
 
-        this.addError(ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_AND, errorPosition, ERROR_CODES.MISSING_TOKEN);
+        const expectedTokens: TokenTypeValues[] = [];
+        if (wasSkipped) {
+          expectedTokens.push(TokenTypes.Key, TokenTypes.LeftParenthesis);
+        }
+
+        this.addError({
+          message: ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_AND,
+          position: errorPosition,
+          code: ERROR_CODES.MISSING_TOKEN,
+          expectedTokens,
+        });
         return leftAST;
       }
 
@@ -191,7 +223,11 @@ export class QueryParser {
 
     // Check for empty parentheses
     if (this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
-      this.addError(ERROR_MESSAGES.EMPTY_PARENTHESES, startToken.position, ERROR_CODES.EMPTY_EXPRESSION);
+      this.addError({
+        message: ERROR_MESSAGES.EMPTY_PARENTHESES,
+        position: startToken.position,
+        code: ERROR_CODES.EMPTY_EXPRESSION,
+      });
       this.tokenStream.consume(); // consume the closing paren
       return null;
     }
@@ -199,14 +235,32 @@ export class QueryParser {
     const expression = this.parseExpression();
 
     if (!expression) {
-      this.addError(ERROR_MESSAGES.EXPECTED_EXPRESSION_IN_PARENTHESES, startToken.position, ERROR_CODES.MISSING_TOKEN);
+      this.addError({
+        message: ERROR_MESSAGES.EXPECTED_EXPRESSION_IN_PARENTHESES,
+        position: startToken.position,
+        code: ERROR_CODES.MISSING_TOKEN,
+      });
       return null;
     }
 
-    this.tokenStream.skipWhitespaces();
+    const wasSkipped = this.tokenStream.skipWhitespaces();
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
-      this.addError(ERROR_MESSAGES.EXPECTED_CLOSING_PAREN, expression.position, ERROR_CODES.UNBALANCED_PARENS);
+      const expectedTokens: TokenTypeValues[] = [TokenTypes.RightParenthesis];
+
+      if (wasSkipped) {
+        expectedTokens.push(TokenTypes.RightParenthesis, TokenTypes.AND, TokenTypes.OR);
+      } else {
+        expectedTokens.push(TokenTypes.Value);
+      }
+
+      this.addError({
+        message: ERROR_MESSAGES.EXPECTED_CLOSING_PAREN,
+        position: expression.position,
+        code: ERROR_CODES.UNBALANCED_PARENS,
+        expectedTokens,
+      });
+
       return expression; // Return what we have for error recovery
     }
 
@@ -229,43 +283,62 @@ export class QueryParser {
       currentToken && this.tokenStream.isCurrentAMatchWith(TokenTypes.Identifier) && !/^\d/.test(currentToken.value);
 
     if (!isValidKeyToken) {
-      this.addError(
-        ERROR_MESSAGES.EXPECTED_KEY,
-        currentToken?.position || ASTBuilder.createPosition(0, 0),
-        ERROR_CODES.MISSING_TOKEN,
-      );
+      this.addError({
+        message: ERROR_MESSAGES.EXPECTED_KEY,
+        position: currentToken?.position || ASTBuilder.createPosition(0, 0),
+        code: ERROR_CODES.MISSING_TOKEN,
+        expectedTokens: [TokenTypes.Key],
+      });
 
       return null;
     }
 
     const keyToken = this.tokenStream.consume()!;
 
-    this.tokenStream.skipWhitespaces();
+    const wasSkipped = this.tokenStream.skipWhitespaces();
 
     // Expect comparator
     if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
+      const expectedTokens: TokenTypeValues[] = [TokenTypes.Colon];
+
+      if (wasSkipped) {
+        expectedTokens.push(TokenTypes.Comparator);
+      } else {
+        expectedTokens.push(TokenTypes.Key);
+      }
+
       const token = this.tokenStream.current();
-      this.addError(
-        ERROR_MESSAGES.EXPECTED_COMPARATOR,
-        token?.position || keyToken.position,
-        ERROR_CODES.MISSING_TOKEN,
-      );
+      this.addError({
+        message: ERROR_MESSAGES.EXPECTED_COMPARATOR,
+        position: token?.position || keyToken.position,
+        code: ERROR_CODES.MISSING_TOKEN,
+        expectedTokens,
+      });
       return null;
     }
 
     const comparatorToken = this.tokenStream.consume()!;
 
-    this.tokenStream.skipWhitespaces();
+    const wasSkippedAfterComparator = this.tokenStream.skipWhitespaces();
 
     // Expect value (identifier or quoted string)
     if (!this.tokenStream.matchAny(TokenTypes.Identifier, TokenTypes.QuotedString)) {
       const valueToken = this.tokenStream.current();
 
-      this.addError(
-        ERROR_MESSAGES.EXPECTED_VALUE,
-        valueToken?.position || comparatorToken.position,
-        ERROR_CODES.MISSING_TOKEN,
-      );
+      const expectedTokens: TokenTypeValues[] = [];
+
+      if (wasSkippedAfterComparator) {
+        expectedTokens.push(TokenTypes.Value, TokenTypes.QuotedString);
+      } else {
+        expectedTokens.push(TokenTypes.Comparator);
+      }
+
+      this.addError({
+        message: ERROR_MESSAGES.EXPECTED_VALUE,
+        position: valueToken?.position || comparatorToken.position,
+        code: ERROR_CODES.MISSING_TOKEN,
+        expectedTokens,
+      });
 
       return null;
     }
@@ -314,13 +387,16 @@ export class QueryParser {
   /**
    * Add a parse error
    */
-  private addError(message: string, position: { start: number; end: number }, code: string): void {
+  private addError(props: AddErrorProps): void {
+    const { code, message, position, expectedTokens } = props;
+
     const error: ParseError = {
       message,
       position: {
         start: position.start,
         end: position.end,
       },
+      expectedTokens,
       recoverable: true,
     };
 
