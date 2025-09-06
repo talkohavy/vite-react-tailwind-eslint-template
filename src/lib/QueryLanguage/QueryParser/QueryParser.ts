@@ -6,9 +6,10 @@
  */
 
 import type { ParseResult, ParseError, ParserOptions, Expression, Comparator } from '../types';
-import type { AddErrorProps } from './QueryParserinterface';
+import type { AddErrorProps } from './QueryParser.interface';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
-import { TokenTypes, type TokenTypeValues } from '../QueryLexer/logic/constants';
+import { ContextTypes, type ContextTypeValues } from '../ContextAnalyzer/logic/constants';
+import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../QueryLexer/TokenStream';
 import { ASTBuilder } from '../utils/ASTBuilder';
@@ -47,7 +48,7 @@ export class QueryParser {
           message: ERROR_MESSAGES.EMPTY_QUERY,
           position: errorEmptyInputPosition,
           code: ERROR_CODES.EMPTY_EXPRESSION,
-          expectedTokens: [TokenTypes.Key, TokenTypes.LeftParenthesis],
+          expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
         });
 
         return { success: false, errors: this.errors };
@@ -63,12 +64,19 @@ export class QueryParser {
 
       if (!this.tokenStream.isAtEnd()) {
         const token = this.tokenStream.current();
+
         if (token) {
+          const expectedTokens: ContextTypeValues[] = [];
+
+          if (token.position.start === expression.position.end + 1 && this.isPartialLogicalOperator(token.value)) {
+            expectedTokens.push(ContextTypes.LogicalOperator);
+          }
+
           this.addError({
             message: ERROR_MESSAGES.UNEXPECTED_TOKEN,
             position: token.position,
             code: ERROR_CODES.UNEXPECTED_TOKEN,
-            expectedTokens: [TokenTypes.AND, TokenTypes.OR, TokenTypes.EOF],
+            expectedTokens,
           });
         }
       }
@@ -125,9 +133,9 @@ export class QueryParser {
       if (this.tokenStream.isAtEnd()) {
         const errorPosition = this.getPositionAfterToken(operatorToken);
 
-        const expectedTokens: TokenTypeValues[] = [];
+        const expectedTokens: ContextTypeValues[] = [];
         if (hasSkipped) {
-          expectedTokens.push(TokenTypes.Key, TokenTypes.LeftParenthesis);
+          expectedTokens.push(ContextTypes.Key, ContextTypes.LeftParenthesis);
         }
 
         this.addError({
@@ -158,20 +166,21 @@ export class QueryParser {
 
     if (!leftAST) return null;
 
-    const wasSkipped = this.tokenStream.skipWhitespaces();
+    this.tokenStream.skipWhitespaces();
 
     while (this.matchLogicalOperatorAND()) {
       const operatorToken = this.tokenStream.consume()!;
 
-      this.tokenStream.skipWhitespaces();
+      const wasSkipped = this.tokenStream.skipWhitespaces();
 
       // Check if we're at end of input after AND
       if (this.tokenStream.isAtEnd()) {
         const errorPosition = this.getPositionAfterToken(operatorToken);
 
-        const expectedTokens: TokenTypeValues[] = [];
+        const expectedTokens: ContextTypeValues[] = [];
+
         if (wasSkipped) {
-          expectedTokens.push(TokenTypes.Key, TokenTypes.LeftParenthesis);
+          expectedTokens.push(ContextTypes.Key, ContextTypes.LeftParenthesis);
         }
 
         this.addError({
@@ -239,6 +248,7 @@ export class QueryParser {
         message: ERROR_MESSAGES.EXPECTED_EXPRESSION_IN_PARENTHESES,
         position: startToken.position,
         code: ERROR_CODES.MISSING_TOKEN,
+        expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
       });
       return null;
     }
@@ -246,12 +256,12 @@ export class QueryParser {
     const wasSkipped = this.tokenStream.skipWhitespaces();
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
-      const expectedTokens: TokenTypeValues[] = [TokenTypes.RightParenthesis];
+      const expectedTokens: ContextTypeValues[] = [ContextTypes.RightParenthesis];
 
       if (wasSkipped) {
-        expectedTokens.push(TokenTypes.RightParenthesis, TokenTypes.AND, TokenTypes.OR);
+        expectedTokens.push(ContextTypes.RightParenthesis, ContextTypes.Comparator);
       } else {
-        expectedTokens.push(TokenTypes.Value);
+        expectedTokens.push(ContextTypes.Value);
       }
 
       this.addError({
@@ -287,7 +297,7 @@ export class QueryParser {
         message: ERROR_MESSAGES.EXPECTED_KEY,
         position: currentToken?.position || ASTBuilder.createPosition(0, 0),
         code: ERROR_CODES.MISSING_TOKEN,
-        expectedTokens: [TokenTypes.Key],
+        expectedTokens: [],
       });
 
       return null;
@@ -299,12 +309,12 @@ export class QueryParser {
 
     // Expect comparator
     if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
-      const expectedTokens: TokenTypeValues[] = [TokenTypes.Colon];
+      const expectedTokens: ContextTypeValues[] = [ContextTypes.Colon];
 
       if (wasSkipped) {
-        expectedTokens.push(TokenTypes.Comparator);
+        expectedTokens.push(ContextTypes.Comparator);
       } else {
-        expectedTokens.push(TokenTypes.Key);
+        expectedTokens.push(ContextTypes.Key);
       }
 
       const token = this.tokenStream.current();
@@ -325,12 +335,11 @@ export class QueryParser {
     if (!this.tokenStream.matchAny(TokenTypes.Identifier, TokenTypes.QuotedString)) {
       const valueToken = this.tokenStream.current();
 
-      const expectedTokens: TokenTypeValues[] = [];
+      const expectedTokens: ContextTypeValues[] = [ContextTypes.Value];
 
+      // Always suggest QuotedString as an alternative for values
       if (wasSkippedAfterComparator) {
-        expectedTokens.push(TokenTypes.Value, TokenTypes.QuotedString);
-      } else {
-        expectedTokens.push(TokenTypes.Comparator);
+        expectedTokens.push(ContextTypes.QuotedString);
       }
 
       this.addError({
@@ -463,5 +472,10 @@ export class QueryParser {
         ],
       };
     }
+  }
+
+  isPartialLogicalOperator(value: string): boolean {
+    const lowercasedIncompleteValue = value.toLowerCase();
+    return [TokenTypes.AND, TokenTypes.OR].some((op) => op.toLowerCase().startsWith(lowercasedIncompleteValue));
   }
 }
