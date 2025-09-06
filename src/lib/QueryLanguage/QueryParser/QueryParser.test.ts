@@ -217,3 +217,56 @@ describe('QueryParser', () => {
     });
   });
 });
+
+describe('Condition Node Structure', () => {
+  test('should create child nodes for key, comparator, and value with spacing info', () => {
+    const parser = new QueryParser();
+    const result = parser.parse('status:  active   ');
+
+    expect(result.success).toBe(true);
+    expect(result.ast?.expression.type).toBe('condition');
+
+    if (result.ast?.expression.type === 'condition') {
+      const condition = result.ast.expression;
+
+      // Test key node
+      expect(condition.key.type).toBe('key');
+      expect(condition.key.value).toBe('status');
+      expect(condition.key.position.start).toBe(0);
+      expect(condition.key.position.end).toBe(6);
+
+      // Test comparator node
+      expect(condition.comparator.type).toBe('comparator');
+      expect(condition.comparator.value).toBe(':');
+      expect(condition.comparator.position.start).toBe(6);
+      expect(condition.comparator.position.end).toBe(7);
+
+      // Test value node
+      expect(condition.value.type).toBe('value');
+      expect(condition.value.value).toBe('active');
+      expect(condition.value.position.start).toBe(9);
+      expect(condition.value.position.end).toBe(15);
+
+      // Test spacing information
+      expect(condition.spacesAfterKey).toBe(0);
+      expect(condition.spacesAfterComparator).toBe(2);
+      expect(condition.spacesAfterValue).toBe(3);
+    }
+  });
+
+  test('should handle different spacing scenarios', () => {
+    const parser = new QueryParser();
+    const result = parser.parse('name : "John Doe"');
+
+    expect(result.success).toBe(true);
+    expect(result.ast?.expression.type).toBe('condition');
+
+    if (result.ast?.expression.type === 'condition') {
+      const condition = result.ast.expression;
+
+      expect(condition.spacesAfterKey).toBe(1);
+      expect(condition.spacesAfterComparator).toBe(1);
+      expect(condition.spacesAfterValue).toBe(0);
+    }
+  });
+});
