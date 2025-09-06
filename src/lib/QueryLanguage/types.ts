@@ -30,11 +30,22 @@ export interface Position {
   column?: number;
 }
 
+export const ExpressionTypes = {
+  Query: 'query',
+  Boolean: 'boolean',
+  Condition: 'condition',
+  Group: 'group',
+} as const;
+
+type TypeOfExpressionTypes = typeof ExpressionTypes;
+export type ExpressionTypeKeys = keyof TypeOfExpressionTypes;
+export type ExpressionTypeValues = TypeOfExpressionTypes[ExpressionTypeKeys];
+
 /**
  * Root query expression
  */
 export interface QueryExpression extends ASTNode {
-  type: 'query';
+  type: typeof ExpressionTypes.Query;
   expression: Expression;
 }
 
@@ -42,7 +53,7 @@ export interface QueryExpression extends ASTNode {
  * Boolean expression (AND/OR operations)
  */
 export interface BooleanExpression extends ASTNode {
-  type: 'boolean';
+  type: typeof ExpressionTypes.Boolean;
   operator: BooleanOperator;
   left: Expression;
   right: Expression;
@@ -52,7 +63,7 @@ export interface BooleanExpression extends ASTNode {
  * Condition expression (key: value)
  */
 export interface ConditionExpression extends ASTNode {
-  type: 'condition';
+  type: typeof ExpressionTypes.Condition;
   key: string;
   comparator: Comparator;
   value: string;
@@ -62,14 +73,14 @@ export interface ConditionExpression extends ASTNode {
  * Grouped expression (parentheses)
  */
 export interface GroupExpression extends ASTNode {
-  type: 'group';
+  type: typeof ExpressionTypes.Group;
   expression: Expression;
 }
 
 /**
  * Union type for all expression types
  */
-export type Expression = BooleanExpression | ConditionExpression | GroupExpression;
+export type Expression = QueryExpression | BooleanExpression | ConditionExpression | GroupExpression;
 
 // =============================================================================
 // Operator Types
@@ -117,7 +128,7 @@ export interface ParseResult {
 export interface ParseError {
   message: string;
   position: Position;
-  expectedTokens?: TokenTypeValues[];
+  expectedTokens?: ContextTypeValues[];
   recoverable: boolean;
 }
 
