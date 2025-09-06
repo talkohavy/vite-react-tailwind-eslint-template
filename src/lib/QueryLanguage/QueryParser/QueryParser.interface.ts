@@ -1,4 +1,4 @@
-import type { ContextTypeValues } from '../ContextAnalyzer/logic/constants';
+import type { ContextTypeValues } from './logic/constants';
 
 export type AddErrorProps = {
   message: string;
