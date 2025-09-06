@@ -19,8 +19,12 @@ describe('QueryParser', () => {
       expect(result.ast?.expression.type).toBe('condition');
 
       if (result.ast?.expression.type === 'condition') {
-        expect(result.ast.expression.key).toBe('status');
-        expect(result.ast.expression.value).toBe('active');
+        expect(result.ast.expression.key.value).toBe('status');
+        expect(result.ast.expression.value.value).toBe('active');
+        expect(result.ast.expression.comparator.value).toBe(':');
+        expect(result.ast.expression.spacesAfterKey).toBe(0);
+        expect(result.ast.expression.spacesAfterComparator).toBe(1);
+        expect(result.ast.expression.spacesAfterValue).toBe(0);
       }
     });
 
@@ -31,8 +35,9 @@ describe('QueryParser', () => {
       expect(result.ast?.expression.type).toBe('condition');
 
       if (result.ast?.expression.type === 'condition') {
-        expect(result.ast.expression.key).toBe('name');
-        expect(result.ast.expression.value).toBe('John Doe');
+        expect(result.ast.expression.key.value).toBe('name');
+        expect(result.ast.expression.value.value).toBe('John Doe');
+        expect(result.ast.expression.comparator.value).toBe(':');
       }
     });
   });
@@ -95,9 +100,9 @@ describe('QueryParser', () => {
         // The right side should be the final condition
         expect(result.ast.expression.right.type).toBe('condition');
         if (result.ast.expression.right.type === 'condition') {
-          expect(result.ast.expression.right.key).toBe('key4');
-          expect(result.ast.expression.right.comparator).toBe('<');
-          expect(result.ast.expression.right.value).toBe('1');
+          expect(result.ast.expression.right.key.value).toBe('key4');
+          expect(result.ast.expression.right.comparator.value).toBe('<');
+          expect(result.ast.expression.right.value.value).toBe('1');
         }
       }
 

@@ -309,13 +309,13 @@ export class QueryParser {
 
     const keyToken = this.tokenStream.consume()!;
 
-    const wasSkipped = this.tokenStream.skipWhitespaces();
+    const spacesAfterKey = this.tokenStream.countAndSkipWhitespaces();
 
     // Expect comparator
     if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
       const expectedTokens: ContextTypeValues[] = [ContextTypes.Colon];
 
-      if (wasSkipped) {
+      if (spacesAfterKey > 0) {
         expectedTokens.push(ContextTypes.Comparator);
       } else {
         expectedTokens.push(ContextTypes.Key);
@@ -333,7 +333,7 @@ export class QueryParser {
 
     const comparatorToken = this.tokenStream.consume()!;
 
-    const wasSkippedAfterComparator = this.tokenStream.skipWhitespaces();
+    const spacesAfterComparator = this.tokenStream.countAndSkipWhitespaces();
 
     // Expect value (identifier or quoted string)
     if (!this.tokenStream.matchAny(TokenTypes.Identifier, TokenTypes.QuotedString)) {
@@ -342,7 +342,7 @@ export class QueryParser {
       const expectedTokens: ContextTypeValues[] = [ContextTypes.Value];
 
       // Always suggest QuotedString as an alternative for values
-      if (wasSkippedAfterComparator) {
+      if (spacesAfterComparator > 0) {
         expectedTokens.push(ContextTypes.QuotedString);
       }
 
@@ -358,13 +358,21 @@ export class QueryParser {
 
     const valueToken = this.tokenStream.consume()!;
 
-    const comparatorValue = comparatorToken.value as Comparator;
+    const spacesAfterValue = this.tokenStream.countAndSkipWhitespaces();
+
+    // Create child nodes
+    const keyNode = ASTBuilder.createKey(keyToken.value, keyToken.position);
+    const comparatorNode = ASTBuilder.createComparator(comparatorToken.value as Comparator, comparatorToken.position);
+    const valueNode = ASTBuilder.createValue(valueToken.value, valueToken.position);
 
     const conditionPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);
     const conditionAST = ASTBuilder.createCondition(
-      keyToken.value,
-      comparatorValue,
-      valueToken.value,
+      keyNode,
+      comparatorNode,
+      valueNode,
+      spacesAfterKey,
+      spacesAfterComparator,
+      spacesAfterValue,
       conditionPosition,
     );
 
