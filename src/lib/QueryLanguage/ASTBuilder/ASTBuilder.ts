@@ -5,28 +5,18 @@
  * with proper type checking and position tracking.
  */
 
+import type { Position } from '../types';
 import type {
-  QueryExpression,
+  ASTNode,
   BooleanExpression,
-  ConditionExpression,
-  GroupExpression,
-  Expression,
-  Position,
   BooleanOperator,
   Comparator,
-  ASTNode,
-} from '../types';
-
-export const AstTypes = {
-  Query: 'query',
-  Boolean: 'boolean',
-  Condition: 'condition',
-  Group: 'group',
-} as const;
-
-type TypOfAstTypes = typeof AstTypes;
-export type AstTypeKeys = keyof TypOfAstTypes;
-export type AstTypeValues = TypOfAstTypes[AstTypeKeys];
+  ConditionExpression,
+  Expression,
+  GroupExpression,
+  QueryExpression,
+} from './types';
+import { AstTypes } from './logic/constants';
 
 export class ASTBuilder {
   /**

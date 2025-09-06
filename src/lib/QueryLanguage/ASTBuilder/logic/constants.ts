@@ -1,0 +1,21 @@
+export const AstTypes = {
+  Query: 'query',
+  Boolean: 'boolean',
+  Condition: 'condition',
+  Group: 'group',
+} as const;
+
+type TypOfAstTypes = typeof AstTypes;
+export type AstTypeKeys = keyof TypOfAstTypes;
+export type AstTypeValues = TypOfAstTypes[AstTypeKeys];
+
+export const ExpressionTypes = {
+  Query: 'query',
+  Boolean: 'boolean',
+  Condition: 'condition',
+  Group: 'group',
+} as const;
+
+type TypeOfExpressionTypes = typeof ExpressionTypes;
+export type ExpressionTypeKeys = keyof TypeOfExpressionTypes;
+export type ExpressionTypeValues = TypeOfExpressionTypes[ExpressionTypeKeys];

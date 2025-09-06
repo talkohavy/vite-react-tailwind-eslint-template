@@ -109,7 +109,7 @@ export { ASTContextAnalyzer } from './ContextAnalyzer/ASTContextAnalyzer';
 export { SuggestionRanker } from './ContextAnalyzer/SuggestionRanker';
 
 // Utility functions
-export * from './utils/ASTBuilder';
+export * from './ASTBuilder';
 
 /**
  * Query Language Library Version

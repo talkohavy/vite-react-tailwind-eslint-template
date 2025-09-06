@@ -2,4 +2,4 @@
  * Utility functions exports
  */
 
-export * from './ASTBuilder';
+export * from '../ASTBuilder';

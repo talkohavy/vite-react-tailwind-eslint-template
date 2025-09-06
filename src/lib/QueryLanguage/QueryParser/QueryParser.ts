@@ -5,14 +5,16 @@
  * handling operator precedence, error recovery, and AST generation.
  */
 
-import type { ParseResult, ParseError, ParserOptions, Expression, Comparator } from '../types';
+import type { Comparator, Expression } from '../ASTBuilder';
+import type { ParserOptions } from '../types';
 import type { AddErrorProps } from './QueryParser.interface';
+import type { ParseError, ParseResult } from './types';
+import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
-import { ContextTypes, type ContextTypeValues } from '../ContextAnalyzer/logic/constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../QueryLexer/TokenStream';
-import { ASTBuilder } from '../utils/ASTBuilder';
+import { ContextTypes, type ContextTypeValues } from './logic/constants';
 
 /**
  * QueryParser parses query strings into Abstract Syntax Trees

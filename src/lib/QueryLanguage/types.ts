@@ -5,96 +5,15 @@
  * parser, auto-completion engine, and related components.
  */
 
-import type { ContextTypeValues } from './ContextAnalyzer/logic/constants';
-import type { TokenTypeValues } from './QueryLexer/logic/constants';
+import type { TokenTypeValues } from './QueryLexer';
+import type { ContextTypeValues } from './QueryParser';
 
-// =============================================================================
-// AST (Abstract Syntax Tree) Types
-// =============================================================================
-
-/**
- * Base interface for all AST nodes
- */
-export interface ASTNode {
-  type: string;
-  position: Position;
-}
-
-/**
- * Position information for error reporting and highlighting
- */
 export interface Position {
   start: number;
   end: number;
   line?: number;
   column?: number;
 }
-
-export const ExpressionTypes = {
-  Query: 'query',
-  Boolean: 'boolean',
-  Condition: 'condition',
-  Group: 'group',
-} as const;
-
-type TypeOfExpressionTypes = typeof ExpressionTypes;
-export type ExpressionTypeKeys = keyof TypeOfExpressionTypes;
-export type ExpressionTypeValues = TypeOfExpressionTypes[ExpressionTypeKeys];
-
-/**
- * Root query expression
- */
-export interface QueryExpression extends ASTNode {
-  type: typeof ExpressionTypes.Query;
-  expression: Expression;
-}
-
-/**
- * Boolean expression (AND/OR operations)
- */
-export interface BooleanExpression extends ASTNode {
-  type: typeof ExpressionTypes.Boolean;
-  operator: BooleanOperator;
-  left: Expression;
-  right: Expression;
-}
-
-/**
- * Condition expression (key: value)
- */
-export interface ConditionExpression extends ASTNode {
-  type: typeof ExpressionTypes.Condition;
-  key: string;
-  comparator: Comparator;
-  value: string;
-}
-
-/**
- * Grouped expression (parentheses)
- */
-export interface GroupExpression extends ASTNode {
-  type: typeof ExpressionTypes.Group;
-  expression: Expression;
-}
-
-/**
- * Union type for all expression types
- */
-export type Expression = QueryExpression | BooleanExpression | ConditionExpression | GroupExpression;
-
-// =============================================================================
-// Operator Types
-// =============================================================================
-
-/**
- * Boolean operators for combining conditions
- */
-export type BooleanOperator = 'AND' | 'OR';
-
-/**
- * Comparison operators (currently only equals, extensible for future)
- */
-export type Comparator = ':' | '>' | '<' | '>=' | '<=' | '!=' | '~';
 
 // =============================================================================
 // Token Types (for lexical analysis)
@@ -107,29 +26,6 @@ export interface Token {
   type: TokenTypeValues;
   value: string;
   position: Position;
-}
-
-// =============================================================================
-// Parser Types
-// =============================================================================
-
-/**
- * Result of parsing operation
- */
-export interface ParseResult {
-  success: boolean;
-  ast?: QueryExpression;
-  errors: ParseError[];
-}
-
-/**
- * Parse error information
- */
-export interface ParseError {
-  message: string;
-  position: Position;
-  expectedTokens?: ContextTypeValues[];
-  recoverable: boolean;
 }
 
 // =============================================================================
