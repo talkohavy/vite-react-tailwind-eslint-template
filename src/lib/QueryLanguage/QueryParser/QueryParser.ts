@@ -198,6 +198,8 @@ export class QueryParser {
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(TokenTypes.AND, leftAST, rightAST, leftPosition);
+
+      this.tokenStream.skipWhitespaces();
     }
 
     return leftAST;

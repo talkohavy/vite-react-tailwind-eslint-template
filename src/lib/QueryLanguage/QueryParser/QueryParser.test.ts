@@ -73,6 +73,37 @@ describe('QueryParser', () => {
         expect(result.ast.expression.right.type).toBe('boolean');
       }
     });
+
+    test('should parse complex mixed operator expression with groups', () => {
+      // This test specifically targets the bug where parsing stops after groups
+      const input = 'key1 == v AND (key2 >= 14 OR key3 : 5) OR key4 < 1';
+      const result = parser.parse(input);
+
+      expect(result.success).toBe(true);
+      expect(result.ast?.expression.type).toBe('boolean');
+
+      if (result.ast?.expression.type === 'boolean') {
+        // The top level should be an OR expression
+        expect(result.ast.expression.operator).toBe('OR');
+
+        // The left side should be the AND expression with the group
+        expect(result.ast.expression.left.type).toBe('boolean');
+        if (result.ast.expression.left.type === 'boolean') {
+          expect(result.ast.expression.left.operator).toBe('AND');
+        }
+
+        // The right side should be the final condition
+        expect(result.ast.expression.right.type).toBe('condition');
+        if (result.ast.expression.right.type === 'condition') {
+          expect(result.ast.expression.right.key).toBe('key4');
+          expect(result.ast.expression.right.comparator).toBe('<');
+          expect(result.ast.expression.right.value).toBe('1');
+        }
+      }
+
+      // Verify that the entire input was parsed (position should match input length)
+      expect(result.ast?.position.end).toBe(input.length);
+    });
   });
 
   describe('grouped expressions', () => {
