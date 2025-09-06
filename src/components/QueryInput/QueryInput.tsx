@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 import type { CompletionItem, KeyConfig } from '../../lib/QueryLanguage/types';
 import { CompletionEngine } from '../../lib/QueryLanguage/ContextAnalyzer/CompletionEngine';
-import { ContextTypes } from '../../lib/QueryLanguage/ContextAnalyzer/logic/constants';
+import { ContextTypes } from '../../lib/QueryLanguage/QueryParser';
 import { QueryParser } from '../../lib/QueryLanguage/QueryParser/QueryParser';
 import CompletionDropdown from './CompletionDropdown';
 import QueryInputBase from './QueryInputBase';

@@ -7,7 +7,7 @@
  */
 
 import type { CompletionItem, CompletionConfig } from '../types';
-import { ContextTypes, type ContextTypeValues } from './logic/constants';
+import { ContextTypes, type ContextTypeValues } from '../QueryParser';
 
 /**
  * Ranks and filters completion suggestions
@@ -32,10 +32,10 @@ export class SuggestionRanker {
       case ContextTypes.Value:
         suggestions = this.generateValueSuggestions(input, context?.key);
         break;
-      case ContextTypes.Operator:
+      case ContextTypes.LogicalOperator:
         suggestions = this.generateOperatorSuggestions(input);
         break;
-      case ContextTypes.Grouping:
+      case ContextTypes.LeftParenthesis:
         suggestions = this.generateGroupingSuggestions(input);
         break;
     }
@@ -89,7 +89,7 @@ export class SuggestionRanker {
 
     return operators.map((op) => ({
       text: op.text,
-      type: ContextTypes.Operator,
+      type: ContextTypes.LogicalOperator,
       description: op.description,
       insertText: ` ${op.text} `,
       priority: this.calculatePriority(op.text, input),
@@ -107,7 +107,7 @@ export class SuggestionRanker {
 
     return groupings.map((grouping) => ({
       text: grouping.text,
-      type: ContextTypes.Grouping,
+      type: ContextTypes.LogicalOperator,
       description: grouping.description,
       insertText: grouping.text,
       priority: this.calculatePriority(grouping.text, input),
