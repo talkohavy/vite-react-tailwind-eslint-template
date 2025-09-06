@@ -11,10 +11,13 @@ import type {
   BooleanExpression,
   BooleanOperator,
   Comparator,
+  ComparatorNode,
   ConditionExpression,
   Expression,
   GroupExpression,
+  KeyNode,
   QueryExpression,
+  ValueNode,
 } from './types';
 import { AstTypes } from './logic/constants';
 
@@ -49,14 +52,58 @@ export class ASTBuilder {
   }
 
   /**
+   * Create a key node
+   */
+  static createKey(value: string, position: Position): KeyNode {
+    return {
+      type: AstTypes.Key,
+      value,
+      position,
+    };
+  }
+
+  /**
+   * Create a comparator node
+   */
+  static createComparator(value: Comparator, position: Position): ComparatorNode {
+    return {
+      type: AstTypes.Comparator,
+      value,
+      position,
+    };
+  }
+
+  /**
+   * Create a value node
+   */
+  static createValue(value: string, position: Position): ValueNode {
+    return {
+      type: AstTypes.Value,
+      value,
+      position,
+    };
+  }
+
+  /**
    * Create a condition expression (key: value)
    */
-  static createCondition(key: string, comparator: Comparator, value: string, position: Position): ConditionExpression {
+  static createCondition(
+    key: KeyNode,
+    comparator: ComparatorNode,
+    value: ValueNode,
+    spacesAfterKey: number,
+    spacesAfterComparator: number,
+    spacesAfterValue: number,
+    position: Position,
+  ): ConditionExpression {
     return {
       type: AstTypes.Condition,
       key,
       comparator,
       value,
+      spacesAfterKey,
+      spacesAfterComparator,
+      spacesAfterValue,
       position,
     };
   }
@@ -114,8 +161,13 @@ export class ASTBuilder {
 
     function traverse(current: Expression): void {
       switch (current.type) {
-        case AstTypes.Condition:
+        case AstTypes.Condition: {
+          const conditionNode = current as ConditionExpression;
+          callback(conditionNode.key, conditionNode);
+          callback(conditionNode.comparator, conditionNode);
+          callback(conditionNode.value, conditionNode);
           break;
+        }
 
         case AstTypes.Group:
           traverse((current as GroupExpression).expression);

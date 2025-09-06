@@ -29,13 +29,40 @@ export interface BooleanExpression extends ASTNode {
 }
 
 /**
+ * Key node for condition expressions
+ */
+export interface KeyNode extends ASTNode {
+  type: typeof ExpressionTypes.Key;
+  value: string;
+}
+
+/**
+ * Comparator node for condition expressions
+ */
+export interface ComparatorNode extends ASTNode {
+  type: typeof ExpressionTypes.Comparator;
+  value: Comparator;
+}
+
+/**
+ * Value node for condition expressions
+ */
+export interface ValueNode extends ASTNode {
+  type: typeof ExpressionTypes.Value;
+  value: string;
+}
+
+/**
  * Condition expression (key: value)
  */
 export interface ConditionExpression extends ASTNode {
   type: typeof ExpressionTypes.Condition;
-  key: string;
-  comparator: Comparator;
-  value: string;
+  key: KeyNode;
+  comparator: ComparatorNode;
+  value: ValueNode;
+  spacesAfterKey: number;
+  spacesAfterComparator: number;
+  spacesAfterValue: number;
 }
 
 /**

@@ -96,6 +96,21 @@ export class TokenStream {
   }
 
   /**
+   * Count and skip whitespace tokens, returning the number of spaces
+   */
+  countAndSkipWhitespaces(): number {
+    let spaceCount = 0;
+
+    while (this.current()?.type === TokenTypes.Whitespace) {
+      const token = this.current()!;
+      spaceCount += token.value.length;
+      this.advance();
+    }
+
+    return spaceCount;
+  }
+
+  /**
    * Advance the position by one without returning the token
    */
   advance(): void {
