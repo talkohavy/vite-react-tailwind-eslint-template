@@ -65,22 +65,20 @@ export class QueryParser {
       this.tokenStream.skipWhitespaces();
 
       if (!this.tokenStream.isAtEnd()) {
-        const token = this.tokenStream.current();
+        const token = this.tokenStream.current()!;
 
-        if (token) {
-          const expectedTokens: ContextTypeValues[] = [];
+        const expectedTokens: ContextTypeValues[] = [];
 
-          if (token.position.start === expression.position.end + 1 && this.isPartialLogicalOperator(token.value)) {
-            expectedTokens.push(ContextTypes.LogicalOperator);
-          }
-
-          this.addError({
-            message: ERROR_MESSAGES.UNEXPECTED_TOKEN,
-            position: token.position,
-            code: ERROR_CODES.UNEXPECTED_TOKEN,
-            expectedTokens,
-          });
+        if (token.position.start === expression.position.end + 1 && this.isPartialLogicalOperator(token.value)) {
+          expectedTokens.push(ContextTypes.LogicalOperator);
         }
+
+        this.addError({
+          message: ERROR_MESSAGES.UNEXPECTED_TOKEN,
+          position: token.position,
+          code: ERROR_CODES.UNEXPECTED_TOKEN,
+          expectedTokens,
+        });
       }
 
       const queryPosition = ASTBuilder.createPosition(0, input.length);
