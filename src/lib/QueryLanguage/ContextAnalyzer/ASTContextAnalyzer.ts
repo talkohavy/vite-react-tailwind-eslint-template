@@ -6,10 +6,22 @@
  * cursor position within the syntax tree.
  */
 
-import type { CompletionContext, ParseResult, Token, ASTNode, ParseError } from '../types';
-import type { AnalyzeContextProps } from './ASTContextAnalyzer.interface';
+import type {
+  ASTNode,
+  BooleanExpression,
+  ConditionExpression,
+  Expression,
+  GroupExpression,
+  QueryExpression,
+} from '../ASTBuilder/types';
+import type { ParseError, ParseResult } from '../QueryParser/types';
+import type { CompletionContext, Token } from '../types';
+import type { AnalyzeContextProps, ASTContextInfo } from './ASTContextAnalyzer.interface';
+import { ExpressionTypes } from '../ASTBuilder/logic/constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
-import { ContextTypes, type ContextTypeValues } from './logic/constants';
+import { ContextTypes, type ContextTypeValues } from '../QueryParser/logic/constants';
+import { AstTypes } from '../utils';
+import { CursorPosition, type CursorPositionValues } from './logic/constants';
 
 export class ASTContextAnalyzer {
   constructor(private readonly tokens: Token[]) {}
@@ -79,18 +91,23 @@ export class ASTContextAnalyzer {
   ): ContextTypeValues[] {
     // If there are parsing errors, we need to be more careful
     if (hasErrors) {
-      return this.determineExpectedTypesFromErrors(parseResult, cursorPosition, currentToken);
+      const expectedTypes = this.determineExpectedTypesFromErrors(parseResult, cursorPosition, currentToken);
+      return expectedTypes;
     }
 
     // If no AST was generated, we're at the beginning or in an invalid state
     if (!parseResult.ast) {
-      return this.determineExpectedTypesForEmptyQuery(cursorPosition);
+      const expectedTypes = this.determineExpectedTypesForEmptyQuery(cursorPosition);
+
+      return expectedTypes;
     }
 
     // Traverse the AST to find where the cursor is positioned
-    const contextInfo = this.findCursorContextInAST(parseResult.ast, cursorPosition);
+    const astNodes = this.findAstNodeByCursor(parseResult.ast, cursorPosition);
+    const positionType = this.getPositionTypeFromContext(astNodes.node, astNodes.parentNode);
+    const expectedTypes = this.getExpectedTypesForCondition(positionType);
 
-    return this.mapASTContextToExpectedTypes(contextInfo, currentToken);
+    return expectedTypes;
   }
 
   /**
@@ -99,30 +116,50 @@ export class ASTContextAnalyzer {
   private determineExpectedTypesFromErrors(
     parseResult: ParseResult,
     cursorPosition: number,
-    currentToken: Token | undefined,
+    _currentToken: Token | undefined,
   ): ContextTypeValues[] {
     const relevantErrors = parseResult.errors.filter(
-      (error) => error.position.start <= cursorPosition && cursorPosition <= error.position.end,
+      (error: ParseError) => error.position.start <= cursorPosition && cursorPosition <= error.position.end,
     );
 
     if (relevantErrors.length === 0) {
       // No errors at cursor position, try to determine from partial AST
       if (parseResult.ast) {
-        const contextInfo = this.findCursorContextInAST(parseResult.ast, cursorPosition);
-        return this.mapASTContextToExpectedTypes(contextInfo, currentToken);
+        const astNodes = this.findAstNodeByCursor(parseResult.ast, cursorPosition);
+
+        console.log('astNodes is:', astNodes);
+
+        const positionType = this.getPositionTypeFromContext(astNodes.node, astNodes.parentNode);
+        const expectedTypes = this.getExpectedTypesForCondition(positionType);
+
+        return expectedTypes;
       }
-      return this.determineExpectedTypesForEmptyQuery(cursorPosition);
+
+      const expectedTypes = this.determineExpectedTypesForEmptyQuery(cursorPosition);
+
+      return expectedTypes;
+    }
+
+    if (relevantErrors[0]?.expectedTokens) {
+      return relevantErrors[0].expectedTokens;
+    }
+
+    // If there's a complete expression before the error position, suggest logical operators
+    if (parseResult.ast && this.doesQueryHaveCompleteExpression(parseResult.ast)) {
+      return [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis];
     }
 
     // Analyze the most relevant error
     const primaryError = relevantErrors[0]!;
 
     if (primaryError.expectedTokens) {
-      return this.mapExpectedTokensToContextTypes(primaryError.expectedTokens, currentToken);
+      const expectedTypes = this.mapExpectedTokensToContextTypes(primaryError.expectedTokens);
+      return expectedTypes;
     }
 
     // Fallback: try to infer from the error message and position
-    return this.inferExpectedTypesFromErrorMessage(primaryError, currentToken);
+    const expectedTypes = this.inferExpectedTypesFromErrorMessage(primaryError);
+    return expectedTypes;
   }
 
   /**
@@ -135,32 +172,75 @@ export class ASTContextAnalyzer {
     }
 
     // Default fallback
-    return [ContextTypes.Key];
+    return [];
   }
 
   /**
    * Finds the context within the AST where the cursor is positioned
    */
-  private findCursorContextInAST(ast: ASTNode, cursorPosition: number): ASTContextInfo {
-    const context: ASTContextInfo = {
-      type: 'unknown',
-      node: null,
-      parentNode: null,
-      position: 'unknown',
+  private findAstNodeByCursor(ast: ASTNode, cursorPosition: number): ASTContextInfo {
+    let mostSpecificNode: ASTNode | null = null;
+    let mostSpecificParent: ASTNode | null = null;
+
+    const updateMostSpecificNode = (node: ASTNode, parent: ASTNode | null): boolean => {
+      /**
+       * NODE: this is to include the edge case of whitespaces after value
+       */
+      const nodeToCheck = {
+        ...node,
+        type: node.type,
+        position: {
+          ...node.position,
+          end: node.position.end + ((parent as any)?.spacesAfterValue ?? 0),
+        },
+      };
+
+      const isWithinNode = this.isPositionWithinNode(cursorPosition, nodeToCheck);
+
+      let shouldContinueDrillDown = false;
+
+      if (isWithinNode) {
+        // This node contains the cursor position
+        // Keep track of the most specific (smallest) node that contains the cursor
+        if (!mostSpecificNode || this.isMoreSpecific(node, mostSpecificNode)) {
+          mostSpecificNode = node;
+          mostSpecificParent = parent;
+        }
+
+        shouldContinueDrillDown = true;
+      }
+
+      return shouldContinueDrillDown;
     };
 
-    this.traverseAST(ast, null, (node, parent) => {
-      if (this.isPositionWithinNode(cursorPosition, node)) {
-        context.node = node;
-        context.parentNode = parent;
-        context.type = this.determineNodeContext(node);
-        context.position = this.determinePositionInNode(node, cursorPosition);
-        return false; // Continue traversing to find the most specific node
-      }
-      return true;
-    });
+    this.traverseAST(ast, null, updateMostSpecificNode);
 
-    return context;
+    const astNodes: ASTContextInfo = {
+      node: mostSpecificNode,
+      parentNode: mostSpecificParent,
+    };
+
+    return astNodes;
+  }
+
+  /**
+   * Determines if nodeA is more specific than nodeB (has a smaller range)
+   */
+  private isMoreSpecific(nodeA: ASTNode, nodeB: ASTNode): boolean {
+    const rangeA = nodeA.position.end - nodeA.position.start;
+    const rangeB = nodeB.position.end - nodeB.position.start;
+
+    // Prefer smaller ranges (more specific)
+    if (rangeA !== rangeB) {
+      return rangeA < rangeB;
+    }
+
+    // If ranges are equal, prefer condition nodes over query nodes
+    if (nodeA.type === AstTypes.Condition && nodeB.type === AstTypes.Query) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -171,41 +251,45 @@ export class ASTContextAnalyzer {
     parent: ASTNode | null,
     callback: (node: ASTNode, parent: ASTNode | null) => boolean,
   ): void {
-    if (!callback(node, parent)) {
-      return;
-    }
+    const shouldContinueDrillDown = callback(node, parent);
+
+    if (!shouldContinueDrillDown) return;
 
     switch (node.type) {
-      case 'query': {
-        const queryNode = node as any;
-        if (queryNode.expression) {
-          this.traverseAST(queryNode.expression, node, callback);
-        }
+      case AstTypes.Query: {
+        const queryNode = node as QueryExpression;
+        this.traverseAST(queryNode.expression, node, callback);
+
         break;
       }
 
-      case 'boolean': {
-        const booleanNode = node as any;
-        if (booleanNode.left) {
-          this.traverseAST(booleanNode.left, node, callback);
-        }
-        if (booleanNode.right) {
-          this.traverseAST(booleanNode.right, node, callback);
-        }
+      case AstTypes.Boolean: {
+        const booleanNode = node as BooleanExpression;
+        this.traverseAST(booleanNode.left, node, callback);
+        this.traverseAST(booleanNode.right, node, callback);
+
         break;
       }
 
-      case 'group': {
-        const groupNode = node as any;
-        if (groupNode.expression) {
-          this.traverseAST(groupNode.expression, node, callback);
-        }
+      case AstTypes.Group: {
+        const groupNode = node as GroupExpression;
+        this.traverseAST(groupNode.expression, node, callback);
+
         break;
       }
 
-      case 'condition':
-        // Condition nodes are leaf nodes, no children to traverse
+      case AstTypes.Condition: {
+        const conditionNode = node as ConditionExpression;
+        this.traverseAST(conditionNode.key, node, callback);
+        this.traverseAST(conditionNode.comparator, node, callback);
+        this.traverseAST(conditionNode.value, node, callback);
+
         break;
+      }
+
+      default: {
+        // Key/Value/Comparator nodes are leaf nodes, no children to traverse
+      }
     }
   }
 
@@ -213,159 +297,84 @@ export class ASTContextAnalyzer {
    * Checks if a position is within a given AST node
    */
   private isPositionWithinNode(position: number, node: ASTNode): boolean {
-    return node.position.start <= position && position <= node.position.end;
+    const isWithinNode = node.position.start <= position && position <= node.position.end;
+
+    return isWithinNode;
   }
 
   /**
-   * Determines the type of context based on the AST node
+   * Checks if the query has a complete expression that can be extended
    */
-  private determineNodeContext(node: ASTNode): string {
-    switch (node.type) {
-      case 'query':
-        return 'query-root';
-      case 'boolean':
-        return 'boolean-expression';
-      case 'condition':
-        return 'condition-expression';
-      case 'group':
-        return 'group-expression';
-      default:
-        return 'unknown';
+  private doesQueryHaveCompleteExpression(queryNode: Expression): boolean {
+    if (!('expression' in queryNode)) return false;
+
+    const expression = queryNode.expression;
+
+    // Check if we have a complete condition
+    if (expression.type === ExpressionTypes.Condition) {
+      const conditionExpression = expression as ConditionExpression;
+      return !!(conditionExpression.key && conditionExpression.comparator && conditionExpression.value);
     }
-  }
 
-  /**
-   * Determines where within a node the cursor is positioned
-   */
-  private determinePositionInNode(node: ASTNode, cursorPosition: number): string {
-    const nodeLength = node.position.end - node.position.start;
-    const relativePosition = cursorPosition - node.position.start;
-    const normalizedPosition = relativePosition / nodeLength;
-
-    if (normalizedPosition < 0.33) {
-      return 'start';
+    // Check if we have a complete boolean expression
+    if (expression.type === ExpressionTypes.Boolean) {
+      const booleanExpression = expression as BooleanExpression;
+      return !!(booleanExpression.left && booleanExpression.right);
     }
-    if (normalizedPosition > 0.67) {
-      return 'end';
+
+    // Check if we have a complete group
+    if (expression.type === ExpressionTypes.Group) {
+      const groupExpression = expression as GroupExpression;
+      return groupExpression.expression && this.doesQueryHaveCompleteExpression(groupExpression);
     }
-    return 'middle';
-  }
 
-  /**
-   * Maps AST context information to expected completion types
-   */
-  private mapASTContextToExpectedTypes(
-    contextInfo: ASTContextInfo,
-    currentToken: Token | undefined,
-  ): ContextTypeValues[] {
-    const { type, position, node } = contextInfo;
-
-    switch (type) {
-      case 'query-root':
-        return [ContextTypes.Key, ContextTypes.LeftParenthesis];
-
-      case 'condition-expression':
-        return this.getExpectedTypesForCondition(node as any, position, currentToken);
-
-      case 'boolean-expression':
-        return this.getExpectedTypesForBoolean(node as any, position);
-
-      case 'group-expression':
-        return this.getExpectedTypesForGroup(node as any, position);
-
-      default:
-        return [ContextTypes.Key];
-    }
+    return false;
   }
 
   /**
    * Gets expected types when cursor is within a condition expression
    */
-  private getExpectedTypesForCondition(
-    node: any,
-    position: string,
-    currentToken: Token | undefined,
-  ): ContextTypeValues[] {
-    // Handle partial matching for the current token
-    if (currentToken) {
-      const partialValue = currentToken.value.toLowerCase();
+  private getExpectedTypesForCondition(position: CursorPositionValues): ContextTypeValues[] {
+    switch (position) {
+      case CursorPosition.InKey:
+        return [ContextTypes.Key];
 
-      // Check for partial logical operators
-      if (this.isPartialLogicalOperator(partialValue)) {
-        return [ContextTypes.LogicalOperator];
-      }
-
-      // Check for partial comparators
-      if (this.isPartialComparator(partialValue)) {
+      case CursorPosition.InOperator:
         return [ContextTypes.Comparator];
-      }
-    }
 
-    switch (position) {
-      case 'start':
-        return [ContextTypes.Key];
-      case 'middle':
-        // Could be in key, comparator, or value
-        if (node.key && !node.comparator) {
-          return [ContextTypes.Comparator];
-        }
-        if (node.comparator && !node.value) {
-          return [ContextTypes.Value];
-        }
-        return [ContextTypes.Key, ContextTypes.Comparator, ContextTypes.Value];
-      case 'end':
-        if (node.value) {
-          return [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis];
-        }
+      case CursorPosition.InValue:
+        return [ContextTypes.Value, ContextTypes.QuotedString];
+
+      case CursorPosition.AfterValue:
+        return [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis];
+
+      case CursorPosition.BetweenKeyComparator:
+        return [ContextTypes.Comparator];
+
+      case CursorPosition.BetweenComparatorValue:
         return [ContextTypes.Value];
-      default:
-        return [ContextTypes.Key];
-    }
-  }
 
-  /**
-   * Gets expected types when cursor is within a boolean expression
-   */
-  private getExpectedTypesForBoolean(_node: any, position: string): ContextTypeValues[] {
-    switch (position) {
-      case 'start':
-        return [ContextTypes.Key, ContextTypes.LeftParenthesis];
-      case 'middle':
-        return [ContextTypes.LogicalOperator];
-      case 'end':
-        return [ContextTypes.Key, ContextTypes.LeftParenthesis];
       default:
-        return [ContextTypes.LogicalOperator];
-    }
-  }
-
-  /**
-   * Gets expected types when cursor is within a group expression
-   */
-  private getExpectedTypesForGroup(_node: any, position: string): ContextTypeValues[] {
-    switch (position) {
-      case 'start':
-        return [ContextTypes.Key, ContextTypes.LeftParenthesis];
-      case 'end':
-        return [ContextTypes.RightParenthesis, ContextTypes.LogicalOperator];
-      default:
-        return [ContextTypes.Key, ContextTypes.LeftParenthesis];
+        return [];
     }
   }
 
   /**
    * Maps expected tokens from parse errors to context types
    */
-  private mapExpectedTokensToContextTypes(
-    expectedTokens: string[],
-    _currentToken: Token | undefined,
-  ): ContextTypeValues[] {
+  private mapExpectedTokensToContextTypes(expectedTokens: string[]): ContextTypeValues[] {
     const contextTypes: ContextTypeValues[] = [];
 
     expectedTokens.forEach((tokenType) => {
       switch (tokenType) {
+        case TokenTypes.Key:
+          contextTypes.push(ContextTypes.Key);
+          break;
+        case TokenTypes.Value:
+          contextTypes.push(ContextTypes.Value);
+          break;
         case TokenTypes.Identifier:
-          // Could be key or value depending on context
+          // Fallback for any remaining IDENTIFIER tokens (should be rare now)
           contextTypes.push(ContextTypes.Key, ContextTypes.Value);
           break;
         case TokenTypes.AND:
@@ -390,13 +399,16 @@ export class ASTContextAnalyzer {
 
     // Remove duplicates
     return Array.from(new Set(contextTypes));
-  }
-
-  /**
+  } /**
    * Infers expected types from error message when expectedTokens is not available
    */
-  private inferExpectedTypesFromErrorMessage(error: ParseError, _currentToken: Token | undefined): ContextTypeValues[] {
+  private inferExpectedTypesFromErrorMessage(error: ParseError): ContextTypeValues[] {
     const message = error.message.toLowerCase();
+
+    // Special case: empty query should suggest keys and parentheses
+    if (message.includes('empty query')) {
+      return [ContextTypes.Key, ContextTypes.LeftParenthesis];
+    }
 
     if (message.includes('expected identifier') || message.includes('expected key')) {
       return [ContextTypes.Key];
@@ -416,22 +428,6 @@ export class ASTContextAnalyzer {
 
     // Default fallback
     return [ContextTypes.Key];
-  }
-
-  /**
-   * Checks if a partial value could be a logical operator
-   */
-  private isPartialLogicalOperator(partialValue: string): boolean {
-    const operators = ['and', 'or'];
-    return operators.some((op) => op.startsWith(partialValue) && partialValue.length < op.length);
-  }
-
-  /**
-   * Checks if a partial value could be a comparator
-   */
-  private isPartialComparator(partialValue: string): boolean {
-    const comparators = ['==', '!=', '>=', '<=', '~'];
-    return comparators.some((comp) => comp.startsWith(partialValue) && partialValue.length < comp.length);
   }
 
   /**
@@ -500,14 +496,14 @@ export class ASTContextAnalyzer {
    * Gets syntax errors from parsing the query
    */
   private getSyntaxErrors(parseResult: ParseResult): string[] {
-    return parseResult.errors.map((error) => error.message);
+    return parseResult.errors.map((error: ParseError) => error.message);
   }
 
   /**
    * Checks if the query is correct up to the given position
    */
   private isQueryCorrectUpToPosition(position: number, parseResult: ParseResult): boolean {
-    return parseResult.errors.every((error) => error.position.start > position);
+    return parseResult.errors.every((error: ParseError) => error.position.start > position);
   }
 
   /**
@@ -544,14 +540,24 @@ export class ASTContextAnalyzer {
   private canStartNewGroup(expectedTypes: ContextTypeValues[]): boolean {
     return expectedTypes.includes(ContextTypes.LeftParenthesis);
   }
-}
 
-/**
- * Context information about where the cursor is positioned in the AST
- */
-interface ASTContextInfo {
-  type: string;
-  node: ASTNode | null;
-  parentNode: ASTNode | null;
-  position: string; // 'start', 'middle', 'end', 'unknown'
+  private getPositionTypeFromContext(node: ASTNode | null, _parentNode: ASTNode | null) {
+    if (!node) {
+      return CursorPosition.Unknown;
+    }
+
+    if (node.type === AstTypes.Key) {
+      return CursorPosition.InKey;
+    }
+
+    if (node.type === AstTypes.Value) {
+      return CursorPosition.InValue;
+    }
+
+    if (node.type === AstTypes.Comparator) {
+      return CursorPosition.InComparator;
+    }
+
+    return CursorPosition.Unknown;
+  }
 }

@@ -1,4 +1,5 @@
-import type { Token, ParseResult } from '../types';
+import type { ParseResult } from '../QueryParser';
+import type { Token } from '../types';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { ASTContextAnalyzer } from './ASTContextAnalyzer';
 
@@ -151,7 +152,7 @@ describe('ASTContextAnalyzer', () => {
           {
             message: 'Expected value',
             position: { start: 5, end: 5 },
-            expectedTokens: [TokenTypes.Identifier, TokenTypes.QuotedString],
+            expectedTokens: [TokenTypes.Value],
             recoverable: true,
           },
         ]),
@@ -162,7 +163,7 @@ describe('ASTContextAnalyzer', () => {
       expect(result.canInsertValue).toBe(true);
       expect(result.canInsertComparator).toBe(false);
       expect(result.canInsertLogicalOperator).toBe(false);
-      expect(result.canInsertKey).toBe(true); // Identifier can be key or value
+      expect(result.canInsertKey).toBe(false); // After comparator, only expecting value
     });
 
     it('should indicate canInsertKey when expecting a key after logical operator', () => {
@@ -181,7 +182,7 @@ describe('ASTContextAnalyzer', () => {
           {
             message: 'Expected key',
             position: { start: 16, end: 16 },
-            expectedTokens: [TokenTypes.Identifier, TokenTypes.LeftParenthesis],
+            expectedTokens: [TokenTypes.Key, TokenTypes.LeftParenthesis],
             recoverable: true,
           },
         ]),
@@ -190,7 +191,7 @@ describe('ASTContextAnalyzer', () => {
       });
 
       expect(result.canInsertKey).toBe(true);
-      expect(result.canInsertValue).toBe(true); // Identifier can be key or value in error cases
+      expect(result.canInsertValue).toBe(false); // After logical operator, only expecting key
       expect(result.canInsertComparator).toBe(false);
       expect(result.canInsertLogicalOperator).toBe(false);
     });
@@ -274,6 +275,113 @@ describe('ASTContextAnalyzer', () => {
 
       const isPartial = (analyzer as any).isPartialComparator('==');
       expect(isPartial).toBe(false);
+    });
+  });
+
+  describe('complete expression analysis', () => {
+    it('should return correct expected types for cursor at end of complete expression', () => {
+      // Test case: "someKey == someVal"
+      const tokens = [
+        createToken(TokenTypes.Identifier, 'someKey', 0, 7),
+        createToken(TokenTypes.Comparator, '==', 8, 10),
+        createToken(TokenTypes.Identifier, 'someVal', 11, 18),
+      ];
+      const analyzer = new ASTContextAnalyzer(tokens);
+
+      // Create a mock AST for a complete condition (matching the real parser structure)
+      const mockAST = {
+        type: 'query',
+        position: { start: 0, end: 18 },
+        expression: {
+          type: 'condition',
+          key: 'someKey',
+          comparator: '==',
+          value: 'someVal',
+          position: { start: 0, end: 18 },
+        },
+      };
+
+      // Test cursor at position 18 (at the end of value token) - should allow continuing the value
+      const result1 = analyzer.analyzeContext({
+        parseResult: createMockParseResult([], mockAST),
+        cursorPosition: 18,
+        originalQuery: 'someKey == someVal',
+      });
+
+      expect(result1.expectedTypes).toContain('value');
+      expect(result1.expectedTypes).not.toContain('operator');
+      expect(result1.expectedTypes).not.toContain('key');
+      expect(result1.expectedTypes).not.toContain('left-parenthesis');
+    });
+
+    it('should return correct expected types for cursor within value', () => {
+      // Test case: "someKey == someVal" with cursor inside value
+      const tokens = [
+        createToken(TokenTypes.Identifier, 'someKey', 0, 7),
+        createToken(TokenTypes.Comparator, '==', 8, 10),
+        createToken(TokenTypes.Identifier, 'someVal', 11, 18),
+      ];
+      const analyzer = new ASTContextAnalyzer(tokens);
+
+      // Create a mock AST for a complete condition
+      const mockAST = {
+        type: 'query',
+        position: { start: 0, end: 18 },
+        expression: {
+          type: 'condition',
+          key: 'someKey',
+          comparator: '==',
+          value: 'someVal',
+          position: { start: 0, end: 18 },
+        },
+      };
+
+      // Test cursor at position 15 (within the value) - should allow value completion
+      const result2 = analyzer.analyzeContext({
+        parseResult: createMockParseResult([], mockAST),
+        cursorPosition: 15,
+        originalQuery: 'someKey == someVal',
+      });
+
+      expect(result2.expectedTypes).toContain('value');
+      expect(result2.expectedTypes).not.toContain('operator');
+      expect(result2.expectedTypes).not.toContain('key');
+    });
+
+    it('should return correct expected types for cursor after complete expression with space', () => {
+      // Test case: "someKey == someVal " with cursor after space
+      const tokens = [
+        createToken(TokenTypes.Identifier, 'someKey', 0, 7),
+        createToken(TokenTypes.Comparator, '==', 8, 10),
+        createToken(TokenTypes.Identifier, 'someVal', 11, 18),
+        createToken(TokenTypes.Whitespace, ' ', 18, 19),
+      ];
+      const analyzer = new ASTContextAnalyzer(tokens);
+
+      // Create a mock AST for a complete condition with trailing space
+      const mockAST = {
+        type: 'query',
+        position: { start: 0, end: 19 },
+        expression: {
+          type: 'condition',
+          key: 'someKey',
+          comparator: '==',
+          value: 'someVal',
+          position: { start: 0, end: 18 },
+        },
+      };
+
+      // Test cursor at position 19 (after space) - should allow logical operators
+      const result = analyzer.analyzeContext({
+        parseResult: createMockParseResult([], mockAST),
+        cursorPosition: 19,
+        originalQuery: 'someKey == someVal ',
+      });
+
+      expect(result.expectedTypes).toContain('operator');
+      expect(result.expectedTypes).toContain('right-parenthesis');
+      expect(result.expectedTypes).not.toContain('key');
+      expect(result.expectedTypes).not.toContain('left-parenthesis');
     });
   });
 });
