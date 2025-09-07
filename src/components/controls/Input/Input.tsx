@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import type { RuleReturnValue } from './types';
 import InputBase from './InputBase';
 
@@ -7,7 +7,8 @@ export type InputProps = {
    * @default 'text'
    */
   type?: 'text' | 'password';
-  onChange: (value: string) => void;
+  onChange: (value: string, e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelect?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   initialValue?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -17,10 +18,11 @@ export type InputProps = {
   testId?: string;
 };
 
-export default function Input(props: InputProps) {
+function InputToForward(props: InputProps, ref: React.Ref<HTMLInputElement>) {
   const {
     type = 'text',
     onChange,
+    onSelect,
     initialValue = '',
     disabled,
     placeholder,
@@ -39,16 +41,18 @@ export default function Input(props: InputProps) {
     };
 
     if (shouldChange) {
-      onChange?.(newValue);
+      onChange?.(newValue, e);
       setInnerValue(newValue);
     }
   };
 
   return (
     <InputBase
+      ref={ref}
       type={type}
       value={innerValue}
       setValue={onTargetValueChange}
+      onSelect={onSelect}
       placeholder={placeholder}
       autoFocus={autoFocus}
       disabled={disabled}
@@ -57,3 +61,7 @@ export default function Input(props: InputProps) {
     />
   );
 }
+
+const Input = forwardRef(InputToForward);
+
+export default Input;

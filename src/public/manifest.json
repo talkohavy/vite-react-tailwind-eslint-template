@@ -36,14 +36,14 @@
   "scope": ".",
   "screenshots": [
     {
-     "src": "/screenshot-640x549.png",
+      "src": "/screenshot-640x549.png",
       "sizes": "640x549",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Wonder Widgets"
     },
     {
-     "src": "/screenshot-640x549.png",
+      "src": "/screenshot-640x549.png",
       "sizes": "640x549",
       "type": "image/png",
       "form_factor": "wide",

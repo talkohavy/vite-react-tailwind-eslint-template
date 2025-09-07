@@ -7,12 +7,12 @@
   "editor.fontSize": 18,
   "debug.console.fontSize": 16,
   "terminal.integrated.fontSize": 16,
-  "editor.suggestFontSize": 18,
-  "gitlens.currentLine.fontSize": 18,
-  "editor.inlayHints.fontSize": 46, 
+  "editor.suggestFontSize": 14, // <--- suggestions popover
+  "gitlens.currentLine.fontSize": 15, // <--- git blame
+  "editor.inlayHints.fontSize": 46,
   "gitlens.blame.fontSize": 46,
   "markdown.preview.fontSize": 46,
-  "editor.codeLensFontSize": 46,
+  "editor.codeLensFontSize": 16, // <--- conflict resolution: "Accept Current" | "No Changes Accepted" | "Remove Stashed Changes" | "Remove Incoming Changes"
 
   // -------------------
   // Basic Editor Rules:
@@ -20,7 +20,7 @@
   "window.title": "${folderName}", // <--- "${dirty}${folderName}${separator}${activeFolderShort}\\${activeEditorShort}${separator}${activeEditorMedium}"
   "window.zoomLevel": 0,
   "window.zoomPerWindow": true, // <--- defaults to true. It used to be false before version 1.86.
-  "editor.formatOnSave":true,
+  "editor.formatOnSave": true,
   "workbench.tree.stickyScrollMaxItemCount": 7, // <--- defaults to 7. It used to be 1 before version 1.86.
   "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.editor.editorActionsLocation": "default",
