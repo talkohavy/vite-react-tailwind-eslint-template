@@ -5,7 +5,7 @@
  * configuration used throughout the query language implementation.
  */
 
-import type { BooleanOperator, Comparator } from './types';
+import type { BooleanOperator, Comparator } from './ASTBuilder';
 
 // =============================================================================
 // Grammar Constants

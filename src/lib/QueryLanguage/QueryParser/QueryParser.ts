@@ -173,15 +173,16 @@ export class QueryParser {
     while (this.matchLogicalOperatorAND()) {
       const operatorToken = this.tokenStream.consume()!;
 
-      const wasSkipped = this.tokenStream.skipWhitespaces();
+      const whiteSpacesAfterLogicalOperatorCount = this.tokenStream.countAndSkipWhitespaces();
 
       // Check if we're at end of input after AND
       if (this.tokenStream.isAtEnd()) {
         const errorPosition = this.getPositionAfterToken(operatorToken);
+        errorPosition.end += whiteSpacesAfterLogicalOperatorCount;
 
         const expectedTokens: ContextTypeValues[] = [];
 
-        if (wasSkipped) {
+        if (whiteSpacesAfterLogicalOperatorCount > 0) {
           expectedTokens.push(ContextTypes.Key, ContextTypes.LeftParenthesis);
         }
 
@@ -257,16 +258,18 @@ export class QueryParser {
       return null;
     }
 
-    const wasSkipped = this.tokenStream.skipWhitespaces();
+    const whitespacesCount = this.tokenStream.countAndSkipWhitespaces();
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
       const expectedTokens: ContextTypeValues[] = [ContextTypes.RightParenthesis];
 
-      if (wasSkipped) {
+      if (whitespacesCount > 0) {
         expectedTokens.push(ContextTypes.RightParenthesis, ContextTypes.Comparator);
       } else {
         expectedTokens.push(ContextTypes.Value);
       }
+
+      expression.position.end = expression.position.end + whitespacesCount;
 
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_CLOSING_PAREN,
@@ -291,17 +294,23 @@ export class QueryParser {
    */
   private parseCondition(): Expression | null {
     // Expect identifier for key
-    const currentToken = this.tokenStream.current();
+    const currentToken = this.tokenStream.current()!;
 
     const isValidKeyToken =
-      currentToken && this.tokenStream.isCurrentAMatchWith(TokenTypes.Identifier) && !/^\d/.test(currentToken.value);
+      this.tokenStream.isCurrentAMatchWith(TokenTypes.Identifier) && !/^\d/.test(currentToken.value);
 
     if (!isValidKeyToken) {
+      const expectedTokens: ContextTypeValues[] = [];
+
+      if (/[a-zA-Z_]/.test(currentToken.value)) {
+        expectedTokens.push(ContextTypes.Key);
+      }
+
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_KEY,
         position: currentToken?.position || ASTBuilder.createPosition(0, 0),
         code: ERROR_CODES.MISSING_TOKEN,
-        expectedTokens: [],
+        expectedTokens,
       });
 
       return null;
@@ -322,6 +331,7 @@ export class QueryParser {
       }
 
       const token = this.tokenStream.current();
+
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_COMPARATOR,
         position: token?.position || keyToken.position,
@@ -366,6 +376,8 @@ export class QueryParser {
     const valueNode = ASTBuilder.createValue(valueToken.value, valueToken.position);
 
     const conditionPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);
+    conditionPosition.end += spacesAfterValue;
+
     const conditionAST = ASTBuilder.createCondition(
       keyNode,
       comparatorNode,
