@@ -65,11 +65,12 @@ export class QueryParser {
       this.tokenStream.skipWhitespaces();
 
       if (!this.tokenStream.isAtEnd()) {
+        debugger;
         const token = this.tokenStream.current()!;
 
         const expectedTokens: ContextTypeValues[] = [];
 
-        if (token.position.start === expression.position.end + 1 && this.isPartialLogicalOperator(token.value)) {
+        if (token.position.start === expression.position.end && this.isPartialLogicalOperator(token.value)) {
           expectedTokens.push(ContextTypes.LogicalOperator);
         }
 
