@@ -65,7 +65,6 @@ export class QueryParser {
       this.tokenStream.skipWhitespaces();
 
       if (!this.tokenStream.isAtEnd()) {
-        debugger;
         const token = this.tokenStream.current()!;
 
         const expectedTokens: ContextTypeValues[] = [];
