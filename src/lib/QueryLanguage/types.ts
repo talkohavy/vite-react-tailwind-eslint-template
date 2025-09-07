@@ -47,17 +47,17 @@ export type CompletionContextType =
  */
 export interface CompletionContext {
   cursorPosition: number;
-  currentToken?: Token;
   expectedTypes: ContextTypeValues[];
-  isInQuotes: boolean;
-  canInsertLogicalOperator: boolean;
-  canInsertComparator: boolean;
-  canInsertKey: boolean;
-  canInsertValue: boolean;
-  canStartNewGroup: boolean;
   incompleteValue: string;
-  syntaxErrors: string[];
-  isPartiallyCorrect: boolean;
+  // currentToken?: Token;
+  // isInQuotes: boolean;
+  // canInsertLogicalOperator: boolean;
+  // canInsertComparator: boolean;
+  // canInsertKey: boolean;
+  // canInsertValue: boolean;
+  // canStartNewGroup: boolean;
+  // syntaxErrors: string[];
+  // isPartiallyCorrect: boolean;
 }
 
 /**
