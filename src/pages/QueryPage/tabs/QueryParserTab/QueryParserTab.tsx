@@ -84,6 +84,14 @@ export default function QueryParserTab() {
         <h1 className='text-3xl font-bold text-gray-900 mb-4'>Query Parser Visualization</h1>
 
         <p className='text-gray-600 mb-6'>Try typing a query below to see how it gets parsed and visualized.</p>
+
+        <p className='text-gray-600 mb-6'>Examples:</p>
+
+        <pre className='text-gray-600 mb-6'>{'status: active AND role: admin'}</pre>
+
+        <pre className='text-gray-600 mb-6'>
+          {'key1:  val   AND (key2  ==  15  OR  (  key3 > 14  AND key4 == "exists"))    AND    key4  >=  100    '}
+        </pre>
       </div>
 
       <div className='space-y-6'>
