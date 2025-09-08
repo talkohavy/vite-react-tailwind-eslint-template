@@ -16,5 +16,6 @@ export const AST_COLORS = {
   Group: '#dc2626', // red
   Key: '#2563eb', // blue
   Comparator: '#d97706', // orange
+  Operator: '#8b5cf6', // violet (same as boolean_operator)
   Value: '#047857', // teal
 };

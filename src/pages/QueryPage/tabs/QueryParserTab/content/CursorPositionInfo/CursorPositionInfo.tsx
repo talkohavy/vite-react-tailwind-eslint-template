@@ -29,7 +29,7 @@ export default function CursorPositionInfo(props: CursorPositionInfoProps) {
         </div>
       )}
 
-      {currentASTNode && (
+      {currentASTNode && currentASTNode.type !== 'condition' && (
         <div>
           <h4 className='text-md font-semibold text-purple-300'>Current AST Node:</h4>
           <div className='text-sm text-gray-300 font-mono'>

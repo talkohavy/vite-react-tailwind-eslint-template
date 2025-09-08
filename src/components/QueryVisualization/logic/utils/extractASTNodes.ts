@@ -27,7 +27,22 @@ export function extractASTNodes(expression: Expression, level = 0): Visualizatio
         }
         break;
       case 'boolean':
-        if ('left' in node && 'right' in node) {
+        if ('left' in node && 'right' in node && 'operator' in node) {
+          // Add the operator node
+          const operatorItem: VisualizationItem = {
+            id: `ast-operator-${node.operator.position.start}-${node.operator.position.end}`,
+            label: `operator: "${node.operator.value}"`,
+            start: node.operator.position.start,
+            end: node.operator.position.end,
+            type: 'ast',
+            subType: 'operator',
+            level: currentLevel + 1,
+            color: AST_COLORS.Operator,
+          };
+
+          items.push(operatorItem);
+
+          // Traverse left and right expressions
           traverseNode(node.left, currentLevel + 1);
           traverseNode(node.right, currentLevel + 1);
         }
