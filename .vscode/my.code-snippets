@@ -1,4 +1,24 @@
 {
+  "classStyle": {
+    "prefix": ["clas", "class"],
+    "body": ["className={styles.${1}}"],
+    "description": "className with style",
+  },
+  "forEach": {
+    "prefix": ["fo", "for", "fore", "forea"],
+    "body": ["forEach((item) => {", "\t${1}", "});"],
+    "description": "forEach loop",
+  },
+  "export default": {
+    "prefix": ["ex", "exp", "expo", "exdef"],
+    "body": ["export { default } from '.${1}';"],
+    "description": "const props",
+  },
+  "const props": {
+    "prefix": ["co", "con", "conprops"],
+    "body": ["const { ${0} } = props;"],
+    "description": "const props",
+  },
   "New TS Function File": {
     "prefix": ["func"],
     "body": [
@@ -13,11 +33,6 @@
     ],
     "description": "New function file",
   },
-  "For Loop2": {
-    "prefix": ["forc", "for-const"],
-    "body": ["for (const ${2:element} of ${1:array}) {", "\t$0", "}"],
-    "description": "A for loop.",
-  },
   "My React Function": {
     "prefix": ["rfc"],
     "body": [
@@ -27,9 +42,43 @@
     ],
     "description": "My React functional component.",
   },
+  "My React Function Typescript with Styles": {
+    "prefix": ["rfcts"],
+    "body": [
+      "import styles from './${1:$TM_FILENAME_BASE}.module.scss';",
+      "",
+      "type ${1:$TM_FILENAME_BASE}Props = {",
+      "\tname: string;",
+      "};",
+      "",
+      "export default function ${1:$TM_FILENAME_BASE}(props: ${1:$TM_FILENAME_BASE}Props) {",
+      "\tconst { name } = props;",
+      "",
+      "\treturn <div className={styles.${1:$TM_FILENAME_BASE}}>${1:$TM_FILENAME_BASE}</div>;",
+      "}",
+      "",
+    ],
+    "description": "My React functional component.",
+  },
+  "My React Function Typescript": {
+    "prefix": ["rfct"],
+    "body": [
+      "type ${1:$TM_FILENAME_BASE}Props = {",
+      "\tname: string;",
+      "};",
+      "",
+      "export default function ${1:$TM_FILENAME_BASE}(props: ${1:$TM_FILENAME_BASE}Props) {",
+      "\tconst { name } = props;",
+      "",
+      "\treturn <div>${1:$TM_FILENAME_BASE}</div>;",
+      "}",
+      "",
+    ],
+    "description": "My React functional component.",
+  },
   "My useState": {
     "prefix": ["ss", "uses", "use"],
-    "body": ["const [${1:value},set${1:value}] = useState(${0:initialValue});"],
+    "body": ["const [${1:value},set${1:value}] = useState();"],
     "description": "My Simple useState.",
   },
   "My useEfect": {
@@ -43,18 +92,18 @@
     "description": "My Simple useState.",
   },
   "My console.log": {
-    "prefix": ["c", "clg"],
-    "body": ["console.log(${0:props})"],
+    "prefix": ["c", "co", "con", "clg"],
+    "body": ["console.log('${1:hi}')"],
     "description": "My Console Log",
   },
   "My console.log is": {
     "prefix": ["c", "clgis"],
-    "body": ["console.log('${1:props} is:', ${0:props})"],
+    "body": ["console.log('${1:props} is:', ${1:props})"],
     "description": "My Console Log Is",
   },
   "My console.error": {
     "prefix": ["cle"],
-    "body": ["console.error(${0:props});"],
+    "body": ["console.error(${0:error});"],
     "description": "My Console Error",
   },
   "My console.warn": {
