@@ -1,4 +1,4 @@
-import { AST_COLORS, TOKEN_COLORS } from '../../logic/constants';
+import { TOKEN_COLORS, AST_COLORS } from '../../../logic/constants';
 
 export default function GanttLegend() {
   return (

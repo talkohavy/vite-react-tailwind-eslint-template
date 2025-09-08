@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
-import type { Token } from '../../lib/QueryLanguage';
-import type { ParseResult } from '../../lib/QueryLanguage/QueryParser/types';
+import type { Token } from '../../../../../../lib/QueryLanguage';
+import type { ParseResult } from '../../../../../../lib/QueryLanguage/QueryParser/types';
 import type { VisualizationItem } from './types';
-import Gantt from './Gantt';
+import Gantt from './content/Gantt';
+import OriginalQueryDisplayer from './content/OriginalQueryDisplayer';
+import ParseErrorDisplayer from './content/ParseErrorDisplayer';
 import { TOKEN_COLORS } from './logic/constants';
 import { extractASTNodes } from './logic/utils/extractASTNodes';
-import OriginalQueryDisplayer from './OriginalQueryDisplayer';
 
 interface QueryVisualizationProps {
   query: string;
@@ -19,7 +20,6 @@ export default function QueryVisualization(props: QueryVisualizationProps) {
   const visualizationData = useMemo(() => {
     const items: VisualizationItem[] = [];
 
-    // Add tokens
     tokens.forEach((token, index) => {
       items.push({
         id: `token-${index}`,
@@ -53,24 +53,7 @@ export default function QueryVisualization(props: QueryVisualizationProps) {
 
       <Gantt maxLevel={maxLevel} visualizationData={visualizationData} queryLength={queryLength} />
 
-      {/* Parse Errors */}
-      {parseResult.errors.length > 0 && (
-        <div className='mt-4 p-4 bg-red-900 border border-red-700 rounded'>
-          <h4 className='text-sm font-semibold mb-2 text-red-200'>Parse Errors:</h4>
-          <div className='space-y-2'>
-            {parseResult.errors.map((error, index) => (
-              <div key={index} className='text-sm text-red-300'>
-                <div className='font-mono'>
-                  Position {error.position.start}-{error.position.end}: {error.message}
-                </div>
-                {error.expectedTokens && (
-                  <div className='text-xs text-red-400 ml-4'>Expected: {error.expectedTokens.join(', ')}</div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {parseResult.errors.length > 0 && <ParseErrorDisplayer errors={parseResult.errors} />}
     </div>
   );
 }

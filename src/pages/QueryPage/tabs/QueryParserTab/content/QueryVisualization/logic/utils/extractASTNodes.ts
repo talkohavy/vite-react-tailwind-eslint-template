@@ -1,4 +1,4 @@
-import type { Expression } from '../../../../lib/QueryLanguage';
+import type { Expression } from '../../../../../../../../lib/QueryLanguage';
 import type { VisualizationItem } from '../../types';
 import { AST_COLORS } from '../constants';
 
