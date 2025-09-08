@@ -1,22 +1,17 @@
 import { useState, useMemo } from 'react';
 import { QueryLexer, QueryParser } from '../../../../../lib/QueryLanguage';
+import { useCursorPositionLogic } from './useCursorPositionLogic';
 
 const lexer = new QueryLexer();
 const queryParser = new QueryParser();
 
 export function useQueryParserTabLogic() {
   const [query, setQuery] = useState('status: active AND role: admin');
-  const [cursorPosition, setCursorPosition] = useState(0);
 
   const tokens = lexer.tokenize(query);
   const result = queryParser.parse(query);
 
-  // Find current token based on cursor position
-  const currentToken = useMemo(() => {
-    return (
-      tokens.find((token) => cursorPosition >= token.position.start && cursorPosition <= token.position.end) || null
-    );
-  }, [tokens, cursorPosition]);
+  const { cursorPosition, setCursorPosition, currentToken } = useCursorPositionLogic({ tokens });
 
   // Find current AST node based on cursor position
   const currentASTNode = useMemo(() => {
