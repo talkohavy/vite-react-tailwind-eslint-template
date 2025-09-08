@@ -8,7 +8,7 @@
 import type { Comparator, Expression } from '../ASTBuilder';
 import type { ParserOptions } from '../types';
 import type { AddErrorProps } from './QueryParser.interface';
-import type { ParseError, ParseResult } from './types';
+import type { ParseError, ParseResult, WhitespaceContext } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
@@ -480,8 +480,166 @@ export class QueryParser {
     }
   }
 
+  /**
+   * Classify whitespace context and determine what should come next
+   */
+  classifyWhitespace(input: string, position: number): WhitespaceContext | null {
+    // First tokenize the input to understand the context
+    const tokens = this.queryLexer.tokenize(input);
+
+    // Find whitespace token at the given position
+    const whitespaceToken = tokens.find(
+      (token) =>
+        token.type === TokenTypes.Whitespace && position >= token.position.start && position <= token.position.end,
+    );
+
+    if (!whitespaceToken) {
+      return null; // Not in whitespace
+    }
+
+    // Find the token that comes before this whitespace
+    const tokenBeforeWhitespace = tokens
+      .filter((token) => token.type !== TokenTypes.Whitespace)
+      .reverse()
+      .find((token) => token.position.end <= whitespaceToken.position.start);
+
+    if (!tokenBeforeWhitespace) {
+      // Whitespace at the beginning - expect key or left parenthesis
+      return {
+        type: ContextTypes.Key,
+        position: whitespaceToken.position,
+        expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
+        description: 'Whitespace at beginning - expect key or left parenthesis',
+      };
+    }
+
+    // Classify based on the token that came before the whitespace
+    switch (tokenBeforeWhitespace.type) {
+      case TokenTypes.Identifier: {
+        // Check if this identifier is a key by looking at what comes after the whitespace
+        const nextNonWhitespaceToken = tokens
+          .filter((token) => token.type !== TokenTypes.Whitespace)
+          .find((token) => token.position.start >= whitespaceToken.position.end);
+
+        if (
+          nextNonWhitespaceToken &&
+          (nextNonWhitespaceToken.type === TokenTypes.Colon || nextNonWhitespaceToken.type === TokenTypes.Comparator)
+        ) {
+          // This identifier is a key
+          return {
+            type: ContextTypes.WhitespaceAfterKey,
+            position: whitespaceToken.position,
+            expectedTokens: [ContextTypes.Comparator, ContextTypes.Colon],
+            description: 'Whitespace after key - expect comparator',
+          };
+        }
+
+        // This identifier is a value
+        return {
+          type: ContextTypes.WhitespaceAfterValue,
+          position: whitespaceToken.position,
+          expectedTokens: this.getExpectedAfterValue(tokens, whitespaceToken.position),
+          description: 'Whitespace after value - expect logical operator or right parenthesis',
+        };
+      }
+
+      case TokenTypes.QuotedString: {
+        // Quoted strings are always values
+        return {
+          type: ContextTypes.WhitespaceAfterValue,
+          position: whitespaceToken.position,
+          expectedTokens: this.getExpectedAfterValue(tokens, whitespaceToken.position),
+          description: 'Whitespace after value - expect logical operator or right parenthesis',
+        };
+      }
+
+      case TokenTypes.Colon:
+      case TokenTypes.Comparator: {
+        return {
+          type: ContextTypes.WhitespaceAfterComparator,
+          position: whitespaceToken.position,
+          expectedTokens: [ContextTypes.Value, ContextTypes.QuotedString],
+          description: 'Whitespace after comparator - expect value',
+        };
+      }
+
+      case TokenTypes.AND:
+      case TokenTypes.OR: {
+        return {
+          type: ContextTypes.WhitespaceAfterLogicalOperator,
+          position: whitespaceToken.position,
+          expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
+          description: 'Whitespace after logical operator - expect key or left parenthesis',
+        };
+      }
+
+      case TokenTypes.RightParenthesis: {
+        return {
+          type: ContextTypes.WhitespaceAfterRightParenthesis,
+          position: whitespaceToken.position,
+          expectedTokens: this.getExpectedAfterValue(tokens, whitespaceToken.position),
+          description: 'Whitespace after right parenthesis - expect logical operator or right parenthesis',
+        };
+      }
+
+      default: {
+        return {
+          type: ContextTypes.Key,
+          position: whitespaceToken.position,
+          expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
+          description: 'Unknown context - expect key or left parenthesis',
+        };
+      }
+    }
+  }
+
+  /**
+   * Get expected tokens after a value (considering parentheses context)
+   */
+  private getExpectedAfterValue(
+    tokens: any[],
+    whitespacePosition: { start: number; end: number },
+  ): ContextTypeValues[] {
+    const expectedTokens: ContextTypeValues[] = [ContextTypes.LogicalOperator];
+
+    // Count open parentheses before this position
+    const tokensBeforeWhitespace = tokens.filter((token) => token.position.end <= whitespacePosition.start);
+
+    let openParensCount = 0;
+    for (const token of tokensBeforeWhitespace) {
+      if (token.type === TokenTypes.LeftParenthesis) {
+        openParensCount++;
+      } else if (token.type === TokenTypes.RightParenthesis) {
+        openParensCount--;
+      }
+    }
+
+    // If there are open parentheses, we can also expect a right parenthesis
+    if (openParensCount > 0) {
+      expectedTokens.push(ContextTypes.RightParenthesis);
+    }
+
+    return expectedTokens;
+  }
+
   isPartialLogicalOperator(value: string): boolean {
     const lowercasedIncompleteValue = value.toLowerCase();
     return [TokenTypes.AND, TokenTypes.OR].some((op) => op.toLowerCase().startsWith(lowercasedIncompleteValue));
+  }
+
+  /**
+   * Test whitespace classification for debugging
+   */
+  testWhitespaceClassification(input: string): Array<{ position: number; context: WhitespaceContext | null }> {
+    const results: Array<{ position: number; context: WhitespaceContext | null }> = [];
+
+    for (let i = 0; i < input.length; i++) {
+      if (input[i] === ' ') {
+        const context = this.classifyWhitespace(input, i);
+        results.push({ position: i, context });
+      }
+    }
+
+    return results;
   }
 }

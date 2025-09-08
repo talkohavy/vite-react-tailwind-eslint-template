@@ -20,3 +20,13 @@ export interface ParseError {
   expectedTokens?: ContextTypeValues[];
   recoverable: boolean;
 }
+
+/**
+ * Whitespace classification information
+ */
+export interface WhitespaceContext {
+  type: ContextTypeValues;
+  position: Position;
+  expectedTokens: ContextTypeValues[];
+  description: string;
+}
