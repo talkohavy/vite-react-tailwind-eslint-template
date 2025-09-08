@@ -23,7 +23,7 @@ export interface QueryExpression extends ASTNode {
  */
 export interface BooleanExpression extends ASTNode {
   type: typeof ExpressionTypes.Boolean;
-  operator: BooleanOperator;
+  operator: OperatorNode;
   left: Expression;
   right: Expression;
 }
@@ -42,6 +42,14 @@ export interface KeyNode extends ASTNode {
 export interface ComparatorNode extends ASTNode {
   type: typeof ExpressionTypes.Comparator;
   value: Comparator;
+}
+
+/**
+ * Operator node for boolean expressions
+ */
+export interface OperatorNode extends ASTNode {
+  type: typeof ExpressionTypes.Operator;
+  value: BooleanOperator;
 }
 
 /**

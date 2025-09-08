@@ -16,6 +16,7 @@ import type {
   Expression,
   GroupExpression,
   KeyNode,
+  OperatorNode,
   QueryExpression,
   ValueNode,
 } from './types';
@@ -37,7 +38,7 @@ export class ASTBuilder {
    * Create a boolean expression (AND/OR operations)
    */
   static createBooleanExpression(
-    operator: BooleanOperator,
+    operator: OperatorNode,
     left: Expression,
     right: Expression,
     position: Position,
@@ -68,6 +69,17 @@ export class ASTBuilder {
   static createComparator(value: Comparator, position: Position): ComparatorNode {
     return {
       type: AstTypes.Comparator,
+      value,
+      position,
+    };
+  }
+
+  /**
+   * Create an operator node
+   */
+  static createOperator(value: BooleanOperator, position: Position): OperatorNode {
+    return {
+      type: AstTypes.Operator,
       value,
       position,
     };

@@ -127,32 +127,16 @@ export class QueryParser {
     while (this.matchLogicalOperatorOR()) {
       const operatorToken = this.tokenStream.consume()!;
 
-      const hasSkipped = this.tokenStream.skipWhitespaces();
-
-      // Check if we're at end of input after OR
-      if (this.tokenStream.isAtEnd()) {
-        const errorPosition = this.getPositionAfterToken(operatorToken);
-
-        const expectedTokens: ContextTypeValues[] = [];
-        if (hasSkipped) {
-          expectedTokens.push(ContextTypes.Key, ContextTypes.LeftParenthesis);
-        }
-
-        this.addError({
-          message: ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_OR,
-          position: errorPosition,
-          code: ERROR_CODES.MISSING_TOKEN,
-          expectedTokens,
-        });
-        return leftAST;
-      }
-
+      this.tokenStream.skipWhitespaces();
       const rightAST = this.parseAndExpression();
 
       if (!rightAST) return leftAST;
 
+      // Create operator node with position information
+      const operatorNode = ASTBuilder.createOperator('OR', operatorToken.position);
+
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
-      leftAST = ASTBuilder.createBooleanExpression(TokenTypes.OR, leftAST, rightAST, leftPosition);
+      leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
     }
 
     return leftAST;
@@ -197,8 +181,11 @@ export class QueryParser {
 
       if (!rightAST) return leftAST;
 
+      // Create operator node with position information
+      const operatorNode = ASTBuilder.createOperator('AND', operatorToken.position);
+
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
-      leftAST = ASTBuilder.createBooleanExpression(TokenTypes.AND, leftAST, rightAST, leftPosition);
+      leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
 
       this.tokenStream.skipWhitespaces();
     }
@@ -266,8 +253,6 @@ export class QueryParser {
       } else {
         expectedTokens.push(ContextTypes.Value);
       }
-
-      expression.position.end = expression.position.end + whitespacesCount;
 
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_CLOSING_PAREN,
@@ -374,7 +359,6 @@ export class QueryParser {
     const valueNode = ASTBuilder.createValue(valueToken.value, valueToken.position);
 
     const conditionPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);
-    conditionPosition.end += spacesAfterValue;
 
     const conditionAST = ASTBuilder.createCondition(
       keyNode,

@@ -5,6 +5,7 @@ export const AstTypes = {
   Group: 'group',
   Key: 'key',
   Comparator: 'comparator',
+  Operator: 'operator',
   Value: 'value',
 } as const;
 
@@ -16,6 +17,7 @@ export const ExpressionTypes = {
   Key: 'key',
   Value: 'value',
   Comparator: 'comparator',
+  Operator: 'operator',
   Query: 'query',
   Boolean: 'boolean',
   Condition: 'condition',
