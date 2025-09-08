@@ -1,12 +1,13 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { QueryLexer, QueryParser } from '../../../../../lib/QueryLanguage';
 import { useCursorPositionLogic } from './useCursorPositionLogic';
+import { useQueryInputLogic } from './useQueryInputLogic';
 
 const lexer = new QueryLexer();
 const queryParser = new QueryParser();
 
 export function useQueryParserTabLogic() {
-  const [query, setQuery] = useState('status: active AND role: admin');
+  const { query, setQuery } = useQueryInputLogic();
 
   const tokens = lexer.tokenize(query);
   const result = queryParser.parse(query);
