@@ -58,7 +58,7 @@ export class QueryParser implements IQueryParser {
       }
 
       // Parse the expression
-      const expression = this.parseExpression();
+      const expression = this.parseOrExpression();
 
       if (!expression) return { success: false, errors: this.errors, tokens };
 
@@ -109,14 +109,6 @@ export class QueryParser implements IQueryParser {
    */
   private reset(): void {
     this.errors = [];
-  }
-
-  /**
-   * Parse an expression (handles operator precedence)
-   */
-  private parseExpression(): Expression | null {
-    const expression = this.parseOrExpression();
-    return expression;
   }
 
   /**
@@ -238,7 +230,7 @@ export class QueryParser implements IQueryParser {
       return null;
     }
 
-    const expression = this.parseExpression();
+    const expression = this.parseOrExpression();
 
     if (!expression) {
       this.addError({
@@ -310,6 +302,7 @@ export class QueryParser implements IQueryParser {
     }
 
     const keyToken = this.tokenStream.consume()!;
+    keyToken.expectedTokens = [ContextTypes.Key, ContextTypes.Colon];
 
     const spacesAfterKey = this.tokenStream.countAndSkipWhitespaces([ContextTypes.Comparator, ContextTypes.Colon]);
 
@@ -323,7 +316,8 @@ export class QueryParser implements IQueryParser {
         expectedTokens.push(ContextTypes.Key);
       }
 
-      const token = this.tokenStream.current();
+      const token = this.tokenStream.current()!;
+      token.expectedTokens = expectedTokens;
 
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_COMPARATOR,
@@ -331,10 +325,12 @@ export class QueryParser implements IQueryParser {
         code: ERROR_CODES.MISSING_TOKEN,
         expectedTokens,
       });
+
       return null;
     }
 
     const comparatorToken = this.tokenStream.consume()!;
+    comparatorToken.expectedTokens = [ContextTypes.Comparator];
 
     const spacesAfterComparator = this.tokenStream.countAndSkipWhitespaces([
       ContextTypes.Value,
@@ -363,6 +359,7 @@ export class QueryParser implements IQueryParser {
     }
 
     const valueToken = this.tokenStream.consume()!;
+    valueToken.expectedTokens = [ContextTypes.Value, ContextTypes.QuotedString];
 
     const spacesAfterValue = this.tokenStream.countAndSkipWhitespaces([
       ContextTypes.LogicalOperator,
