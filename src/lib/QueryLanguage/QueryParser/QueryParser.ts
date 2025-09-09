@@ -487,7 +487,7 @@ export class QueryParser implements IQueryParser {
     // Find whitespace token at the given position
     const whitespaceToken = tokens.find(
       (token) =>
-        token.type === TokenTypes.Whitespace && position >= token.position.start && position <= token.position.end,
+        token.type === TokenTypes.Whitespace && position > token.position.start && position <= token.position.end,
     );
 
     if (!whitespaceToken) {
