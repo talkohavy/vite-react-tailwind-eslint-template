@@ -19,6 +19,16 @@ export interface Position {
 // Token Types (for lexical analysis)
 // =============================================================================
 
+type TokenContextBase = {
+  expectedTokens: ContextTypeValues[]; // <--- Context information for whitespace tokens (added during parsing)
+};
+
+export type TokenContextWithKey = TokenContextBase & {
+  key: string;
+};
+
+export type TokenContext = TokenContextBase | TokenContextWithKey;
+
 /**
  * Token structure from lexical analysis
  */
@@ -26,7 +36,7 @@ export interface Token {
   type: TokenTypeValues;
   value: string;
   position: Position;
-  expectedTokens?: ContextTypeValues[]; // <--- Context information for whitespace tokens (added during parsing)
+  context?: TokenContext;
 }
 
 // =============================================================================

@@ -6,8 +6,7 @@
  * position tracking.
  */
 
-import type { ContextTypeValues } from '../QueryParser';
-import type { Token } from '../types';
+import type { Token, TokenContext } from '../types';
 import { TokenTypes, type TokenTypeValues } from './logic/constants';
 
 /**
@@ -85,12 +84,12 @@ export class TokenStream {
   /**
    * Count and skip whitespace tokens, returning the number of spaces
    */
-  countAndSkipWhitespaces(expectedTokens: ContextTypeValues[]): number {
+  countAndSkipWhitespaces(context: TokenContext): number {
     let spaceCount = 0;
 
     while (this.current()?.type === TokenTypes.Whitespace) {
       const token = this.current()!;
-      token.expectedTokens = expectedTokens;
+      token.context = context;
       spaceCount += token.value.length;
       this.advance();
     }

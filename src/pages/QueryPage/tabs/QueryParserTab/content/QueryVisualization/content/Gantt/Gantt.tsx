@@ -1,4 +1,4 @@
-import type { VisualizationItem } from '../types';
+import type { VisualizationItem } from '../../types';
 import GanttItem from './content/GanttItem';
 import GanttLegend from './content/GanttLegend';
 import TotalItemsCounterProps from './content/TotalItemsCounter';

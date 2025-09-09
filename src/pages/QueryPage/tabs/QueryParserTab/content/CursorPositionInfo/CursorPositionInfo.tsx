@@ -26,13 +26,13 @@ export default function CursorPositionInfo(props: CursorPositionInfoProps) {
             <span className='text-yellow-400'>
               {currentToken.position.start}-{currentToken.position.end}
             </span>
-            {currentToken.expectedTokens?.length && (
+            {currentToken.context?.expectedTokens?.length && (
               <div>
                 Expected:{' '}
-                {currentToken.expectedTokens.map((token, index) => (
+                {currentToken?.context?.expectedTokens.map((token, index) => (
                   <span key={token} className='text-yellow-400'>
                     {token}
-                    {index < currentToken!.expectedTokens!.length - 1 ? ', ' : ''}
+                    {index < currentToken.context!.expectedTokens!.length - 1 ? ', ' : ''}
                   </span>
                 ))}
               </div>

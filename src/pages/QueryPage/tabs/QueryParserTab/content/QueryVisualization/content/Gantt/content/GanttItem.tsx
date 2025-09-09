@@ -1,4 +1,4 @@
-import type { VisualizationItem } from '../../types';
+import type { VisualizationItem } from '../../../types';
 import GanttInnerText from './GanttInnerText';
 import GanttTooltip from './GanttTooltip';
 
