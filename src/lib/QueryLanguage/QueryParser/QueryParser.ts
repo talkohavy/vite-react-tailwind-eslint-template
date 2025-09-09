@@ -307,6 +307,13 @@ export class QueryParser implements IQueryParser {
     if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
       const token = this.tokenStream.current()!;
 
+      const expectedTokens: ContextTypeValues[] = [];
+
+      if (this.isPartialComparator(token.value)) {
+        expectedTokens.push(ContextTypes.Comparator);
+      }
+      token.context = { expectedTokens };
+
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_COMPARATOR,
         position: token?.position || keyToken.position,
@@ -455,5 +462,10 @@ export class QueryParser implements IQueryParser {
   private isPartialLogicalOperator(value: string): boolean {
     const lowercasedIncompleteValue = value.toLowerCase();
     return [TokenTypes.AND, TokenTypes.OR].some((op) => op.toLowerCase().startsWith(lowercasedIncompleteValue));
+  }
+
+  private isPartialComparator(value: string): boolean {
+    const comparators = [':', '=', '!=', '<', '<=', '>', '>='];
+    return comparators.some((comp) => comp.startsWith(value));
   }
 }
