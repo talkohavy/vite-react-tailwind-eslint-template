@@ -8,12 +8,11 @@ type UsePositionInfoLogicProps = {
   cursorPosition?: number;
   tokens: Token[];
   result: ParseResult;
-  query: string;
   queryParser: IQueryParser;
 };
 
 export function usePositionInfoLogic(props: UsePositionInfoLogicProps) {
-  const { cursorPosition = 0, tokens, result, query, queryParser } = props;
+  const { cursorPosition = 0, tokens, result, queryParser } = props;
 
   const currentToken = useMemo(() => {
     return (
@@ -48,7 +47,7 @@ export function usePositionInfoLogic(props: UsePositionInfoLogicProps) {
   // Classify whitespace context
   const whitespaceContext = useMemo(() => {
     return queryParser.classifyWhitespace(tokens, cursorPosition);
-  }, [query, cursorPosition]);
+  }, [tokens, cursorPosition]);
 
   return { currentToken, currentASTNode, whitespaceContext };
 }

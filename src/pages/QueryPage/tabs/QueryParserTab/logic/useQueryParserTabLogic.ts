@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { QueryLexer, QueryParser } from '../../../../../lib/QueryLanguage';
 import { useCursorPositionLogic } from './useCursorPositionLogic';
 import { usePositionInfoLogic } from './usePositionInfoLogic';
@@ -10,14 +11,16 @@ export function useQueryParserTabLogic() {
   const { cursorPosition, setCursorPosition } = useCursorPositionLogic();
   const { query, handleInputChange } = useQueryInputLogic({ setCursorPosition });
 
-  const tokens = lexer.tokenize(query);
-  const result = queryParser.parse(query);
+  const { tokens, result } = useMemo(() => {
+    const tokens = lexer.tokenize(query);
+    const result = queryParser.parse(query);
+    return { tokens, result };
+  }, [query]);
 
   const { currentToken, currentASTNode, whitespaceContext } = usePositionInfoLogic({
     cursorPosition,
     tokens,
     result,
-    query,
     queryParser,
   });
 
