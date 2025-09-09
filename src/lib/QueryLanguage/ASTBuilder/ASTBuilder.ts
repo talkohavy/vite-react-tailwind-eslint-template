@@ -5,11 +5,11 @@
  * with proper type checking and position tracking.
  */
 
+import type { BooleanOperatorValues } from '../constants';
 import type { Position } from '../types';
 import type {
   ASTNode,
   BooleanExpression,
-  BooleanOperator,
   Comparator,
   ComparatorNode,
   ConditionExpression,
@@ -77,7 +77,7 @@ export class ASTBuilder {
   /**
    * Create an operator node
    */
-  static createOperator(value: BooleanOperator, position: Position): OperatorNode {
+  static createOperator(value: BooleanOperatorValues, position: Position): OperatorNode {
     return {
       type: AstTypes.Operator,
       value,

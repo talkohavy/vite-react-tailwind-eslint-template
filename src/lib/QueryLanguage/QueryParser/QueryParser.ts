@@ -10,7 +10,7 @@ import type { ParserOptions } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
 import type { ParseError, ParseResult } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
-import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
+import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS, BooleanOperator } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../QueryLexer/TokenStream';
@@ -51,7 +51,6 @@ export class QueryParser implements IQueryParser {
           message: ERROR_MESSAGES.EMPTY_QUERY,
           position: errorEmptyInputPosition,
           code: ERROR_CODES.EMPTY_EXPRESSION,
-          expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
         });
 
         return { success: false, errors: this.errors, tokens };
@@ -69,16 +68,20 @@ export class QueryParser implements IQueryParser {
         const token = this.tokenStream.current()!;
 
         const expectedTokens: ContextTypeValues[] = [];
+        const spacesAfterValue = 'spacesAfterValue' in expression ? expression.spacesAfterValue : 0;
 
-        if (token.position.start === expression.position.end && this.isPartialLogicalOperator(token.value)) {
+        if (
+          token.position.start === expression.position.end + spacesAfterValue &&
+          this.isPartialLogicalOperator(token.value)
+        ) {
           expectedTokens.push(ContextTypes.LogicalOperator);
         }
+        token.context = { expectedTokens };
 
         this.addError({
-          message: ERROR_MESSAGES.UNEXPECTED_TOKEN,
+          message: ERROR_MESSAGES.EXPECTED_OPERATOR,
           position: token.position,
           code: ERROR_CODES.UNEXPECTED_TOKEN,
-          expectedTokens,
         });
       }
 
@@ -108,6 +111,7 @@ export class QueryParser implements IQueryParser {
    */
   private reset(): void {
     this.errors = [];
+    this.openParenthesisCount = 0;
   }
 
   /**
@@ -128,7 +132,7 @@ export class QueryParser implements IQueryParser {
       if (!rightAST) return leftAST;
 
       // Create operator node with position information
-      const operatorNode = ASTBuilder.createOperator('OR', operatorToken.position);
+      const operatorNode = ASTBuilder.createOperator(BooleanOperator.OR, operatorToken.position);
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
@@ -161,18 +165,12 @@ export class QueryParser implements IQueryParser {
         const errorPosition = this.getPositionAfterToken(operatorToken);
         errorPosition.end += whiteSpacesAfterLogicalOperatorCount;
 
-        const expectedTokens: ContextTypeValues[] = [];
-
-        if (whiteSpacesAfterLogicalOperatorCount > 0) {
-          expectedTokens.push(ContextTypes.Key, ContextTypes.LeftParenthesis);
-        }
-
         this.addError({
           message: ERROR_MESSAGES.EXPECTED_EXPRESSION_AFTER_AND,
           position: errorPosition,
           code: ERROR_CODES.MISSING_TOKEN,
-          expectedTokens,
         });
+
         return leftAST;
       }
 
@@ -181,7 +179,7 @@ export class QueryParser implements IQueryParser {
       if (!rightAST) return leftAST;
 
       // Create operator node with position information
-      const operatorNode = ASTBuilder.createOperator('AND', operatorToken.position);
+      const operatorNode = ASTBuilder.createOperator(BooleanOperator.AND, operatorToken.position);
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
@@ -228,7 +226,10 @@ export class QueryParser implements IQueryParser {
         position: startToken.position,
         code: ERROR_CODES.EMPTY_EXPRESSION,
       });
-      this.tokenStream.consume(); // consume the closing paren
+
+      this.tokenStream.consume(); // consume the closing parenthesis
+      this.openParenthesisCount--;
+
       return null;
     }
 
@@ -239,37 +240,29 @@ export class QueryParser implements IQueryParser {
         message: ERROR_MESSAGES.EXPECTED_EXPRESSION_IN_PARENTHESES,
         position: startToken.position,
         code: ERROR_CODES.MISSING_TOKEN,
-        expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
       });
+
       return null;
     }
 
-    const whitespacesCount = this.tokenStream.countAndSkipWhitespaces({
+    this.tokenStream.countAndSkipWhitespaces({
       expectedTokens: [ContextTypes.RightParenthesis, ContextTypes.Comparator],
     });
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
-      const expectedTokens: ContextTypeValues[] = [ContextTypes.RightParenthesis];
-
-      if (whitespacesCount > 0) {
-        expectedTokens.push(ContextTypes.RightParenthesis, ContextTypes.Comparator);
-      } else {
-        expectedTokens.push(ContextTypes.Value);
-      }
-
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_CLOSING_PAREN,
         position: expression.position,
         code: ERROR_CODES.UNBALANCED_PARENS,
-        expectedTokens,
       });
 
       return expression; // Return what we have for error recovery
     }
 
-    const endToken = this.tokenStream.consume()!;
+    const rightParenthesisToken = this.tokenStream.consume()!;
+    this.openParenthesisCount--;
 
-    const groupPosition = ASTBuilder.mergePositions(startToken.position, endToken.position);
+    const groupPosition = ASTBuilder.mergePositions(startToken.position, rightParenthesisToken.position);
     const groupAST = ASTBuilder.createGroup(expression, groupPosition);
 
     return groupAST;
@@ -286,17 +279,10 @@ export class QueryParser implements IQueryParser {
       this.tokenStream.isCurrentAMatchWith(TokenTypes.Identifier) && !/^\d/.test(currentToken.value);
 
     if (!isValidKeyToken) {
-      const expectedTokens: ContextTypeValues[] = [];
-
-      if (/[a-zA-Z_]/.test(currentToken.value)) {
-        expectedTokens.push(ContextTypes.Key);
-      }
-
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_KEY,
         position: currentToken?.position || ASTBuilder.createPosition(0, 0),
         code: ERROR_CODES.MISSING_TOKEN,
-        expectedTokens,
       });
 
       return null;
@@ -311,22 +297,12 @@ export class QueryParser implements IQueryParser {
 
     // Expect comparator
     if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
-      const expectedTokens: ContextTypeValues[] = [ContextTypes.Colon];
-
-      if (spacesAfterKey > 0) {
-        expectedTokens.push(ContextTypes.Comparator);
-      } else {
-        expectedTokens.push(ContextTypes.Key);
-      }
-
       const token = this.tokenStream.current()!;
-      token.context = { expectedTokens, key: keyToken.value };
 
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_COMPARATOR,
         position: token?.position || keyToken.position,
         code: ERROR_CODES.MISSING_TOKEN,
-        expectedTokens,
       });
 
       return null;
@@ -344,18 +320,10 @@ export class QueryParser implements IQueryParser {
     if (!this.tokenStream.matchAny(TokenTypes.Identifier, TokenTypes.QuotedString)) {
       const valueToken = this.tokenStream.current();
 
-      const expectedTokens: ContextTypeValues[] = [ContextTypes.Value];
-
-      // Always suggest QuotedString as an alternative for values
-      if (spacesAfterComparator > 0) {
-        expectedTokens.push(ContextTypes.QuotedString);
-      }
-
       this.addError({
         message: ERROR_MESSAGES.EXPECTED_VALUE,
         position: valueToken?.position || comparatorToken.position,
         code: ERROR_CODES.MISSING_TOKEN,
-        expectedTokens,
       });
 
       return null;
@@ -418,7 +386,7 @@ export class QueryParser implements IQueryParser {
    * Add a parse error
    */
   private addError(props: AddErrorProps): void {
-    const { code, message, position, expectedTokens } = props;
+    const { code, message, position } = props;
 
     const error: ParseError = {
       message,
@@ -426,7 +394,6 @@ export class QueryParser implements IQueryParser {
         start: position.start,
         end: position.end,
       },
-      expectedTokens,
       recoverable: true,
     };
 

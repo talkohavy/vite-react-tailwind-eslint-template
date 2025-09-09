@@ -5,7 +5,16 @@
  * configuration used throughout the query language implementation.
  */
 
-import type { BooleanOperator, Comparator } from './ASTBuilder';
+import type { Comparator } from './ASTBuilder';
+
+export const BooleanOperator = {
+  AND: 'AND',
+  OR: 'OR',
+} as const;
+
+type TypeofBooleanOperator = typeof BooleanOperator;
+type BooleanOperatorKeys = keyof TypeofBooleanOperator;
+export type BooleanOperatorValues = TypeofBooleanOperator[BooleanOperatorKeys];
 
 // =============================================================================
 // Grammar Constants
@@ -14,7 +23,7 @@ import type { BooleanOperator, Comparator } from './ASTBuilder';
 /**
  * Boolean operators supported by the query language
  */
-export const BOOLEAN_OPERATORS: Record<string, BooleanOperator> = {
+export const BOOLEAN_OPERATORS: Record<string, BooleanOperatorValues> = {
   AND: 'AND',
   and: 'AND',
   And: 'AND',
@@ -63,7 +72,7 @@ export const SUPPORTED_COMPARATORS: Comparator[] = [':'];
 /**
  * Operator precedence (higher number = higher precedence)
  */
-export const OPERATOR_PRECEDENCE: Record<BooleanOperator, number> = {
+export const OPERATOR_PRECEDENCE: Record<BooleanOperatorValues, number> = {
   AND: 2,
   OR: 1,
 } as const;
