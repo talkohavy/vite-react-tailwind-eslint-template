@@ -21,7 +21,6 @@ const OutletTabsPage = lazy(() => import('./pages/OutletTabsPage'));
 const IFramePage = lazy(() => import('./pages/IFramePage'));
 const MasterFilterPage = lazy(() => import('./pages/MasterFilterPage'));
 const QueryPage = lazy(() => import('./pages/QueryPage'));
-const QueryShowcase = lazy(() => import('./pages/QueryShowcase'));
 
 // Mini-pages/tabs
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -30,7 +29,6 @@ const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
 const TokenStreamTab = lazy(() => import('./pages/QueryPage/tabs/TokenStreamTab'));
 const QueryParserTab = lazy(() => import('./pages/QueryPage/tabs/QueryParserTab'));
-const ContextAnalyzerTab = lazy(() => import('./pages/QueryPage/tabs/ContextAnalyzerTab'));
 const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
 
 export const routes: Array<Route> = [
@@ -183,7 +181,6 @@ export const routes: Array<Route> = [
       `${BASE_URL}/query-language/lexer`,
       `${BASE_URL}/query-language/token-stream`,
       `${BASE_URL}/query-language/query-parser`,
-      `${BASE_URL}/query-language/context-analyzer`,
       `${BASE_URL}/query-language/query-language`,
     ],
     Component: QueryPage,
@@ -207,23 +204,11 @@ export const routes: Array<Route> = [
         Component: QueryParserTab,
       },
       {
-        to: 'context-analyzer',
-        text: 'Context Analyzer',
-        activeNames: [],
-        Component: ContextAnalyzerTab,
-      },
-      {
         to: 'query-language',
         text: 'Query Language',
         activeNames: [],
         Component: QueryLanguageTab,
       },
     ],
-  },
-  {
-    to: `${BASE_URL}/query-showcase`,
-    text: 'Query Showcase',
-    activeNames: [`${BASE_URL}/query-showcase`],
-    Component: QueryShowcase,
   },
 ];

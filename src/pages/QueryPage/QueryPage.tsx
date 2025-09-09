@@ -27,10 +27,6 @@ const tabOptions = [
     label: 'Query Parser',
   },
   {
-    value: Tabs.ContextAnalyzer,
-    label: 'Context Analyzer',
-  },
-  {
     value: Tabs.QueryLanguage,
     label: 'Query Language',
   },
