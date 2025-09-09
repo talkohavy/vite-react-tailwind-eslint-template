@@ -6,9 +6,9 @@
  */
 
 import type { Comparator, Expression } from '../ASTBuilder';
-import type { ParserOptions, Token } from '../types';
+import type { ParserOptions } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
-import type { ParseError, ParseResult, WhitespaceContext } from './types';
+import type { ParseError, ParseResult } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
@@ -38,10 +38,11 @@ export class QueryParser implements IQueryParser {
       this.reset();
 
       // Tokenize input
-      this.tokenStream = new TokenStream(this.queryLexer.tokenize(input));
+      const tokens = this.queryLexer.tokenize(input);
+      this.tokenStream = new TokenStream(tokens);
 
       // Skip leading whitespace
-      this.tokenStream.skipWhitespaces();
+      this.tokenStream.countAndSkipWhitespaces([ContextTypes.Key, ContextTypes.LeftParenthesis]);
 
       // Check for empty input
       if (this.tokenStream.isAtEnd()) {
@@ -53,16 +54,17 @@ export class QueryParser implements IQueryParser {
           expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
         });
 
-        return { success: false, errors: this.errors };
+        return { success: false, errors: this.errors, tokens };
       }
 
       // Parse the expression
       const expression = this.parseExpression();
 
-      if (!expression) return { success: false, errors: this.errors };
+      if (!expression) return { success: false, errors: this.errors, tokens };
 
       // Check for unexpected tokens at end
-      this.tokenStream.skipWhitespaces();
+      this.tokenStream.countAndSkipWhitespaces([]);
+      // this.tokenStream.countAndSkipWhitespaces([ContextTypes.LogicalOperator]);
 
       if (!this.tokenStream.isAtEnd()) {
         const token = this.tokenStream.current()!;
@@ -88,6 +90,7 @@ export class QueryParser implements IQueryParser {
         success: this.errors.length === 0,
         ast: queryAST,
         errors: this.errors,
+        tokens,
       };
     } catch (error) {
       const errorPosition = ASTBuilder.createPosition(0, input.length);
@@ -97,7 +100,7 @@ export class QueryParser implements IQueryParser {
         code: ERROR_CODES.SYNTAX_ERROR,
       });
 
-      return { success: false, errors: this.errors };
+      return { success: false, errors: this.errors, tokens: [] };
     }
   }
 
@@ -127,7 +130,8 @@ export class QueryParser implements IQueryParser {
     while (this.matchLogicalOperatorOR()) {
       const operatorToken = this.tokenStream.consume()!;
 
-      this.tokenStream.skipWhitespaces();
+      this.tokenStream.countAndSkipWhitespaces([ContextTypes.Key, ContextTypes.LeftParenthesis]);
+
       const rightAST = this.parseAndExpression();
 
       if (!rightAST) return leftAST;
@@ -150,12 +154,15 @@ export class QueryParser implements IQueryParser {
 
     if (!leftAST) return null;
 
-    this.tokenStream.skipWhitespaces();
+    this.tokenStream.countAndSkipWhitespaces([ContextTypes.LogicalOperator, ContextTypes.RightParenthesis]);
 
     while (this.matchLogicalOperatorAND()) {
       const operatorToken = this.tokenStream.consume()!;
 
-      const whiteSpacesAfterLogicalOperatorCount = this.tokenStream.countAndSkipWhitespaces();
+      const whiteSpacesAfterLogicalOperatorCount = this.tokenStream.countAndSkipWhitespaces([
+        ContextTypes.Key,
+        ContextTypes.LeftParenthesis,
+      ]);
 
       // Check if we're at end of input after AND
       if (this.tokenStream.isAtEnd()) {
@@ -187,7 +194,7 @@ export class QueryParser implements IQueryParser {
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
 
-      this.tokenStream.skipWhitespaces();
+      this.tokenStream.countAndSkipWhitespaces([ContextTypes.LogicalOperator, ContextTypes.RightParenthesis]);
     }
 
     return leftAST;
@@ -197,7 +204,7 @@ export class QueryParser implements IQueryParser {
    * Parse primary expressions (conditions and groups)
    */
   private parsePrimaryExpression(): Expression | null {
-    this.tokenStream.skipWhitespaces();
+    this.tokenStream.countAndSkipWhitespaces([ContextTypes.Key, ContextTypes.LeftParenthesis]);
 
     // Handle grouped expressions
     if (this.tokenStream.isCurrentAMatchWith(TokenTypes.LeftParenthesis)) {
@@ -218,7 +225,7 @@ export class QueryParser implements IQueryParser {
   private parseGroupExpression(): Expression | null {
     const startToken = this.tokenStream.expect(TokenTypes.LeftParenthesis);
 
-    this.tokenStream.skipWhitespaces();
+    this.tokenStream.countAndSkipWhitespaces([ContextTypes.Key, ContextTypes.LeftParenthesis]);
 
     // Check for empty parentheses
     if (this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
@@ -243,7 +250,10 @@ export class QueryParser implements IQueryParser {
       return null;
     }
 
-    const whitespacesCount = this.tokenStream.countAndSkipWhitespaces();
+    const whitespacesCount = this.tokenStream.countAndSkipWhitespaces([
+      ContextTypes.RightParenthesis,
+      ContextTypes.Comparator,
+    ]);
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
       const expectedTokens: ContextTypeValues[] = [ContextTypes.RightParenthesis];
@@ -301,7 +311,7 @@ export class QueryParser implements IQueryParser {
 
     const keyToken = this.tokenStream.consume()!;
 
-    const spacesAfterKey = this.tokenStream.countAndSkipWhitespaces();
+    const spacesAfterKey = this.tokenStream.countAndSkipWhitespaces([ContextTypes.Comparator, ContextTypes.Colon]);
 
     // Expect comparator
     if (!this.tokenStream.matchAny(TokenTypes.Colon, TokenTypes.Comparator)) {
@@ -326,7 +336,10 @@ export class QueryParser implements IQueryParser {
 
     const comparatorToken = this.tokenStream.consume()!;
 
-    const spacesAfterComparator = this.tokenStream.countAndSkipWhitespaces();
+    const spacesAfterComparator = this.tokenStream.countAndSkipWhitespaces([
+      ContextTypes.Value,
+      ContextTypes.QuotedString,
+    ]);
 
     // Expect value (identifier or quoted string)
     if (!this.tokenStream.matchAny(TokenTypes.Identifier, TokenTypes.QuotedString)) {
@@ -351,7 +364,10 @@ export class QueryParser implements IQueryParser {
 
     const valueToken = this.tokenStream.consume()!;
 
-    const spacesAfterValue = this.tokenStream.countAndSkipWhitespaces();
+    const spacesAfterValue = this.tokenStream.countAndSkipWhitespaces([
+      ContextTypes.LogicalOperator,
+      ContextTypes.RightParenthesis,
+    ]);
 
     // Create child nodes
     const keyNode = ASTBuilder.createKey(keyToken.value, keyToken.position);
@@ -427,32 +443,12 @@ export class QueryParser implements IQueryParser {
   }
 
   /**
-   * Get current parsing position for debugging
-   */
-  private getCurrentPosition(): number {
-    const token = this.tokenStream.current();
-    return token?.position.start || 0;
-  }
-
-  /**
    * Get position after a token for error reporting
    */
   private getPositionAfterToken(token: any): { start: number; end: number } {
     return {
       start: token.position.end,
       end: token.position.end,
-    };
-  }
-
-  /**
-   * Get detailed parse information for debugging
-   */
-  getDebugInfo(): object {
-    return {
-      currentToken: this.tokenStream.current(),
-      position: this.getCurrentPosition(),
-      errors: this.errors,
-      tokenStream: this.tokenStream.getDebugInfo(),
     };
   }
 
@@ -478,145 +474,6 @@ export class QueryParser implements IQueryParser {
         ],
       };
     }
-  }
-
-  /**
-   * Classify whitespace context and determine what should come next
-   */
-  classifyWhitespace(tokens: Token[], position: number): WhitespaceContext | null {
-    // Find whitespace token at the given position
-    const whitespaceToken = tokens.find(
-      (token) =>
-        token.type === TokenTypes.Whitespace && position > token.position.start && position <= token.position.end,
-    );
-
-    if (!whitespaceToken) {
-      return null; // Not in whitespace
-    }
-
-    // Find the token that comes before this whitespace
-    const tokenBeforeWhitespace = tokens
-      .filter((token) => token.type !== TokenTypes.Whitespace)
-      .reverse()
-      .find((token) => token.position.end <= whitespaceToken.position.start);
-
-    if (!tokenBeforeWhitespace) {
-      // Whitespace at the beginning - expect key or left parenthesis
-      return {
-        type: ContextTypes.Key,
-        position: whitespaceToken.position,
-        expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
-        description: 'Whitespace at beginning - expect key or left parenthesis',
-      };
-    }
-
-    // Classify based on the token that came before the whitespace
-    switch (tokenBeforeWhitespace.type) {
-      case TokenTypes.Identifier: {
-        // Check if this identifier is a key by looking at what comes after the whitespace
-        const nextNonWhitespaceToken = tokens
-          .filter((token) => token.type !== TokenTypes.Whitespace)
-          .find((token) => token.position.start >= whitespaceToken.position.end);
-
-        if (
-          nextNonWhitespaceToken &&
-          (nextNonWhitespaceToken.type === TokenTypes.Colon || nextNonWhitespaceToken.type === TokenTypes.Comparator)
-        ) {
-          // This identifier is a key
-          return {
-            type: ContextTypes.WhitespaceAfterKey,
-            position: whitespaceToken.position,
-            expectedTokens: [ContextTypes.Comparator, ContextTypes.Colon],
-            description: 'Whitespace after key - expect comparator',
-          };
-        }
-
-        // This identifier is a value
-        return {
-          type: ContextTypes.WhitespaceAfterValue,
-          position: whitespaceToken.position,
-          expectedTokens: this.getExpectedAfterValue(tokens, whitespaceToken.position),
-          description: 'Whitespace after value - expect logical operator or right parenthesis',
-        };
-      }
-
-      case TokenTypes.QuotedString: {
-        // Quoted strings are always values
-        return {
-          type: ContextTypes.WhitespaceAfterValue,
-          position: whitespaceToken.position,
-          expectedTokens: this.getExpectedAfterValue(tokens, whitespaceToken.position),
-          description: 'Whitespace after value - expect logical operator or right parenthesis',
-        };
-      }
-
-      case TokenTypes.Colon:
-      case TokenTypes.Comparator: {
-        return {
-          type: ContextTypes.WhitespaceAfterComparator,
-          position: whitespaceToken.position,
-          expectedTokens: [ContextTypes.Value, ContextTypes.QuotedString],
-          description: 'Whitespace after comparator - expect value',
-        };
-      }
-
-      case TokenTypes.AND:
-      case TokenTypes.OR: {
-        return {
-          type: ContextTypes.WhitespaceAfterLogicalOperator,
-          position: whitespaceToken.position,
-          expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
-          description: 'Whitespace after logical operator - expect key or left parenthesis',
-        };
-      }
-
-      case TokenTypes.RightParenthesis: {
-        return {
-          type: ContextTypes.WhitespaceAfterRightParenthesis,
-          position: whitespaceToken.position,
-          expectedTokens: this.getExpectedAfterValue(tokens, whitespaceToken.position),
-          description: 'Whitespace after right parenthesis - expect logical operator or right parenthesis',
-        };
-      }
-
-      default: {
-        return {
-          type: ContextTypes.Key,
-          position: whitespaceToken.position,
-          expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis],
-          description: 'Unknown context - expect key or left parenthesis',
-        };
-      }
-    }
-  }
-
-  /**
-   * Get expected tokens after a value (considering parentheses context)
-   */
-  private getExpectedAfterValue(
-    tokens: any[],
-    whitespacePosition: { start: number; end: number },
-  ): ContextTypeValues[] {
-    const expectedTokens: ContextTypeValues[] = [ContextTypes.LogicalOperator];
-
-    // Count open parentheses before this position
-    const tokensBeforeWhitespace = tokens.filter((token) => token.position.end <= whitespacePosition.start);
-
-    let openParensCount = 0;
-    for (const token of tokensBeforeWhitespace) {
-      if (token.type === TokenTypes.LeftParenthesis) {
-        openParensCount++;
-      } else if (token.type === TokenTypes.RightParenthesis) {
-        openParensCount--;
-      }
-    }
-
-    // If there are open parentheses, we can also expect a right parenthesis
-    if (openParensCount > 0) {
-      expectedTokens.push(ContextTypes.RightParenthesis);
-    }
-
-    return expectedTokens;
   }
 
   private isPartialLogicalOperator(value: string): boolean {

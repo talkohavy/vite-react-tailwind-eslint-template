@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { Token } from '../../../../../../lib/QueryLanguage';
 import type { ParseResult } from '../../../../../../lib/QueryLanguage/QueryParser/types';
 import type { VisualizationItem } from './types';
 import Gantt from './content/Gantt';
@@ -10,17 +9,16 @@ import { extractASTNodes } from './logic/utils/extractASTNodes';
 
 interface QueryVisualizationProps {
   query: string;
-  tokens: Token[];
   parseResult: ParseResult;
 }
 
 export default function QueryVisualization(props: QueryVisualizationProps) {
-  const { query, tokens, parseResult } = props;
+  const { query, parseResult } = props;
 
   const visualizationData = useMemo(() => {
     const items: VisualizationItem[] = [];
 
-    tokens.forEach((token, index) => {
+    parseResult.tokens.forEach((token, index) => {
       items.push({
         id: `token-${index}`,
         label: `${token.type}: "${token.value}"`,
@@ -40,7 +38,7 @@ export default function QueryVisualization(props: QueryVisualizationProps) {
     }
 
     return items;
-  }, [tokens, parseResult]);
+  }, [parseResult.tokens, parseResult]);
 
   const maxLevel = Math.max(...visualizationData.map((item) => item.level));
   const queryLength = query.length;

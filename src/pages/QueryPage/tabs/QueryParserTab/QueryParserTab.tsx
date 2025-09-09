@@ -6,8 +6,7 @@ import { useQueryParserTabLogic } from './logic/useQueryParserTabLogic';
 import QueryInput from './QueryInput';
 
 export default function QueryParserTab() {
-  const { query, tokens, result, cursorPosition, currentToken, currentASTNode, whitespaceContext, handleInputChange } =
-    useQueryParserTabLogic();
+  const { query, result, cursorPosition, currentToken, currentASTNode, handleInputChange } = useQueryParserTabLogic();
 
   return (
     <div className='p-6 max-w-6xl mx-auto bg-black'>
@@ -36,16 +35,15 @@ export default function QueryParserTab() {
               cursorPosition={cursorPosition}
               currentToken={currentToken}
               currentASTNode={currentASTNode}
-              whitespaceContext={whitespaceContext}
             />
           </div>
         </div>
 
-        {query && <QueryVisualization query={query} tokens={tokens} parseResult={result} />}
+        {query && <QueryVisualization query={query} parseResult={result} />}
 
         <RawParseResult result={result} />
 
-        <TokenList tokens={tokens} />
+        <TokenList tokens={result.tokens} />
       </div>
     </div>
   );

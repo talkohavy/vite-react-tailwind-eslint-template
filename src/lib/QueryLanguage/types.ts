@@ -26,6 +26,7 @@ export interface Token {
   type: TokenTypeValues;
   value: string;
   position: Position;
+  expectedTokens?: ContextTypeValues[]; // <--- Context information for whitespace tokens (added during parsing)
 }
 
 // =============================================================================

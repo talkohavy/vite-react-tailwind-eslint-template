@@ -1,24 +1,21 @@
 import { useMemo } from 'react';
-import type { Token } from '../../../../../lib/QueryLanguage';
 import type { ParseResult } from '../../../../../lib/QueryLanguage/QueryParser';
-import type { IQueryParser } from '../../../../../lib/QueryLanguage/QueryParser/QueryParser.interface';
 import { ASTBuilder } from '../../../../../lib/QueryLanguage/ASTBuilder';
 
 type UsePositionInfoLogicProps = {
   cursorPosition?: number;
-  tokens: Token[];
   result: ParseResult;
-  queryParser: IQueryParser;
 };
 
 export function usePositionInfoLogic(props: UsePositionInfoLogicProps) {
-  const { cursorPosition = 0, tokens, result, queryParser } = props;
+  const { cursorPosition = 0, result } = props;
 
   const currentToken = useMemo(() => {
     return (
-      tokens.find((token) => cursorPosition >= token.position.start && cursorPosition <= token.position.end) || null
+      result.tokens.find((token) => cursorPosition >= token.position.start && cursorPosition <= token.position.end) ||
+      null
     );
-  }, [tokens, cursorPosition]);
+  }, [result.tokens, cursorPosition]);
 
   // Find current AST node based on cursor position
   const currentASTNode = useMemo(() => {
@@ -44,10 +41,5 @@ export function usePositionInfoLogic(props: UsePositionInfoLogicProps) {
     return foundNode;
   }, [result, cursorPosition]);
 
-  // Classify whitespace context
-  const whitespaceContext = useMemo(() => {
-    return queryParser.classifyWhitespace(tokens, cursorPosition);
-  }, [tokens, cursorPosition]);
-
-  return { currentToken, currentASTNode, whitespaceContext };
+  return { currentToken, currentASTNode };
 }
