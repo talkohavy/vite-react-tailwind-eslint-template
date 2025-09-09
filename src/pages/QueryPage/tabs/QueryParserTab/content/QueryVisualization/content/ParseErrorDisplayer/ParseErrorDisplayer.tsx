@@ -16,9 +16,6 @@ export default function ParseErrorDisplayer(props: ParseErrorDisplayerProps) {
             <div className='font-mono'>
               Position {error.position.start}-{error.position.end}: {error.message}
             </div>
-            {error.expectedTokens && (
-              <div className='text-xs text-red-400 ml-4'>Expected: {error.expectedTokens.join(', ')}</div>
-            )}
           </div>
         ))}
       </div>
