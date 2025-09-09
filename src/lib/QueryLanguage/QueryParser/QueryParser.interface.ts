@@ -1,3 +1,4 @@
+import type { Token } from '../types';
 import type { ContextTypeValues } from './logic/constants';
 import type { ParseResult, WhitespaceContext } from './types';
 
@@ -10,5 +11,5 @@ export type AddErrorProps = {
 
 export interface IQueryParser {
   parse: (query: string) => ParseResult;
-  classifyWhitespace: (query: string, position: number) => WhitespaceContext | null;
+  classifyWhitespace: (tokens: Token[], position: number) => WhitespaceContext | null;
 }

@@ -6,7 +6,7 @@
  */
 
 import type { Comparator, Expression } from '../ASTBuilder';
-import type { ParserOptions } from '../types';
+import type { ParserOptions, Token } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
 import type { ParseError, ParseResult, WhitespaceContext } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
@@ -483,10 +483,7 @@ export class QueryParser implements IQueryParser {
   /**
    * Classify whitespace context and determine what should come next
    */
-  classifyWhitespace(input: string, position: number): WhitespaceContext | null {
-    // First tokenize the input to understand the context
-    const tokens = this.queryLexer.tokenize(input);
-
+  classifyWhitespace(tokens: Token[], position: number): WhitespaceContext | null {
     // Find whitespace token at the given position
     const whitespaceToken = tokens.find(
       (token) =>
@@ -622,24 +619,8 @@ export class QueryParser implements IQueryParser {
     return expectedTokens;
   }
 
-  isPartialLogicalOperator(value: string): boolean {
+  private isPartialLogicalOperator(value: string): boolean {
     const lowercasedIncompleteValue = value.toLowerCase();
     return [TokenTypes.AND, TokenTypes.OR].some((op) => op.toLowerCase().startsWith(lowercasedIncompleteValue));
-  }
-
-  /**
-   * Test whitespace classification for debugging
-   */
-  testWhitespaceClassification(input: string): Array<{ position: number; context: WhitespaceContext | null }> {
-    const results: Array<{ position: number; context: WhitespaceContext | null }> = [];
-
-    for (let i = 0; i < input.length; i++) {
-      if (input[i] === ' ') {
-        const context = this.classifyWhitespace(input, i);
-        results.push({ position: i, context });
-      }
-    }
-
-    return results;
   }
 }

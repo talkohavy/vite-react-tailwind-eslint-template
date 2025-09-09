@@ -47,7 +47,7 @@ export function usePositionInfoLogic(props: UsePositionInfoLogicProps) {
 
   // Classify whitespace context
   const whitespaceContext = useMemo(() => {
-    return queryParser.classifyWhitespace(query, cursorPosition);
+    return queryParser.classifyWhitespace(tokens, cursorPosition);
   }, [query, cursorPosition]);
 
   return { currentToken, currentASTNode, whitespaceContext };
