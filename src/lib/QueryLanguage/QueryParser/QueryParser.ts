@@ -6,7 +6,7 @@
  */
 
 import type { Comparator, Expression } from '../ASTBuilder';
-import type { ParserOptions } from '../types';
+import type { ParserOptions, TokenContext } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
 import type { ParseError, ParseResult } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
@@ -22,6 +22,7 @@ import { ContextTypes, type ContextTypeValues } from './logic/constants';
 export class QueryParser implements IQueryParser {
   private tokenStream: TokenStream = new TokenStream([]);
   private errors: ParseError[] = [];
+  private openParenthesisCount = 0;
   private options: ParserOptions;
   private queryLexer: QueryLexer;
 
@@ -149,9 +150,11 @@ export class QueryParser implements IQueryParser {
 
     if (!leftAST) return null;
 
-    this.tokenStream.countAndSkipWhitespaces({
-      expectedTokens: [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis],
-    });
+    const context: TokenContext = { expectedTokens: [ContextTypes.LogicalOperator] };
+    if (this.openParenthesisCount > 0) {
+      context.expectedTokens.push(ContextTypes.RightParenthesis);
+    }
+    this.tokenStream.countAndSkipWhitespaces(context);
 
     while (this.matchLogicalOperatorAND()) {
       const operatorToken = this.tokenStream.consume()!;
@@ -184,9 +187,11 @@ export class QueryParser implements IQueryParser {
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
 
-      this.tokenStream.countAndSkipWhitespaces({
-        expectedTokens: [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis],
-      });
+      const context: TokenContext = { expectedTokens: [ContextTypes.LogicalOperator] };
+      if (this.openParenthesisCount > 0) {
+        context.expectedTokens.push(ContextTypes.RightParenthesis);
+      }
+      this.tokenStream.countAndSkipWhitespaces(context);
     }
 
     return leftAST;
@@ -216,6 +221,7 @@ export class QueryParser implements IQueryParser {
    */
   private parseGroupExpression(): Expression | null {
     const startToken = this.tokenStream.expect(TokenTypes.LeftParenthesis);
+    this.openParenthesisCount++;
 
     this.tokenStream.countAndSkipWhitespaces({ expectedTokens: [ContextTypes.Key, ContextTypes.LeftParenthesis] });
 
@@ -245,9 +251,11 @@ export class QueryParser implements IQueryParser {
       return null;
     }
 
-    this.tokenStream.countAndSkipWhitespaces({
-      expectedTokens: [ContextTypes.RightParenthesis, ContextTypes.Comparator],
-    });
+    const context: TokenContext = { expectedTokens: [ContextTypes.Comparator] };
+    if (this.openParenthesisCount > 1) {
+      context.expectedTokens.push(ContextTypes.RightParenthesis);
+    }
+    this.tokenStream.countAndSkipWhitespaces(context);
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
       this.addError({
@@ -332,9 +340,11 @@ export class QueryParser implements IQueryParser {
     const valueToken = this.tokenStream.consume()!;
     valueToken.context = { expectedTokens: [ContextTypes.Value, ContextTypes.QuotedString] };
 
-    const spacesAfterValue = this.tokenStream.countAndSkipWhitespaces({
-      expectedTokens: [ContextTypes.LogicalOperator, ContextTypes.RightParenthesis],
-    });
+    const context: TokenContext = { expectedTokens: [ContextTypes.LogicalOperator] };
+    if (this.openParenthesisCount > 0) {
+      context.expectedTokens.push(ContextTypes.RightParenthesis);
+    }
+    const spacesAfterValue = this.tokenStream.countAndSkipWhitespaces(context);
 
     // Create child nodes
     const keyNode = ASTBuilder.createKey(keyToken.value, keyToken.position);
