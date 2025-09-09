@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { Token } from '../../../../../lib/QueryLanguage';
 import type { ParseResult } from '../../../../../lib/QueryLanguage/QueryParser';
+import type { IQueryParser } from '../../../../../lib/QueryLanguage/QueryParser/QueryParser.interface';
 import { ASTBuilder } from '../../../../../lib/QueryLanguage/ASTBuilder';
 
 type UsePositionInfoLogicProps = {
@@ -8,7 +9,7 @@ type UsePositionInfoLogicProps = {
   tokens: Token[];
   result: ParseResult;
   query: string;
-  queryParser: any;
+  queryParser: IQueryParser;
 };
 
 export function usePositionInfoLogic(props: UsePositionInfoLogicProps) {

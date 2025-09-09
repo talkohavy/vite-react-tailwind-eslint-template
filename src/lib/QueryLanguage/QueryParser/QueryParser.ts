@@ -7,7 +7,7 @@
 
 import type { Comparator, Expression } from '../ASTBuilder';
 import type { ParserOptions } from '../types';
-import type { AddErrorProps } from './QueryParser.interface';
+import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
 import type { ParseError, ParseResult, WhitespaceContext } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS } from '../constants';
@@ -19,7 +19,7 @@ import { ContextTypes, type ContextTypeValues } from './logic/constants';
 /**
  * QueryParser parses query strings into Abstract Syntax Trees
  */
-export class QueryParser {
+export class QueryParser implements IQueryParser {
   private tokenStream: TokenStream = new TokenStream([]);
   private errors: ParseError[] = [];
   private options: ParserOptions;
