@@ -72,7 +72,6 @@ export {
 
   // Parser Configuration
   DEFAULT_PARSER_OPTIONS,
-  DEFAULT_LEXER_OPTIONS,
 
   // Character Constants
   SPECIAL_CHARS,

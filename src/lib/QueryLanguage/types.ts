@@ -186,6 +186,5 @@ export interface ParserOptions {
  * Options for lexer configuration
  */
 export interface LexerOptions {
-  ignoreWhitespace: boolean;
-  caseSensitiveOperators: boolean;
+  caseSensitiveOperators?: boolean;
 }

@@ -85,8 +85,6 @@ export const OPERATOR_PRECEDENCE: Record<BooleanOperatorValues, number> = {
  * Pattern for valid identifiers (keys and unquoted values)
  */
 export const IDENTIFIER_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
-export const KEY_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
-export const VALUE_PATTERN = /^[a-zA-Z0-9_]+$/;
 
 /**
  * Pattern for quoted strings (single or double quotes)
@@ -184,14 +182,6 @@ export const DEFAULT_COMPLETION_CONFIG = {
 export const DEFAULT_PARSER_OPTIONS = {
   maxErrors: 10,
   trackPositions: true,
-} as const;
-
-/**
- * Default lexer options
- */
-export const DEFAULT_LEXER_OPTIONS = {
-  ignoreWhitespace: false,
-  caseSensitiveOperators: false,
 } as const;
 
 // =============================================================================
