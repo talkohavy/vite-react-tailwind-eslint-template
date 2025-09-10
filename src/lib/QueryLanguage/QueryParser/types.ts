@@ -1,9 +1,6 @@
 import type { QueryExpression } from '../ASTBuilder';
-import type { Position, Token } from '../types';
+import type { Position, Token } from '../QueryLexer';
 
-/**
- * Result of parsing operation
- */
 export interface ParseResult {
   success: boolean;
   ast?: QueryExpression;
@@ -11,11 +8,13 @@ export interface ParseResult {
   tokens: Token[];
 }
 
-/**
- * Parse error information
- */
 export interface ParseError {
   message: string;
   position: Position;
   recoverable: boolean;
+}
+
+export interface ParserOptions {
+  maxErrors: number;
+  trackPositions: boolean;
 }

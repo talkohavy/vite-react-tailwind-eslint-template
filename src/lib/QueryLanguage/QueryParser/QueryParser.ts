@@ -1,14 +1,7 @@
-/**
- * QueryParser - Parses token streams into Abstract Syntax Trees
- *
- * This parser implements a recursive descent parser for the query language,
- * handling operator precedence, error recovery, and AST generation.
- */
-
 import type { Comparator, Expression } from '../ASTBuilder';
-import type { ParserOptions, TokenContext } from '../types';
+import type { TokenContext } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
-import type { ParseError, ParseResult } from './types';
+import type { ParseError, ParseResult, ParserOptions } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS, BooleanOperator } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
