@@ -2,10 +2,6 @@ import type { Token } from '../QueryLexer';
 import type { TokenContext } from '../types';
 import { TokenTypes, type TokenTypeValues } from '../QueryLexer/logic/constants';
 
-/**
- * TokenStream manages a sequence of tokens with cursor positioning
- * and lookahead capabilities for parser consumption.
- */
 export class TokenStream {
   private tokens: Token[];
   private position = 0;
