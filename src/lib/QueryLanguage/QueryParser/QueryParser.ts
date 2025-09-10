@@ -13,7 +13,7 @@ import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
 import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS, BooleanOperator } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
-import { TokenStream } from '../QueryLexer/TokenStream';
+import { TokenStream } from '../TokenStream';
 import { ContextTypes, type ContextTypeValues } from './logic/constants';
 
 /**

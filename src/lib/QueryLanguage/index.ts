@@ -90,7 +90,7 @@ export {
 // Core components
 export { QueryParser } from './QueryParser/QueryParser';
 export { QueryLexer } from './QueryLexer/QueryLexer';
-export { TokenStream } from './QueryLexer/TokenStream';
+export { TokenStream } from './TokenStream';
 
 // Auto-completion components
 
