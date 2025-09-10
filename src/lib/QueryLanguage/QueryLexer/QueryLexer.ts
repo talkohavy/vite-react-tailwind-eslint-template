@@ -1,13 +1,7 @@
 import type { LexerOptions } from '../types';
 import type { Token } from './types';
-import {
-  BOOLEAN_OPERATORS,
-  WHITESPACE_PATTERN,
-  SPECIAL_CHARS,
-  ComparatorBeginnings,
-  type ComparatorBeginningKeys,
-} from '../constants';
-import { TokenTypes, type TokenTypeValues } from './logic/constants';
+import { BOOLEAN_OPERATORS, ComparatorBeginnings, type ComparatorBeginningKeys } from '../constants';
+import { SPECIAL_CHARS, TokenTypes, type TokenTypeValues } from './logic/constants';
 
 export class QueryLexer {
   private input = '';
@@ -273,7 +267,7 @@ export class QueryLexer {
    * Check if character is whitespace
    */
   private getIsWhitespace(char: string): boolean {
-    return WHITESPACE_PATTERN.test(char);
+    return /^\s+$/.test(char);
   }
 
   /**

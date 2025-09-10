@@ -3,21 +3,18 @@ import type { TokenContext } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
 import type { ParseError, ParseResult, ParserOptions } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
-import {
-  ERROR_MESSAGES,
-  ERROR_CODES,
-  DEFAULT_PARSER_OPTIONS,
-  BooleanOperator,
-  type ComparatorValues,
-} from '../constants';
+import { BooleanOperator, type ComparatorValues } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../TokenStream';
-import { ContextTypes, type ContextTypeValues } from './logic/constants';
+import {
+  ContextTypes,
+  ERROR_CODES,
+  ERROR_MESSAGES,
+  DEFAULT_PARSER_OPTIONS,
+  type ContextTypeValues,
+} from './logic/constants';
 
-/**
- * QueryParser parses query strings into Abstract Syntax Trees
- */
 export class QueryParser implements IQueryParser {
   private tokenStream: TokenStream = new TokenStream([]);
   private errors: ParseError[] = [];

@@ -15,3 +15,16 @@ export const TokenTypes = {
 type TokenTypesType = typeof TokenTypes;
 export type TokenTypeKeys = keyof TokenTypesType;
 export type TokenTypeValues = TokenTypesType[TokenTypeKeys];
+
+export const SPECIAL_CHARS = {
+  COLON: ':',
+  LPAREN: '(',
+  RPAREN: ')',
+  SINGLE_QUOTE: "'",
+  DOUBLE_QUOTE: '"',
+  SPACE: ' ',
+  TAB: '\t',
+  NEWLINE: '\n',
+  CARRIAGE_RETURN: '\r',
+  INCLUDES: '~',
+} as const;
