@@ -1,7 +1,7 @@
 import type { LexerOptions } from '../types';
 import type { Token } from './types';
 import { BOOLEAN_OPERATORS, ComparatorBeginnings, type ComparatorBeginningKeys } from '../constants';
-import { SPECIAL_CHARS, TokenTypes, type TokenTypeValues } from './logic/constants';
+import { SpecialChars, TokenTypes, type TokenTypeValues } from './logic/constants';
 
 export class QueryLexer {
   private input = '';
@@ -51,7 +51,7 @@ export class QueryLexer {
     }
 
     // Handle a valid COLON char (that comes after a Key)
-    if (char === SPECIAL_CHARS.COLON) {
+    if (char === SpecialChars.Colon) {
       this.advance();
 
       const colonToken = this.createToken(TokenTypes.Colon, char, start, this.position);
@@ -60,13 +60,13 @@ export class QueryLexer {
     }
 
     // Handle quoted strings
-    if (char === SPECIAL_CHARS.SINGLE_QUOTE || char === SPECIAL_CHARS.DOUBLE_QUOTE) {
+    if (char === SpecialChars.SingleQuote || char === SpecialChars.DoubleQuote) {
       const quotedStringToken = this.scanQuotedString(start);
       return quotedStringToken;
     }
 
     // Handle Parentheses
-    if (char === SPECIAL_CHARS.LPAREN) {
+    if (char === SpecialChars.LeftParenthesis) {
       this.advance();
 
       const leftParenthesisToken = this.createToken(TokenTypes.LeftParenthesis, char, start, this.position);
@@ -75,7 +75,7 @@ export class QueryLexer {
     }
 
     // Handle Right Parenthesis
-    if (char === SPECIAL_CHARS.RPAREN) {
+    if (char === SpecialChars.RightParenthesis) {
       this.advance();
 
       const rightParenthesisToken = this.createToken(TokenTypes.RightParenthesis, char, start, this.position);
