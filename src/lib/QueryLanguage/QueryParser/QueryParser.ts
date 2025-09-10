@@ -3,7 +3,7 @@ import type { TokenContext } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
 import type { ParseError, ParseResult, ParserOptions } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
-import { BooleanOperator, type ComparatorValues } from '../constants';
+import { BooleanOperators, type ComparatorValues } from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../TokenStream';
@@ -129,7 +129,7 @@ export class QueryParser implements IQueryParser {
       if (!rightAST) return leftAST;
 
       // Create operator node with position information
-      const logicalOperatorNode = ASTBuilder.createOperator(BooleanOperator.OR, operatorToken.position);
+      const logicalOperatorNode = ASTBuilder.createOperator(BooleanOperators.OR, operatorToken.position);
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(logicalOperatorNode, leftAST, rightAST, leftPosition);
@@ -178,7 +178,7 @@ export class QueryParser implements IQueryParser {
       if (!rightAST) return leftAST;
 
       // Create operator node with position information
-      const logicalOperatorNode = ASTBuilder.createOperator(BooleanOperator.AND, operatorToken.position);
+      const logicalOperatorNode = ASTBuilder.createOperator(BooleanOperators.AND, operatorToken.position);
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
       leftAST = ASTBuilder.createBooleanExpression(logicalOperatorNode, leftAST, rightAST, leftPosition);

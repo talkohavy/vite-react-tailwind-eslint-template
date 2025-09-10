@@ -1,27 +1,11 @@
-export const BooleanOperator = {
+export const BooleanOperators = {
   AND: 'AND',
   OR: 'OR',
 } as const;
 
-type TypeofBooleanOperator = typeof BooleanOperator;
+type TypeofBooleanOperator = typeof BooleanOperators;
 type BooleanOperatorKeys = keyof TypeofBooleanOperator;
 export type BooleanOperatorValues = TypeofBooleanOperator[BooleanOperatorKeys];
-
-// =============================================================================
-// Grammar Constants
-// =============================================================================
-
-/**
- * Boolean operators supported by the query language
- */
-export const BOOLEAN_OPERATORS: Record<string, BooleanOperatorValues> = {
-  AND: 'AND',
-  and: 'AND',
-  And: 'AND',
-  OR: 'OR',
-  or: 'OR',
-  Or: 'OR',
-} as const;
 
 export const Comparators = {
   '>': '>',

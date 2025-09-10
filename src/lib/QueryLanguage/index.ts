@@ -1,8 +1,4 @@
-export {
-  // Grammar Constants
-  BOOLEAN_OPERATORS,
-  Comparators,
-} from './constants';
+export { Comparators } from './constants';
 
 // Core components
 export { QueryParser } from './QueryParser/QueryParser';

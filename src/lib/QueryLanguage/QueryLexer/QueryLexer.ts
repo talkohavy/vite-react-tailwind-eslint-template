@@ -1,6 +1,11 @@
 import type { LexerOptions } from '../types';
 import type { Token } from './types';
-import { BOOLEAN_OPERATORS, ComparatorBeginnings, type ComparatorBeginningKeys } from '../constants';
+import {
+  ComparatorBeginnings,
+  type ComparatorBeginningKeys,
+  type BooleanOperatorValues,
+  BooleanOperators,
+} from '../constants';
 import { SpecialChars, TokenTypes, type TokenTypeValues } from './logic/constants';
 
 export class QueryLexer {
@@ -202,9 +207,11 @@ export class QueryLexer {
     }
 
     const wordValue = this.input.slice(start, this.position);
-    const uppercaseValue = this.options.caseSensitiveOperators ? wordValue : wordValue.toUpperCase();
+    const uppercaseValue = (
+      this.options.caseSensitiveOperators ? wordValue : wordValue.toUpperCase()
+    ) as BooleanOperatorValues;
 
-    if (BOOLEAN_OPERATORS[uppercaseValue]) {
+    if (BooleanOperators[uppercaseValue]) {
       const logicalOperatorToken = this.scanLogicalOperator(start, uppercaseValue, wordValue);
       return logicalOperatorToken;
     }
