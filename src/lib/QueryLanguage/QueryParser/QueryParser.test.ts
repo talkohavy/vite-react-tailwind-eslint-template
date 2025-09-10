@@ -50,7 +50,7 @@ describe('QueryParser', () => {
       expect(result.ast?.expression.type).toBe('boolean');
 
       if (result.ast?.expression.type === 'boolean') {
-        expect(result.ast.expression.operator).toBe('AND');
+        expect(result.ast.expression.operator.value).toBe('AND');
         expect(result.ast.expression.left.type).toBe('condition');
         expect(result.ast.expression.right.type).toBe('condition');
       }
@@ -63,7 +63,7 @@ describe('QueryParser', () => {
       expect(result.ast?.expression.type).toBe('boolean');
 
       if (result.ast?.expression.type === 'boolean') {
-        expect(result.ast.expression.operator).toBe('OR');
+        expect(result.ast.expression.operator.value).toBe('OR');
       }
     });
 
@@ -74,7 +74,7 @@ describe('QueryParser', () => {
       expect(result.ast?.expression.type).toBe('boolean');
 
       if (result.ast?.expression.type === 'boolean') {
-        expect(result.ast.expression.operator).toBe('OR');
+        expect(result.ast.expression.operator.value).toBe('OR');
         expect(result.ast.expression.right.type).toBe('boolean');
       }
     });
@@ -89,12 +89,12 @@ describe('QueryParser', () => {
 
       if (result.ast?.expression.type === 'boolean') {
         // The top level should be an OR expression
-        expect(result.ast.expression.operator).toBe('OR');
+        expect(result.ast.expression.operator.value).toBe('OR');
 
         // The left side should be the AND expression with the group
         expect(result.ast.expression.left.type).toBe('boolean');
         if (result.ast.expression.left.type === 'boolean') {
-          expect(result.ast.expression.left.operator).toBe('AND');
+          expect(result.ast.expression.left.operator.value).toBe('AND');
         }
 
         // The right side should be the final condition
@@ -130,7 +130,7 @@ describe('QueryParser', () => {
       expect(result.ast?.expression.type).toBe('boolean');
 
       if (result.ast?.expression.type === 'boolean') {
-        expect(result.ast.expression.operator).toBe('AND');
+        expect(result.ast.expression.operator.value).toBe('AND');
         expect(result.ast.expression.left.type).toBe('group');
       }
     });
