@@ -7,6 +7,7 @@ export default function QueryLanguageTab() {
   const [query, setQuery] = useState('');
   const [cursorPosition, setCursorPosition] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedCompletionIndex, setSelectedCompletionIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Initialize QueryParser and key configs
@@ -308,21 +309,56 @@ export default function QueryLanguageTab() {
     const newValue = event.target.value;
     setQuery(newValue);
     setCursorPosition(event.target.selectionStart || 0);
+    setSelectedCompletionIndex(-1); // Reset selection when typing
   }, []);
 
   const handleInputClick = useCallback((event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
     setCursorPosition(target.selectionStart || 0);
+    setSelectedCompletionIndex(-1); // Reset selection when clicking
   }, []);
 
-  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      const target = event.target as HTMLInputElement;
 
-    // Update cursor position on key navigation
-    setTimeout(() => {
-      setCursorPosition(target.selectionStart || 0);
-    }, 0);
-  }, []);
+      // Handle arrow key navigation in dropdown
+      if (isDropdownOpen && completions.length > 0) {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          setSelectedCompletionIndex((prev) => (prev < completions.length - 1 ? prev + 1 : 0));
+          return;
+        }
+
+        if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          setSelectedCompletionIndex((prev) => (prev > 0 ? prev - 1 : completions.length - 1));
+          return;
+        }
+
+        if (event.key === 'Enter' && selectedCompletionIndex >= 0) {
+          event.preventDefault();
+          const selectedCompletion = completions[selectedCompletionIndex];
+          if (selectedCompletion) {
+            handleCompletionSelect(selectedCompletion);
+          }
+          return;
+        }
+
+        if (event.key === 'Escape') {
+          setIsDropdownOpen(false);
+          setSelectedCompletionIndex(-1);
+          return;
+        }
+      }
+
+      // Update cursor position on key navigation
+      setTimeout(() => {
+        setCursorPosition(target.selectionStart || 0);
+      }, 0);
+    },
+    [isDropdownOpen, completions, selectedCompletionIndex],
+  );
 
   const handleCompletionSelect = useCallback((completion: CompletionItem) => {
     if (!inputRef.current) return;
@@ -349,7 +385,6 @@ export default function QueryLanguageTab() {
 
     setQuery(newValue);
     setCursorPosition(newCursorPosition);
-    setIsDropdownOpen(false);
 
     // Focus back to input and set cursor position
     setTimeout(() => {
@@ -371,33 +406,6 @@ export default function QueryLanguageTab() {
 
   return (
     <div className='p-6 max-w-4xl mx-auto bg-black'>
-      <div className='mb-8'>
-        <h1 className='text-3xl font-bold text-white mb-4'>Query Language System</h1>
-        <p className='text-gray-300 mb-6'>
-          Type a query below with intelligent autocomplete. The dropdown will show available keys, values, and operators
-          based on context.
-        </p>
-
-        <div className='mb-6'>
-          <h2 className='text-lg font-semibold text-white mb-3'>Examples:</h2>
-          <div className='space-y-2'>
-            {examples.map((example, index) => (
-              <button
-                key={index}
-                type='button'
-                className='text-sm text-gray-400 font-mono bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-700 transition-colors text-left w-full'
-                onClick={() => {
-                  setQuery(example);
-                  setCursorPosition(example.length);
-                }}
-              >
-                {example}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
       <div className='space-y-6'>
         <div className='bg-gray-800 rounded-lg border border-gray-700 p-6'>
           <h2 className='text-xl font-semibold text-white mb-4'>Query Input</h2>
@@ -414,19 +422,22 @@ export default function QueryLanguageTab() {
               className='w-full px-4 py-3 text-lg font-mono bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
             />
 
-            {/* Autocomplete Dropdown */}
+            {/* Autocomplete Dropdown with Arrow Key Navigation */}
             {isDropdownOpen && completions.length > 0 && (
               <div className='absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10'>
                 {completions.map((completion: CompletionItem, index: number) => (
                   <button
                     key={`${completion.text}-${index}`}
                     type='button'
-                    className='px-4 py-3 hover:bg-gray-700 cursor-pointer border-b border-gray-700 last:border-b-0 text-left w-full'
+                    className={`px-4 py-3 cursor-pointer border-b border-gray-700 last:border-b-0 text-left w-full transition-colors ${
+                      index === selectedCompletionIndex ? 'bg-blue-600 text-white' : 'hover:bg-gray-700 text-white'
+                    }`}
                     onClick={() => handleCompletionSelect(completion)}
+                    onMouseEnter={() => setSelectedCompletionIndex(index)}
                   >
                     <div className='flex items-center justify-between'>
                       <div className='flex items-center space-x-3'>
-                        <span className='font-mono text-white'>{completion.text}</span>
+                        <span className='font-mono'>{completion.text}</span>
                         <span className='text-xs px-2 py-1 bg-blue-600 text-white rounded'>{completion.type}</span>
                       </div>
                       <span className='text-xs text-gray-400'>Priority: {completion.priority}</span>
@@ -517,6 +528,33 @@ export default function QueryLanguageTab() {
             </div>
           </div>
         )}
+      </div>
+
+      <div className='mb-8'>
+        <h1 className='text-3xl font-bold text-white mb-4'>Query Language System</h1>
+        <p className='text-gray-300 mb-6'>
+          Type a query below with intelligent autocomplete. The dropdown will show available keys, values, and operators
+          based on context.
+        </p>
+
+        <div className='mb-6'>
+          <h2 className='text-lg font-semibold text-white mb-3'>Examples:</h2>
+          <div className='space-y-2'>
+            {examples.map((example, index) => (
+              <button
+                key={index}
+                type='button'
+                className='text-sm text-gray-400 font-mono bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-700 transition-colors text-left w-full'
+                onClick={() => {
+                  setQuery(example);
+                  setCursorPosition(example.length);
+                }}
+              >
+                {example}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
