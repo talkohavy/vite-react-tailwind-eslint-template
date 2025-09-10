@@ -1,5 +1,6 @@
 import type { QueryExpression } from '../ASTBuilder';
-import type { Position, Token } from '../QueryLexer';
+import type { Token } from '../QueryLexer';
+import type { Position } from '../types';
 
 export interface ParseResult {
   success: boolean;
