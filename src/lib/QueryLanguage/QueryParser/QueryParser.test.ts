@@ -1,7 +1,3 @@
-/**
- * Unit tests for QueryParser
- */
-
 import { QueryParser } from './QueryParser';
 
 describe('QueryParser', () => {
