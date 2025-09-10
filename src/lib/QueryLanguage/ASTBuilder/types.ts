@@ -1,6 +1,6 @@
 import type { BooleanOperatorValues, ComparatorValues } from '../constants';
 import type { Position } from '../types';
-import type { ExpressionTypes } from './logic/constants';
+import type { AstTypes } from '../utils';
 
 export interface ASTNode {
   type: string;
@@ -11,7 +11,7 @@ export interface ASTNode {
  * Root query expression
  */
 export interface QueryExpression extends ASTNode {
-  type: typeof ExpressionTypes.Query;
+  type: typeof AstTypes.Query;
   expression: Expression;
 }
 
@@ -19,7 +19,7 @@ export interface QueryExpression extends ASTNode {
  * Boolean expression (AND/OR operations)
  */
 export interface BooleanExpression extends ASTNode {
-  type: typeof ExpressionTypes.Boolean;
+  type: typeof AstTypes.Boolean;
   operator: OperatorNode;
   left: Expression;
   right: Expression;
@@ -29,7 +29,7 @@ export interface BooleanExpression extends ASTNode {
  * Key node for condition expressions
  */
 export interface KeyNode extends ASTNode {
-  type: typeof ExpressionTypes.Key;
+  type: typeof AstTypes.Key;
   value: string;
 }
 
@@ -37,7 +37,7 @@ export interface KeyNode extends ASTNode {
  * Comparator node for condition expressions
  */
 export interface ComparatorNode extends ASTNode {
-  type: typeof ExpressionTypes.Comparator;
+  type: typeof AstTypes.Comparator;
   value: ComparatorValues;
 }
 
@@ -45,7 +45,7 @@ export interface ComparatorNode extends ASTNode {
  * Operator node for boolean expressions
  */
 export interface OperatorNode extends ASTNode {
-  type: typeof ExpressionTypes.LogicalOperator;
+  type: typeof AstTypes.LogicalOperator;
   value: BooleanOperatorValues;
 }
 
@@ -53,7 +53,7 @@ export interface OperatorNode extends ASTNode {
  * Value node for condition expressions
  */
 export interface ValueNode extends ASTNode {
-  type: typeof ExpressionTypes.Value;
+  type: typeof AstTypes.Value;
   value: string;
 }
 
@@ -61,7 +61,7 @@ export interface ValueNode extends ASTNode {
  * Condition expression (key: value)
  */
 export interface ConditionExpression extends ASTNode {
-  type: typeof ExpressionTypes.Condition;
+  type: typeof AstTypes.Condition;
   key: KeyNode;
   comparator: ComparatorNode;
   value: ValueNode;
@@ -74,7 +74,7 @@ export interface ConditionExpression extends ASTNode {
  * Grouped expression (parentheses)
  */
 export interface GroupExpression extends ASTNode {
-  type: typeof ExpressionTypes.Group;
+  type: typeof AstTypes.Group;
   expression: Expression;
 }
 

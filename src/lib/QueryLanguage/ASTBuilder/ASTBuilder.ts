@@ -71,7 +71,7 @@ export class ASTBuilder {
    */
   static createOperator(value: BooleanOperatorValues, position: Position): OperatorNode {
     return {
-      type: AstTypes.Operator,
+      type: AstTypes.LogicalOperator,
       value,
       position,
     };
