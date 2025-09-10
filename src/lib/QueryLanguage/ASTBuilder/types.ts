@@ -34,17 +34,11 @@ export interface LogicalOperatorNode extends ASTNode {
   value: BooleanOperatorValues;
 }
 
-/**
- * Value node for condition expressions
- */
 export interface ValueNode extends ASTNode {
   type: typeof AstTypes.Value;
   value: string;
 }
 
-/**
- * Condition expression (key: value)
- */
 export interface ConditionExpression extends ASTNode {
   type: typeof AstTypes.Condition;
   key: KeyNode;
@@ -55,15 +49,9 @@ export interface ConditionExpression extends ASTNode {
   spacesAfterValue: number;
 }
 
-/**
- * Grouped expression (parentheses)
- */
 export interface GroupExpression extends ASTNode {
   type: typeof AstTypes.Group;
   expression: Expression;
 }
 
-/**
- * Union type for all expression types
- */
 export type Expression = QueryExpression | BooleanExpression | ConditionExpression | GroupExpression;

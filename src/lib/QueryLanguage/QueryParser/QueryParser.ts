@@ -103,9 +103,6 @@ export class QueryParser implements IQueryParser {
     }
   }
 
-  /**
-   * Reset parser state
-   */
   private reset(): void {
     this.errors = [];
     this.openParenthesisCount = 0;
@@ -251,6 +248,7 @@ export class QueryParser implements IQueryParser {
     if (this.openParenthesisCount > 1) {
       context.expectedTokens.push(ContextTypes.RightParenthesis);
     }
+
     this.tokenStream.countAndSkipWhitespaces(context);
 
     if (!this.tokenStream.isCurrentAMatchWith(TokenTypes.RightParenthesis)) {
@@ -273,7 +271,7 @@ export class QueryParser implements IQueryParser {
   }
 
   /**
-   * Parse condition expression (key: value)
+   * Parse condition expression (key comparator value)
    */
   private parseCondition(): Expression | null {
     // Expect identifier for key
@@ -398,9 +396,6 @@ export class QueryParser implements IQueryParser {
     return isOrOperator;
   }
 
-  /**
-   * Add a parse error
-   */
   private addError(props: AddErrorProps): void {
     const { code, message, position } = props;
 
@@ -432,30 +427,6 @@ export class QueryParser implements IQueryParser {
       start: token.position.end,
       end: token.position.end,
     };
-  }
-
-  /**
-   * Validate syntax without full parsing (faster for validation-only scenarios)
-   */
-  validateSyntax(input: string): { valid: boolean; errors: ParseError[] } {
-    try {
-      const result = this.parse(input);
-      return {
-        valid: result.success,
-        errors: result.errors,
-      };
-    } catch (error) {
-      return {
-        valid: false,
-        errors: [
-          {
-            message: error instanceof Error ? error.message : 'Validation error',
-            position: { start: 0, end: input.length },
-            recoverable: false,
-          },
-        ],
-      };
-    }
   }
 
   private isPartialLogicalOperator(value: string): boolean {

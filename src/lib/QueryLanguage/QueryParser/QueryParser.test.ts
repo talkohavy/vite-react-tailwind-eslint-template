@@ -185,22 +185,6 @@ describe('QueryParser', () => {
     });
   });
 
-  describe('syntax validation', () => {
-    test('should validate correct syntax', () => {
-      const result = parser.validateSyntax('status: active AND role: admin');
-
-      expect(result.valid).toBe(true);
-      expect(result.errors).toHaveLength(0);
-    });
-
-    test('should detect syntax errors', () => {
-      const result = parser.validateSyntax('status: AND role');
-
-      expect(result.valid).toBe(false);
-      expect(result.errors.length).toBeGreaterThan(0);
-    });
-  });
-
   describe('whitespace handling', () => {
     test('should handle extra whitespace', () => {
       const result = parser.parse('  status  :  active  AND  role  :  admin  ');
