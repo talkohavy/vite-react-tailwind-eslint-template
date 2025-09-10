@@ -21,14 +21,3 @@ export const Comparators = {
 type TypeOfComparator = typeof Comparators;
 export type ComparatorKeys = keyof TypeOfComparator;
 export type ComparatorValues = TypeOfComparator[ComparatorKeys];
-
-export const ComparatorBeginnings = {
-  '>': '>',
-  '<': '<',
-  '=': '=',
-  '!': '!',
-} as const;
-
-type TypeOfComparatorBeginnings = typeof ComparatorBeginnings;
-export type ComparatorBeginningKeys = keyof TypeOfComparatorBeginnings;
-export type ComparatorBeginningValues = TypeOfComparatorBeginnings[ComparatorBeginningKeys];

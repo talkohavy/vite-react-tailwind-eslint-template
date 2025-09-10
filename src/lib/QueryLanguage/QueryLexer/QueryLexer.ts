@@ -1,12 +1,13 @@
 import type { LexerOptions } from '../types';
 import type { Token } from './types';
+import { type BooleanOperatorValues, BooleanOperators } from '../constants';
 import {
-  ComparatorBeginnings,
   type ComparatorBeginningKeys,
-  type BooleanOperatorValues,
-  BooleanOperators,
-} from '../constants';
-import { SpecialChars, TokenTypes, type TokenTypeValues } from './logic/constants';
+  ComparatorBeginnings,
+  SpecialChars,
+  TokenTypes,
+  type TokenTypeValues,
+} from './logic/constants';
 
 export class QueryLexer {
   private input = '';

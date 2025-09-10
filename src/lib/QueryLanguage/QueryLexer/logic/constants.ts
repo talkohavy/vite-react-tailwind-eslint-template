@@ -16,6 +16,17 @@ type TokenTypesType = typeof TokenTypes;
 export type TokenTypeKeys = keyof TokenTypesType;
 export type TokenTypeValues = TokenTypesType[TokenTypeKeys];
 
+export const ComparatorBeginnings = {
+  '>': '>',
+  '<': '<',
+  '=': '=',
+  '!': '!',
+} as const;
+
+type TypeOfComparatorBeginnings = typeof ComparatorBeginnings;
+export type ComparatorBeginningKeys = keyof TypeOfComparatorBeginnings;
+export type ComparatorBeginningValues = TypeOfComparatorBeginnings[ComparatorBeginningKeys];
+
 export const SpecialChars = {
   Colon: ':',
   LeftParenthesis: '(',
