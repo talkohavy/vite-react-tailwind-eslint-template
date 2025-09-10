@@ -1,4 +1,5 @@
-import type { Token, LexerOptions } from '../types';
+import type { LexerOptions } from '../types';
+import type { Token } from './types';
 import {
   BOOLEAN_OPERATORS,
   WHITESPACE_PATTERN,
