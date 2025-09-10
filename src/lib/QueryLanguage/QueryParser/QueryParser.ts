@@ -129,10 +129,10 @@ export class QueryParser implements IQueryParser {
       if (!rightAST) return leftAST;
 
       // Create operator node with position information
-      const operatorNode = ASTBuilder.createOperator(BooleanOperator.OR, operatorToken.position);
+      const logicalOperatorNode = ASTBuilder.createOperator(BooleanOperator.OR, operatorToken.position);
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
-      leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
+      leftAST = ASTBuilder.createBooleanExpression(logicalOperatorNode, leftAST, rightAST, leftPosition);
     }
 
     return leftAST;
@@ -178,10 +178,10 @@ export class QueryParser implements IQueryParser {
       if (!rightAST) return leftAST;
 
       // Create operator node with position information
-      const operatorNode = ASTBuilder.createOperator(BooleanOperator.AND, operatorToken.position);
+      const logicalOperatorNode = ASTBuilder.createOperator(BooleanOperator.AND, operatorToken.position);
 
       const leftPosition = ASTBuilder.mergePositions(leftAST.position, rightAST.position);
-      leftAST = ASTBuilder.createBooleanExpression(operatorNode, leftAST, rightAST, leftPosition);
+      leftAST = ASTBuilder.createBooleanExpression(logicalOperatorNode, leftAST, rightAST, leftPosition);
 
       const context: TokenContext = { expectedTokens: [ContextTypes.LogicalOperator] };
       if (this.openParenthesisCount > 0) {

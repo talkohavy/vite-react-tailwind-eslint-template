@@ -8,16 +8,13 @@ import type {
   Expression,
   GroupExpression,
   KeyNode,
-  OperatorNode,
+  LogicalOperatorNode,
   QueryExpression,
   ValueNode,
 } from './types';
 import { AstTypes } from './logic/constants';
 
 export class ASTBuilder {
-  /**
-   * Create a query expression (root node)
-   */
   static createQuery(expression: Expression, position: Position): QueryExpression {
     return {
       type: AstTypes.Query,
@@ -26,11 +23,8 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create a boolean expression (AND/OR operations)
-   */
   static createBooleanExpression(
-    operator: OperatorNode,
+    operator: LogicalOperatorNode,
     left: Expression,
     right: Expression,
     position: Position,
@@ -44,9 +38,6 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create a key node
-   */
   static createKey(value: string, position: Position): KeyNode {
     return {
       type: AstTypes.Key,
@@ -55,9 +46,6 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create a comparator node
-   */
   static createComparator(value: ComparatorValues, position: Position): ComparatorNode {
     return {
       type: AstTypes.Comparator,
@@ -66,10 +54,7 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create an operator node
-   */
-  static createOperator(value: BooleanOperatorValues, position: Position): OperatorNode {
+  static createOperator(value: BooleanOperatorValues, position: Position): LogicalOperatorNode {
     return {
       type: AstTypes.LogicalOperator,
       value,
@@ -77,9 +62,6 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create a value node
-   */
   static createValue(value: string, position: Position): ValueNode {
     return {
       type: AstTypes.Value,
@@ -88,9 +70,6 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create a condition expression (key: value)
-   */
   static createCondition(
     key: KeyNode,
     comparator: ComparatorNode,
@@ -112,9 +91,6 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create a group expression (parentheses)
-   */
   static createGroup(expression: Expression, position: Position): GroupExpression {
     return {
       type: AstTypes.Group,
@@ -123,9 +99,6 @@ export class ASTBuilder {
     };
   }
 
-  /**
-   * Create a position object
-   */
   static createPosition(start: number, end: number, line?: number, column?: number): Position {
     return {
       start,

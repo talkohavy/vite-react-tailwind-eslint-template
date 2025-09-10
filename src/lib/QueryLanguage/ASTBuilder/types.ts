@@ -7,44 +7,29 @@ export interface ASTNode {
   position: Position;
 }
 
-/**
- * Root query expression
- */
 export interface QueryExpression extends ASTNode {
   type: typeof AstTypes.Query;
   expression: Expression;
 }
 
-/**
- * Boolean expression (AND/OR operations)
- */
 export interface BooleanExpression extends ASTNode {
   type: typeof AstTypes.Boolean;
-  operator: OperatorNode;
+  operator: LogicalOperatorNode;
   left: Expression;
   right: Expression;
 }
 
-/**
- * Key node for condition expressions
- */
 export interface KeyNode extends ASTNode {
   type: typeof AstTypes.Key;
   value: string;
 }
 
-/**
- * Comparator node for condition expressions
- */
 export interface ComparatorNode extends ASTNode {
   type: typeof AstTypes.Comparator;
   value: ComparatorValues;
 }
 
-/**
- * Operator node for boolean expressions
- */
-export interface OperatorNode extends ASTNode {
+export interface LogicalOperatorNode extends ASTNode {
   type: typeof AstTypes.LogicalOperator;
   value: BooleanOperatorValues;
 }
