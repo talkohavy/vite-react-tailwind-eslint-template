@@ -17,7 +17,7 @@ export const ExpressionTypes = {
   Key: 'key',
   Value: 'value',
   Comparator: 'comparator',
-  Operator: 'operator',
+  LogicalOperator: 'logical-operator',
   Query: 'query',
   Boolean: 'boolean',
   Condition: 'condition',

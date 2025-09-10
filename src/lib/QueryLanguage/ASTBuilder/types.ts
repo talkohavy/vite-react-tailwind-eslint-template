@@ -45,7 +45,7 @@ export interface ComparatorNode extends ASTNode {
  * Operator node for boolean expressions
  */
 export interface OperatorNode extends ASTNode {
-  type: typeof ExpressionTypes.Operator;
+  type: typeof ExpressionTypes.LogicalOperator;
   value: BooleanOperatorValues;
 }
 
