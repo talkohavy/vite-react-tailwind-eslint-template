@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import type { KeyConfig, CompletionItem, TokenContext, TokenContextWithKey } from '../../../../lib/QueryLanguage/types';
-import { QueryParser } from '../../../../lib/QueryLanguage';
-import { ContextTypes } from '../../../../lib/QueryLanguage/QueryParser';
+import type { TokenContext, TokenContextWithKey } from '../../../../lib/QueryLanguage/types';
+import type { CompletionItem, KeyConfig } from './types';
+import { ContextTypes, QueryParser } from '../../../../lib/QueryLanguage/QueryParser';
 
 export default function QueryLanguageTab() {
   const [query, setQuery] = useState('');

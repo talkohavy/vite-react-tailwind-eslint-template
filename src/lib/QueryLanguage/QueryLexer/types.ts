@@ -7,3 +7,7 @@ export interface Token {
   position: Position;
   context?: TokenContext;
 }
+
+export interface LexerOptions {
+  caseSensitiveOperators?: boolean;
+}

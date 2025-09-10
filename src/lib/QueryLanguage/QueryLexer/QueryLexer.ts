@@ -1,5 +1,4 @@
-import type { LexerOptions } from '../types';
-import type { Token } from './types';
+import type { Token, LexerOptions } from './types';
 import { type BooleanOperatorValues, BooleanOperators } from '../constants';
 import {
   type ComparatorBeginningKeys,
