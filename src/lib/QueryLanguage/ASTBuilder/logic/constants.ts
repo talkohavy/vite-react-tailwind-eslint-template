@@ -1,12 +1,12 @@
 export const AstTypes = {
-  Query: 'query',
-  Boolean: 'boolean',
-  Condition: 'condition',
-  Group: 'group',
   Key: 'key',
+  Value: 'value',
   Comparator: 'comparator',
   Operator: 'operator',
-  Value: 'value',
+  Condition: 'condition',
+  Group: 'group',
+  Boolean: 'boolean',
+  Query: 'query',
 } as const;
 
 type TypOfAstTypes = typeof AstTypes;

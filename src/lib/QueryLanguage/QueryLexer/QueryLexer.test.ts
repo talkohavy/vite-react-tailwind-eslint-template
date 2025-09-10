@@ -10,8 +10,8 @@ describe('QueryLexer', () => {
     const lexer = new QueryLexer();
     const tokens = lexer.tokenize(input);
 
-    // Remove EOF token for easier testing
-    const actualTokens = tokens.slice(0, -1);
+    // Remove EOF and WHITESPACE tokens for easier testing
+    const actualTokens = tokens.slice(0, -1).filter((token) => token.type !== 'WHITESPACE');
 
     expect(actualTokens).toHaveLength(expected.length);
 

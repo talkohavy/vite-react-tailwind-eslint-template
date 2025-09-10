@@ -1,10 +1,3 @@
-/**
- * ASTBuilder - Utility functions for building Abstract Syntax Tree nodes
- *
- * This module provides factory functions for creating well-formed AST nodes
- * with proper type checking and position tracking.
- */
-
 import type { BooleanOperatorValues } from '../constants';
 import type { Position } from '../types';
 import type {
