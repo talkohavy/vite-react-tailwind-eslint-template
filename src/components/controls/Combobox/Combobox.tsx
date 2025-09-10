@@ -48,6 +48,7 @@ type ComboboxProps = {
   controlClassName?: string;
   triggerClassName?: string;
   clearIconClassName?: string;
+  dropdownClassName?: string;
 } & Field.RootProps;
 
 export default function Combobox(props: ComboboxProps) {
@@ -68,6 +69,7 @@ export default function Combobox(props: ComboboxProps) {
     controlClassName,
     triggerClassName,
     clearIconClassName,
+    dropdownClassName,
     ...rest
   } = props;
 
@@ -138,7 +140,7 @@ export default function Combobox(props: ComboboxProps) {
 
         <Portal>
           <Positioner className={styles.dropdown}>
-            <Content className={styles.content}>
+            <Content className={clsx(styles.content, dropdownClassName)}>
               <ItemGroup>
                 {/* <ItemGroupLabel>Frameworks</ItemGroupLabel> */}
                 {collection.items.map((item) => (

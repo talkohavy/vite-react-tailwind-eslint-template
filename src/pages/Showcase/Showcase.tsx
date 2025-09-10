@@ -158,6 +158,7 @@ export default function RadixComponents() {
         setSelectOption={setSelectComboboxOption}
         options={options}
         placeholder='Choose...'
+        dropdownClassName='h-44'
         loop
       />
 
