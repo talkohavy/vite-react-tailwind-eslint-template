@@ -1,8 +1,6 @@
-import type { BooleanOperatorValues } from '../constants';
+import type { BooleanOperatorValues, ComparatorValues } from '../constants';
 import type { Position } from '../types';
 import type { ExpressionTypes } from './logic/constants';
-
-export type Comparator = ':' | '>' | '<' | '>=' | '<=' | '!=' | '~';
 
 export interface ASTNode {
   type: string;
@@ -40,7 +38,7 @@ export interface KeyNode extends ASTNode {
  */
 export interface ComparatorNode extends ASTNode {
   type: typeof ExpressionTypes.Comparator;
-  value: Comparator;
+  value: ComparatorValues;
 }
 
 /**

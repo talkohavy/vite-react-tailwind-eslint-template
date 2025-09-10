@@ -1,9 +1,15 @@
-import type { Comparator, Expression } from '../ASTBuilder';
+import type { Expression } from '../ASTBuilder';
 import type { TokenContext } from '../types';
 import type { AddErrorProps, IQueryParser } from './QueryParser.interface';
 import type { ParseError, ParseResult, ParserOptions } from './types';
 import { ASTBuilder } from '../ASTBuilder/ASTBuilder';
-import { ERROR_MESSAGES, ERROR_CODES, DEFAULT_PARSER_OPTIONS, BooleanOperator } from '../constants';
+import {
+  ERROR_MESSAGES,
+  ERROR_CODES,
+  DEFAULT_PARSER_OPTIONS,
+  BooleanOperator,
+  type ComparatorValues,
+} from '../constants';
 import { TokenTypes } from '../QueryLexer/logic/constants';
 import { QueryLexer } from '../QueryLexer/QueryLexer';
 import { TokenStream } from '../TokenStream';
@@ -348,7 +354,10 @@ export class QueryParser implements IQueryParser {
 
     // Create child nodes
     const keyNode = ASTBuilder.createKey(keyToken.value, keyToken.position);
-    const comparatorNode = ASTBuilder.createComparator(comparatorToken.value as Comparator, comparatorToken.position);
+    const comparatorNode = ASTBuilder.createComparator(
+      comparatorToken.value as ComparatorValues,
+      comparatorToken.position,
+    );
     const valueNode = ASTBuilder.createValue(valueToken.value, valueToken.position);
 
     const conditionPosition = ASTBuilder.mergePositions(keyToken.position, valueToken.position);

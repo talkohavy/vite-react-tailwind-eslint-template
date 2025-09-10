@@ -1,9 +1,8 @@
-import type { BooleanOperatorValues } from '../constants';
+import type { BooleanOperatorValues, ComparatorValues } from '../constants';
 import type { Position } from '../types';
 import type {
   ASTNode,
   BooleanExpression,
-  Comparator,
   ComparatorNode,
   ConditionExpression,
   Expression,
@@ -59,7 +58,7 @@ export class ASTBuilder {
   /**
    * Create a comparator node
    */
-  static createComparator(value: Comparator, position: Position): ComparatorNode {
+  static createComparator(value: ComparatorValues, position: Position): ComparatorNode {
     return {
       type: AstTypes.Comparator,
       value,

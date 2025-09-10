@@ -1,4 +1,4 @@
-import type { Token } from '../../../../../../lib/QueryLanguage';
+import type { Token } from '../../../../../../lib/QueryLanguage/QueryLexer';
 
 type TokenListProps = {
   tokens: Token[];

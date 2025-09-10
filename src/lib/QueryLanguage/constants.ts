@@ -1,12 +1,3 @@
-/**
- * Constants and patterns for the Query Language system
- *
- * This module contains all the constant values, regex patterns, and
- * configuration used throughout the query language implementation.
- */
-
-import type { Comparator } from './ASTBuilder';
-
 export const BooleanOperator = {
   AND: 'AND',
   OR: 'OR',
@@ -43,8 +34,8 @@ export const Comparators = {
   '<=': '<=',
   '!=': '!=',
   '==': '==',
-  // ':': ':',
-  // '~': '~',
+  ':': ':',
+  '~': '~',
 } as const;
 
 type TypeOfComparator = typeof Comparators;
@@ -67,7 +58,7 @@ export type ComparatorBeginningValues = TypeOfComparatorBeginnings[ComparatorBeg
 /**
  * Currently supported comparators (phase 1 only supports equals)
  */
-export const SUPPORTED_COMPARATORS: Comparator[] = [':'];
+export const SUPPORTED_COMPARATORS: ComparatorValues[] = [':'];
 
 /**
  * Operator precedence (higher number = higher precedence)

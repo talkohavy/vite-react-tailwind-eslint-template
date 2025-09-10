@@ -1,4 +1,5 @@
-import type { ASTNode, Token } from '../../../../../../lib/QueryLanguage';
+import type { ASTNode } from '../../../../../../lib/QueryLanguage';
+import type { Token } from '../../../../../../lib/QueryLanguage/QueryLexer';
 
 interface CursorPositionInfoProps {
   cursorPosition: number;

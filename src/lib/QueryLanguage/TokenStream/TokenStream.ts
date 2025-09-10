@@ -1,4 +1,5 @@
-import type { Token, TokenContext } from '../types';
+import type { Token } from '../QueryLexer';
+import type { TokenContext } from '../types';
 import { TokenTypes, type TokenTypeValues } from '../QueryLexer/logic/constants';
 
 /**
