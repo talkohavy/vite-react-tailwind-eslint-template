@@ -10,9 +10,6 @@ export const TokenTypes = {
   OR: 'OR',
   Comparator: 'COMPARATOR',
   EOF: 'EOF',
-  // Custom types for context analysis
-  Key: 'KEY',
-  Value: 'VALUE',
 } as const;
 
 type TokenTypesType = typeof TokenTypes;
