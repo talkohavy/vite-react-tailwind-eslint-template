@@ -7,7 +7,7 @@ import { QueryLexer } from './QueryLexer';
 
 describe('QueryLexer', () => {
   function testTokenization(input: string, expected: Array<{ type: TokenTypeValues; value: string }>) {
-    const lexer = new QueryLexer({ ignoreWhitespace: true });
+    const lexer = new QueryLexer();
     const tokens = lexer.tokenize(input);
 
     // Remove EOF token for easier testing
@@ -60,13 +60,6 @@ describe('QueryLexer', () => {
 
       expect(tokens[0]?.type).toBe(TokenTypes.QuotedString);
       expect(tokens[0]?.value).toBe('hello world');
-    });
-  });
-
-  describe('static utility methods', () => {
-    test('extractQuotedContent should extract content from quoted strings', () => {
-      expect(QueryLexer.extractQuotedContent('"hello world"')).toBe('hello world');
-      expect(QueryLexer.extractQuotedContent('unquoted')).toBe(null);
     });
   });
 });
