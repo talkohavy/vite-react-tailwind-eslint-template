@@ -8,7 +8,7 @@ type QueryInputProps = {
   selectedCompletionIndex: number;
   onQueryChange: (value: string) => void;
   onCursorPositionChange: (position: number) => void;
-  onCompletionSelect: (completion: CompletionItem) => void;
+  onCompletionSelect?: (completion: CompletionItem) => void;
   onSelectedIndexChange: (index: number) => void;
   onDropdownToggle: (open: boolean) => void;
 };
@@ -69,7 +69,7 @@ export default function QueryInput(props: QueryInputProps) {
           event.preventDefault();
           const selectedCompletion = completions[selectedCompletionIndex];
           if (selectedCompletion) {
-            onCompletionSelect(selectedCompletion);
+            onCompletionSelect?.(selectedCompletion);
           }
           return;
         }
@@ -117,7 +117,7 @@ export default function QueryInput(props: QueryInputProps) {
       }
 
       // Insert the completion
-      const insertText = completion.insertText || completion.text;
+      const insertText = `${completion.insertText || completion.text} `;
       const newValue = value.substring(0, tokenStart) + insertText + value.substring(start);
       const newCursorPosition = tokenStart + insertText.length;
 

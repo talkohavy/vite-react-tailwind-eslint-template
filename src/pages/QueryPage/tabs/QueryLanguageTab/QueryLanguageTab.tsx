@@ -1,9 +1,6 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import type { TokenContext } from '../../../../lib/QueryLanguage/types';
-import type { CompletionItem } from './types';
-import { ContextTypes, QueryParser } from '../../../../lib/QueryLanguage/QueryParser';
+import { useState, useMemo, useEffect } from 'react';
+import { QueryParser } from '../../../../lib/QueryLanguage/QueryParser';
 import ContextInfo from './components/ContextInfo';
-import ExampleQueries from './components/ExampleQueries';
 import ParseResult from './components/ParseResult';
 import QueryInput from './components/QueryInput';
 import { keyConfigs } from './logic/constants';
@@ -24,12 +21,7 @@ export default function QueryLanguageTab() {
   // Get completion context and suggestions
   const { completions, expectedTypes } = useMemo(() => {
     if (!query) {
-      const context: TokenContext = { expectedTokens: [ContextTypes.Key] };
-
-      return {
-        completions: generateCompletions(context, ''),
-        expectedTypes: [ContextTypes.Key],
-      };
+      return { completions: [], expectedTypes: [] };
     }
 
     try {
@@ -57,10 +49,8 @@ export default function QueryLanguageTab() {
       };
     } catch (error) {
       console.error('Error getting completions:', error);
-      return {
-        completions: [],
-        expectedTypes: [],
-      };
+
+      return { completions: [], expectedTypes: [] };
     }
   }, [query, cursorPosition, queryParser, generateCompletions]);
 
@@ -69,17 +59,6 @@ export default function QueryLanguageTab() {
     const shouldShowDropdown = expectedTypes.length > 0 && completions.length > 0;
     setIsDropdownOpen(shouldShowDropdown);
   }, [expectedTypes, completions]);
-
-  const handleCompletionSelect = useCallback((completion: CompletionItem) => {
-    // This logic is now handled inside QueryInput component
-    // We just need to pass the callback
-    console.log('Completion selected:', completion);
-  }, []);
-
-  const handleExampleSelect = useCallback((example: string) => {
-    setQuery(example);
-    setCursorPosition(example.length);
-  }, []);
 
   return (
     <div className='p-6 max-w-4xl mx-auto bg-black'>
@@ -94,7 +73,6 @@ export default function QueryLanguageTab() {
             selectedCompletionIndex={selectedCompletionIndex}
             onQueryChange={setQuery}
             onCursorPositionChange={setCursorPosition}
-            onCompletionSelect={handleCompletionSelect}
             onSelectedIndexChange={setSelectedCompletionIndex}
             onDropdownToggle={setIsDropdownOpen}
           />
@@ -109,8 +87,6 @@ export default function QueryLanguageTab() {
 
         <ParseResult query={query} queryParser={queryParser} />
       </div>
-
-      <ExampleQueries onExampleSelect={handleExampleSelect} />
     </div>
   );
 }
