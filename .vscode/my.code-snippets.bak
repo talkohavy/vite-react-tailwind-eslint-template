@@ -1,4 +1,9 @@
 {
+  "className": {
+    "prefix": ["cl"],
+    "body": ["className=''"],
+    "description": "className with string",
+  },
   "classStyle": {
     "prefix": ["clas", "class"],
     "body": ["className={styles.${1}}"],
