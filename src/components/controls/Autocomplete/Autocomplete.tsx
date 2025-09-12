@@ -112,14 +112,7 @@ export default function Autocomplete(props: AutocompleteProps) {
     <Field.Root {...rest}>
       <RootProvider
         value={combobox}
-        // closeOnSelect={closeOnSelect} // inputBehavior='autocomplete' // <--- defaults to 'none'. Options are: 'none' | 'autohighlight' | 'autocomplete'. Defines the auto-completion behavior of the combobox. - `autohighlight`: The first focused item is highlighted as the user types - `autocomplete`: Navigating the listbox with the arrow keys selects the item and the input is updated
-        // defaultOpen={isInitiallyOpen} // <--- The initial open state of the combobox when rendered. Use when you don't need to control the open state of the combobox.
-        // onHighlightChange={() => {}}
-        // onInteractOutside={() => {}}
         // onExitComplete={() => {}}
-        // onFocusOutside={() => {}}
-        // onOpenChange={() => {}}
-        // onPointerDownOutside={() => {}}
       >
         <Label className={labelClassName}>{label}</Label>
 
