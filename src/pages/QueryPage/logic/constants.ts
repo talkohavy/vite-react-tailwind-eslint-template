@@ -1,4 +1,4 @@
-import type { KeyConfig } from '../../../lib/QueryLanguage/types';
+import type { KeyConfig } from '../tabs/QueryLanguageTab/types';
 
 export const pageName = 'query-language';
 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { QueryParser } from '../../../../../lib/QueryLanguage';
+import { QueryParser } from '../../../../../lib/QueryLanguage/QueryParser';
 import { useCursorPositionLogic } from './useCursorPositionLogic';
 import { usePositionInfoLogic } from './usePositionInfoLogic';
 import { useQueryInputLogic } from './useQueryInputLogic';
