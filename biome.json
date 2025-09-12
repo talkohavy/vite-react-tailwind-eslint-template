@@ -46,7 +46,8 @@
         "useKeyWithMouseEvents": "off",
         "useValidAnchor": "off",
         "noSvgWithoutTitle": "off",
-        "useSemanticElements": "off"
+        "useSemanticElements": "off",
+        "noStaticElementInteractions": "off"
       },
       "style": {
         "useSingleVarDeclarator": "off",
