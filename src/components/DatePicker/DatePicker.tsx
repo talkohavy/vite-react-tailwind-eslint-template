@@ -81,9 +81,11 @@ export default function DatePicker(props: DatePickerProps) {
 
   return (
     <>
-      <button type='button' onClick={() => datePicker.clearValue()}>
-        Clear
-      </button>
+      {value.length && (
+        <button type='button' className='self-start' onClick={datePicker.clearValue}>
+          Clear
+        </button>
+      )}
 
       <RootProvider value={datePicker}>
         {label && <Label>{label}</Label>}
