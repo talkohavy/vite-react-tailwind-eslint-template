@@ -1,4 +1,5 @@
 import { type Color, ColorPicker as ColorPickerOriginal } from '@ark-ui/react/color-picker';
+import clsx from 'clsx';
 import EyeDropIcon from '../../svgs/EyeDropIcon';
 import styles from './ColorPicker.module.scss';
 
@@ -31,18 +32,19 @@ type ColorPickerProps = {
   color: Color;
   setColor: (value: any) => void;
   label?: string;
+  className?: string;
   labelClassName?: string;
   format?: 'hsla' | 'hsba' | 'rgba';
 };
 
 export default function ColorPicker(props: ColorPickerProps) {
-  const { color, setColor, label, labelClassName, format } = props;
+  const { color, setColor, label, className, labelClassName, format } = props;
 
   return (
     <Root format={format} value={color} onValueChange={(e) => setColor(e.value)} className={styles.root}>
       {label && <Label className={labelClassName}>{label}</Label>}
 
-      <Control className={styles.control}>
+      <Control className={clsx(styles.control, className)}>
         <ChannelInput channel='hex' className={styles.channelInput} />
 
         {/* <ChannelInput channel='alpha' /> */}
