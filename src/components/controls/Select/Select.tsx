@@ -45,6 +45,7 @@ type SelectProps = {
   alignOffset?: number;
   ariaLabel?: string;
   showArrow?: boolean;
+  className?: string;
   dropdownClassName?: string;
   /**
    * Applies to all items in the dropdown.
@@ -71,6 +72,7 @@ export default function Select(props: SelectProps) {
     alignOffset,
     showArrow,
     ariaLabel,
+    className,
     dropdownClassName,
     itemClassName,
   } = props;
@@ -94,8 +96,9 @@ export default function Select(props: SelectProps) {
       // onOpenChange={setIsOpen}
       // name='' // <--- The name of the select. Submitted with its owning form as part of a name/value pair.
     >
-      <Trigger className={styles.selectTrigger} aria-label={ariaLabel}>
+      <Trigger className={clsx(styles.selectTrigger, className)} aria-label={ariaLabel}>
         <Value placeholder={placeholder} />
+
         <Icon className={styles.selectIcon}>
           <DownArrow className='size-2.5' />
         </Icon>
