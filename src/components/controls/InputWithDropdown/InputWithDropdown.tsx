@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Combobox as ComboboxOriginal, createListCollection, useCombobox } from '@ark-ui/react/combobox';
 import { Field } from '@ark-ui/react/field';
 import { Portal } from '@ark-ui/react/portal';
@@ -36,6 +36,14 @@ type InputWithDropdownProps = {
   options: Array<SelectOption>;
   placeholder?: string;
   label?: string;
+  /**
+   * @default false
+   */
+  showClear?: boolean;
+  /**
+   * @default true
+   */
+  showArrow?: boolean;
   allowCustomValue?: boolean;
   autoFocus?: boolean;
   closeOnSelect?: boolean;
@@ -46,14 +54,11 @@ type InputWithDropdownProps = {
    */
   loop?: boolean;
   className?: string;
+  rootClassName?: string;
   labelClassName?: string;
   triggerClassName?: string;
-  clearIconClassName?: string;
   dropdownClassName?: string;
-  /**
-   * Custom filter function. If not provided, uses default string filtering.
-   */
-  filterFunction?: (options: Array<SelectOption>, inputValue: string) => Array<SelectOption>;
+  clearIconClassName?: string;
 } & Omit<Field.RootProps, 'onChange'>;
 
 export default function InputWithDropdown(props: InputWithDropdownProps) {
@@ -64,41 +69,28 @@ export default function InputWithDropdown(props: InputWithDropdownProps) {
     label,
     options,
     placeholder,
+    showClear,
+    showArrow = true,
     allowCustomValue,
     autoFocus,
     closeOnSelect = true,
     disabled,
     isInvalid,
     loop = true,
-    labelClassName,
     className,
+    rootClassName,
     triggerClassName,
-    clearIconClassName,
+    labelClassName,
     dropdownClassName,
-    filterFunction,
+    clearIconClassName,
     ...rest
   } = props;
 
-  const [filteredItems, setFilteredItems] = useState(options);
-
-  // Default filter function
-  const defaultFilterFunction = (optionsList: Array<SelectOption>, inputValue: string) => {
-    const lowercasedInputValue = inputValue.toLowerCase();
-    return optionsList.filter(({ label }) => label.toLowerCase().includes(lowercasedInputValue));
-  };
-
-  const collection = useMemo(() => createListCollection({ items: filteredItems }), [filteredItems]);
+  const collection = useMemo(() => createListCollection({ items: options }), [options]);
 
   const handleInputChange = (details: InputValueChangeDetails) => {
-    const newValue = details.inputValue;
-
-    // Update the input value
-    onChange(newValue);
-
-    // Filter options based on input
-    const filterFunc = filterFunction || defaultFilterFunction;
-    const newFilteredItems = filterFunc(options, newValue);
-    setFilteredItems(newFilteredItems.length > 0 ? newFilteredItems : options);
+    // Just update the input value - no filtering logic
+    onChange(details.inputValue);
   };
 
   const handleSelect = (details: SelectionDetails) => {
@@ -109,13 +101,6 @@ export default function InputWithDropdown(props: InputWithDropdownProps) {
       onItemSelect(selectedItem);
     }
   };
-
-  // Update filtered items when options change
-  useEffect(() => {
-    const filterFunc = filterFunction || defaultFilterFunction;
-    const newFilteredItems = filterFunc(options, value);
-    setFilteredItems(newFilteredItems.length > 0 ? newFilteredItems : options);
-  }, [options, value, filterFunction]);
 
   const combobox = useCombobox({
     collection,
@@ -128,28 +113,29 @@ export default function InputWithDropdown(props: InputWithDropdownProps) {
     autoFocus,
     allowCustomValue,
     closeOnSelect,
-    selectionBehavior: 'preserve', // This prevents the input from being replaced
+    selectionBehavior: 'preserve', // <--- This prevents the input from being replaced
   });
 
   return (
     <Field.Root {...rest}>
-      <RootProvider
-        value={combobox}
-        // onExitComplete={() => {}}
-      >
+      <RootProvider value={combobox} className={rootClassName}>
         <Label className={labelClassName}>{label}</Label>
 
         <Control className={clsx(styles.control, className)}>
           <Input value={value} placeholder={placeholder} className='w-full' />
 
           <div className='shrink-0'>
-            <ClearTrigger className={clsx(styles.clearIcon, clearIconClassName)}>
-              <CloseIcon />
-            </ClearTrigger>
+            {showClear && (
+              <ClearTrigger className={clsx(styles.clearIcon, clearIconClassName)}>
+                <CloseIcon />
+              </ClearTrigger>
+            )}
 
-            <Trigger className={clsx(styles.trigger, triggerClassName)}>
-              <DownArrow />
-            </Trigger>
+            {showArrow && (
+              <Trigger className={clsx(styles.trigger, triggerClassName)}>
+                <DownArrow />
+              </Trigger>
+            )}
           </div>
         </Control>
 
