@@ -11,7 +11,7 @@ type TooltipTriggerProps = PropsWithChildren<{
   placeOverride?: PlacementValues;
   delayShowOverride?: number;
   delayHideOverride?: number;
-  variantOverride?: VariantValues;
+  variant?: VariantValues;
   /**
    * @default false
    */
@@ -36,7 +36,7 @@ export default function TooltipTrigger(props: TooltipTriggerProps) {
     delayShowOverride,
     delayHideOverride,
     shouldFollowMouse,
-    variantOverride,
+    variant,
     hide,
     className,
     onClick,
@@ -55,7 +55,7 @@ export default function TooltipTrigger(props: TooltipTriggerProps) {
     if (delayShowOverride) dataProps['data-tooltip-delay-show'] = delayShowOverride;
     if (delayHideOverride) dataProps['data-tooltip-delay-hide'] = delayHideOverride;
     if (hide) dataProps['data-tooltip-hidden'] = hide;
-    if (variantOverride) dataProps['data-tooltip-variant'] = variantOverride;
+    if (variant) dataProps['data-tooltip-variant'] = variant;
 
     // dataProps['data-tooltip-class-name'] = 'custom-classname';
 
@@ -67,7 +67,7 @@ export default function TooltipTrigger(props: TooltipTriggerProps) {
     placeOverride,
     delayShowOverride,
     delayHideOverride,
-    variantOverride,
+    variant,
     shouldFollowMouse,
     hide,
   ]);

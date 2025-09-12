@@ -8,7 +8,7 @@ import ToggleV2 from '../../components/beautiful/ToggleV2';
 import ToggleV3 from '../../components/beautiful/ToggleV3';
 import ToggleV4 from '../../components/beautiful/ToggleV4';
 import CodeBlock from '../../components/CodeBlock';
-import Combobox from '../../components/controls/Autocomplete';
+import Autocomplete from '../../components/controls/Autocomplete';
 import Checkbox from '../../components/controls/Checkbox';
 import Tag from '../../components/controls/Checkbox/Tag';
 import ColorPicker from '../../components/controls/ColorPicker';
@@ -24,8 +24,8 @@ import PinInput from '../../components/PinInput';
 import ProgressBar from '../../components/ProgressBar';
 import DownArrow from '../../components/svgs/DownArrow';
 import Tooltip from '../../components/Tooltip';
+import { Placement } from '../../components/Tooltip';
 import TooltipTrigger from '../../components/Tooltip/TooltipTrigger';
-import { Placement } from '../../components/Tooltip/types';
 import { useIsCloseToEdge } from '../../hooks/useIsCloseToEdge';
 import { useScrollToEdge } from '../../hooks/useScrollToEdge';
 import DropdownMenuContent from './components/DropdownMenuContent';
@@ -97,6 +97,42 @@ export default function RadixComponents() {
           className='dark:bg-slate-950 px-4 max-w-xs shadow-xs dark:shadow-dark-xs'
         />
       </div>
+
+      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
+        <div>Autocomplete:</div>
+
+        <Autocomplete
+          selectOption={selectComboboxOption}
+          setSelectOption={setSelectComboboxOption}
+          options={options}
+          placeholder='Choose...'
+          className='max-w-xs dark-bg-red shadow-xs dark:shadow-dark-xs'
+          dropdownClassName='max-h-[224px] overflow-auto'
+          loop
+        />
+      </div>
+
+      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
+        <div>Select:</div>
+
+        <Select
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          options={options}
+          placeholder='choose one'
+          className='max-w-xs'
+          dropdownClassName='max-h-60'
+          // showArrow
+          // itemClassName='bg-red-500 data-[state=checked]:bg-blue-500'
+        />
+      </div>
+
+      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
+        <div>Checkbox:</div>
+
+        <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Remember me?' />
+      </div>
+
       <div className='font-mono flex flex-col gap-2 w-full'>
         <div>RadioDots:</div>
 
@@ -110,16 +146,52 @@ export default function RadixComponents() {
           className='flex gap-2'
         />
       </div>
+
+      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
+        <div>DatePicker:</div>
+
+        <DatePicker value={date} setValue={setDate} />
+      </div>
+
+      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
+        <div>Tooltip:</div>
+
+        <TooltipTrigger variant='dark' groupId={tooltipUniqueId} contentOverride='spelling' className='w-fit'>
+          <div>hover me</div>
+        </TooltipTrigger>
+
+        <Tooltip
+          groupId={tooltipUniqueId}
+          place={Placement.Top}
+          isClickable
+          noArrow
+          className='p-3! border border-red-500 rounded-lg!'
+          style={{
+            '--rt-color-dark': 'black',
+            // '--rt-color-white': 'white',
+            // '--rt-color-success': 'green',
+            // '--rt-color-error': 'red',
+            // '--rt-color-warning': 'yellow',
+            // '--rt-color-info': 'gray',
+            // '--rt-opacity': '1',
+            // '--rt-transition-show-delay': '0.15s',
+            // '--rt-transition-closing-delay': '0.15s',
+          }}
+        />
+      </div>
+
       <div className='font-mono flex flex-col gap-2 w-full'>
         <div>ProgressBar:</div>
 
         <ProgressBar completed={progressBarValue} className='shrink-0 h-12 w-full' />
       </div>
+
       <div className='font-mono flex flex-col gap-2 w-full'>
         <div>FancyProgressBar:</div>
 
         <FancyProgressBar completed={progressBarValue} className='shrink-0 h-12 w-full max-w-lg' />
       </div>
+
       <div className='font-mono flex flex-col gap-2 w-full'>
         <div>PinInput:</div>
 
@@ -137,11 +209,7 @@ export default function RadixComponents() {
           // defaultValue={['1', '2', '3', '4']}
         />
       </div>
-      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
-        <div>DatePicker:</div>
 
-        <DatePicker value={date} setValue={setDate} />
-      </div>
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>ColorPicker:</div>
 
@@ -153,46 +221,49 @@ export default function RadixComponents() {
           <li>• rgba color: {color.toString('hsla')}</li>
         </ul>
       </div>
+
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>NumberInput:</div>
 
         <NumberInput value={numberValue} setValue={setNumberValue} min={0} max={12} />
       </div>
+
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>Toggle:</div>
 
         <Toggle isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
       </div>
+
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>ToggleV1:</div>
 
         <ToggleV1 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
       </div>
+
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>ToggleV2:</div>
 
         <ToggleV2 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
       </div>
+
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>ToggleV3:</div>
 
         <ToggleV3 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
       </div>
+
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>ToggleV4:</div>
 
         <ToggleV4 isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} />
       </div>
-      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
-        <div>Checkbox:</div>
 
-        <Checkbox isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Remember me?' />
-      </div>
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>Tag:</div>
 
         <Tag isChecked={isChecked} setIsChecked={() => setIsChecked((prev) => !prev)} label='Bicycle' />
       </div>
+
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
         <div>Textarea:</div>
 
@@ -200,34 +271,6 @@ export default function RadixComponents() {
           value={textareaValue}
           setValue={(e) => setTextareaValue(e.target.value)}
           className='dark:bg-slate-950'
-        />
-      </div>
-      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
-        <div>Select:</div>
-
-        <Select
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-          options={options}
-          placeholder='choose one'
-          className='max-w-xs'
-          dropdownClassName='max-h-60'
-          // showArrow
-          // itemClassName='bg-red-500 data-[state=checked]:bg-blue-500'
-        />
-      </div>
-
-      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
-        <div>Combobox:</div>
-
-        <Combobox
-          selectOption={selectComboboxOption}
-          setSelectOption={setSelectComboboxOption}
-          options={options}
-          placeholder='Choose...'
-          className='max-w-xs dark-bg-red shadow-xs dark:shadow-dark-xs'
-          dropdownClassName='max-h-[224px] overflow-auto'
-          loop
         />
       </div>
 
@@ -253,15 +296,6 @@ export default function RadixComponents() {
             setPerson={setPerson}
           />
         </DropdownMenu>
-      </div>
-
-      <div className='font-mono flex flex-col justify-start gap-2 w-full'>
-        <div>Tooltip:</div>
-
-        <TooltipTrigger groupId={tooltipUniqueId} contentOverride={'spelling'} className='w-auto inline-block'>
-          <div className='border border-black p-4 rounded-lg dark:border-white w-auto'>My Tooltip</div>
-        </TooltipTrigger>
-        <Tooltip groupId={tooltipUniqueId} place={Placement.Top} isClickable className='!p-3' />
       </div>
 
       <div className='font-mono flex flex-col justify-start gap-2 w-full'>
