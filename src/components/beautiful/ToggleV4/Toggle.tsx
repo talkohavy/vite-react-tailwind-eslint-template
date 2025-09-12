@@ -12,10 +12,10 @@ export default function Toggle(props: ToggleProps) {
   const { isChecked, setIsChecked, disabled, className } = props;
 
   return (
-    <div className={clsx(styles.toggle, className)} onClick={setIsChecked}>
+    <button type='button' className={clsx(styles.toggle, className)} onClick={setIsChecked}>
       <input type='checkbox' checked={isChecked} onChange={setIsChecked} disabled={disabled} />
 
       <div className={styles.toggleMark} />
-    </div>
+    </button>
   );
 }
