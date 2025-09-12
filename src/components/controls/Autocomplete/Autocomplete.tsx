@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import type { SelectOption } from '../Select/types';
 import CloseIcon from '../../svgs/CloseIcon';
 import DownArrow from '../../svgs/DownArrow';
-import styles from './Combobox.module.scss';
+import styles from './Autocomplete.module.scss';
 
 type InputValueChangeDetails = ComboboxOriginal.InputValueChangeDetails;
 type ValueChangeDetails<T> = ComboboxOriginal.ValueChangeDetails<T>;
@@ -26,7 +26,7 @@ const {
   ItemIndicator,
 } = ComboboxOriginal;
 
-type ComboboxProps = {
+type AutocompleteProps = {
   selectOption: SelectOption | null;
   setSelectOption: (value: any) => void;
   /**
@@ -44,14 +44,14 @@ type ComboboxProps = {
   isInvalid?: boolean;
   loop?: boolean;
   isMultiSelect?: boolean;
+  className?: string;
   labelClassName?: string;
-  controlClassName?: string;
   triggerClassName?: string;
   clearIconClassName?: string;
   dropdownClassName?: string;
 } & Field.RootProps;
 
-export default function Combobox(props: ComboboxProps) {
+export default function Autocomplete(props: AutocompleteProps) {
   const {
     label,
     selectOption,
@@ -66,7 +66,7 @@ export default function Combobox(props: ComboboxProps) {
     loop,
     isMultiSelect,
     labelClassName,
-    controlClassName,
+    className,
     triggerClassName,
     clearIconClassName,
     dropdownClassName,
@@ -126,16 +126,19 @@ export default function Combobox(props: ComboboxProps) {
         // onPointerDownOutside={() => {}}
       >
         <Label className={labelClassName}>{label}</Label>
-        <Control className={clsx(styles.control, controlClassName)}>
-          <Input placeholder={placeholder} />
 
-          <ClearTrigger className={clsx(styles.clearIcon, clearIconClassName)}>
-            <CloseIcon />
-          </ClearTrigger>
+        <Control className={clsx(styles.control, className)}>
+          <Input placeholder={placeholder} className='w-full' />
 
-          <Trigger className={clsx(styles.trigger, triggerClassName)}>
-            <DownArrow />
-          </Trigger>
+          <div className='shrink-0'>
+            <ClearTrigger className={clsx(styles.clearIcon, clearIconClassName)}>
+              <CloseIcon />
+            </ClearTrigger>
+
+            <Trigger className={clsx(styles.trigger, triggerClassName)}>
+              <DownArrow />
+            </Trigger>
+          </div>
         </Control>
 
         <Portal>
