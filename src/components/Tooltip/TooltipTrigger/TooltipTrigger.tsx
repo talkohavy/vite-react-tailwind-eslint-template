@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useMemo } from 'react';
-import type { Placement, Variant } from '../types';
+import type { PlacementValues, VariantValues } from '../logic/constants';
 
 type TooltipTriggerProps = PropsWithChildren<{
   groupId?: string;
@@ -8,10 +8,10 @@ type TooltipTriggerProps = PropsWithChildren<{
    */
   offsetOverride?: number;
   contentOverride?: string;
-  placeOverride?: Placement;
+  placeOverride?: PlacementValues;
   delayShowOverride?: number;
   delayHideOverride?: number;
-  variantOverride?: Variant;
+  variantOverride?: VariantValues;
   /**
    * @default false
    */
