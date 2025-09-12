@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Input from '../../../../components/controls/Input';
-import { QueryLexer, TokenStream } from '../../../../lib/QueryLanguage';
+import { QueryLexer } from '../../../../lib/QueryLanguage/QueryLexer';
+import { TokenStream } from '../../../../lib/QueryLanguage/TokenStream';
 
 const lexer = new QueryLexer();
 
