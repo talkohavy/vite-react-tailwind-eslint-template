@@ -88,13 +88,9 @@ export default function Autocomplete(props: AutocompleteProps) {
   };
 
   const handleValueChange = (details: ValueChangeDetails<SelectOption>) => {
-    // details.value would give you the item's value
-    // details.items would give you the item itself
-    if (details.items.length) {
-      setSelectOption(details.items[0]);
-    } else {
-      setSelectOption(null);
-    }
+    const selectedItem = details.items[0];
+
+    setSelectOption(selectedItem);
   };
 
   const combobox = useCombobox({
