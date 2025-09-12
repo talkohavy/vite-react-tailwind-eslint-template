@@ -83,8 +83,8 @@ export default function InputWithDropdown(props: InputWithDropdownProps) {
 
   // Default filter function
   const defaultFilterFunction = (optionsList: Array<SelectOption>, inputValue: string) => {
-    const lowerInputValue = inputValue.toLowerCase();
-    return optionsList.filter(({ label }) => label.toLowerCase().includes(lowerInputValue));
+    const lowercasedInputValue = inputValue.toLowerCase();
+    return optionsList.filter(({ label }) => label.toLowerCase().includes(lowercasedInputValue));
   };
 
   const collection = useMemo(() => createListCollection({ items: filteredItems }), [filteredItems]);
@@ -102,8 +102,7 @@ export default function InputWithDropdown(props: InputWithDropdownProps) {
   };
 
   const handleSelect = (details: SelectionDetails) => {
-    // Find the selected item from the collection using the details
-    const selectedValue = details.value[0]; // Get the first selected value
+    const [selectedValue] = details.value;
     const selectedItem = options.find((option) => option.value === selectedValue);
 
     if (selectedItem) {
