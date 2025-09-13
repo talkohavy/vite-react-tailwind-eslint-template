@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { QueryParser } from '../../../../lib/QueryLanguage/QueryParser';
+import { QueryParser } from 'create-query-language';
 import ContextInfo from './components/ContextInfo';
 import ParseResult from './components/ParseResult';
 import QueryInput from './components/QueryInput';

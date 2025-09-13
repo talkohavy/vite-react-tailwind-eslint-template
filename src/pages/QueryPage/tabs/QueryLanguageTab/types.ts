@@ -1,4 +1,4 @@
-import type { ContextTypeValues } from '../../../../lib/QueryLanguage/QueryParser';
+import type { ContextTypeValues } from 'create-query-language';
 
 export interface CompletionItem {
   text: string;

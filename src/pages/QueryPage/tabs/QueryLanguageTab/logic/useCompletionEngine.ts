@@ -1,8 +1,12 @@
 import { useCallback } from 'react';
-import type { TokenContext, TokenContextWithKey } from '../../../../../lib/QueryLanguage/types';
+import {
+  BooleanOperators,
+  ContextTypes,
+  type TokenContextWithKey,
+  type TokenContext,
+  Comparators,
+} from 'create-query-language';
 import type { CompletionItem, KeyConfig } from '../types';
-import { BooleanOperators, Comparators } from '../../../../../lib/QueryLanguage/constants';
-import { ContextTypes } from '../../../../../lib/QueryLanguage/QueryParser';
 
 interface UseCompletionEngineProps {
   keyConfigs: KeyConfig[];

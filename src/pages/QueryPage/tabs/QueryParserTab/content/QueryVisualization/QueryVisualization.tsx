@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { ParseResult } from '../../../../../../lib/QueryLanguage/QueryParser/types';
+import type { ParseResult } from 'create-query-language';
 import type { VisualizationItem } from './types';
 import Gantt from './content/Gantt';
 import OriginalQueryDisplayer from './content/OriginalQueryDisplayer';

@@ -1,4 +1,4 @@
-import type { Expression } from '../../../../../../../../lib/QueryLanguage/ASTBuilder';
+import type { Expression } from 'create-query-language';
 import type { VisualizationItem } from '../../types';
 import { AST_COLORS } from '../constants';
 
