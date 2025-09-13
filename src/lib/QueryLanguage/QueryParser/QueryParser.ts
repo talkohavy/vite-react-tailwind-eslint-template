@@ -321,7 +321,7 @@ export class QueryParser implements IQueryParser {
     comparatorToken.context = { expectedTokens: [ContextTypes.Comparator] };
 
     const spacesAfterComparator = this.tokenStream.countAndSkipWhitespaces({
-      expectedTokens: [ContextTypes.Value, ContextTypes.QuotedString],
+      expectedTokens: [ContextTypes.Value],
       key: keyToken.value,
     });
 
@@ -339,7 +339,7 @@ export class QueryParser implements IQueryParser {
     }
 
     const valueToken = this.tokenStream.consume()!;
-    valueToken.context = { expectedTokens: [ContextTypes.Value, ContextTypes.QuotedString] };
+    valueToken.context = { expectedTokens: [ContextTypes.Value] };
 
     const context: TokenContext = { expectedTokens: [ContextTypes.LogicalOperator] };
     if (this.openParenthesisCount > 0) {

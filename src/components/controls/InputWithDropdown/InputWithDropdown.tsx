@@ -1,12 +1,12 @@
 import { forwardRef, useMemo } from 'react';
 import { Combobox as ComboboxOriginal, createListCollection, useCombobox } from '@ark-ui/react/combobox';
-import { Field } from '@ark-ui/react/field';
 import { Portal } from '@ark-ui/react/portal';
 import clsx from 'clsx';
 import type { SelectOption } from '../Select/types';
 import CloseIcon from '../../svgs/CloseIcon';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './InputWithDropdown.module.scss';
+import { InputWithDropdownClasses } from './logic/constants';
 
 type InputValueChangeDetails = ComboboxOriginal.InputValueChangeDetails;
 type SelectionDetails = ComboboxOriginal.SelectionDetails;
@@ -30,6 +30,8 @@ type InputWithDropdownProps = {
   value: string;
   onChange: (value: string) => void;
   onItemSelect: (item: SelectOption) => void;
+  onKeyDown?: (e: any) => void;
+  onMousedown?: (e: any) => void;
   /**
    * Dynamic options that can change at any time
    */
@@ -58,14 +60,17 @@ type InputWithDropdownProps = {
   labelClassName?: string;
   triggerClassName?: string;
   dropdownClassName?: string;
+  itemClassName?: string;
   clearIconClassName?: string;
-} & Omit<Field.RootProps, 'onChange'>;
+};
 
 function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.ForwardedRef<HTMLInputElement>) {
   const {
     value,
     onChange,
     onItemSelect,
+    onKeyDown,
+    onMousedown,
     label,
     options,
     placeholder,
@@ -82,8 +87,8 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
     triggerClassName,
     labelClassName,
     dropdownClassName,
+    itemClassName,
     clearIconClassName,
-    ...rest
   } = props;
 
   const collection = useMemo(() => createListCollection({ items: options }), [options]);
@@ -114,49 +119,64 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
     allowCustomValue,
     closeOnSelect,
     selectionBehavior: 'preserve', // <--- This prevents the input from being replaced
+    defaultOpen: false,
+    openOnKeyPress: true, // <--- defaults to true
   });
 
   return (
-    <Field.Root {...rest}>
-      <RootProvider value={combobox} className={rootClassName}>
-        <Label className={labelClassName}>{label}</Label>
+    <RootProvider value={combobox} className={rootClassName}>
+      <Label className={clsx(InputWithDropdownClasses.root, labelClassName)}>{label}</Label>
 
-        <Control className={clsx(styles.control, className)}>
-          <Input ref={ref} value={value} placeholder={placeholder} className='w-full' />
+      <Control className={clsx(InputWithDropdownClasses.control, styles.control, className)}>
+        <Input
+          ref={ref}
+          placeholder={placeholder}
+          className={clsx(InputWithDropdownClasses.input, styles.input)}
+          onKeyDown={onKeyDown}
+          onMouseDown={onMousedown}
+        />
 
-          <div className='shrink-0'>
-            {showClear && (
-              <ClearTrigger className={clsx(styles.clearIcon, clearIconClassName)}>
-                <CloseIcon />
-              </ClearTrigger>
-            )}
+        <div className={styles.actionsWrapper}>
+          {showClear && (
+            <ClearTrigger
+              hidden={value.length === 0}
+              className={clsx(InputWithDropdownClasses.clear, styles.clearIcon, clearIconClassName)}
+            >
+              <CloseIcon />
+            </ClearTrigger>
+          )}
 
-            {showArrow && (
-              <Trigger className={clsx(styles.trigger, triggerClassName)}>
-                <DownArrow />
-              </Trigger>
-            )}
-          </div>
-        </Control>
+          {showArrow && (
+            <Trigger className={clsx(InputWithDropdownClasses.arrow, styles.arrowTrigger, triggerClassName)}>
+              <DownArrow />
+            </Trigger>
+          )}
+        </div>
+      </Control>
 
-        <Portal>
-          <Positioner className={styles.dropdown}>
-            <Content className={clsx(styles.content, dropdownClassName)}>
-              <ItemGroup>
-                {/* <ItemGroupLabel>Frameworks</ItemGroupLabel> */}
-                {collection.items.map((item) => (
-                  <Item key={item.value} item={item} className={styles.item}>
-                    <ItemIndicator className={styles.selectItemIndicator}>✓</ItemIndicator>
+      <Portal>
+        <Positioner>
+          <Content className={clsx(InputWithDropdownClasses.dropdown, styles.dropdown, dropdownClassName)}>
+            <ItemGroup>
+              {/* <ItemGroupLabel>Frameworks</ItemGroupLabel> */}
+              {collection.items.map((item) => (
+                <Item
+                  key={item.value}
+                  item={item}
+                  className={clsx(InputWithDropdownClasses.item, styles.item, itemClassName)}
+                >
+                  <div className={styles.selectItemIndicator}>
+                    <ItemIndicator>✓</ItemIndicator>
+                  </div>
 
-                    <ItemText>{item.label}</ItemText>
-                  </Item>
-                ))}
-              </ItemGroup>
-            </Content>
-          </Positioner>
-        </Portal>
-      </RootProvider>
-    </Field.Root>
+                  <ItemText>{item.label}</ItemText>
+                </Item>
+              ))}
+            </ItemGroup>
+          </Content>
+        </Positioner>
+      </Portal>
+    </RootProvider>
   );
 }
 

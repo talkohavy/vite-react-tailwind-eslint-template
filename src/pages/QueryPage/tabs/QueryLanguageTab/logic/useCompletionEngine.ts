@@ -31,8 +31,7 @@ export function useCompletionEngine({ keyConfigs, query }: UseCompletionEnginePr
             });
             break;
           }
-          case ContextTypes.Value:
-          case ContextTypes.QuotedString: {
+          case ContextTypes.Value: {
             const currentKeyToken = (context as TokenContextWithKey).key;
             const keyConfig = keyConfigs.find((k) => k.name === currentKeyToken);
 

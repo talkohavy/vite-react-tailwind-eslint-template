@@ -1,7 +1,9 @@
 import { useRef, useCallback } from 'react';
+import type { SelectOption } from '../../../../../components/controls/Select/types';
 import type { CompletionItem } from '../types';
-import CompletionDropdown from './CompletionDropdown';
-import TextInputField from './TextInputField';
+import InputWithDropdown from '../../../../../components/controls/InputWithDropdown';
+// import CompletionDropdown from './CompletionDropdown';
+// import TextInputField from './TextInputField';
 
 type QueryInputProps = {
   query: string;
@@ -10,7 +12,7 @@ type QueryInputProps = {
   selectedCompletionIndex: number;
   onQueryChange: (value: string) => void;
   onCursorPositionChange: (position: number) => void;
-  onCompletionSelect?: (completion: CompletionItem) => void;
+  onCompletionSelect?: (completion: SelectOption) => void;
   onSelectedIndexChange: (index: number) => void;
   onDropdownToggle: (open: boolean) => void;
 };
@@ -18,20 +20,20 @@ type QueryInputProps = {
 export default function QueryInput(props: QueryInputProps) {
   const {
     query,
-    isDropdownOpen,
     completions,
-    selectedCompletionIndex,
     onQueryChange,
     onCursorPositionChange,
     onCompletionSelect,
-    onSelectedIndexChange,
-    onDropdownToggle,
+    // isDropdownOpen,
+    // selectedCompletionIndex,
+    // onSelectedIndexChange,
+    // onDropdownToggle,
   } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleCompletionSelect = useCallback(
-    (completion: CompletionItem) => {
+    (completion: any) => {
       // Call the parent's completion select handler first
       onCompletionSelect?.(completion);
 
@@ -54,7 +56,7 @@ export default function QueryInput(props: QueryInputProps) {
       }
 
       // Insert the completion
-      const insertText = `${completion.insertText || completion.text} `;
+      const insertText = `${completion.label || completion.value} `;
       const newValue = value.substring(0, tokenStart) + insertText + value.substring(start);
       const newCursorPosition = tokenStart + insertText.length;
 
@@ -70,9 +72,41 @@ export default function QueryInput(props: QueryInputProps) {
     [onQueryChange, onCursorPositionChange, onCompletionSelect],
   );
 
+  const updateCursorPosition = useCallback((e: any) => {
+    // ignore right-mouse click
+    if (e.type === 'mousedown' && e.button === 2) {
+      return;
+    }
+
+    // ignore shift + arrow keys to avoid double handling
+    if (
+      e.shiftKey &&
+      (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown')
+    ) {
+      return;
+    }
+
+    // Update cursor position on key navigation
+    setTimeout(() => {
+      onCursorPositionChange(e.target.selectionStart || 0);
+    }, 0);
+  }, []);
+
   return (
     <div className='relative'>
-      <TextInputField
+      <InputWithDropdown
+        ref={inputRef}
+        value={query}
+        options={completions.map((c) => ({ value: c.text, label: c.text }))}
+        onItemSelect={handleCompletionSelect}
+        onChange={onQueryChange}
+        closeOnSelect={false}
+        onKeyDown={updateCursorPosition}
+        onMousedown={updateCursorPosition}
+        showClear
+        placeholder='Type your query... (e.g., status: active AND role: manager)'
+      />
+      {/* <TextInputField
         ref={inputRef}
         query={query}
         isDropdownOpen={isDropdownOpen}
@@ -91,7 +125,7 @@ export default function QueryInput(props: QueryInputProps) {
         selectedIndex={selectedCompletionIndex}
         onCompletionSelect={handleCompletionSelect}
         onSelectedIndexChange={onSelectedIndexChange}
-      />
+      /> */}
     </div>
   );
 }
