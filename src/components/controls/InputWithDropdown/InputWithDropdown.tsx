@@ -123,7 +123,7 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
         <Label className={labelClassName}>{label}</Label>
 
         <Control className={clsx(styles.control, className)}>
-          <Input ref={ref} value={value} placeholder={placeholder} className='w-full' />
+          <Input ref={ref} placeholder={placeholder} className='w-full' />
 
           <div className='shrink-0'>
             {showClear && (
