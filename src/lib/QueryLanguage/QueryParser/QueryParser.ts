@@ -435,7 +435,7 @@ export class QueryParser implements IQueryParser {
   }
 
   private isPartialComparator(value: string): boolean {
-    const comparators = [':', '=', '!=', '<', '<=', '>', '>='];
+    const comparators = ['=', '!=', '<', '<=', '>', '>='];
     return comparators.some((comp) => comp.startsWith(value));
   }
 }

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import type { TokenContext, TokenContextWithKey } from '../../../../../lib/QueryLanguage/types';
 import type { CompletionItem, KeyConfig } from '../types';
-import { BooleanOperators } from '../../../../../lib/QueryLanguage/constants';
+import { BooleanOperators, Comparators } from '../../../../../lib/QueryLanguage/constants';
 import { ContextTypes } from '../../../../../lib/QueryLanguage/QueryParser';
 
 interface UseCompletionEngineProps {
@@ -71,13 +71,12 @@ export function useCompletionEngine({ keyConfigs, query }: UseCompletionEnginePr
             break;
           }
           case ContextTypes.Comparator: {
-            const comparators = [':', '==', '!=', '>', '<', '>=', '<='];
-            comparators.forEach((comp, index) => {
+            Object.values(Comparators).forEach((comp, index) => {
               completions.push({
                 text: comp,
                 type: ContextTypes.Comparator,
-                description: comp === ':' ? 'Basic comparison (most common)' : `Comparison operator: ${comp}`,
-                priority: comp === ':' ? 10 : 7 - index, // Give ':' highest priority
+                description: `Comparison operator: ${comp}`,
+                priority: 7 - index,
               });
             });
             break;

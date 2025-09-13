@@ -14,8 +14,8 @@ export const Comparators = {
   '<=': '<=',
   '!=': '!=',
   '==': '==',
-  ':': ':',
   '~': '~',
+  // ':': ':',
 } as const;
 
 type TypeOfComparator = typeof Comparators;
