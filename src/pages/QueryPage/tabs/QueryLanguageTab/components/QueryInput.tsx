@@ -70,6 +70,26 @@ export default function QueryInput(props: QueryInputProps) {
     [onQueryChange, onCursorPositionChange, onCompletionSelect],
   );
 
+  const updateCursorPosition = useCallback((e: any) => {
+    // ignore right-mouse click
+    if (e.type === 'mousedown' && e.button === 2) {
+      return;
+    }
+
+    // ignore shift + arrow keys to avoid double handling
+    if (
+      e.shiftKey &&
+      (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown')
+    ) {
+      return;
+    }
+
+    // Update cursor position on key navigation
+    setTimeout(() => {
+      onCursorPositionChange(e.target.selectionStart || 0);
+    }, 0);
+  }, []);
+
   return (
     <div className='relative'>
       <TextInputField
