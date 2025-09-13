@@ -27,7 +27,7 @@
     "@talkohavy/lodash": "^1.4.1",
     "axios": "^1.10.0",
     "clsx": "^2.1.1",
-    "create-query-language": "^0.0.3",
+    "create-query-language": "^1.0.0",
     "highlight.js": "^11.11.1",
     "radix-ui": "^1.4.2",
     "react": "^19.1.0",
