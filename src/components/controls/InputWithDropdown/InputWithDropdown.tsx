@@ -7,6 +7,7 @@ import type { SelectOption } from '../Select/types';
 import CloseIcon from '../../svgs/CloseIcon';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './InputWithDropdown.module.scss';
+import { InputWithDropdownClasses } from './logic/constants';
 
 type InputValueChangeDetails = ComboboxOriginal.InputValueChangeDetails;
 type SelectionDetails = ComboboxOriginal.SelectionDetails;
@@ -60,6 +61,7 @@ type InputWithDropdownProps = {
   labelClassName?: string;
   triggerClassName?: string;
   dropdownClassName?: string;
+  itemClassName?: string;
   clearIconClassName?: string;
 } & Omit<Field.RootProps, 'onChange'>;
 
@@ -86,6 +88,7 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
     triggerClassName,
     labelClassName,
     dropdownClassName,
+    itemClassName,
     clearIconClassName,
     ...rest
   } = props;
@@ -125,26 +128,26 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
   return (
     <Field.Root {...rest}>
       <RootProvider value={combobox} className={rootClassName}>
-        <Label className={labelClassName}>{label}</Label>
+        <Label className={clsx(InputWithDropdownClasses.root, labelClassName)}>{label}</Label>
 
-        <Control className={clsx(styles.control, className)}>
+        <Control className={clsx(InputWithDropdownClasses.control, styles.control, className)}>
           <Input
             ref={ref}
             placeholder={placeholder}
-            className='w-full'
+            className={clsx(InputWithDropdownClasses.input, 'w-full')}
             onKeyDown={onKeyDown}
             onMouseDown={onMousedown}
           />
 
           <div className='shrink-0'>
             {showClear && (
-              <ClearTrigger className={clsx(styles.clearIcon, clearIconClassName)}>
+              <ClearTrigger className={clsx(InputWithDropdownClasses.clear, styles.clearIcon, clearIconClassName)}>
                 <CloseIcon />
               </ClearTrigger>
             )}
 
             {showArrow && (
-              <Trigger className={clsx(styles.trigger, triggerClassName)}>
+              <Trigger className={clsx(InputWithDropdownClasses.arrow, styles.trigger, triggerClassName)}>
                 <DownArrow />
               </Trigger>
             )}
@@ -153,11 +156,15 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
 
         <Portal>
           <Positioner className={styles.dropdown}>
-            <Content className={clsx(styles.content, dropdownClassName)}>
+            <Content className={clsx(InputWithDropdownClasses.dropdown, styles.content, dropdownClassName)}>
               <ItemGroup>
                 {/* <ItemGroupLabel>Frameworks</ItemGroupLabel> */}
                 {collection.items.map((item) => (
-                  <Item key={item.value} item={item} className={styles.item}>
+                  <Item
+                    key={item.value}
+                    item={item}
+                    className={clsx(InputWithDropdownClasses.item, styles.item, itemClassName)}
+                  >
                     <ItemIndicator className={styles.selectItemIndicator}>✓</ItemIndicator>
 
                     <ItemText>{item.label}</ItemText>
