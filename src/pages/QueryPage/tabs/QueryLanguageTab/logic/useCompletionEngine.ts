@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import type { TokenContext, TokenContextWithKey } from '../../../../../lib/QueryLanguage/types';
 import type { CompletionItem, KeyConfig } from '../types';
+import { BooleanOperators } from '../../../../../lib/QueryLanguage/constants';
 import { ContextTypes } from '../../../../../lib/QueryLanguage/QueryParser';
 
 interface UseCompletionEngineProps {
@@ -51,9 +52,9 @@ export function useCompletionEngine({ keyConfigs, query }: UseCompletionEnginePr
             break;
           }
           case ContextTypes.LogicalOperator: {
-            if (!currentInput || 'AND'.toLowerCase().includes(currentInput.toLowerCase())) {
+            if (!currentInput || BooleanOperators.AND.toLowerCase().includes(currentInput.toLowerCase())) {
               completions.push({
-                text: 'AND',
+                text: BooleanOperators.AND,
                 type: ContextTypes.LogicalOperator,
                 description: 'Logical AND operator',
                 priority: 9,
