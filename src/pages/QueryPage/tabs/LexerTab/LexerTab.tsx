@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { QueryLexer } from 'create-query-language';
 import Input from '../../../../components/controls/Input';
-import { QueryLexer } from '../../../../lib/QueryLanguage/QueryLexer';
 
 const lexer = new QueryLexer();
 

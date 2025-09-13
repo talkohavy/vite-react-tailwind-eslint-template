@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-import type { ParseResult } from '../../../../../lib/QueryLanguage/QueryParser';
-import { ASTBuilder } from '../../../../../lib/QueryLanguage/ASTBuilder';
+import { ASTBuilder, type ParseResult } from 'create-query-language';
 
 type UsePositionInfoLogicProps = {
   cursorPosition?: number;

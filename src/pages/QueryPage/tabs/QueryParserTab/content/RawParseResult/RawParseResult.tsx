@@ -1,4 +1,4 @@
-import type { ParseResult } from '../../../../../../lib/QueryLanguage/QueryParser';
+import type { ParseResult } from 'create-query-language';
 
 type RawParseResultProps = {
   result: ParseResult;

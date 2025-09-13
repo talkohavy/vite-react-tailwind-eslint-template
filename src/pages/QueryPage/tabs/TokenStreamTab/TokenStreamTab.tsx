@@ -1,7 +1,6 @@
 import { useState } from 'react';
+import { QueryLexer, TokenStream } from 'create-query-language';
 import Input from '../../../../components/controls/Input';
-import { QueryLexer } from '../../../../lib/QueryLanguage/QueryLexer';
-import { TokenStream } from '../../../../lib/QueryLanguage/TokenStream';
 
 const lexer = new QueryLexer();
 

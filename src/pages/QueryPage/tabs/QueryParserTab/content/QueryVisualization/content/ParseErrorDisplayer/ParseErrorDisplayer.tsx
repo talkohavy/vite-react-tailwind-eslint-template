@@ -1,4 +1,4 @@
-import type { ParseError } from '../../../../../../../../lib/QueryLanguage/QueryParser';
+import type { ParseError } from 'create-query-language';
 
 type ParseErrorDisplayerProps = {
   errors: ParseError[];

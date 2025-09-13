@@ -1,4 +1,4 @@
-import type { QueryParser } from '../../../../../lib/QueryLanguage/QueryParser';
+import type { QueryParser } from 'create-query-language';
 
 type ParseResultProps = {
   query: string;
