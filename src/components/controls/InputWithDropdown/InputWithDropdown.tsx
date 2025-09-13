@@ -30,6 +30,8 @@ type InputWithDropdownProps = {
   value: string;
   onChange: (value: string) => void;
   onItemSelect: (item: SelectOption) => void;
+  onKeyDown?: (e: any) => void;
+  onMousedown?: (e: any) => void;
   /**
    * Dynamic options that can change at any time
    */
@@ -66,6 +68,8 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
     value,
     onChange,
     onItemSelect,
+    onKeyDown,
+    onMousedown,
     label,
     options,
     placeholder,
@@ -124,7 +128,13 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
         <Label className={labelClassName}>{label}</Label>
 
         <Control className={clsx(styles.control, className)}>
-          <Input ref={ref} placeholder={placeholder} className='w-full' />
+          <Input
+            ref={ref}
+            placeholder={placeholder}
+            className='w-full'
+            onKeyDown={onKeyDown}
+            onMouseDown={onMousedown}
+          />
 
           <div className='shrink-0'>
             {showClear && (
