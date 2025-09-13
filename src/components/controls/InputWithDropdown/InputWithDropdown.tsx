@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { Combobox as ComboboxOriginal, createListCollection, useCombobox } from '@ark-ui/react/combobox';
 import { Field } from '@ark-ui/react/field';
 import { Portal } from '@ark-ui/react/portal';
@@ -61,7 +61,7 @@ type InputWithDropdownProps = {
   clearIconClassName?: string;
 } & Omit<Field.RootProps, 'onChange'>;
 
-export default function InputWithDropdown(props: InputWithDropdownProps) {
+function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.ForwardedRef<HTMLInputElement>) {
   const {
     value,
     onChange,
@@ -122,7 +122,7 @@ export default function InputWithDropdown(props: InputWithDropdownProps) {
         <Label className={labelClassName}>{label}</Label>
 
         <Control className={clsx(styles.control, className)}>
-          <Input value={value} placeholder={placeholder} className='w-full' />
+          <Input ref={ref} value={value} placeholder={placeholder} className='w-full' />
 
           <div className='shrink-0'>
             {showClear && (
@@ -159,3 +159,7 @@ export default function InputWithDropdown(props: InputWithDropdownProps) {
     </Field.Root>
   );
 }
+
+const InputWithDropdown = forwardRef<HTMLInputElement, InputWithDropdownProps>(InputWithDropdownToForward);
+
+export default InputWithDropdown;
