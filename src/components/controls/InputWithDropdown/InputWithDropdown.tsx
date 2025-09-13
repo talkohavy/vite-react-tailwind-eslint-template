@@ -115,6 +115,7 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
     closeOnSelect,
     selectionBehavior: 'preserve', // <--- This prevents the input from being replaced
     defaultOpen: false,
+    openOnKeyPress: true, // <--- defaults to true
   });
 
   return (
