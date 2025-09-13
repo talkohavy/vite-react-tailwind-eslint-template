@@ -2,82 +2,62 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
   height: 40px;
+  padding: 8px 16px;
   border-radius: 6px;
 }
 
-.trigger > svg {
-  height: 10px;
-  margin-left: 6px;
+.input {
+  width: 100%;
 }
 
-.clearIcon > svg {
+.actionsWrapper {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.clearIcon,
+.arrowTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.clearIcon:hover,
+.arrowTrigger:hover {
+  background-color: rgb(224, 224, 224, 0.2);
+}
+
+.clearIcon > svg,
+.arrowTrigger > svg {
+  position: relative;
   height: 10px;
+  width: 10px;
+  top: 1px;
 }
 
 .dropdown {
-  background-color: white;
-  border-radius: 6px;
-}
-
-body[class*='dark'] .dropdown {
-  background-color: rgb(23, 21, 45);
-}
-
-.content {
-  padding: 5px;
-  border-radius: 6px;
-  background-color: white;
-  border: 1px solid #c9c9c9;
   overflow: auto;
 }
 
-body[class*='dark'] .content {
-  background-color: #191918;
-}
-
 .item {
-  position: relative;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  min-height: 40px;
-  padding: 0 35px 0 25px;
-  user-select: none;
-  line-height: 1;
-  font-size: 13px;
-  border-radius: 3px;
-  color: purple;
-}
-
-body[class*='dark'] .item {
-  color: #b5b3ad;
-}
-
-.item[data-disabled] {
-  pointer-events: none;
-  color: #c9c9c9; // var(--mauve-8)
-}
-
-body[class*='dark'] .item[data-disabled] {
-  color: #606060; // var(--mauve-8)
-}
-
-.item[data-highlighted] {
-  outline: none;
-  background-color: violet; // var(--violet-9)
-  color: pink; // var(--violet-1);
-}
-
-body[class*='dark'] .item[data-highlighted] {
-  background-color: #2d2d2c;
+  gap: 4px;
 }
 
 .selectItemIndicator {
-  position: absolute;
-  left: 0;
-  width: 25px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 18px;
+  height: 18px;
 }
