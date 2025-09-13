@@ -35,6 +35,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      create-query-language:
+        specifier: ^0.0.1
+        version: 0.0.1
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -2751,6 +2754,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  create-query-language@0.0.1:
+    resolution: {integrity: sha512-25icCmok32BkpHzVFK6y+56ZtxpE7ssEWEEGVXed+8Ymp6BGmhlPta+YEids8K2A5pwdlRv1CkPmMZ42w7k6Dw==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -7625,6 +7631,8 @@ snapshots:
       path-type: 4.0.0
     optionalDependencies:
       typescript: 5.8.3
+
+  create-query-language@0.0.1: {}
 
   cross-spawn@7.0.6:
     dependencies:
