@@ -40,7 +40,7 @@ export default function QueryLanguageTab() {
         expectedTypes = [...currentToken.context.expectedTokens];
       }
 
-      const currentInput = currentToken?.value ?? ''; // Could be enhanced to get partial input
+      const currentInput = currentToken!.value.trim() ?? '';
       const suggestions = generateCompletions(currentToken?.context, currentInput);
 
       return {
@@ -82,9 +82,14 @@ export default function QueryLanguageTab() {
 
     const addedWhitespaces = token.type === TokenTypes.Whitespace ? ' ' : '';
 
+    /**
+     * Replace Logic:
+     *
+     *
+     */
     const leftPart = `${query.substring(0, token.position.start)}${addedWhitespaces}`;
     const insertText = completion.label;
-    const rightPart = `${addedWhitespaces}${query.substring(token.position.end)}`;
+    const rightPart = `${addedWhitespaces}${query.substring(token.position.end)}`.trimEnd();
     const newValue = leftPart + insertText + rightPart;
 
     const newCursorPosition = leftPart.length + insertText.length;
