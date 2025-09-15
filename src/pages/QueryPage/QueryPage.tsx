@@ -11,6 +11,7 @@ const Tabs = {
   QueryParser: 'query-parser',
   ContextAnalyzer: 'context-analyzer',
   Suggestions: 'suggestions',
+  UIChips: 'ui-chips',
   QueryLanguage: 'query-language',
 } as const;
 
@@ -30,6 +31,10 @@ const tabOptions = [
   {
     value: Tabs.Suggestions,
     label: 'Suggestions',
+  },
+  {
+    value: Tabs.UIChips,
+    label: 'UI Chips',
   },
   {
     value: Tabs.QueryLanguage,
