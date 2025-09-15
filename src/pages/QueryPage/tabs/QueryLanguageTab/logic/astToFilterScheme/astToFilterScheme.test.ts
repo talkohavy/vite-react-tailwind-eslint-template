@@ -81,18 +81,20 @@ describe('convertAstToFilterScheme', () => {
       },
     } as BooleanExpression;
 
-    const expectedResult = [
-      {
-        fieldName: 'status',
-        operator: 'equals',
-        value: 'active',
-      },
-      {
-        fieldName: 'role',
-        operator: 'equals',
-        value: 'admin',
-      },
-    ];
+    const expectedResult = {
+      AND: [
+        {
+          fieldName: 'status',
+          operator: 'equals',
+          value: 'active',
+        },
+        {
+          fieldName: 'role',
+          operator: 'equals',
+          value: 'admin',
+        },
+      ],
+    };
 
     const actualResult = convertAstToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
@@ -205,27 +207,29 @@ describe('convertAstToFilterScheme', () => {
       },
     } as BooleanExpression;
 
-    const expectedResult = [
-      {
-        fieldName: 'status',
-        operator: 'equals',
-        value: 'active',
-      },
-      {
-        OR: [
-          {
-            fieldName: 'role',
-            operator: 'equals',
-            value: 'admin',
-          },
-          {
-            fieldName: 'role',
-            operator: 'equals',
-            value: 'manager',
-          },
-        ],
-      },
-    ];
+    const expectedResult = {
+      AND: [
+        {
+          fieldName: 'status',
+          operator: 'equals',
+          value: 'active',
+        },
+        {
+          OR: [
+            {
+              fieldName: 'role',
+              operator: 'equals',
+              value: 'admin',
+            },
+            {
+              fieldName: 'role',
+              operator: 'equals',
+              value: 'manager',
+            },
+          ],
+        },
+      ],
+    };
 
     const actualResult = convertAstToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
@@ -255,18 +259,20 @@ describe('convertAstToFilterScheme', () => {
       },
     } as QueryExpression;
 
-    const expectedResult = [
-      {
-        fieldName: 'a',
-        operator: 'equals',
-        value: '2',
-      },
-      {
-        fieldName: 'name',
-        operator: 'greaterThanOrEqual',
-        value: 'asd',
-      },
-    ];
+    const expectedResult = {
+      AND: [
+        {
+          fieldName: 'a',
+          operator: 'equals',
+          value: '2',
+        },
+        {
+          fieldName: 'name',
+          operator: 'greaterThanOrEqual',
+          value: 'asd',
+        },
+      ],
+    };
 
     const actualResult = convertAstToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
