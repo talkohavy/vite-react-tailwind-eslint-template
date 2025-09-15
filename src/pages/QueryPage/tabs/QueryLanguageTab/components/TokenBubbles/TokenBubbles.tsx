@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import clsx from 'clsx';
 import { type Token, TokenTypes } from 'create-query-language';
-import TokenLegend from '../TokenLegend/TokenLegend';
 import { ERROR_TOKEN_CLASS, TOKEN_COLOR_MAP } from './logic/constants';
+import TokenLegend from './TokenLegend/TokenLegend';
 
 type TokenBubblesProps = {
   tokens: Token[];
