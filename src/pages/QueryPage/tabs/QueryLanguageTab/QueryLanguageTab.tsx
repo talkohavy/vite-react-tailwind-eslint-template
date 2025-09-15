@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { QueryParser, TokenTypes } from 'create-query-language';
 import ContextInfo from './components/ContextInfo';
 import ParseResult from './components/ParseResult';
@@ -12,6 +12,7 @@ export default function QueryLanguageTab() {
   const [cursorPosition, setCursorPosition] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCompletionIndex, setSelectedCompletionIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const queryParser = useMemo(() => new QueryParser(), []);
 
@@ -88,9 +89,20 @@ export default function QueryLanguageTab() {
 
     const newCursorPosition = leftPart.length + insertText.length;
 
-    setCursorPosition(newCursorPosition);
-
     return { value: newValue, cursorPosition: newCursorPosition };
+  };
+
+  const onQueryChange = (value: string, cursorPosition?: number) => {
+    setQuery(value);
+    const newCursorPosition = cursorPosition ?? inputRef!.current?.selectionStart ?? 0;
+
+    if (inputRef.current == null) return;
+
+    if (cursorPosition !== undefined && cursorPosition !== inputRef.current.selectionStart) {
+      inputRef.current!.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
+    setCursorPosition(newCursorPosition);
   };
 
   return (
@@ -102,12 +114,13 @@ export default function QueryLanguageTab() {
           <TokenBubbles tokens={tokens} firstErrorTokenIndex={firstErrorTokenIndex} />
 
           <QueryInput
+            ref={inputRef}
             query={query}
+            onQueryChange={onQueryChange}
             isDropdownOpen={isDropdownOpen}
             completions={completions}
             selectedCompletionIndex={selectedCompletionIndex}
-            onQueryChange={setQuery}
-            onCursorPositionChange={setCursorPosition}
+            setCursorPosition={setCursorPosition}
             onSelectedIndexChange={setSelectedCompletionIndex}
             onDropdownToggle={setIsDropdownOpen}
             onCompletionSelect={onCompletionSelect}

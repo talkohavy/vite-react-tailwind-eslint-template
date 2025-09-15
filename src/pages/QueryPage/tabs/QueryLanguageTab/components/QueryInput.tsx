@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import type { SelectOption } from '../../../../../components/controls/Select/types';
 import type { CompletionItem } from '../types';
 import InputWithDropdown from '../../../../../components/controls/InputWithDropdown';
@@ -10,17 +10,15 @@ type QueryInputProps = {
   isDropdownOpen: boolean;
   completions: CompletionItem[];
   selectedCompletionIndex: number;
-  onQueryChange: (value: string) => void;
+  onQueryChange: (value: string, cursorPosition?: number) => void;
   onCompletionSelect: (completion: SelectOption) => { value: string; cursorPosition: number };
-  onCursorPositionChange: (position: number) => void;
+  setCursorPosition: (position: number) => void;
   onSelectedIndexChange: (index: number) => void;
   onDropdownToggle: (open: boolean) => void;
 };
 
-export default function QueryInput(props: QueryInputProps) {
-  const { query, completions, onQueryChange, onCursorPositionChange, onCompletionSelect } = props;
-
-  const inputRef = useRef<HTMLInputElement>(null);
+function QueryInputToForward(props: QueryInputProps, inputRef: any) {
+  const { query, completions, onQueryChange, setCursorPosition, onCompletionSelect } = props;
 
   const handleCompletionSelect = useCallback(
     (completion: any) => {
@@ -30,33 +28,39 @@ export default function QueryInput(props: QueryInputProps) {
 
       const { value: newValue, cursorPosition: newCursorPosition } = onCompletionSelect(completion);
 
-      onQueryChange(newValue);
+      onQueryChange(newValue, newCursorPosition);
 
       setTimeout(() => {
         input.focus();
         input.setSelectionRange(newCursorPosition, newCursorPosition);
       }, 0);
     },
-    [onQueryChange, onCursorPositionChange, onCompletionSelect],
+    [onQueryChange, onCompletionSelect],
   );
 
   const updateCursorPosition = useCallback((e: any) => {
-    // ignore right-mouse click
-    if (e.type === 'mousedown' && e.button === 2) {
-      return;
-    }
+    const shouldUpdateCursor =
+      // Left-mouse click
+      (e.type === 'mousedown' && e.button === 0) ||
+      // Arrow keys (alone, with alt, or with ctrl, but not shift)
+      (e.type === 'keydown' && e.key === 'ArrowLeft' && !e.shiftKey) ||
+      (e.type === 'keydown' && e.key === 'ArrowRight' && !e.shiftKey) ||
+      // Home and End keys (alone or with ctrl)
+      (e.type === 'keydown' && e.key === 'Home') ||
+      (e.type === 'keydown' && e.key === 'End') ||
+      // Page navigation keys
+      (e.type === 'keydown' && e.key === 'PageUp') ||
+      (e.type === 'keydown' && e.key === 'PageDown') ||
+      // Select all (Ctrl+A)
+      (e.type === 'keydown' && e.key === 'a' && e.ctrlKey && !e.shiftKey && !e.altKey);
 
-    // ignore shift + arrow keys to avoid double handling
-    if (
-      e.shiftKey &&
-      (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown')
-    ) {
+    if (!shouldUpdateCursor) {
       return;
     }
 
     // Update cursor position on key navigation
     setTimeout(() => {
-      onCursorPositionChange(e.target.selectionStart || 0);
+      setCursorPosition(e.target.selectionStart || 0);
     }, 0);
   }, []);
 
@@ -77,3 +81,7 @@ export default function QueryInput(props: QueryInputProps) {
     </div>
   );
 }
+
+const QueryInput = forwardRef(QueryInputToForward);
+
+export default QueryInput;
