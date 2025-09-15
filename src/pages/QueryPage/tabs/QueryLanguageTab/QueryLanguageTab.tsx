@@ -69,7 +69,6 @@ export default function QueryLanguageTab() {
      * 3. "role <= ad|min" - token should be "admin"
      * 4. "role <= | admin" - token should be WHITESPACE
      * 5. "role <= admin |" - token should be WHITESPACE
-     *
      */
     // Find uses < intentionally! So that cases like "status <= <cursor-here>pending AND ..." would take the "pending" adn not the WHITESPACE.
     const currentToken = tokens.find(

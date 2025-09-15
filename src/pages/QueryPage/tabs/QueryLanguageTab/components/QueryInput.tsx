@@ -18,17 +18,7 @@ type QueryInputProps = {
 };
 
 export default function QueryInput(props: QueryInputProps) {
-  const {
-    query,
-    completions,
-    onQueryChange,
-    onCursorPositionChange,
-    onCompletionSelect,
-    // isDropdownOpen,
-    // selectedCompletionIndex,
-    // onSelectedIndexChange,
-    // onDropdownToggle,
-  } = props;
+  const { query, completions, onQueryChange, onCursorPositionChange, onCompletionSelect } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -84,26 +74,6 @@ export default function QueryInput(props: QueryInputProps) {
         showClear
         placeholder='Type your query... (e.g., status: active AND role: manager)'
       />
-      {/* <TextInputField
-        ref={inputRef}
-        query={query}
-        isDropdownOpen={isDropdownOpen}
-        completions={completions}
-        selectedCompletionIndex={selectedCompletionIndex}
-        onQueryChange={onQueryChange}
-        onCursorPositionChange={onCursorPositionChange}
-        onCompletionSelect={handleCompletionSelect}
-        onSelectedIndexChange={onSelectedIndexChange}
-        onDropdownToggle={onDropdownToggle}
-      />
-
-      <CompletionDropdown
-        isOpen={isDropdownOpen}
-        completions={completions}
-        selectedIndex={selectedCompletionIndex}
-        onCompletionSelect={handleCompletionSelect}
-        onSelectedIndexChange={onSelectedIndexChange}
-      /> */}
     </div>
   );
 }
