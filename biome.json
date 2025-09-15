@@ -20,7 +20,8 @@
         "noAssignInExpressions": "off",
         "noArrayIndexKey": "off",
         "noDebugger": "off",
-        "noDoubleEquals": "off"
+        "noDoubleEquals": "off",
+        "noFocusedTests": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off",
