@@ -3,6 +3,7 @@ import { QueryParser, TokenTypes } from 'create-query-language';
 import ContextInfo from './components/ContextInfo';
 import QueryInput from './components/QueryInput';
 import TokenBubbles from './components/TokenBubbles';
+import { convertAstToFilterScheme } from './logic/astToFilterScheme/astToFilterScheme';
 import { keyConfigs } from './logic/constants';
 import { useCompletionEngine } from './logic/useCompletionEngine';
 
@@ -17,13 +18,15 @@ export default function QueryLanguageTab() {
 
   const { generateCompletions } = useCompletionEngine({ keyConfigs, query });
 
-  const { completions, expectedTypes, tokens, firstErrorTokenIndex } = useMemo(() => {
+  const { completions, expectedTypes, tokens, firstErrorTokenIndex, filterScheme } = useMemo(() => {
     if (!query) {
-      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined };
+      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined, filterScheme: [] };
     }
 
     try {
       const parseResult = queryParser.parse(query);
+
+      const filterScheme = parseResult.success && parseResult.ast ? convertAstToFilterScheme(parseResult.ast) : [];
 
       // Find the first error token (Invalid type or where parsing fails)
       const visibleTokens = parseResult.tokens.filter((token) => token.type !== TokenTypes.Whitespace);
@@ -47,11 +50,12 @@ export default function QueryLanguageTab() {
         expectedTypes,
         tokens: parseResult.tokens,
         firstErrorTokenIndex: firstErrorIndex >= 0 ? firstErrorIndex : undefined,
+        filterScheme,
       };
     } catch (error) {
       console.error('Error getting completions:', error);
 
-      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined };
+      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined, filterScheme: [] };
     }
   }, [query, cursorPosition, queryParser, generateCompletions]);
 
@@ -136,6 +140,15 @@ export default function QueryLanguageTab() {
             completions={completions}
             query={query}
           />
+        </div>
+
+        <div className='bg-gray-800 rounded-lg border border-gray-700 p-6'>
+          <h3 className='text-lg font-semibold text-white mb-4'>Generated FilterScheme</h3>
+          <div className='font-mono text-sm'>
+            <pre className='whitespace-pre-wrap bg-gray-900 p-3 rounded border border-gray-600 overflow-x-auto text-gray-300'>
+              {JSON.stringify(filterScheme, null, 2)}
+            </pre>
+          </div>
         </div>
       </div>
     </div>
