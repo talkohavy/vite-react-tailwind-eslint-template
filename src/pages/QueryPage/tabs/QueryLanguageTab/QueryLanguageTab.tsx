@@ -110,10 +110,10 @@ export default function QueryLanguageTab() {
   };
 
   return (
-    <div className='p-6 max-w-4xl mx-auto bg-black'>
-      <div className='space-y-6'>
-        <div className='bg-gray-800 rounded-lg border border-gray-700 p-6'>
-          <h2 className='text-xl font-semibold text-white mb-4'>Query Input</h2>
+    <div className='p-6 max-w-4xl mx-auto'>
+      <div className='flex flex-col gap-6'>
+        <div className='dark:bg-gray-800 rounded-lg border border-gray-700 p-6'>
+          <h2 className='text-xl font-semibold mb-4'>Query Input</h2>
 
           <TokenBubbles tokens={tokens} firstErrorTokenIndex={firstErrorTokenIndex} />
 

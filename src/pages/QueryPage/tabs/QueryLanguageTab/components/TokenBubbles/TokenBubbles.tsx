@@ -40,7 +40,7 @@ export default function TokenBubbles(props: TokenBubblesProps) {
 
   return (
     <div className='mt-4'>
-      <h3 className='text-sm font-medium text-gray-300 mb-2'>Query Tokens</h3>
+      <h3 className='text-sm font-medium text-gray-600 dark:text-gray-300 mb-2'>Query Tokens</h3>
 
       <div className='flex gap-2 items-center overflow-auto'>
         {validTokens.map((token, index) => {

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import clsx from 'clsx';
 import type { TokenMetaInfo } from '../../types';
 import { TOKEN_TYPE_TO_COLOR } from '../../logic/constants';
 
@@ -24,14 +25,17 @@ export default function TokenLegend(props: TokenLegendProps) {
   }, []);
 
   return (
-    <div className={`mt-2 ${className}`}>
+    <div className={clsx('my-6 mx-3', className)}>
       <details className='group'>
-        <summary className='text-xs text-gray-400 cursor-pointer hover:text-gray-300 select-none'>Token Legend</summary>
+        <summary className='text-xs dark:text-gray-400 cursor-pointer hover:text-gray-500 dark:hover:text-gray-300 select-none'>
+          Token Legend
+        </summary>
+
         <div className='mt-2 flex flex-wrap gap-2'>
           {legendItems.map((item, index) => (
             <div key={index} className='flex items-center gap-1'>
-              <span className={`inline-block w-3 h-3 rounded-full ${item.backgroundColor}`} />
-              <span className='text-xs text-gray-400'>{item.label}</span>
+              <span className={clsx('inline-block w-3 h-3 rounded-full', item.backgroundColor)} />
+              <span className='text-xs dark:text-gray-400'>{item.label}</span>
             </div>
           ))}
         </div>
