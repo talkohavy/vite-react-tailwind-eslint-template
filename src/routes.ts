@@ -29,6 +29,7 @@ const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
 const TokenStreamTab = lazy(() => import('./pages/QueryPage/tabs/TokenStreamTab'));
 const QueryParserTab = lazy(() => import('./pages/QueryPage/tabs/QueryParserTab'));
+const SuggestionsTab = lazy(() => import('./pages/QueryPage/tabs/SuggestionsTab'));
 const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
 
 export const routes: Array<Route> = [
@@ -181,6 +182,7 @@ export const routes: Array<Route> = [
       `${BASE_URL}/query-language/lexer`,
       `${BASE_URL}/query-language/token-stream`,
       `${BASE_URL}/query-language/query-parser`,
+      `${BASE_URL}/query-language/suggestions`,
       `${BASE_URL}/query-language/query-language`,
     ],
     Component: QueryPage,
@@ -202,6 +204,12 @@ export const routes: Array<Route> = [
         text: 'Query Parser',
         activeNames: [],
         Component: QueryParserTab,
+      },
+      {
+        to: 'suggestions',
+        text: 'Suggestions',
+        activeNames: [],
+        Component: SuggestionsTab,
       },
       {
         to: 'query-language',

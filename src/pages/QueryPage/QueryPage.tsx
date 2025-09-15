@@ -10,6 +10,7 @@ const Tabs = {
   TokenStream: 'token-stream',
   QueryParser: 'query-parser',
   ContextAnalyzer: 'context-analyzer',
+  Suggestions: 'suggestions',
   QueryLanguage: 'query-language',
 } as const;
 
@@ -25,6 +26,10 @@ const tabOptions = [
   {
     value: Tabs.QueryParser,
     label: 'Query Parser',
+  },
+  {
+    value: Tabs.Suggestions,
+    label: 'Suggestions',
   },
   {
     value: Tabs.QueryLanguage,
