@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import clsx from 'clsx';
 import { type Token, TokenTypes } from 'create-query-language';
-import { ERROR_TOKEN_CLASS, TOKEN_COLOR_MAP } from './logic/constants';
-import TokenLegend from './TokenLegend/TokenLegend';
+import type { ColorableTokenTypes } from './types';
+import TokenLegend from './content/TokenLegend';
+import { TOKEN_TYPE_TO_COLOR } from './logic/constants';
 
 type TokenBubblesProps = {
   tokens: Token[];
@@ -43,14 +44,15 @@ export default function TokenBubbles(props: TokenBubblesProps) {
 
       <div className='flex gap-2 items-center overflow-auto'>
         {validTokens.map((token, index) => {
-          const colorClass = TOKEN_COLOR_MAP[token.type] || 'bg-gray-100 text-gray-800 border-gray-200';
+          const { backgroundColor, color } = TOKEN_TYPE_TO_COLOR[token.type as ColorableTokenTypes] || {};
 
           return (
             <span
               key={`${token.position.start}-${token.position.end}-${index}`}
               className={clsx(
-                'inline-flex items-center h-8 px-2.5 py-1 rounded-lg text-xs font-medium border',
-                colorClass,
+                'inline-flex items-center h-6 px-2.5 py-1 rounded-lg text-xs font-mono font-medium',
+                backgroundColor,
+                color,
               )}
               title={`Type: ${token.type}, Position: ${token.position.start}-${token.position.end}`}
             >
@@ -60,25 +62,24 @@ export default function TokenBubbles(props: TokenBubblesProps) {
         })}
 
         {errorTokens.map((token, index) => {
-          const colorClass = ERROR_TOKEN_CLASS;
+          const { backgroundColor, color } = TOKEN_TYPE_TO_COLOR[TokenTypes.Invalid];
 
           return (
             <span
               key={`${token.position.start}-${token.position.end}-${index}`}
               className={clsx(
-                'inline-flex items-center h-8 px-2.5 py-1 rounded-lg text-xs font-medium border',
-                colorClass,
+                'inline-flex items-center h-6 px-2.5 py-1 rounded-lg text-xs font-medium',
+                backgroundColor,
+                color,
               )}
               title={`Type: ${token.type}, Position: ${token.position.start}-${token.position.end}(Error detected)`}
             >
               <span className='select-none'>{token.value}</span>
 
-              <svg className='ml-1 w-3 h-3' fill='currentColor' viewBox='0 0 20 20'>
-                <path
-                  fillRule='evenodd'
-                  d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
-                  clipRule='evenodd'
-                />
+              <svg className='ml-1 w-3 h-3' stroke='none' viewBox='0 0 20 20'>
+                <circle cx='10' cy='10' r='8' fill='#ff6e6e' />
+                <rect x='9' y='6' width='2' height='5' rx='1' fill='white' />
+                <circle cx='10' cy='14' r='1' fill='white' />
               </svg>
             </span>
           );
