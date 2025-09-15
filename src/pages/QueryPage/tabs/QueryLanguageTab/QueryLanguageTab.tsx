@@ -3,6 +3,7 @@ import { QueryParser, TokenTypes } from 'create-query-language';
 import ContextInfo from './components/ContextInfo';
 import ParseResult from './components/ParseResult';
 import QueryInput from './components/QueryInput';
+import TokenBubbles from './components/TokenBubbles';
 import { keyConfigs } from './logic/constants';
 import { useCompletionEngine } from './logic/useCompletionEngine';
 
@@ -16,13 +17,17 @@ export default function QueryLanguageTab() {
 
   const { generateCompletions } = useCompletionEngine({ keyConfigs, query });
 
-  const { completions, expectedTypes, tokens } = useMemo(() => {
+  const { completions, expectedTypes, tokens, firstErrorTokenIndex } = useMemo(() => {
     if (!query) {
-      return { completions: [], expectedTypes: [], tokens: [] };
+      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined };
     }
 
     try {
       const parseResult = queryParser.parse(query);
+
+      // Find the first error token (Invalid type or where parsing fails)
+      const visibleTokens = parseResult.tokens.filter((token) => token.type !== TokenTypes.Whitespace);
+      const firstErrorIndex = visibleTokens.findIndex((token) => token.type === TokenTypes.Invalid);
 
       const currentToken = parseResult.tokens.find(
         (token) => cursorPosition >= token.position.start && cursorPosition <= token.position.end,
@@ -37,11 +42,16 @@ export default function QueryLanguageTab() {
       const currentInput = currentToken?.value ?? ''; // Could be enhanced to get partial input
       const suggestions = generateCompletions(currentToken?.context, currentInput);
 
-      return { completions: suggestions, expectedTypes, tokens: parseResult.tokens };
+      return {
+        completions: suggestions,
+        expectedTypes,
+        tokens: parseResult.tokens,
+        firstErrorTokenIndex: firstErrorIndex >= 0 ? firstErrorIndex : undefined,
+      };
     } catch (error) {
       console.error('Error getting completions:', error);
 
-      return { completions: [], expectedTypes: [], tokens: [] };
+      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined };
     }
   }, [query, cursorPosition, queryParser, generateCompletions]);
 
@@ -89,6 +99,8 @@ export default function QueryLanguageTab() {
       <div className='space-y-6'>
         <div className='bg-gray-800 rounded-lg border border-gray-700 p-6'>
           <h2 className='text-xl font-semibold text-white mb-4'>Query Input</h2>
+
+          <TokenBubbles tokens={tokens} firstErrorTokenIndex={firstErrorTokenIndex} />
 
           <QueryInput
             query={query}
