@@ -7,6 +7,8 @@ import { convertAstToFilterScheme } from './logic/astToFilterScheme/astToFilterS
 import { keyConfigs } from './logic/constants';
 import { useCompletionEngine } from './logic/useCompletionEngine';
 
+const queryParser = new QueryParser();
+
 export default function QueryLanguageTab() {
   const [query, setQuery] = useState('');
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -14,20 +16,17 @@ export default function QueryLanguageTab() {
   const [selectedCompletionIndex, setSelectedCompletionIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const queryParser = useMemo(() => new QueryParser(), []);
-
   const { generateCompletions } = useCompletionEngine({ keyConfigs, query });
 
-  const { completions, expectedTypes, tokens, firstErrorTokenIndex, filterScheme } = useMemo(() => {
-    if (!query) {
-      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined, filterScheme: [] };
-    }
+  const { parseResult, filterScheme } = useMemo(() => {
+    const parseResult = queryParser.parse(query);
+    const filterScheme = convertAstToFilterScheme(parseResult.ast);
 
+    return { parseResult, filterScheme };
+  }, [query]);
+
+  const { completions, expectedTypes, tokens, firstErrorTokenIndex } = useMemo(() => {
     try {
-      const parseResult = queryParser.parse(query);
-
-      const filterScheme = parseResult.success && parseResult.ast ? convertAstToFilterScheme(parseResult.ast) : [];
-
       // Find the first error token (Invalid type or where parsing fails)
       const visibleTokens = parseResult.tokens.filter((token) => token.type !== TokenTypes.Whitespace);
       const firstErrorIndex = visibleTokens.findIndex((token) => token.type === TokenTypes.Invalid);
@@ -50,12 +49,11 @@ export default function QueryLanguageTab() {
         expectedTypes,
         tokens: parseResult.tokens,
         firstErrorTokenIndex: firstErrorIndex >= 0 ? firstErrorIndex : undefined,
-        filterScheme,
       };
     } catch (error) {
       console.error('Error getting completions:', error);
 
-      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined, filterScheme: [] };
+      return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined };
     }
   }, [query, cursorPosition, queryParser, generateCompletions]);
 
