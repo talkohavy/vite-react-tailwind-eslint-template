@@ -1,5 +1,5 @@
 import { forwardRef, useCallback } from 'react';
-import type { RefObject } from 'react';
+import type { ForwardRefRenderFunction, RefObject } from 'react';
 import type { SelectOption } from '../../../../../components/controls/Select/types';
 import type { CompletionItem } from '../types';
 import InputWithDropdown from '../../../../../components/controls/InputWithDropdown';
@@ -84,6 +84,6 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
   );
 }
 
-const QueryInput = forwardRef(QueryInputToForward);
+const QueryInput = forwardRef(QueryInputToForward as ForwardRefRenderFunction<any, QueryInputProps>);
 
 export default QueryInput;
