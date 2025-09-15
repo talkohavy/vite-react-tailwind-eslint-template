@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { QueryParser, TokenTypes } from 'create-query-language';
 import ContextInfo from './components/ContextInfo';
-import ParseResult from './components/ParseResult';
 import QueryInput from './components/QueryInput';
 import TokenBubbles from './components/TokenBubbles';
 import { keyConfigs } from './logic/constants';
@@ -138,8 +137,6 @@ export default function QueryLanguageTab() {
             query={query}
           />
         </div>
-
-        <ParseResult query={query} queryParser={queryParser} />
       </div>
     </div>
   );
