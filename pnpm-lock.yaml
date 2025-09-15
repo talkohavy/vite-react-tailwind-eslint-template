@@ -36,8 +36,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       create-query-language:
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.6
+        version: 1.0.6
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -2755,8 +2755,8 @@ packages:
       typescript:
         optional: true
 
-  create-query-language@1.0.4:
-    resolution: {integrity: sha512-xK4gmjeszc4b6xbOwDjmpPDgGVG0PXGrWfD1KavbiQGedLew6MFJWwgxT8SSm/C680imdcsyZF0LmBQpEGIj2Q==}
+  create-query-language@1.0.6:
+    resolution: {integrity: sha512-7XykfHh42DK1QtZFNfKKjvgEhsczRqeMY4FLdrmA6H1DKrfxj+qeq2shSEEussAelZQEm9rS1VNEp8u0VlHDHw==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -7632,7 +7632,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  create-query-language@1.0.4: {}
+  create-query-language@1.0.6: {}
 
   cross-spawn@7.0.6:
     dependencies:

@@ -11,8 +11,8 @@ type QueryInputProps = {
   completions: CompletionItem[];
   selectedCompletionIndex: number;
   onQueryChange: (value: string) => void;
+  onCompletionSelect: (completion: SelectOption) => { value: string; cursorPosition: number };
   onCursorPositionChange: (position: number) => void;
-  onCompletionSelect?: (completion: SelectOption) => void;
   onSelectedIndexChange: (index: number) => void;
   onDropdownToggle: (open: boolean) => void;
 };
@@ -34,36 +34,14 @@ export default function QueryInput(props: QueryInputProps) {
 
   const handleCompletionSelect = useCallback(
     (completion: any) => {
-      // Call the parent's completion select handler first
-      onCompletionSelect?.(completion);
-
-      // Then handle the text insertion logic here
-      if (!inputRef.current) return;
-
       const input = inputRef.current;
-      const value = input.value;
-      const start = input.selectionStart || 0;
 
-      // Find the start of the current token to replace
-      let tokenStart = start;
-      while (tokenStart > 0) {
-        const prevChar = value[tokenStart - 1];
-        if (prevChar && /[a-zA-Z0-9_-]/.test(prevChar)) {
-          tokenStart--;
-        } else {
-          break;
-        }
-      }
+      if (!input) return;
 
-      // Insert the completion
-      const insertText = `${completion.label || completion.value} `;
-      const newValue = value.substring(0, tokenStart) + insertText + value.substring(start);
-      const newCursorPosition = tokenStart + insertText.length;
+      const { value: newValue, cursorPosition: newCursorPosition } = onCompletionSelect(completion);
 
       onQueryChange(newValue);
-      onCursorPositionChange(newCursorPosition);
 
-      // Focus back to input and set cursor position
       setTimeout(() => {
         input.focus();
         input.setSelectionRange(newCursorPosition, newCursorPosition);
