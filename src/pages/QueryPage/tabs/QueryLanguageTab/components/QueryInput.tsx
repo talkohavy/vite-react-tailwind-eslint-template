@@ -1,9 +1,8 @@
 import { forwardRef, useCallback } from 'react';
+import type { RefObject } from 'react';
 import type { SelectOption } from '../../../../../components/controls/Select/types';
 import type { CompletionItem } from '../types';
 import InputWithDropdown from '../../../../../components/controls/InputWithDropdown';
-// import CompletionDropdown from './CompletionDropdown';
-// import TextInputField from './TextInputField';
 
 type QueryInputProps = {
   query: string;
@@ -17,12 +16,12 @@ type QueryInputProps = {
   onDropdownToggle: (open: boolean) => void;
 };
 
-function QueryInputToForward(props: QueryInputProps, inputRef: any) {
+function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInputElement>) {
   const { query, completions, onQueryChange, setCursorPosition, onCompletionSelect } = props;
 
   const handleCompletionSelect = useCallback(
     (completion: any) => {
-      const input = inputRef.current;
+      const input = inputRef?.current;
 
       if (!input) return;
 
@@ -38,31 +37,34 @@ function QueryInputToForward(props: QueryInputProps, inputRef: any) {
     [onQueryChange, onCompletionSelect],
   );
 
-  const updateCursorPosition = useCallback((e: any) => {
-    const shouldUpdateCursor =
-      // Left-mouse click
-      (e.type === 'mousedown' && e.button === 0) ||
-      // Arrow keys (alone, with alt, or with ctrl, but not shift)
-      (e.type === 'keydown' && e.key === 'ArrowLeft' && !e.shiftKey) ||
-      (e.type === 'keydown' && e.key === 'ArrowRight' && !e.shiftKey) ||
-      // Home and End keys (alone or with ctrl)
-      (e.type === 'keydown' && e.key === 'Home') ||
-      (e.type === 'keydown' && e.key === 'End') ||
-      // Page navigation keys
-      (e.type === 'keydown' && e.key === 'PageUp') ||
-      (e.type === 'keydown' && e.key === 'PageDown') ||
-      // Select all (Ctrl+A)
-      (e.type === 'keydown' && e.key === 'a' && e.ctrlKey && !e.shiftKey && !e.altKey);
+  const updateCursorPosition = useCallback(
+    (e: any) => {
+      const shouldUpdateCursor =
+        // Left-mouse click
+        (e.type === 'mousedown' && e.button === 0) ||
+        // Arrow keys (alone, with alt, or with ctrl, but not shift)
+        (e.type === 'keydown' && e.key === 'ArrowLeft' && !e.shiftKey) ||
+        (e.type === 'keydown' && e.key === 'ArrowRight' && !e.shiftKey) ||
+        // Home and End keys (alone or with ctrl)
+        (e.type === 'keydown' && e.key === 'Home') ||
+        (e.type === 'keydown' && e.key === 'End') ||
+        // Page navigation keys
+        (e.type === 'keydown' && e.key === 'PageUp') ||
+        (e.type === 'keydown' && e.key === 'PageDown') ||
+        // Select all (Ctrl+A)
+        (e.type === 'keydown' && e.key === 'a' && e.ctrlKey && !e.shiftKey && !e.altKey);
 
-    if (!shouldUpdateCursor) {
-      return;
-    }
+      if (!shouldUpdateCursor) {
+        return;
+      }
 
-    // Update cursor position on key navigation
-    setTimeout(() => {
-      setCursorPosition(e.target.selectionStart || 0);
-    }, 0);
-  }, []);
+      // Update cursor position on key navigation
+      setTimeout(() => {
+        setCursorPosition(e.target.selectionStart || 0);
+      }, 0);
+    },
+    [setCursorPosition],
+  );
 
   return (
     <div className='relative'>
