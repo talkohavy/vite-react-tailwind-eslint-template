@@ -7,7 +7,7 @@ import { useCompletionEngine } from './logic/useCompletionEngine';
 
 const queryParser = new QueryParser();
 
-export default function QueryLanguageTab() {
+export default function SuggestionsTab() {
   const [query, setQuery] = useState('');
   const [cursorPosition, setCursorPosition] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
