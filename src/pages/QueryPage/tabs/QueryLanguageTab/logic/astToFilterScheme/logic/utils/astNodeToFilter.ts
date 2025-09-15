@@ -23,11 +23,40 @@ export function convertAstNodeToFilter(node: Expression): any {
       const rightSideCondition = convertAstNodeToFilter(node.right);
       conditions.push(rightSideCondition);
 
-      const result = conditions.filter(Boolean);
+      if (operatorValue === BooleanOperators.OR) {
+        const result = [];
+        if (conditions[0].OR) {
+          result.push(...conditions[0].OR);
+        } else {
+          result.push(conditions[0]);
+        }
 
-      if (operatorValue === BooleanOperators.OR) return { OR: result };
+        if (conditions[1].OR) {
+          result.push(...conditions[1].OR);
+        } else {
+          result.push(conditions[1]);
+        }
 
-      return result;
+        return { [BooleanOperators.OR]: result };
+      }
+      if (operatorValue === BooleanOperators.AND) {
+        const result = [];
+        if (conditions[0].AND) {
+          result.push(...conditions[0].AND);
+        } else {
+          result.push(conditions[0]);
+        }
+
+        if (conditions[1].AND) {
+          result.push(...conditions[1].AND);
+        } else {
+          result.push(conditions[1]);
+        }
+
+        return { [BooleanOperators.AND]: result };
+      }
+
+      return null;
     }
 
     case AstTypes.Condition: {
