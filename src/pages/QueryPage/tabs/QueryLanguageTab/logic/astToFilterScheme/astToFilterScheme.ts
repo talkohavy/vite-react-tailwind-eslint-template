@@ -1,6 +1,6 @@
 import type { FilterScheme } from '@talkohavy/filters';
 import type { Expression } from 'create-query-language';
-import { convertAstNodeToFilter } from './logic/utils/convertASTNodeToFilter';
+import { convertAstNodeToFilter } from './logic/utils/astNodeToFilter';
 
 export function convertAstToFilterScheme(ast: Expression): FilterScheme {
   try {
