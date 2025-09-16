@@ -88,7 +88,9 @@ export default function QueryLanguageTab() {
      *
      *
      */
-    const leftPart = `${query.substring(0, token.position.start)}${addedWhitespaces}`;
+    const tokenPosition = completion.label === ':' ? token.position.end : token.position.start;
+
+    const leftPart = `${query.substring(0, tokenPosition)}${addedWhitespaces}`;
     const insertText = completion.label;
     const rightPart = `${addedWhitespaces}${query.substring(token.position.end)}`.trimEnd();
     const newValue = leftPart + insertText + rightPart;
