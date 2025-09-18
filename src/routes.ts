@@ -22,6 +22,7 @@ const IFramePage = lazy(() => import('./pages/IFramePage'));
 const MasterFilterPage = lazy(() => import('./pages/MasterFilterPage'));
 const QueryPage = lazy(() => import('./pages/QueryPage'));
 const WebEditorPage = lazy(() => import('./pages/WebEditorPage'));
+const TestPage = lazy(() => import('./pages/TestPage/TestPageFixed'));
 
 // Mini-pages/tabs
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -233,5 +234,11 @@ export const routes: Array<Route> = [
     text: 'Code Editor',
     activeNames: [`${BASE_URL}/web-editor`],
     Component: WebEditorPage,
+  },
+  {
+    to: `${BASE_URL}/test`,
+    text: 'Test Page',
+    activeNames: [`${BASE_URL}/test`],
+    Component: TestPage,
   },
 ];
