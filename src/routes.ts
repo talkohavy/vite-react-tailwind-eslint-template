@@ -21,6 +21,7 @@ const OutletTabsPage = lazy(() => import('./pages/OutletTabsPage'));
 const IFramePage = lazy(() => import('./pages/IFramePage'));
 const MasterFilterPage = lazy(() => import('./pages/MasterFilterPage'));
 const QueryPage = lazy(() => import('./pages/QueryPage'));
+const WebEditorPage = lazy(() => import('./pages/WebEditorPage'));
 
 // Mini-pages/tabs
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -226,5 +227,11 @@ export const routes: Array<Route> = [
         Component: QueryLanguageTab,
       },
     ],
+  },
+  {
+    to: `${BASE_URL}/web-editor`,
+    text: 'Code Editor',
+    activeNames: [`${BASE_URL}/web-editor`],
+    Component: WebEditorPage,
   },
 ];
