@@ -39,6 +39,7 @@ export function convertAstNodeToFilter(node: Expression): any {
 
         return { [BooleanOperators.OR]: result };
       }
+
       if (operatorValue === BooleanOperators.AND) {
         const result = [];
         if (conditions[0].AND) {
@@ -57,6 +58,19 @@ export function convertAstNodeToFilter(node: Expression): any {
       }
 
       return null;
+    }
+
+    case AstTypes.Not: {
+      const result = [];
+
+      const innerFilter = convertAstNodeToFilter(node.expression);
+      if (innerFilter.AND) {
+        result.push(...innerFilter.AND);
+      } else {
+        result.push(innerFilter);
+      }
+
+      return { NOT: result };
     }
 
     case AstTypes.Condition: {

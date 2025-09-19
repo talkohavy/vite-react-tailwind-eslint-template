@@ -323,4 +323,69 @@ describe('convertAstToFilterScheme', () => {
     const actualResult = convertAstToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
+
+  it('should convert NOT expression', () => {
+    const ast = {
+      type: AstTypes.Not,
+      expression: {
+        type: AstTypes.Condition,
+        key: { value: 'email' },
+        comparator: { value: ':' },
+        value: { value: 'asd' },
+      },
+    } as any;
+
+    const expectedResult = {
+      NOT: [
+        {
+          fieldName: 'email',
+          operator: 'equals',
+          value: 'asd',
+        },
+      ],
+    };
+
+    const actualResult = convertAstToFilterScheme(ast);
+    expect(actualResult).toEqual(expectedResult);
+  });
+
+  it('should convert NOT expression with complex inner expression', () => {
+    const ast = {
+      type: AstTypes.Not,
+      expression: {
+        type: AstTypes.Boolean,
+        operator: { value: BooleanOperators.AND },
+        left: {
+          type: AstTypes.Condition,
+          key: { value: 'status' },
+          comparator: { value: '==' },
+          value: { value: 'active' },
+        },
+        right: {
+          type: AstTypes.Condition,
+          key: { value: 'role' },
+          comparator: { value: '==' },
+          value: { value: 'admin' },
+        },
+      },
+    } as any;
+
+    const expectedResult = {
+      NOT: [
+        {
+          fieldName: 'status',
+          operator: 'equals',
+          value: 'active',
+        },
+        {
+          fieldName: 'role',
+          operator: 'equals',
+          value: 'admin',
+        },
+      ],
+    };
+
+    const actualResult = convertAstToFilterScheme(ast);
+    expect(actualResult).toEqual(expectedResult);
+  });
 });

@@ -27,6 +27,11 @@ export const TOKEN_TYPE_TO_COLOR: Record<ColorableTokenTypes, TokenMetaInfo> = {
     color: 'text-blue-800',
     label: 'Logical Operator',
   },
+  [TokenTypes.NOT]: {
+    backgroundColor: 'bg-purple-300',
+    color: 'text-purple-800',
+    label: 'NOT Operator',
+  },
   [TokenTypes.LeftParenthesis]: {
     backgroundColor: 'bg-green-300',
     color: 'text-green-800',
