@@ -13,7 +13,7 @@ export const examples = [
 
 export const keyConfigs: KeyConfig[] = [
   {
-    name: 'name',
+    name: 'os name',
     description: 'User full name',
     valueType: 'string',
     values: [
