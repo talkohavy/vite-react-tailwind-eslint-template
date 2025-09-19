@@ -6,6 +6,7 @@ import {
   type TokenContext,
   Comparators,
   type ContextTypeValues,
+  SpecialChars,
 } from 'create-query-language';
 import type { CompletionItem, KeyConfig } from '../types';
 
@@ -27,9 +28,9 @@ export function useCompletionEngine({ keyConfigs, query }: UseCompletionEnginePr
         addCompletions({ keyConfigs, currentInput, context, completions });
       });
 
-      const completionsSorted = completions.toSorted((a, b) => b.priority - a.priority);
+      // const completionsSorted = completions.toSorted((a, b) => b.priority - a.priority);
 
-      return completionsSorted;
+      return completions;
     },
     [keyConfigs, query],
   );
@@ -45,24 +46,26 @@ type HandlerProps = {
 };
 
 const TOKEN_TYPE_HANDLERS: Record<ContextTypeValues, (props: HandlerProps) => void> = {
-  [ContextTypes.Key]: (props: HandlerProps) => {
+  [ContextTypes.Key]: (props) => {
     const { keyConfigs, currentInput, completions } = props;
 
     keyConfigs.forEach((keyConfig) => {
       const lowercasedKey = keyConfig.name.toLowerCase();
-      if (!currentInput || lowercasedKey.includes(currentInput.toLowerCase())) {
+      const lowercasedInput = currentInput.toLowerCase();
+
+      if (!currentInput || lowercasedKey.includes(lowercasedInput)) {
         const needsQuotes = lowercasedKey.includes(' ');
 
         completions.push({
-          text: needsQuotes ? `"${keyConfig.name}"` : keyConfig.name,
           type: ContextTypes.Key,
-          description: keyConfig.description,
-          priority: 10,
+          value: keyConfig.name,
+          label: keyConfig.name,
+          insertText: needsQuotes ? `"${keyConfig.name}"` : keyConfig.name,
         });
       }
     });
   },
-  [ContextTypes.Value]: (props: HandlerProps) => {
+  [ContextTypes.Value]: (props) => {
     const { keyConfigs, currentInput, context, completions } = props;
 
     const currentKeyToken = (context as TokenContextWithKey).key;
@@ -70,79 +73,93 @@ const TOKEN_TYPE_HANDLERS: Record<ContextTypeValues, (props: HandlerProps) => vo
 
     if (keyConfig?.values) {
       keyConfig.values.forEach((valueConfig) => {
-        if (!currentInput || valueConfig.value.toLowerCase().includes(currentInput.toLowerCase())) {
-          const needsQuotes = valueConfig.value.includes(' ');
+        const lowercasedValue = valueConfig.value.toLowerCase();
+        const lowercasedInput = currentInput.toLowerCase();
+
+        if (!currentInput || lowercasedValue.includes(lowercasedInput)) {
+          const needsQuotes = lowercasedValue.includes(' ');
+
           completions.push({
-            text: needsQuotes ? `"${valueConfig.value}"` : valueConfig.value,
             type: needsQuotes ? ContextTypes.QuotedString : ContextTypes.Value,
-            description: valueConfig.description,
-            priority: 8,
+            value: valueConfig.value,
+            label: valueConfig.value,
+            insertText: needsQuotes ? `"${valueConfig.value}"` : valueConfig.value,
           });
         }
       });
     }
   },
-  [ContextTypes.LogicalOperator]: (props: HandlerProps) => {
+  [ContextTypes.LogicalOperator]: (props) => {
     const { currentInput, completions } = props;
 
     if (!currentInput || BooleanOperators.AND.toLowerCase().includes(currentInput.toLowerCase())) {
       completions.push({
-        text: BooleanOperators.AND,
         type: ContextTypes.LogicalOperator,
-        description: 'Logical AND operator',
-        priority: 9,
+        value: BooleanOperators.AND,
+        label: BooleanOperators.AND,
+        insertText: BooleanOperators.AND,
       });
     }
-    if (!currentInput || 'OR'.toLowerCase().includes(currentInput.toLowerCase())) {
+    if (!currentInput || BooleanOperators.OR.toLowerCase().includes(currentInput.toLowerCase())) {
       completions.push({
-        text: 'OR',
         type: ContextTypes.LogicalOperator,
-        description: 'Logical OR operator',
-        priority: 9,
+        value: BooleanOperators.OR,
+        label: BooleanOperators.OR,
+        insertText: BooleanOperators.OR,
       });
     }
   },
-  [ContextTypes.Comparator]: (props: HandlerProps) => {
+  [ContextTypes.Comparator]: (props) => {
     const { completions } = props;
 
-    Object.values(Comparators).forEach((comp, index) => {
+    Object.values(Comparators).forEach((comparator) => {
       completions.push({
-        text: comp,
         type: ContextTypes.Comparator,
-        description: `Comparison operator: ${comp}`,
-        priority: 7 - index,
+        value: comparator,
+        label: comparator,
+        insertText: comparator,
       });
     });
   },
-  [ContextTypes.Colon]: (props: HandlerProps) => {
+  [ContextTypes.Colon]: (props) => {
     const { completions } = props;
 
     completions.push({
-      text: ':',
       type: ContextTypes.Colon,
-      description: 'Basic comparison operator',
-      priority: 10,
+      value: SpecialChars.Colon,
+      label: SpecialChars.Colon,
+      insertText: SpecialChars.Colon,
     });
   },
-  [ContextTypes.LeftParenthesis]: (props: HandlerProps) => {
+  [ContextTypes.LeftParenthesis]: (props) => {
     const { completions } = props;
 
     completions.push({
-      text: '(',
       type: ContextTypes.LeftParenthesis,
-      description: 'Start grouping with parentheses',
-      priority: 6,
+      value: SpecialChars.LeftParenthesis,
+      label: SpecialChars.LeftParenthesis,
+      insertText: SpecialChars.LeftParenthesis,
     });
   },
-  [ContextTypes.RightParenthesis]: (props: HandlerProps) => {
+  [ContextTypes.RightParenthesis]: (props) => {
     const { completions } = props;
 
     completions.push({
-      text: ')',
       type: ContextTypes.RightParenthesis,
-      description: 'End grouping with parentheses',
-      priority: 6,
+      value: SpecialChars.RightParenthesis,
+      label: SpecialChars.RightParenthesis,
+      insertText: SpecialChars.RightParenthesis,
     });
   },
-  [ContextTypes.QuotedString]: (_props: HandlerProps) => {},
+  [ContextTypes.Not]: (props) => {
+    const { completions } = props;
+
+    completions.push({
+      type: ContextTypes.Not,
+      value: BooleanOperators.NOT,
+      label: BooleanOperators.NOT,
+      insertText: BooleanOperators.NOT,
+    });
+  },
+  [ContextTypes.QuotedString]: (_props) => {},
 } as const;

@@ -15,7 +15,6 @@ export default function QueryLanguageTab() {
   const [query, setQuery] = useState('');
   const [cursorPosition, setCursorPosition] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedCompletionIndex, setSelectedCompletionIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { generateCompletions } = useCompletionEngine({ keyConfigs, query });
@@ -92,13 +91,10 @@ export default function QueryLanguageTab() {
             ref={inputRef}
             query={query}
             onQueryChange={onQueryChange}
-            isDropdownOpen={isDropdownOpen}
             completions={completions}
-            selectedCompletionIndex={selectedCompletionIndex}
-            setCursorPosition={setCursorPosition}
-            onSelectedIndexChange={setSelectedCompletionIndex}
-            onDropdownToggle={setIsDropdownOpen}
             onCompletionSelect={onCompletionSelect}
+            isDropdownOpen={isDropdownOpen}
+            setCursorPosition={setCursorPosition}
           />
 
           <ContextInfo

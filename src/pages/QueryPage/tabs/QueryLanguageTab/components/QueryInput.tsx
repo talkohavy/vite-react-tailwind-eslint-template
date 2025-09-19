@@ -1,19 +1,15 @@
 import { forwardRef, useCallback } from 'react';
 import type { ForwardRefRenderFunction, RefObject } from 'react';
-import type { SelectOption } from '../../../../../components/controls/Select/types';
 import type { CompletionItem } from '../types';
 import InputWithDropdown from '../../../../../components/controls/InputWithDropdown';
 
 type QueryInputProps = {
   query: string;
-  isDropdownOpen: boolean;
-  completions: CompletionItem[];
-  selectedCompletionIndex: number;
   onQueryChange: (value: string, cursorPosition?: number) => void;
-  onCompletionSelect: (completion: SelectOption) => { value: string; cursorPosition: number };
+  completions: CompletionItem[];
+  onCompletionSelect: (completion: CompletionItem) => { value: string; cursorPosition: number };
+  isDropdownOpen: boolean;
   setCursorPosition: (position: number) => void;
-  onSelectedIndexChange: (index: number) => void;
-  onDropdownToggle: (open: boolean) => void;
 };
 
 function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInputElement>) {
@@ -71,7 +67,7 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
       <InputWithDropdown
         ref={inputRef}
         value={query}
-        options={completions.map((c) => ({ value: c.text, label: c.text }))}
+        options={completions}
         onItemSelect={handleCompletionSelect}
         onChange={onQueryChange}
         closeOnSelect={false}

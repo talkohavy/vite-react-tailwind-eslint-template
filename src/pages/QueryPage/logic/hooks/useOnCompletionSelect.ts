@@ -1,4 +1,5 @@
-import { TokenTypes, type Token } from 'create-query-language';
+import { SpecialChars, TokenTypes, type Token } from 'create-query-language';
+import type { CompletionItem } from '../../tabs/QueryLanguageTab/types';
 
 type UseOnCompletionSelectProps = {
   tokens: Token[];
@@ -9,7 +10,7 @@ type UseOnCompletionSelectProps = {
 export function useOnCompletionSelect(props: UseOnCompletionSelectProps) {
   const { tokens, cursorPosition, query } = props;
 
-  const onCompletionSelect = (completion: any) => {
+  const onCompletionSelect = (completion: CompletionItem) => {
     /**
      * Use Cases:
      * 1. "role <= |admin" - token should be "admin"
@@ -34,14 +35,14 @@ export function useOnCompletionSelect(props: UseOnCompletionSelectProps) {
      *
      *
      */
-    const tokenPosition = completion.label === ':' ? token.position.end : token.position.start;
+    const tokenPosition = completion.insertText === SpecialChars.Colon ? token.position.end : token.position.start;
 
     const leftPart = `${query.substring(0, tokenPosition)}${addedWhitespaces}`;
-    const insertText = completion.label;
+    const middlePart = completion.insertText;
     const rightPart = `${addedWhitespaces}${query.substring(token.position.end)}`.trimEnd();
-    const newValue = leftPart + insertText + rightPart;
+    const newValue = leftPart + middlePart + rightPart;
 
-    const newCursorPosition = leftPart.length + insertText.length;
+    const newCursorPosition = leftPart.length + middlePart.length;
 
     return { value: newValue, cursorPosition: newCursorPosition };
   };
