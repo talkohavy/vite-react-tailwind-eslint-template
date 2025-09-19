@@ -49,9 +49,12 @@ const TOKEN_TYPE_HANDLERS: Record<ContextTypeValues, (props: HandlerProps) => vo
     const { keyConfigs, currentInput, completions } = props;
 
     keyConfigs.forEach((keyConfig) => {
-      if (!currentInput || keyConfig.name.toLowerCase().includes(currentInput.toLowerCase())) {
+      const lowercasedKey = keyConfig.name.toLowerCase();
+      if (!currentInput || lowercasedKey.includes(currentInput.toLowerCase())) {
+        const needsQuotes = lowercasedKey.includes(' ');
+
         completions.push({
-          text: keyConfig.name,
+          text: needsQuotes ? `"${keyConfig.name}"` : keyConfig.name,
           type: ContextTypes.Key,
           description: keyConfig.description,
           priority: 10,
