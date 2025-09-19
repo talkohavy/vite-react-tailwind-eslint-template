@@ -23,7 +23,7 @@
     "@radix-ui/react-popover": "^1.1.14",
     "@radix-ui/react-select": "^2.2.5",
     "@reduxjs/toolkit": "^2.8.2",
-    "@talkohavy/filters": "^2.0.0",
+    "@talkohavy/filters": "^2.0.1",
     "@talkohavy/lodash": "^1.4.1",
     "axios": "^1.10.0",
     "clsx": "^2.1.1",
