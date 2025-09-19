@@ -63,9 +63,9 @@ export function useCompletionEngine({ keyConfigs, query }: UseCompletionEnginePr
                 priority: 9,
               });
             }
-            if (!currentInput || 'OR'.toLowerCase().includes(currentInput.toLowerCase())) {
+            if (!currentInput || BooleanOperators.OR.toLowerCase().includes(currentInput.toLowerCase())) {
               completions.push({
-                text: 'OR',
+                text: BooleanOperators.OR,
                 type: ContextTypes.LogicalOperator,
                 description: 'Logical OR operator',
                 priority: 9,
