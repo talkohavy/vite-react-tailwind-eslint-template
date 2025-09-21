@@ -1,17 +1,13 @@
-import { useMemo, useState } from 'react';
-import { QueryParser } from 'create-query-language';
+import { useState } from 'react';
+import { useQueryParser } from '../../../logic/hooks/useQueryParser';
 import { usePositionInfoLogic } from './usePositionInfoLogic';
 import { useQueryInputLogic } from './useQueryInputLogic';
-
-const queryParser = new QueryParser();
 
 export function useQueryParserTabLogic() {
   const [cursorPosition, setCursorPosition] = useState(0);
   const { query, handleInputChange } = useQueryInputLogic({ setCursorPosition });
 
-  const result = useMemo(() => {
-    return queryParser.parse(query);
-  }, [query]);
+  const result = useQueryParser({ query });
 
   const { currentToken, currentASTNode } = usePositionInfoLogic({ cursorPosition, result });
 
