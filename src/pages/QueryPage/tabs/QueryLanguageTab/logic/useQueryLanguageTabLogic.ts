@@ -14,9 +14,9 @@ export function useQueryLanguageTabLogic() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { generateCompletions } = useCompletionEngine({ keyConfigs, query });
-
   const parseResult = useQueryParser({ query });
+
+  const { generateCompletions } = useCompletionEngine({ keyConfigs, query });
 
   const filterScheme = useMemo(() => {
     const filterScheme = convertAstToFilterScheme(parseResult.ast);
