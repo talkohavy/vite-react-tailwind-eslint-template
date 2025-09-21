@@ -29,7 +29,6 @@ const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
 const AnalyticsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
 const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
-const TokenStreamTab = lazy(() => import('./pages/QueryPage/tabs/TokenStreamTab'));
 const QueryParserTab = lazy(() => import('./pages/QueryPage/tabs/QueryParserTab'));
 const SuggestionsTab = lazy(() => import('./pages/QueryPage/tabs/SuggestionsTab'));
 const UIChipsTab = lazy(() => import('./pages/QueryPage/tabs/UIChipsTab'));
@@ -183,7 +182,6 @@ export const routes: Array<Route> = [
     activeNames: [
       `${BASE_URL}/query-language/`,
       `${BASE_URL}/query-language/lexer`,
-      `${BASE_URL}/query-language/token-stream`,
       `${BASE_URL}/query-language/query-parser`,
       `${BASE_URL}/query-language/suggestions`,
       `${BASE_URL}/query-language/ui-chips`,
@@ -196,12 +194,6 @@ export const routes: Array<Route> = [
         text: 'Lexer',
         activeNames: [],
         Component: LexerTab,
-      },
-      {
-        to: 'token-stream',
-        text: 'Token Stream',
-        activeNames: [],
-        Component: TokenStreamTab,
       },
       {
         to: 'query-parser',

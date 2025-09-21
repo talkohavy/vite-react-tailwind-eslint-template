@@ -21,10 +21,6 @@ const tabOptions = [
     label: 'Lexer',
   },
   {
-    value: Tabs.TokenStream,
-    label: 'Token Stream',
-  },
-  {
     value: Tabs.QueryParser,
     label: 'Query Parser',
   },
