@@ -1,8 +1,8 @@
+import QueryInput from '../QueryLanguageTab/components/QueryInput';
 import CursorPositionInfo from './content/CursorPositionInfo';
 import QueryVisualization from './content/QueryVisualization';
 import RawParseResult from './content/RawParseResult';
 import { useQueryParserTabLogic } from './logic/useQueryParserTabLogic';
-import QueryInput from './QueryInput';
 
 export default function QueryParserTab() {
   const { query, result, cursorPosition, currentToken, currentASTNode, handleInputChange } = useQueryParserTabLogic();
@@ -28,7 +28,14 @@ export default function QueryParserTab() {
           <h2 className='text-xl font-semibold text-gray-900 mb-4'>Enter Query</h2>
 
           <div className='space-y-4'>
-            <QueryInput value={query} onChange={handleInputChange} placeholder='Type a query...' />
+            <QueryInput
+              query={query}
+              onQueryChange={handleInputChange}
+              isDropdownOpen={false}
+              completions={[]}
+              onCompletionSelect={(_props: any) => ({}) as any}
+              setCursorPosition={(_props: any) => {}}
+            />
 
             <CursorPositionInfo
               cursorPosition={cursorPosition}
