@@ -1,42 +1,14 @@
-import { useCallback } from 'react';
 import {
   BooleanOperators,
-  ContextTypes,
-  type TokenContextWithKey,
-  type TokenContext,
   Comparators,
-  type ContextTypeValues,
+  ContextTypes,
   SpecialChars,
+  type TokenContextWithKey,
+  type ContextTypeValues,
+  type TokenContext,
 } from 'create-query-language';
-import type { CompletionItem, KeyConfig } from '../types';
-
-interface UseCompletionEngineProps {
-  keyConfigs: KeyConfig[];
-  query: string;
-}
-
-export function useCompletionEngine({ keyConfigs, query }: UseCompletionEngineProps) {
-  const generateCompletions = useCallback(
-    (context: TokenContext | undefined, currentInput: string): CompletionItem[] => {
-      if (!context) return [];
-
-      const completions: CompletionItem[] = [];
-
-      context.expectedTokens.forEach((type) => {
-        const addCompletions = TOKEN_TYPE_HANDLERS[type];
-
-        addCompletions({ keyConfigs, currentInput, context, completions });
-      });
-
-      // const completionsSorted = completions.toSorted((a, b) => b.priority - a.priority);
-
-      return completions;
-    },
-    [keyConfigs, query],
-  );
-
-  return { generateCompletions };
-}
+import type { KeyConfig } from '../../../../tabs/QueryLanguageTab/types';
+import type { CompletionItem } from '../types';
 
 type HandlerProps = {
   keyConfigs: KeyConfig[];
@@ -45,7 +17,7 @@ type HandlerProps = {
   completions: CompletionItem[];
 };
 
-const TOKEN_TYPE_HANDLERS: Record<ContextTypeValues, (props: HandlerProps) => void> = {
+export const TOKEN_TYPE_HANDLERS: Record<ContextTypeValues, (props: HandlerProps) => void> = {
   [ContextTypes.Key]: (props) => {
     const { keyConfigs, currentInput, completions } = props;
 
