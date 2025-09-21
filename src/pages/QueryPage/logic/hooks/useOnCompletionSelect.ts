@@ -1,5 +1,5 @@
 import { SpecialChars, TokenTypes, type Token } from 'create-query-language';
-import type { CompletionItem } from '../../tabs/QueryLanguageTab/types';
+import type { CompletionItem } from './useSuggestionEngine/types';
 
 type UseOnCompletionSelectProps = {
   tokens: Token[];

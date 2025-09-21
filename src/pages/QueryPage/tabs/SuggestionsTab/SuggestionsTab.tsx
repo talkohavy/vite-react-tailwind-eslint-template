@@ -1,5 +1,5 @@
+import QueryInput from '../QueryLanguageTab/components/QueryInput';
 import ContextInfo from './components/ContextInfo';
-import QueryInput from './components/QueryInput';
 import { useSuggestionsTabLogic } from './logic/useSuggestionsTabLogic';
 
 export default function SuggestionsTab() {
@@ -8,12 +8,9 @@ export default function SuggestionsTab() {
     onQueryChange,
     isDropdownOpen,
     completions,
-    selectedCompletionIndex,
-    setCursorPosition,
-    setSelectedCompletionIndex,
-    setIsDropdownOpen,
-    onCompletionSelect,
     cursorPosition,
+    setCursorPosition,
+    onCompletionSelect,
     expectedTypes,
     inputRef,
   } = useSuggestionsTabLogic();
@@ -28,13 +25,10 @@ export default function SuggestionsTab() {
             ref={inputRef}
             query={query}
             onQueryChange={onQueryChange}
-            isDropdownOpen={isDropdownOpen}
             completions={completions}
-            selectedCompletionIndex={selectedCompletionIndex}
-            setCursorPosition={setCursorPosition}
-            onSelectedIndexChange={setSelectedCompletionIndex}
-            onDropdownToggle={setIsDropdownOpen}
             onCompletionSelect={onCompletionSelect}
+            isDropdownOpen={isDropdownOpen}
+            setCursorPosition={setCursorPosition}
           />
 
           <ContextInfo

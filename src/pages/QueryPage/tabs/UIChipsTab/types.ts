@@ -1,13 +1,3 @@
-import type { ContextTypeValues } from 'create-query-language';
-
-export interface CompletionItem {
-  text: string;
-  type: ContextTypeValues;
-  description?: string;
-  insertText?: string;
-  priority: number;
-}
-
 /**
  * Configuration for key values
  */

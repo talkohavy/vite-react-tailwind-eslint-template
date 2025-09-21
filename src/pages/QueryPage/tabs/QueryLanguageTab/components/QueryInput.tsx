@@ -1,6 +1,6 @@
 import { forwardRef, useCallback } from 'react';
 import type { ForwardRefRenderFunction, RefObject } from 'react';
-import type { CompletionItem } from '../types';
+import type { CompletionItem } from '../../../logic/hooks/useSuggestionEngine/types';
 import InputWithDropdown from '../../../../../components/controls/InputWithDropdown';
 
 type QueryInputProps = {
