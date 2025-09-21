@@ -1,7 +1,6 @@
 import CursorPositionInfo from './content/CursorPositionInfo';
 import QueryVisualization from './content/QueryVisualization';
 import RawParseResult from './content/RawParseResult';
-import TokenList from './content/TokenList';
 import { useQueryParserTabLogic } from './logic/useQueryParserTabLogic';
 import QueryInput from './QueryInput';
 
@@ -42,8 +41,6 @@ export default function QueryParserTab() {
         {query && <QueryVisualization query={query} parseResult={result} />}
 
         <RawParseResult result={result} />
-
-        <TokenList tokens={result.tokens} />
       </div>
     </div>
   );
