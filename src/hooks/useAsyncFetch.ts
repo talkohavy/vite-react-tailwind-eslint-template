@@ -23,7 +23,7 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    */
   asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
   /**
-   * **IMPORTANT NOTE! Passing undefined will qualify as `true`!!! Be sure to do !!flag to avoid weird situations.**
+   * **IMPORTANT NOTE! Passing undefined will qualify as `true`!!! Be sure to do `Boolean(flag)` to avoid weird situations.**
    *
    *
    * `isAutoFetch` is set to `true` by default.
@@ -65,14 +65,19 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
   dependencies?: any[];
 };
 
+type AsyncFetchResult<T> =
+  | { isLoading: true; isError: false; data: undefined; fetchData: (funcProps?: any) => Promise<T | undefined> }
+  | { isLoading: false; isError: true; data: undefined; fetchData: (funcProps?: any) => Promise<T | undefined> }
+  | { isLoading: false; isError: false; data: T; fetchData: (funcProps?: any) => Promise<T | undefined> };
+
 export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   props: useAsyncFetchProps<ReturnType, TransformType>,
-) {
+): AsyncFetchResult<TransformType> {
   const { asyncFunc, transform, isAutoFetch = true, onSuccess, onError, dependencies = [] } = props;
 
   const [isLoading, setIsLoading] = useState(isAutoFetch);
   const [isError, setIsError] = useState(false);
-  const [data, setData] = useState(undefined as TransformType);
+  const [data, setData] = useState<TransformType>();
 
   const asyncFuncRef = useRef(asyncFunc);
   const requestIdRef = useRef<string>('');
@@ -126,5 +131,5 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
     fetchData();
   }, [fetchData, isAutoFetch, ...dependencies]);
 
-  return { isLoading, isError, data, fetchData };
+  return { isLoading, isError, data, fetchData } as AsyncFetchResult<TransformType>;
 }
