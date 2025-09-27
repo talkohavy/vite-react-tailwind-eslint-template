@@ -13,6 +13,7 @@
   "gitlens.blame.fontSize": 46,
   "markdown.preview.fontSize": 46,
   "editor.codeLensFontSize": 16, // <--- conflict resolution: "Accept Current" | "No Changes Accepted" | "Remove Stashed Changes" | "Remove Incoming Changes"
+  "chat.fontSize": 16,
 
   // -------------------
   // Basic Editor Rules:
