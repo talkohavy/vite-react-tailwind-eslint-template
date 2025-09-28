@@ -65,10 +65,11 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
   dependencies?: any[];
 };
 
-type AsyncFetchResult<T> =
-  | { isLoading: true; isError: false; data: undefined; fetchData: (funcProps?: any) => Promise<T | undefined> }
-  | { isLoading: false; isError: true; data: undefined; fetchData: (funcProps?: any) => Promise<T | undefined> }
-  | { isLoading: false; isError: false; data: T; fetchData: (funcProps?: any) => Promise<T | undefined> };
+type AsyncFetchResult<T> = { fetchData: (funcProps?: any) => Promise<T | undefined> } & (
+  | { isLoading: true; isError: false; data: undefined }
+  | { isLoading: false; isError: true; data: undefined }
+  | { isLoading: false; isError: false; data: T }
+);
 
 export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   props: useAsyncFetchProps<ReturnType, TransformType>,
