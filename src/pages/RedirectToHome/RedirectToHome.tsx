@@ -6,7 +6,7 @@ export default function RedirectToHome() {
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    navigateTo(BASE_URL);
+    navigateTo(`${BASE_URL}/home`, { replace: true });
   }, [navigateTo]);
 
   return null;
