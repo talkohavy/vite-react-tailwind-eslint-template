@@ -3,35 +3,36 @@
   padding: 12px 16px;
   font-size: 16px;
   font-family: monospace;
-  background-color: #1a1a1a;
-  border: 1px solid #606060;
   border-radius: 8px;
-  color: white;
   outline: none;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #374151;
 }
 
 .InputWithDropdownControl:has(input:focus) {
   outline: none;
-  box-shadow: 0 0 0 2px #3b82f6;
   border-color: transparent;
+  box-shadow: 0 0 0 2px #3b82f6;
 }
 
 .InputWithDropdownDropdown {
-  border: 1px solid #696b83;
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-height: 240px;
-  background-color: #1f2937;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
 }
 
 .InputWithDropdownItem {
   padding: 8px 12px;
   cursor: pointer;
-  border-bottom: 1px solid #e5e5e5;
   height: 73px;
   width: 100%;
   text-align: left;
   font-size: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
 }
 
 .InputWithDropdownItem:last-child {
@@ -40,23 +41,39 @@
 
 .InputWithDropdownItem[data-disabled] {
   pointer-events: none;
-  color: #c9c9c9;
-}
-
-body[class*='dark'] .InputWithDropdownItem {
-  color: white;
-}
-
-body[class*='dark'] .InputWithDropdownItem[data-disabled] {
-  color: #606060;
+  color: #9ca3af;
 }
 
 .InputWithDropdownItem[data-highlighted] {
   outline: none;
-  background-color: violet;
-  color: pink;
+  background-color: #ede9fe;
+  color: #6d28d9;
 }
 
-body[class*='dark'] .InputWithDropdownItem[data-highlighted] {
+html body[class*='dark'] .InputWithDropdownControl {
+  background-color: #1a1a1a;
+  border: 1px solid #606060;
+  color: white;
+}
+
+html body[class*='dark'] .InputWithDropdownControl:has(input:focus) {
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+html body[class*='dark'] .InputWithDropdownDropdown {
+  border: 1px solid #696b83;
+  background-color: #1f2937;
+}
+
+html body[class*='dark'] .InputWithDropdownItem {
+  border-bottom: 1px solid #e5e5e5;
+  color: white;
+}
+
+html body[class*='dark'] .InputWithDropdownItem[data-disabled] {
+  color: #606060;
+}
+
+html body[class*='dark'] .InputWithDropdownItem[data-highlighted] {
   background-color: rgb(21, 93, 251);
 }
