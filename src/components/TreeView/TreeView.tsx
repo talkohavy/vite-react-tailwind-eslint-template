@@ -28,14 +28,15 @@ export default function TreeView(props: TreeViewProps) {
   const updateNode = useCallback((nodeId: string, updates: Partial<TreeNode>) => {
     const updateNodeRecursive = (nodes: Array<TreeNode>): Array<TreeNode> => {
       return nodes.map((node) => {
-        if (node.id === nodeId) {
-          return { ...node, ...updates };
-        }
+        const { id, items } = node;
 
-        if (node.items) {
-          return { ...node, items: updateNodeRecursive(node.items) };
-        }
+        // if ids match, found the node to update
+        if (id === nodeId) return { ...node, ...updates };
 
+        // if has items, recursively check child nodes
+        if (items) return { ...node, items: updateNodeRecursive(items) };
+
+        // No changes on this node
         return node;
       });
     };
