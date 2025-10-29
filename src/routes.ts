@@ -34,6 +34,12 @@ const SuggestionsTab = lazy(() => import('./pages/QueryPage/tabs/SuggestionsTab'
 const UIChipsTab = lazy(() => import('./pages/QueryPage/tabs/UIChipsTab'));
 const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
 
+// TreeView Main page & Demo tabs
+const TreeViewDemoPage = lazy(() => import('./pages/TreeViewDemo'));
+const StaticTreeTab = lazy(() => import('./pages/TreeViewDemo/tabs/StaticTreeTab'));
+const DynamicTreeTab = lazy(() => import('./pages/TreeViewDemo/tabs/DynamicTreeTab'));
+const CustomRenderingTab = lazy(() => import('./pages/TreeViewDemo/tabs/CustomRenderingTab'));
+
 export const routes: Array<Route> = [
   {
     to: '/',
@@ -51,6 +57,32 @@ export const routes: Array<Route> = [
     text: 'Showcase',
     activeNames: [`${BASE_URL}/showcase`],
     Component: ShowcasePage,
+  },
+  {
+    to: `${BASE_URL}/tree-view-demo`,
+    text: 'TreeView Demo',
+    activeNames: [`${BASE_URL}/tree-view-demo`],
+    Component: TreeViewDemoPage,
+    children: [
+      {
+        to: `${BASE_URL}/tree-view-demo/static-tree`,
+        text: 'Static Tree',
+        activeNames: [`${BASE_URL}/tree-view-demo/static-tree`],
+        Component: StaticTreeTab,
+      },
+      {
+        to: `${BASE_URL}/tree-view-demo/dynamic-tree`,
+        text: 'Dynamic Tree',
+        activeNames: [`${BASE_URL}/tree-view-demo/dynamic-tree`],
+        Component: DynamicTreeTab,
+      },
+      {
+        to: `${BASE_URL}/tree-view-demo/custom-rendering`,
+        text: 'Custom Rendering',
+        activeNames: [`${BASE_URL}/tree-view-demo/custom-rendering`],
+        Component: CustomRenderingTab,
+      },
+    ],
   },
   {
     to: `${BASE_URL}/server-call`,
