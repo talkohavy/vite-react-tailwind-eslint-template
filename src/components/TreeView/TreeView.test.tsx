@@ -7,12 +7,12 @@ const mockStaticData: Array<TreeNode> = [
     id: '1',
     name: 'src',
     type: 'folder',
-    children: [
+    items: [
       {
         id: '2',
         name: 'components',
         type: 'folder',
-        children: [
+        items: [
           { id: '3', name: 'Button.tsx', type: 'file' },
           { id: '4', name: 'Input.tsx', type: 'file' },
         ],
@@ -76,7 +76,7 @@ describe('TreeView', () => {
     it('should expand folder when expand button is clicked', () => {
       render(<TreeView data={mockStaticData} />);
 
-      // Initially children should not be visible
+      // Initially items should not be visible
       expect(screen.queryByText('components')).not.toBeInTheDocument();
 
       // Click the expand button for src folder
@@ -87,7 +87,7 @@ describe('TreeView', () => {
         fireEvent.click(expandButton);
       }
 
-      // Now children should be visible
+      // Now items should be visible
       expect(screen.getByText('components')).toBeInTheDocument();
       expect(screen.getByText('App.tsx')).toBeInTheDocument();
     });
@@ -110,25 +110,25 @@ describe('TreeView', () => {
     it('should expand on node click when expandOnClick is true', () => {
       render(<TreeView data={mockStaticData} expandOnClick={true} />);
 
-      // Initially children should not be visible
+      // Initially items should not be visible
       expect(screen.queryByText('components')).not.toBeInTheDocument();
 
       // Click the folder name
       fireEvent.click(screen.getByText('src'));
 
-      // Now children should be visible
+      // Now items should be visible
       expect(screen.getByText('components')).toBeInTheDocument();
     });
   });
 
   describe('Dynamic Configuration', () => {
     it('should call onNodeExpand when expanding a folder', async () => {
-      const mockChildren: Array<TreeNode> = [
+      const mockItems: Array<TreeNode> = [
         { id: 'child1', name: 'src', type: 'folder' },
         { id: 'child2', name: 'dist', type: 'folder' },
       ];
 
-      const mockOnNodeExpand = jest.fn().mockResolvedValue(mockChildren);
+      const mockOnNodeExpand = jest.fn().mockResolvedValue(mockItems);
 
       render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} />);
 
@@ -148,7 +148,7 @@ describe('TreeView', () => {
         }),
       );
 
-      // Wait for children to be loaded and displayed
+      // Wait for items to be loaded and displayed
       await waitFor(() => {
         expect(screen.getByText('src')).toBeInTheDocument();
         expect(screen.getByText('dist')).toBeInTheDocument();
@@ -196,7 +196,7 @@ describe('TreeView', () => {
 
       // Wait for error handling
       await waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith('Error loading children:', expect.any(Error));
+        expect(consoleSpy).toHaveBeenCalledWith('Error loading items:', expect.any(Error));
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
 
@@ -230,13 +230,13 @@ describe('TreeView', () => {
     it('should apply custom indentSize', () => {
       render(<TreeView data={mockStaticData} indentSize={32} />);
 
-      // Expand the src folder to see indented children
+      // Expand the src folder to see indented items
       const expandButton = screen.getByText('src').parentElement?.querySelector('button');
       if (expandButton) {
         fireEvent.click(expandButton);
       }
 
-      // Check that children have proper indentation
+      // Check that items have proper indentation
       const componentsNode = screen.getByText('components').parentElement;
       expect(componentsNode).toHaveStyle('margin-left: 32px');
     });
@@ -250,10 +250,10 @@ describe('TreeView', () => {
       expect(treeView).toBeInTheDocument();
     });
 
-    it('should handle nodes without children property', () => {
-      const dataWithoutChildren: Array<TreeNode> = [{ id: '1', name: 'file.txt', type: 'file' }];
+    it('should handle nodes without items property', () => {
+      const dataWithoutItems: Array<TreeNode> = [{ id: '1', name: 'file.txt', type: 'file' }];
 
-      render(<TreeView data={dataWithoutChildren} />);
+      render(<TreeView data={dataWithoutItems} />);
 
       expect(screen.getByText('file.txt')).toBeInTheDocument();
     });

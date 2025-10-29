@@ -8,12 +8,12 @@ export const staticTreeData: Array<TreeNode> = [
     id: '1',
     name: 'src',
     type: 'folder',
-    children: [
+    items: [
       {
         id: '2',
         name: 'components',
         type: 'folder',
-        children: [
+        items: [
           { id: '3', name: 'Button.tsx', type: 'file', icon: '⚛️' },
           { id: '4', name: 'Input.tsx', type: 'file', icon: '⚛️' },
           { id: '5', name: 'TreeView.tsx', type: 'file', icon: '🌳' },
@@ -23,7 +23,7 @@ export const staticTreeData: Array<TreeNode> = [
         id: '6',
         name: 'pages',
         type: 'folder',
-        children: [
+        items: [
           { id: '7', name: 'Home.tsx', type: 'file', icon: '🏠' },
           { id: '8', name: 'About.tsx', type: 'file', icon: 'ℹ️' },
         ],
@@ -36,7 +36,7 @@ export const staticTreeData: Array<TreeNode> = [
     id: '11',
     name: 'public',
     type: 'folder',
-    children: [
+    items: [
       { id: '12', name: 'favicon.ico', type: 'file', icon: '🌐' },
       { id: '13', name: 'manifest.json', type: 'file', icon: '📄' },
     ],
@@ -59,7 +59,7 @@ export const customTreeData: Array<TreeNode> = [
     name: 'Frontend',
     type: 'folder',
     metadata: { department: 'Engineering', count: 5 },
-    children: [
+    items: [
       {
         id: '2',
         name: 'Button.tsx',
@@ -88,7 +88,7 @@ export const customTreeData: Array<TreeNode> = [
     name: 'Backend',
     type: 'folder',
     metadata: { department: 'Engineering', count: 3 },
-    children: [
+    items: [
       {
         id: '6',
         name: 'server.js',

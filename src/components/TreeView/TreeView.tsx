@@ -32,8 +32,8 @@ export default function TreeView(props: TreeViewProps) {
           return { ...node, ...updates };
         }
 
-        if (node.children) {
-          return { ...node, children: updateNodeRecursive(node.children) };
+        if (node.items) {
+          return { ...node, items: updateNodeRecursive(node.items) };
         }
 
         return node;

@@ -24,27 +24,27 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
   } = props;
 
   const [isExpanded, setIsExpanded] = useState(node.isExpanded || false);
-  const [children, setChildren] = useState<Array<TreeNode>>(node.children || []);
+  const [items, setItems] = useState<Array<TreeNode>>(node.items || []);
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasChildren = node.type === NodeTypes.Folder && (children.length > 0 || onNodeExpand);
-  const canExpand = hasChildren && !isLoading;
+  const hasItems = node.type === NodeTypes.Folder && (items.length > 0 || onNodeExpand);
+  const canExpand = hasItems && !isLoading;
 
   const handleExpandToggle = useCallback(async () => {
     if (!canExpand) return;
 
-    if (!isExpanded && onNodeExpand && children.length === 0) {
+    if (!isExpanded && onNodeExpand && items.length === 0) {
       setIsLoading(true);
       updateNode(node.id, { isLoading: true });
 
       try {
-        const newChildren = await onNodeExpand(node);
-        if (newChildren) {
-          setChildren(newChildren);
-          updateNode(node.id, { children: newChildren, isLoading: false });
+        const newItems = await onNodeExpand(node);
+        if (newItems) {
+          setItems(newItems);
+          updateNode(node.id, { items: newItems, isLoading: false });
         }
       } catch (error) {
-        console.error('Error loading children:', error);
+        console.error('Error loading items:', error);
         updateNode(node.id, { isLoading: false });
       } finally {
         setIsLoading(false);
@@ -54,14 +54,14 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     const newExpanded = !isExpanded;
     setIsExpanded(newExpanded);
     updateNode(node.id, { isExpanded: newExpanded });
-  }, [canExpand, isExpanded, onNodeExpand, children.length, node, updateNode]);
+  }, [canExpand, isExpanded, onNodeExpand, items.length, node, updateNode]);
 
   const handleNodeClick = useCallback(() => {
-    if (expandOnClick && hasChildren) {
+    if (expandOnClick && hasItems) {
       handleExpandToggle();
     }
     onNodeClick?.(node);
-  }, [expandOnClick, hasChildren, handleExpandToggle, onNodeClick, node]);
+  }, [expandOnClick, hasItems, handleExpandToggle, onNodeClick, node]);
 
   const defaultIcon = node.type === NodeTypes.Folder ? '📁' : '📄';
   const iconToShow = showIcons ? node.icon || defaultIcon : null;
@@ -76,7 +76,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
       style={{ marginLeft: `${level * indentSize}px` }}
       onClick={handleNodeClick}
     >
-      {hasChildren && (
+      {hasItems && (
         <button
           type='button'
           onClick={(e) => {
@@ -94,7 +94,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
         </button>
       )}
 
-      {!hasChildren && <div className='w-5' />}
+      {!hasItems && <div className='w-5' />}
 
       {iconToShow && <span className='mr-2 text-sm'>{typeof iconToShow === 'string' ? iconToShow : iconToShow}</span>}
 
@@ -109,9 +109,9 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
   return (
     <div>
       {nodeContent}
-      {isExpanded && children.length > 0 && (
+      {isExpanded && items.length > 0 && (
         <div>
-          {children.map((child) => (
+          {items.map((child) => (
             <TreeNodeItem
               key={child.id}
               node={child}

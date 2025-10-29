@@ -4,7 +4,7 @@ export type TreeNode = {
   id: string;
   name: string;
   type: NodeTypeValues;
-  children?: Array<TreeNode>;
+  items?: Array<TreeNode>;
   isExpanded?: boolean;
   isLoading?: boolean;
   icon?: React.ReactNode;
