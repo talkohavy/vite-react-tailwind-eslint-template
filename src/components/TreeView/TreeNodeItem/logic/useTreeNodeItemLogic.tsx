@@ -1,21 +1,18 @@
 import { useCallback, useState } from 'react';
 import type { TreeNode } from '@ark-ui/react/collection';
-import { twMerge } from 'tailwind-merge';
 import type { TreeNodeItemProps } from '../TreeNodeItem';
-import RightArrow from '../../../svgs/RightArrow/RightArrow';
-import { NodeTypes } from '../../logic/constants';
+import { DEFAULT_FILE_ICON, DEFAULT_FOLDER_ICON, NodeTypes } from '../../logic/constants';
 
 export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
-  const { node, level, updateNode, onNodeExpand, onNodeClick, renderNode, expandOnClick, showIcons, indentSize } =
-    props;
+  const { node, updateNode, onNodeExpand, onNodeClick, expandOnClick, showIcons } = props;
 
-  const { id, type: nodeType, name, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
+  const { id, type: nodeType, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
 
   const [isExpanded, setIsExpanded] = useState(initialIsExpanded || false);
   const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasItems = nodeType === NodeTypes.Folder && (items.length || onNodeExpand);
+  const hasItems = nodeType === NodeTypes.Folder && !!(items.length || onNodeExpand);
   const canExpand = hasItems && !isLoading;
 
   const handleExpandToggle = useCallback(async () => {
@@ -49,51 +46,12 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
     if (expandOnClick && hasItems) {
       handleExpandToggle();
     }
+
     onNodeClick?.(node);
   }, [expandOnClick, hasItems, handleExpandToggle, onNodeClick, node]);
 
-  const defaultIcon = nodeType === NodeTypes.Folder ? '📁' : '📄';
+  const defaultIcon = nodeType === NodeTypes.Folder ? DEFAULT_FOLDER_ICON : DEFAULT_FILE_ICON;
   const iconToShow = showIcons ? icon || defaultIcon : null;
 
-  const defaultRender = (
-    <div
-      className={twMerge(
-        'flex items-center py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer rounded select-none',
-        nodeType === NodeTypes.File && 'text-gray-700 dark:text-gray-300',
-        nodeType === NodeTypes.Folder && 'text-gray-900 dark:text-gray-100 font-medium',
-      )}
-      style={{ marginLeft: `${level * indentSize!}px` }}
-      onClick={handleNodeClick}
-    >
-      {hasItems && (
-        <button
-          type='button'
-          onClick={(e) => {
-            e.stopPropagation();
-            handleExpandToggle();
-          }}
-          className={twMerge(
-            'flex items-center justify-center w-4 h-4 mr-1 transition-transform duration-200',
-            isExpanded ? 'rotate-90' : 'rotate-0',
-            isLoading && 'animate-spin',
-          )}
-          disabled={isLoading}
-        >
-          <RightArrow className='w-3 h-3' />
-        </button>
-      )}
-
-      {!hasItems && <div className='w-5' />}
-
-      {iconToShow && <span className='mr-2 text-sm'>{typeof iconToShow === 'string' ? iconToShow : iconToShow}</span>}
-
-      <span className='flex-1 truncate'>{name}</span>
-
-      {isLoading && <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>Loading...</span>}
-    </div>
-  );
-
-  const nodeContent = renderNode ? renderNode(node, defaultRender) : defaultRender;
-
-  return { nodeContent, isExpanded, items };
+  return { isExpanded, items, handleNodeClick, handleExpandToggle, hasItems, isLoading, iconToShow };
 }

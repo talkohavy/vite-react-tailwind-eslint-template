@@ -1,5 +1,6 @@
 import type { SharedNodeProps, TreeNode } from '../types';
 import { DEFAULT_INDENT_SIZE } from '../logic/constants';
+import DefaultTreeNodeContent from './content/DefaultTreeNodeContent';
 import { useTreeNodeItemLogic } from './logic/useTreeNodeItemLogic';
 
 export type TreeNodeItemProps = SharedNodeProps & {
@@ -10,21 +11,35 @@ export type TreeNodeItemProps = SharedNodeProps & {
 
 export default function TreeNodeItem(props: TreeNodeItemProps) {
   const {
+    node,
     level,
     onNodeClick,
     onNodeExpand,
-    renderNode,
+    renderNode: RenderNode,
     showIcons,
     indentSize = DEFAULT_INDENT_SIZE,
     expandOnClick,
     updateNode,
   } = props;
 
-  const { nodeContent, isExpanded, items } = useTreeNodeItemLogic(props);
+  const { hasItems, isLoading, isExpanded, iconToShow, handleNodeClick, handleExpandToggle, items } =
+    useTreeNodeItemLogic(props);
 
   return (
     <div>
-      {nodeContent}
+      {RenderNode ? (
+        RenderNode(node, DefaultTreeNodeContent)
+      ) : (
+        <DefaultTreeNodeContent
+          {...props}
+          hasItems={hasItems}
+          isLoading={isLoading}
+          isExpanded={isExpanded}
+          iconToShow={iconToShow}
+          handleNodeClick={handleNodeClick}
+          handleExpandToggle={handleExpandToggle}
+        />
+      )}
 
       {isExpanded && items.length && (
         <div>
@@ -35,7 +50,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
               level={level + 1}
               onNodeClick={onNodeClick}
               onNodeExpand={onNodeExpand}
-              renderNode={renderNode}
+              renderNode={RenderNode}
               showIcons={showIcons}
               indentSize={indentSize}
               expandOnClick={expandOnClick}

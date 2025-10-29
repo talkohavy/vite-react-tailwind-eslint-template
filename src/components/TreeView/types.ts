@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { NodeTypeValues } from './logic/constants';
 
 export type TreeNode = {
@@ -20,7 +21,7 @@ export type TreeNode = {
 export type SharedNodeProps = {
   onNodeClick?: (node: TreeNode) => void;
   onNodeExpand?: (node: TreeNode) => Promise<Array<TreeNode>> | undefined;
-  renderNode?: (node: TreeNode, defaultRender: React.ReactNode) => React.ReactNode;
+  renderNode?: (node: TreeNode, DefaultRender: (props: any) => ReactNode) => ReactNode;
   /**
    * @default false
    */
