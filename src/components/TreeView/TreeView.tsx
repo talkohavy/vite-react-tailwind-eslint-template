@@ -1,29 +1,26 @@
 import { useState, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
-import type { TreeNode } from './types';
+import type { SharedNodeProps, TreeNode } from './types';
+import { DEFAULT_INDENT_SIZE } from './logic/constants';
 import TreeNodeItem from './TreeNodeItem';
 
-export type TreeViewProps = {
+export type TreeViewProps = SharedNodeProps & {
   data: Array<TreeNode>;
   className?: string;
-  onNodeClick?: (node: TreeNode) => void;
-  onNodeExpand?: (node: TreeNode) => Promise<Array<TreeNode>> | undefined;
-  renderNode?: (node: TreeNode, defaultRender: React.ReactNode) => React.ReactNode;
-  showIcons?: boolean;
-  indentSize?: number;
-  expandOnClick?: boolean;
+  testId?: string;
 };
 
 export default function TreeView(props: TreeViewProps) {
   const {
     data,
-    className,
     onNodeClick,
     onNodeExpand,
     renderNode,
-    showIcons = true,
-    indentSize = 16,
-    expandOnClick = false,
+    showIcons,
+    indentSize = DEFAULT_INDENT_SIZE,
+    expandOnClick,
+    className,
+    testId,
   } = props;
 
   const [treeData, setTreeData] = useState(data);
@@ -34,14 +31,16 @@ export default function TreeView(props: TreeViewProps) {
         if (node.id === nodeId) {
           return { ...node, ...updates };
         }
+
         if (node.children) {
           return { ...node, children: updateNodeRecursive(node.children) };
         }
+
         return node;
       });
     };
 
-    setTreeData((prevData) => updateNodeRecursive(prevData));
+    setTreeData(updateNodeRecursive);
   }, []);
 
   return (
@@ -50,7 +49,7 @@ export default function TreeView(props: TreeViewProps) {
         'tree-view p-2 text-sm font-mono bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden',
         className,
       )}
-      data-test-id='tree-view-container'
+      data-test-id={testId}
     >
       {treeData.map((node) => (
         <TreeNodeItem

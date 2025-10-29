@@ -1,17 +1,12 @@
 import { useCallback, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import type { TreeNode } from '../types';
+import type { SharedNodeProps, TreeNode } from '../types';
 import RightArrow from '../../svgs/RightArrow/RightArrow';
+import { DEFAULT_INDENT_SIZE, NodeTypes } from '../logic/constants';
 
-type TreeNodeItemProps = {
+type TreeNodeItemProps = SharedNodeProps & {
   node: TreeNode;
   level: number;
-  onNodeClick?: (node: TreeNode) => void;
-  onNodeExpand?: (node: TreeNode) => Promise<Array<TreeNode>> | undefined;
-  renderNode?: (node: TreeNode, defaultRender: React.ReactNode) => React.ReactNode;
-  showIcons?: boolean;
-  indentSize: number;
-  expandOnClick?: boolean;
   updateNode: (nodeId: string, updates: Partial<TreeNode>) => void;
 };
 
@@ -22,9 +17,9 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     onNodeClick,
     onNodeExpand,
     renderNode,
-    showIcons = true,
-    indentSize,
-    expandOnClick = false,
+    showIcons,
+    indentSize = DEFAULT_INDENT_SIZE,
+    expandOnClick,
     updateNode,
   } = props;
 
@@ -32,7 +27,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
   const [children, setChildren] = useState<Array<TreeNode>>(node.children || []);
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasChildren = node.type === 'folder' && (children.length > 0 || onNodeExpand);
+  const hasChildren = node.type === NodeTypes.Folder && (children.length > 0 || onNodeExpand);
   const canExpand = hasChildren && !isLoading;
 
   const handleExpandToggle = useCallback(async () => {
@@ -68,15 +63,15 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     onNodeClick?.(node);
   }, [expandOnClick, hasChildren, handleExpandToggle, onNodeClick, node]);
 
-  const defaultIcon = node.type === 'folder' ? '📁' : '📄';
+  const defaultIcon = node.type === NodeTypes.Folder ? '📁' : '📄';
   const iconToShow = showIcons ? node.icon || defaultIcon : null;
 
   const defaultRender = (
     <div
       className={twMerge(
         'flex items-center py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer rounded select-none',
-        node.type === 'file' && 'text-gray-700 dark:text-gray-300',
-        node.type === 'folder' && 'text-gray-900 dark:text-gray-100 font-medium',
+        node.type === NodeTypes.File && 'text-gray-700 dark:text-gray-300',
+        node.type === NodeTypes.Folder && 'text-gray-900 dark:text-gray-100 font-medium',
       )}
       style={{ marginLeft: `${level * indentSize}px` }}
       onClick={handleNodeClick}
