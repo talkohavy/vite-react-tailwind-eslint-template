@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import type { SharedNodeProps, TreeNode } from './types';
 import { DEFAULT_INDENT_SIZE } from './logic/constants';
+import { useTreeViewLogic } from './logic/useTreeViewLogic';
 import TreeNodeItem from './TreeNodeItem';
 
 export type TreeViewProps = SharedNodeProps & {
@@ -23,26 +23,7 @@ export default function TreeView(props: TreeViewProps) {
     testId,
   } = props;
 
-  const [treeData, setTreeData] = useState(data);
-
-  const updateNode = useCallback((nodeId: string, updates: Partial<TreeNode>) => {
-    const updateNodeRecursive = (nodes: Array<TreeNode>): Array<TreeNode> => {
-      return nodes.map((node) => {
-        const { id, items } = node;
-
-        // if ids match, found the node to update
-        if (id === nodeId) return { ...node, ...updates };
-
-        // if has items, recursively check child nodes
-        if (items) return { ...node, items: updateNodeRecursive(items) };
-
-        // No changes on this node
-        return node;
-      });
-    };
-
-    setTreeData(updateNodeRecursive);
-  }, []);
+  const { treeData, updateNode } = useTreeViewLogic({ data });
 
   return (
     <div
