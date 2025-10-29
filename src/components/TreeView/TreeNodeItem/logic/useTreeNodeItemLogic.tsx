@@ -15,7 +15,7 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
   const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasItems = nodeType === NodeTypes.Folder && (items.length > 0 || onNodeExpand);
+  const hasItems = nodeType === NodeTypes.Folder && (items.length || onNodeExpand);
   const canExpand = hasItems && !isLoading;
 
   const handleExpandToggle = useCallback(async () => {
@@ -23,6 +23,7 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
 
     if (!isExpanded && onNodeExpand && items.length === 0) {
       setIsLoading(true);
+
       updateNode(id, { isLoading: true });
 
       try {
