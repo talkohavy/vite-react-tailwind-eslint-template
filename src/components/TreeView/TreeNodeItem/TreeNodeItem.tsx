@@ -23,11 +23,13 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     updateNode,
   } = props;
 
-  const [isExpanded, setIsExpanded] = useState(node.isExpanded || false);
-  const [items, setItems] = useState<Array<TreeNode>>(node.items || []);
+  const { id, type: nodeType, name, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
+
+  const [isExpanded, setIsExpanded] = useState(initialIsExpanded || false);
+  const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasItems = node.type === NodeTypes.Folder && (items.length > 0 || onNodeExpand);
+  const hasItems = nodeType === NodeTypes.Folder && (items.length > 0 || onNodeExpand);
   const canExpand = hasItems && !isLoading;
 
   const handleExpandToggle = useCallback(async () => {
@@ -35,17 +37,17 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
 
     if (!isExpanded && onNodeExpand && items.length === 0) {
       setIsLoading(true);
-      updateNode(node.id, { isLoading: true });
+      updateNode(id, { isLoading: true });
 
       try {
         const newItems = await onNodeExpand(node);
         if (newItems) {
           setItems(newItems);
-          updateNode(node.id, { items: newItems, isLoading: false });
+          updateNode(id, { items: newItems, isLoading: false });
         }
       } catch (error) {
         console.error('Error loading items:', error);
-        updateNode(node.id, { isLoading: false });
+        updateNode(id, { isLoading: false });
       } finally {
         setIsLoading(false);
       }
@@ -53,7 +55,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
 
     const newExpanded = !isExpanded;
     setIsExpanded(newExpanded);
-    updateNode(node.id, { isExpanded: newExpanded });
+    updateNode(id, { isExpanded: newExpanded });
   }, [canExpand, isExpanded, onNodeExpand, items.length, node, updateNode]);
 
   const handleNodeClick = useCallback(() => {
@@ -63,15 +65,15 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     onNodeClick?.(node);
   }, [expandOnClick, hasItems, handleExpandToggle, onNodeClick, node]);
 
-  const defaultIcon = node.type === NodeTypes.Folder ? '📁' : '📄';
-  const iconToShow = showIcons ? node.icon || defaultIcon : null;
+  const defaultIcon = nodeType === NodeTypes.Folder ? '📁' : '📄';
+  const iconToShow = showIcons ? icon || defaultIcon : null;
 
   const defaultRender = (
     <div
       className={twMerge(
         'flex items-center py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer rounded select-none',
-        node.type === NodeTypes.File && 'text-gray-700 dark:text-gray-300',
-        node.type === NodeTypes.Folder && 'text-gray-900 dark:text-gray-100 font-medium',
+        nodeType === NodeTypes.File && 'text-gray-700 dark:text-gray-300',
+        nodeType === NodeTypes.Folder && 'text-gray-900 dark:text-gray-100 font-medium',
       )}
       style={{ marginLeft: `${level * indentSize}px` }}
       onClick={handleNodeClick}
@@ -98,7 +100,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
 
       {iconToShow && <span className='mr-2 text-sm'>{typeof iconToShow === 'string' ? iconToShow : iconToShow}</span>}
 
-      <span className='flex-1 truncate'>{node.name}</span>
+      <span className='flex-1 truncate'>{name}</span>
 
       {isLoading && <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>Loading...</span>}
     </div>

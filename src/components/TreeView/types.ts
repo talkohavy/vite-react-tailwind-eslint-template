@@ -2,6 +2,12 @@ import type { NodeTypeValues } from './logic/constants';
 
 export type TreeNode = {
   id: string;
+  /**
+   * File/Folder name
+   *
+   * In case of files, consider including the extension (e.g., "document.txt").
+   * It might help in rendering appropriate icons or handling file-specific logic.
+   */
   name: string;
   type: NodeTypeValues;
   items?: Array<TreeNode>;
