@@ -53,8 +53,8 @@ describe('TreeView', () => {
       expect(screen.getByText('package.json')).toBeInTheDocument();
     });
 
-    it('should show folder and file icons by default', () => {
-      render(<TreeView data={mockStaticData} />);
+    it('should show folder and file icons when showIcons is applied', () => {
+      render(<TreeView data={mockStaticData} showIcons />);
 
       const srcFolder = screen.getByText('src').parentElement;
       const packageFile = screen.getByText('package.json').parentElement;
@@ -244,7 +244,7 @@ describe('TreeView', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty data array', () => {
-      render(<TreeView data={[]} />);
+      render(<TreeView data={[]} testId='tree-view-container' />);
 
       const treeView = screen.getByTestId('tree-view-container');
       expect(treeView).toBeInTheDocument();
