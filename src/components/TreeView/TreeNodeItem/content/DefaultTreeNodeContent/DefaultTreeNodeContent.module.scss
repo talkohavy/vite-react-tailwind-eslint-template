@@ -59,11 +59,6 @@
   cursor: not-allowed;
 }
 
-.btnArrow {
-  width: 12px;
-  height: 12px;
-}
-
 // NOTE! The width here MUST match the width of the "expand" button (arrow pointing right), plus it's margin-right, to ensure proper alignment of file nodes.
 .fileNodeAligner {
   width: 20px;
