@@ -36,7 +36,7 @@ export default function TokenBubbles(props: TokenBubblesProps) {
     });
 
     return { validTokens, errorTokens };
-  }, [tokens]);
+  }, [filteredTokens, firstErrorTokenIndex]);
 
   return (
     <div className='mt-4'>
