@@ -1,10 +1,17 @@
 .treeNodeContent {
   display: flex;
   align-items: center;
-  padding: 4px 8px;
-  cursor: pointer;
+  justify-content: space-between;
+}
+
+.treeNodeAsButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-radius: 4px;
+  padding: 4px 8px;
   user-select: none;
+  cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:hover {
@@ -25,7 +32,6 @@
 }
 
 .folderType {
-  //  dark:text-gray-100
   color: #111827;
   font-weight: 500;
 
@@ -68,10 +74,9 @@
 }
 
 .nodeLabel {
-  flex: 1;
+  text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .loadingText {

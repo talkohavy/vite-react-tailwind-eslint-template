@@ -30,32 +30,38 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
   const { name, type: nodeType } = node;
 
   return (
-    <button
-      type='button'
-      className={clsx(styles.treeNodeContent, nodeType === NodeTypes.File ? styles.fileType : styles.folderType)}
-      style={{ marginLeft: level * indentSize }}
-      onClick={handleNodeClick}
-    >
-      {isFolderType && (
-        <ExpandButton
-          onClick={(e) => {
-            e.stopPropagation(); // <--- Prevent the button's onClick from firing the node click handler
-            handleExpandToggle();
-          }}
-          disabled={isLoading}
-          className={clsx(styles.btnExpandFolder, isExpanded && styles.btnIsExpanded, isLoading && styles.btnIsLoading)}
-        />
-      )}
+    <div className={styles.treeNodeContent}>
+      <button
+        type='button'
+        className={clsx(styles.treeNodeAsButton, nodeType === NodeTypes.File ? styles.fileType : styles.folderType)}
+        style={{ marginLeft: level * indentSize }}
+        onClick={handleNodeClick}
+      >
+        {isFolderType && (
+          <ExpandButton
+            onClick={(e) => {
+              e.stopPropagation(); // <--- Prevent the button's onClick from firing the node click handler
+              handleExpandToggle();
+            }}
+            disabled={isLoading}
+            className={clsx(
+              styles.btnExpandFolder,
+              isExpanded && styles.btnIsExpanded,
+              isLoading && styles.btnIsLoading,
+            )}
+          />
+        )}
 
-      {!isFolderType && <div className={styles.fileNodeAligner} />}
+        {!isFolderType && <div className={styles.fileNodeAligner} />}
 
-      {IconToShow && (
-        <span className={styles.nodeIcon}>{typeof IconToShow === 'string' ? IconToShow : <IconToShow />}</span>
-      )}
+        {IconToShow && (
+          <span className={styles.nodeIcon}>{typeof IconToShow === 'string' ? IconToShow : <IconToShow />}</span>
+        )}
 
-      <span className={styles.nodeLabel}>{name}</span>
+        <span className={styles.nodeLabel}>{name}</span>
+      </button>
 
       {isLoading && <span className={styles.loadingText}>Loading...</span>}
-    </button>
+    </div>
   );
 }
