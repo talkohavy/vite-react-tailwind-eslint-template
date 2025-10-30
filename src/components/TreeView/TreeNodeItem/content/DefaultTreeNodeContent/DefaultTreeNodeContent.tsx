@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import clsx from 'clsx';
 import type { TreeNodeItemProps } from '../../TreeNodeItem';
-import RightArrow from '../../../../svgs/RightArrow';
 import { NodeTypes } from '../../../logic/constants';
+import ExpandButton from '../ExpandButton';
+import styles from './DefaultTreeNodeContent.module.scss';
 
 type DefaultTreeNodeContentProps = TreeNodeItemProps & {
-  hasItems: boolean;
+  isFolderType: boolean;
   isLoading: boolean;
   isExpanded: boolean;
   iconToShow: string | (() => ReactNode) | null;
@@ -17,7 +18,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
   const {
     node,
     level,
-    hasItems,
+    isFolderType,
     isLoading,
     isExpanded,
     iconToShow: IconToShow,
@@ -30,41 +31,30 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
 
   return (
     <div
-      className={twMerge(
-        'flex items-center py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer rounded select-none',
-        nodeType === NodeTypes.File && 'text-gray-700 dark:text-gray-300',
-        nodeType === NodeTypes.Folder && 'text-gray-900 dark:text-gray-100 font-medium',
-      )}
-      style={{ marginLeft: `${level * indentSize!}px` }}
+      className={clsx(styles.treeNodeContent, nodeType === NodeTypes.File ? styles.fileType : styles.folderType)}
+      style={{ marginLeft: level * indentSize }}
       onClick={handleNodeClick}
     >
-      {hasItems && (
-        <button
-          type='button'
+      {isFolderType && (
+        <ExpandButton
           onClick={(e) => {
             e.stopPropagation();
             handleExpandToggle();
           }}
-          className={twMerge(
-            'flex cursor-pointer items-center justify-center w-4 h-4 mr-1 transition-transform duration-200',
-            isExpanded ? 'rotate-90' : 'rotate-0',
-            isLoading && 'animate-spin',
-          )}
           disabled={isLoading}
-        >
-          <RightArrow className='w-3 h-3' />
-        </button>
+          className={clsx(styles.btnExpandFolder, isExpanded && styles.btnIsExpanded, isLoading && styles.btnIsLoading)}
+        />
       )}
 
-      {!hasItems && <div className='w-5' />}
+      {!isFolderType && <div className={styles.fileNodeAligner} />}
 
       {IconToShow && (
-        <span className='mr-2 text-sm'>{typeof IconToShow === 'string' ? IconToShow : <IconToShow />}</span>
+        <span className={styles.nodeIcon}>{typeof IconToShow === 'string' ? IconToShow : <IconToShow />}</span>
       )}
 
-      <span className='flex-1 truncate'>{name}</span>
+      <span className={styles.nodeLabel}>{name}</span>
 
-      {isLoading && <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>Loading...</span>}
+      {isLoading && <span className={styles.loadingText}>Loading...</span>}
     </div>
   );
 }

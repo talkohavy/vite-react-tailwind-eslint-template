@@ -1,0 +1,101 @@
+.treeNodeContent {
+  // ' dark:hover:bg-gray-800',
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  user-select: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f3f4f6;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: #1f2937;
+    }
+  }
+}
+
+.fileType {
+  // dark:text-gray-300',
+  color: #374151;
+
+  @media (prefers-color-scheme: dark) {
+    color: #d1d5db;
+  }
+}
+
+.folderType {
+  //  dark:text-gray-100
+  color: #111827;
+  font-weight: 500;
+
+  @media (prefers-color-scheme: dark) {
+    color: #f9fafb;
+  }
+}
+
+.btnExpandFolder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  transition: transform 0.2s ease;
+}
+
+.btnIsExpanded {
+  transform: rotate(90deg);
+}
+
+.btnIsLoading {
+  animation: spin 1s linear infinite;
+}
+
+.btnExpandFolder:disabled {
+  cursor: not-allowed;
+}
+
+.btnArrow {
+  width: 12px;
+  height: 12px;
+}
+
+// NOTE! The width here MUST match the width of the "expand" button (arrow pointing right), plus it's margin-right, to ensure proper alignment of file nodes.
+.fileNodeAligner {
+  width: 20px;
+}
+
+.nodeIcon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.nodeLabel {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.loadingText {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #6b7280;
+
+  @media (prefers-color-scheme: dark) {
+    color: #9ca3af;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
