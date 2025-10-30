@@ -30,7 +30,8 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
   const { name, type: nodeType } = node;
 
   return (
-    <div
+    <button
+      type='button'
       className={clsx(styles.treeNodeContent, nodeType === NodeTypes.File ? styles.fileType : styles.folderType)}
       style={{ marginLeft: level * indentSize }}
       onClick={handleNodeClick}
@@ -55,6 +56,6 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
       <span className={styles.nodeLabel}>{name}</span>
 
       {isLoading && <span className={styles.loadingText}>Loading...</span>}
-    </div>
+    </button>
   );
 }
