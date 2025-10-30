@@ -12,8 +12,8 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
   const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasItems = nodeType === NodeTypes.Folder && !!(items.length || onNodeExpand);
-  const canExpand = hasItems && !isLoading;
+  const isFolderType = nodeType === NodeTypes.Folder;
+  const canExpand = isFolderType && !isLoading;
 
   const handleExpandToggle = useCallback(async () => {
     if (!canExpand) return;
@@ -37,21 +37,24 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
       }
     }
 
-    const newExpanded = !isExpanded;
-    setIsExpanded(newExpanded);
-    updateNode(id, { isExpanded: newExpanded });
-  }, [canExpand, isExpanded, onNodeExpand, items.length, node, updateNode]);
+    const newIsExpanded = !isExpanded;
+    setIsExpanded(newIsExpanded);
+
+    const newNodeState = { isExpanded: newIsExpanded };
+
+    updateNode(id, newNodeState);
+  }, [canExpand, isExpanded, items.length, node, onNodeExpand, updateNode]);
 
   const handleNodeClick = useCallback(() => {
-    if (expandOnClick && hasItems) {
+    if (isFolderType && expandOnClick) {
       handleExpandToggle();
     }
 
     onNodeClick?.(node);
-  }, [expandOnClick, hasItems, handleExpandToggle, onNodeClick, node]);
+  }, [expandOnClick, isFolderType, handleExpandToggle, onNodeClick, node]);
 
   const defaultIcon = nodeType === NodeTypes.Folder ? DEFAULT_FOLDER_ICON : DEFAULT_FILE_ICON;
   const iconToShow = showIcons ? icon || defaultIcon : null;
 
-  return { isExpanded, items, handleNodeClick, handleExpandToggle, hasItems, isLoading, iconToShow };
+  return { items, isExpanded, isFolderType, isLoading, handleNodeClick, handleExpandToggle, iconToShow };
 }
