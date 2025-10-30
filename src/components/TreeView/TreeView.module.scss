@@ -1,0 +1,14 @@
+.treeView {
+  padding: 8px;
+  font-size: 14px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #111827;
+    border-color: #374151;
+  }
+}

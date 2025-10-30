@@ -19,19 +19,22 @@ export type TreeNode = {
 };
 
 export type SharedNodeProps = {
-  onNodeClick?: (node: TreeNode) => void;
-  onNodeExpand?: (node: TreeNode) => Promise<Array<TreeNode>> | undefined;
-  renderNode?: (node: TreeNode, DefaultRender: (props: any) => ReactNode) => ReactNode;
   /**
    * @default false
    */
   showIcons?: boolean;
   /**
+   * @default false
+   */
+  shouldExpandOnClick?: boolean;
+  /**
    * @default 16
    */
   indentSize?: number;
-  /**
-   * @default false
-   */
-  expandOnClick?: boolean;
+};
+
+export type SharedNodeEventHandlers = {
+  onNodeClick?: (node: TreeNode) => void;
+  onNodeExpand?: (node: TreeNode) => Promise<Array<TreeNode>> | undefined;
+  renderNode?: (node: TreeNode, DefaultRender: (props: any) => ReactNode) => ReactNode;
 };

@@ -108,7 +108,7 @@ describe('TreeView', () => {
     });
 
     it('should expand on node click when expandOnClick is true', () => {
-      render(<TreeView data={mockStaticData} expandOnClick={true} />);
+      render(<TreeView data={mockStaticData} shouldExpandOnClick={true} />);
 
       // Initially items should not be visible
       expect(screen.queryByText('components')).not.toBeInTheDocument();
@@ -223,7 +223,7 @@ describe('TreeView', () => {
     it('should apply custom className', () => {
       const { container } = render(<TreeView data={mockStaticData} className='custom-tree' />);
 
-      const treeView = container.querySelector('.tree-view');
+      const treeView = container.firstChild;
       expect(treeView).toHaveClass('custom-tree');
     });
 

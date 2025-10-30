@@ -20,9 +20,9 @@ export default function StaticTreeTab() {
             data={staticTreeData}
             onNodeClick={handleNodeClick}
             className='max-h-96 overflow-auto'
-            expandOnClick
+            showIcons
+            shouldExpandOnClick
             // indentSize={10}
-            // showIcons
           />
         </div>
 
