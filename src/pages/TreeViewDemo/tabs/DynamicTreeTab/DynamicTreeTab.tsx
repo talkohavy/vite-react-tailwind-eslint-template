@@ -35,6 +35,7 @@ export default function DynamicTreeTab() {
             data={dynamicTreeData}
             onNodeClick={handleNodeClick}
             onNodeExpand={mockAsyncLoader}
+            shouldExpandOnClick
             className='max-h-96 overflow-auto'
           />
         </div>
