@@ -42,7 +42,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
         />
       )}
 
-      {isExpanded && items.length && (
+      {isExpanded && items.length > 0 && (
         <div>
           {items.map((child) => (
             <TreeNodeItem
