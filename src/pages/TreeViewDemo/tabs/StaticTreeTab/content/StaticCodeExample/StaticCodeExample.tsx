@@ -8,12 +8,12 @@ export default function StaticCodeExample() {
     id: '1',
     name: 'src',
     type: 'folder',
-    children: [
+    items: [
       {
         id: '2', 
         name: 'components',
         type: 'folder',
-        children: [
+        items: [
           { 
             id: '3', 
             name: 'Button.tsx', 
