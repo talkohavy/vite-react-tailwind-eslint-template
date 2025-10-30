@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
-import type { TreeNode } from '@ark-ui/react/collection';
+import type { TreeNode } from '../../types';
 import type { TreeNodeItemProps } from '../TreeNodeItem';
 import { DEFAULT_FILE_ICON, DEFAULT_FOLDER_ICON, NodeTypes } from '../../logic/constants';
 
 export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
-  const { node, updateNode, onNodeExpand, onNodeClick, expandOnClick, showIcons } = props;
+  const { node, updateNode, onNodeExpand, onNodeClick, shouldExpandOnClick, showIcons } = props;
 
   const { id, type: nodeType, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
 
@@ -46,12 +46,12 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
   }, [canExpand, isExpanded, items.length, node, onNodeExpand, updateNode]);
 
   const handleNodeClick = useCallback(() => {
-    if (isFolderType && expandOnClick) {
+    if (isFolderType && shouldExpandOnClick) {
       handleExpandToggle();
     }
 
     onNodeClick?.(node);
-  }, [expandOnClick, isFolderType, handleExpandToggle, onNodeClick, node]);
+  }, [shouldExpandOnClick, isFolderType, handleExpandToggle, onNodeClick, node]);
 
   const defaultIcon = nodeType === NodeTypes.Folder ? DEFAULT_FOLDER_ICON : DEFAULT_FILE_ICON;
   const iconToShow = showIcons ? icon || defaultIcon : null;
