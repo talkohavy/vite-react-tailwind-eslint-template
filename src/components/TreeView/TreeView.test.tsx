@@ -254,5 +254,42 @@ describe('TreeView', () => {
 
       expect(screen.getByText('file.txt')).toBeInTheDocument();
     });
+
+    it('should generate correct test IDs for tree nodes', () => {
+      render(<TreeView data={mockStaticData} />);
+
+      // Check root level nodes have correct test IDs
+      const srcNode = screen.getByTestId('i1');
+      expect(srcNode).toBeInTheDocument();
+      expect(srcNode).toHaveTextContent('src');
+
+      const packageJsonNode = screen.getByTestId('i2');
+      expect(packageJsonNode).toBeInTheDocument();
+      expect(packageJsonNode).toHaveTextContent('package.json');
+
+      // Expand the src folder to access its children
+      fireEvent.click(srcNode);
+
+      // Check second level nodes have correct test IDs
+      const componentsNode = screen.getByTestId('i1-i1');
+      expect(componentsNode).toBeInTheDocument();
+      expect(componentsNode).toHaveTextContent('components');
+
+      const appTsxNode = screen.getByTestId('i1-i2');
+      expect(appTsxNode).toBeInTheDocument();
+      expect(appTsxNode).toHaveTextContent('App.tsx');
+
+      // Expand components folder to access its children
+      fireEvent.click(componentsNode);
+
+      // Check third level nodes have correct test IDs
+      const buttonTsxNode = screen.getByTestId('i1-i1-i1');
+      expect(buttonTsxNode).toBeInTheDocument();
+      expect(buttonTsxNode).toHaveTextContent('Button.tsx');
+
+      const inputTsxNode = screen.getByTestId('i1-i1-i2');
+      expect(inputTsxNode).toBeInTheDocument();
+      expect(inputTsxNode).toHaveTextContent('Input.tsx');
+    });
   });
 });

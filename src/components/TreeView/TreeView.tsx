@@ -29,7 +29,7 @@ export default function TreeView(props: TreeViewProps) {
 
   return (
     <div className={clsx(styles.treeView, className)} data-test-id={testId}>
-      {treeData.map((node) => (
+      {treeData.map((node, index) => (
         <TreeNodeItem
           key={node.id}
           node={node}
@@ -41,6 +41,7 @@ export default function TreeView(props: TreeViewProps) {
           onNodeExpand={onNodeExpand}
           updateNode={updateNode}
           renderNode={renderNode}
+          testIdPath={`i${index + 1}`}
         />
       ))}
     </div>
