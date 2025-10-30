@@ -34,13 +34,13 @@ export default function TreeView(props: TreeViewProps) {
           key={node.id}
           node={node}
           level={0}
-          onNodeClick={onNodeClick}
-          onNodeExpand={onNodeExpand}
-          renderNode={renderNode}
           showIcons={showIcons}
           indentSize={indentSize}
           shouldExpandOnClick={shouldExpandOnClick}
+          onNodeClick={onNodeClick}
+          onNodeExpand={onNodeExpand}
           updateNode={updateNode}
+          renderNode={renderNode}
         />
       ))}
     </div>
