@@ -14,7 +14,7 @@ export type TreeNode = {
   items?: Array<TreeNode>;
   isExpanded?: boolean;
   isLoading?: boolean;
-  icon?: React.ReactNode;
+  icon?: string | (() => React.ReactNode);
   metadata?: Record<string, any>;
 };
 

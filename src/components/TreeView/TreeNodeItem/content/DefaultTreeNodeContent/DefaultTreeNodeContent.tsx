@@ -8,14 +8,23 @@ type DefaultTreeNodeContentProps = TreeNodeItemProps & {
   hasItems: boolean;
   isLoading: boolean;
   isExpanded: boolean;
-  iconToShow: ReactNode;
+  iconToShow: string | (() => ReactNode) | null;
   handleNodeClick: () => void;
   handleExpandToggle: () => void;
 };
 
 export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProps) {
-  const { node, level, hasItems, isLoading, isExpanded, iconToShow, indentSize, handleNodeClick, handleExpandToggle } =
-    props;
+  const {
+    node,
+    level,
+    hasItems,
+    isLoading,
+    isExpanded,
+    iconToShow: IconToShow,
+    indentSize,
+    handleNodeClick,
+    handleExpandToggle,
+  } = props;
 
   const { name, type: nodeType } = node;
 
@@ -37,7 +46,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
             handleExpandToggle();
           }}
           className={twMerge(
-            'flex items-center justify-center w-4 h-4 mr-1 transition-transform duration-200',
+            'flex cursor-pointer items-center justify-center w-4 h-4 mr-1 transition-transform duration-200',
             isExpanded ? 'rotate-90' : 'rotate-0',
             isLoading && 'animate-spin',
           )}
@@ -49,7 +58,9 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
 
       {!hasItems && <div className='w-5' />}
 
-      {iconToShow && <span className='mr-2 text-sm'>{typeof iconToShow === 'string' ? iconToShow : iconToShow}</span>}
+      {IconToShow && (
+        <span className='mr-2 text-sm'>{typeof IconToShow === 'string' ? IconToShow : <IconToShow />}</span>
+      )}
 
       <span className='flex-1 truncate'>{name}</span>
 
