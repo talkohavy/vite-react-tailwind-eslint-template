@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import type { TreeNode } from './types';
 import TreeView from './TreeView';
 
@@ -56,8 +56,8 @@ describe('TreeView', () => {
     it('should show folder and file icons when showIcons is applied', () => {
       render(<TreeView data={mockStaticData} showIcons />);
 
-      const srcFolder = screen.getByText('src').parentElement;
-      const packageFile = screen.getByText('package.json').parentElement;
+      const srcFolder = screen.getByRole('button', { name: /📁.*src/ });
+      const packageFile = screen.getByRole('button', { name: /📄.*package\.json/ });
 
       expect(srcFolder).toHaveTextContent('📁');
       expect(packageFile).toHaveTextContent('📄');
@@ -66,8 +66,8 @@ describe('TreeView', () => {
     it('should hide icons when showIcons is false', () => {
       render(<TreeView data={mockStaticData} showIcons={false} />);
 
-      const srcFolder = screen.getByText('src').parentElement;
-      const packageFile = screen.getByText('package.json').parentElement;
+      const srcFolder = screen.getByRole('button', { name: 'src' });
+      const packageFile = screen.getByRole('button', { name: 'package.json' });
 
       expect(srcFolder).not.toHaveTextContent('📁');
       expect(packageFile).not.toHaveTextContent('📄');
@@ -79,13 +79,11 @@ describe('TreeView', () => {
       // Initially items should not be visible
       expect(screen.queryByText('components')).not.toBeInTheDocument();
 
-      // Click the expand button for src folder
-      const expandButton = screen.getByText('src').parentElement?.querySelector('button');
-      expect(expandButton).toBeInTheDocument();
+      // Get the main src button and use within to find the nested expand button
+      const srcButton = screen.getByRole('button', { name: 'src' });
+      const expandButton = within(srcButton).getByRole('button');
 
-      if (expandButton) {
-        fireEvent.click(expandButton);
-      }
+      fireEvent.click(expandButton);
 
       // Now items should be visible
       expect(screen.getByText('components')).toBeInTheDocument();
@@ -108,7 +106,7 @@ describe('TreeView', () => {
     });
 
     it('should expand on node click when expandOnClick is true', () => {
-      render(<TreeView data={mockStaticData} shouldExpandOnClick={true} />);
+      render(<TreeView data={mockStaticData} shouldExpandOnClick />);
 
       // Initially items should not be visible
       expect(screen.queryByText('components')).not.toBeInTheDocument();
@@ -133,12 +131,10 @@ describe('TreeView', () => {
       render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} />);
 
       // Click the expand button for project folder
-      const expandButton = screen.getByText('project').parentElement?.querySelector('button');
-      expect(expandButton).toBeInTheDocument();
+      const projectButton = screen.getByRole('button', { name: 'project' });
+      const expandButton = within(projectButton).getByRole('button');
 
-      if (expandButton) {
-        fireEvent.click(expandButton);
-      }
+      fireEvent.click(expandButton);
 
       expect(mockOnNodeExpand).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -151,6 +147,9 @@ describe('TreeView', () => {
       // Wait for items to be loaded and displayed
       await waitFor(() => {
         expect(screen.getByText('src')).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
         expect(screen.getByText('dist')).toBeInTheDocument();
       });
     });
@@ -166,11 +165,10 @@ describe('TreeView', () => {
       render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} />);
 
       // Click the expand button for project folder
-      const expandButton = screen.getByText('project').parentElement?.querySelector('button');
+      const projectButton = screen.getByRole('button', { name: 'project' });
+      const expandButton = within(projectButton).getByRole('button');
 
-      if (expandButton) {
-        fireEvent.click(expandButton);
-      }
+      fireEvent.click(expandButton);
 
       // Should show loading state
       expect(screen.getByText('Loading...')).toBeInTheDocument();
@@ -188,15 +186,17 @@ describe('TreeView', () => {
       render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} />);
 
       // Click the expand button for project folder
-      const expandButton = screen.getByText('project').parentElement?.querySelector('button');
+      const projectButton = screen.getByRole('button', { name: 'project' });
+      const expandButton = within(projectButton).getByRole('button');
 
-      if (expandButton) {
-        fireEvent.click(expandButton);
-      }
+      fireEvent.click(expandButton);
 
       // Wait for error handling
       await waitFor(() => {
         expect(consoleSpy).toHaveBeenCalledWith('Error loading items:', expect.any(Error));
+      });
+
+      await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
 
@@ -208,9 +208,7 @@ describe('TreeView', () => {
     it('should use custom renderNode function', () => {
       const mockRenderNode = jest
         .fn()
-        .mockImplementation((node: TreeNode, _defaultRender) => (
-          <div data-test-id={`custom-${node.id}`}>Custom: {node.name}</div>
-        ));
+        .mockImplementation((node: TreeNode) => <div data-test-id={`custom-${node.id}`}>Custom: {node.name}</div>);
 
       render(<TreeView data={mockStaticData} renderNode={mockRenderNode} />);
 
@@ -221,9 +219,9 @@ describe('TreeView', () => {
 
   describe('Styling and Layout', () => {
     it('should apply custom className', () => {
-      const { container } = render(<TreeView data={mockStaticData} className='custom-tree' />);
+      render(<TreeView data={mockStaticData} className='custom-tree' testId='tree-view-container' />);
 
-      const treeView = container.firstChild;
+      const treeView = screen.getByTestId('tree-view-container');
       expect(treeView).toHaveClass('custom-tree');
     });
 
@@ -231,14 +229,13 @@ describe('TreeView', () => {
       render(<TreeView data={mockStaticData} indentSize={32} />);
 
       // Expand the src folder to see indented items
-      const expandButton = screen.getByText('src').parentElement?.querySelector('button');
-      if (expandButton) {
-        fireEvent.click(expandButton);
-      }
+      const srcButton = screen.getByRole('button', { name: 'src' });
+      const expandButton = within(srcButton).getByRole('button');
+      fireEvent.click(expandButton);
 
       // Check that items have proper indentation
-      const componentsNode = screen.getByText('components').parentElement;
-      expect(componentsNode).toHaveStyle('margin-left: 32px');
+      const componentsButton = screen.getByRole('button', { name: 'components' });
+      expect(componentsButton).toHaveStyle('margin-left: 32px');
     });
   });
 
