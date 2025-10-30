@@ -1,6 +1,7 @@
 import pluginJs from '@eslint/js';
 import perfectionist from 'eslint-plugin-perfectionist';
 import pluginCompiler from 'eslint-plugin-react-compiler';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -16,10 +17,13 @@ export default [
     name: 'react-compiler/recommended',
     plugins: {
       'react-compiler': pluginCompiler,
+      'react-hooks': pluginReactHooks,
       perfectionist,
     },
     rules: {
       'react-compiler/react-compiler': 'error',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
     },
   },
   {
