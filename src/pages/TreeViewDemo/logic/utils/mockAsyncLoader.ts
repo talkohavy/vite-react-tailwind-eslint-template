@@ -7,16 +7,8 @@ export async function mockAsyncLoader(node: TreeNode): Promise<Array<TreeNode>> 
 
   if (node.id === 'root') {
     return [
-      {
-        id: 'root-src',
-        name: 'src',
-        type: 'folder',
-      },
-      {
-        id: 'root-tests',
-        name: 'tests',
-        type: 'folder',
-      },
+      { id: 'root-src', name: 'src', type: 'folder' },
+      { id: 'root-tests', name: 'tests', type: 'folder' },
       { id: 'root-app', name: 'App.tsx', type: 'file', icon: '⚛️' },
     ];
   }
