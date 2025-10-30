@@ -38,7 +38,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
       {isFolderType && (
         <ExpandButton
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // <--- Prevent the button's onClick from firing the node click handler
             handleExpandToggle();
           }}
           disabled={isLoading}

@@ -1,5 +1,4 @@
 .treeNodeContent {
-  // ' dark:hover:bg-gray-800',
   display: flex;
   align-items: center;
   padding: 4px 8px;
@@ -18,7 +17,6 @@
 }
 
 .fileType {
-  // dark:text-gray-300',
   color: #374151;
 
   @media (prefers-color-scheme: dark) {
