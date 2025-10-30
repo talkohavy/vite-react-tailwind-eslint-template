@@ -25,6 +25,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
     indentSize,
     handleNodeClick,
     handleExpandToggle,
+    shouldExpandOnClick,
   } = props;
 
   const { name, type: nodeType } = node;
@@ -33,7 +34,11 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
     <div className={styles.treeNodeContent}>
       <button
         type='button'
-        className={clsx(styles.treeNodeAsButton, nodeType === NodeTypes.File ? styles.fileType : styles.folderType)}
+        className={clsx(
+          styles.treeNodeInfoButton,
+          nodeType === NodeTypes.File ? styles.fileType : styles.folderType,
+          isFolderType && shouldExpandOnClick ? styles.pointerCursor : styles.defaultCursor,
+        )}
         style={{ marginLeft: level * indentSize }}
         onClick={handleNodeClick}
       >
