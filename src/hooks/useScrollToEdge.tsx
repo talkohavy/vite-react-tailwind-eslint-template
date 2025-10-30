@@ -14,7 +14,9 @@ export function useScrollToEdge(props: UseScrollToEdgeProps) {
       top: to === 'top' ? 0 : refElement.current.scrollHeight,
       behavior: scrollBehavior,
     });
-  }, [to]);
+    // refElement should not be a dependency here
+    // eslint-disable-next-line
+  }, [to, scrollBehavior]);
 
   return { scrollToEdge };
 }

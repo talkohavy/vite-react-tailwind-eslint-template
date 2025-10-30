@@ -5,14 +5,13 @@ import type { CompletionItem } from './types';
 import { TOKEN_TYPE_HANDLERS } from './logic/tokenTypeToHandlerMapper';
 
 interface UseSuggestionEngineProps {
-  query: string;
   tokens: Token[];
   cursorPosition: number;
   keyConfigs: KeyConfig[];
 }
 
 export function useSuggestionEngine(props: UseSuggestionEngineProps) {
-  const { query, tokens, keyConfigs, cursorPosition } = props;
+  const { tokens, keyConfigs, cursorPosition } = props;
 
   const generateCompletions = useCallback(
     (context: TokenContext | undefined, currentInput: string): CompletionItem[] => {
@@ -30,7 +29,7 @@ export function useSuggestionEngine(props: UseSuggestionEngineProps) {
 
       return completions;
     },
-    [keyConfigs, query],
+    [keyConfigs],
   );
 
   const { completions, expectedTypes, firstErrorTokenIndex } = useMemo(() => {
@@ -62,7 +61,7 @@ export function useSuggestionEngine(props: UseSuggestionEngineProps) {
 
       return { completions: [], expectedTypes: [], tokens: [], firstErrorTokenIndex: undefined };
     }
-  }, [query, cursorPosition, tokens, generateCompletions]);
+  }, [cursorPosition, tokens, generateCompletions]);
 
   return { completions, expectedTypes, firstErrorTokenIndex };
 }

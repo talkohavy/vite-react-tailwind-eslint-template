@@ -53,6 +53,7 @@ describe('Input', () => {
       const [email, setEmail] = useState('');
       const prevEmail = useRef<string>('');
 
+      // eslint-disable-next-line
       const shouldFetchDataDebounced = useCallback(
         // eslint-disable-next-line
         wrapInDebounce((newValue: string) => {

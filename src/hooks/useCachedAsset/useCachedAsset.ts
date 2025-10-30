@@ -30,7 +30,7 @@ export function useCachedAsset(props: useCachedAssetProps) {
     }
 
     loadCachedAssetIfExists();
-  }, [assetUrl]);
+  }, [isImage, assetUrl]);
 
   return { data, setData };
 }

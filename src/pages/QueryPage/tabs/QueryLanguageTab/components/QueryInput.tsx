@@ -30,6 +30,8 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
         input.setSelectionRange(newCursorPosition, newCursorPosition);
       }, 0);
     },
+    // inputRef is a ref and doesn't need to be in dependencies array
+    // eslint-disable-next-line
     [onQueryChange, onCompletionSelect],
   );
 

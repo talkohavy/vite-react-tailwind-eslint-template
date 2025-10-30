@@ -130,6 +130,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
     if (!isAutoFetch) return;
 
     fetchData();
+    // eslint-disable-next-line
   }, [fetchData, isAutoFetch, ...dependencies]);
 
   return { isLoading, isError, data, fetchData } as AsyncFetchResult<TransformType>;

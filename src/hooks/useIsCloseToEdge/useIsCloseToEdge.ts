@@ -39,6 +39,7 @@ export function useIsCloseToEdge(props: UseIsCloseToEdgeProps) {
 
   const [isCloseToEdge, setIsCloseToEdge] = useState(initialState);
 
+  // eslint-disable-next-line
   const onScroll = useCallback(
     // eslint-disable-next-line
     wrapInDebounce((e) => {

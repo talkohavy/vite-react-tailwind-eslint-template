@@ -28,5 +28,7 @@ export default function useEventListener(props: UseEventListenerProps) {
     callbackRef.current();
 
     return () => element.removeEventListener(eventType, callbackRef.current);
-  }, [...dependencies, shouldExecute]);
+    // element should no be a dependency, it should not change between renders.
+    // eslint-disable-next-line
+  }, [...dependencies, eventType, shouldExecute]);
 }

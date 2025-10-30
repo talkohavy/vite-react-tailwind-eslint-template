@@ -38,7 +38,7 @@ export default function QueryVisualization(props: QueryVisualizationProps) {
     }
 
     return items;
-  }, [parseResult.tokens, parseResult]);
+  }, [parseResult]);
 
   const maxLevel = Math.max(...visualizationData.map((item) => item.level));
   const queryLength = query.length;

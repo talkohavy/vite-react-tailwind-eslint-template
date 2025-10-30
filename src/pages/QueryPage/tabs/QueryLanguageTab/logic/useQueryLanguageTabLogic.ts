@@ -14,7 +14,6 @@ export function useQueryLanguageTabLogic() {
   const parseResult = useQueryParser({ query });
 
   const { expectedTypes, completions, firstErrorTokenIndex } = useSuggestionEngine({
-    query,
     cursorPosition,
     tokens: parseResult.tokens,
     keyConfigs,
@@ -24,7 +23,7 @@ export function useQueryLanguageTabLogic() {
     const filterScheme = convertAstToFilterScheme(parseResult.ast);
 
     return filterScheme;
-  }, [query]);
+  }, [parseResult.ast]);
 
   // Update dropdown visibility based on expected types
   useEffect(() => {

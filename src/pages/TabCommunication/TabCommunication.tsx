@@ -49,7 +49,7 @@ export default function TabCommunication() {
       window.removeEventListener('beforeunload', sendDisconnectedMessage);
       bc.close();
     };
-  }, []);
+  }, [handleMessage]);
 
   return (
     <div className='size-full p-6 overflow-auto'>

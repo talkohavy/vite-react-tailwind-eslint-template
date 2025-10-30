@@ -6,7 +6,7 @@ import { DEFAULT_FILE_ICON, DEFAULT_FOLDER_ICON, NodeTypes } from '../../logic/c
 export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
   const { node, updateNode, onNodeExpand, onNodeClick, shouldExpandOnClick, showIcons } = props;
 
-  const { id, type: nodeType, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
+  const { type: nodeType, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
 
   const [isExpanded, setIsExpanded] = useState(initialIsExpanded || false);
   const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
@@ -21,17 +21,17 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
     if (!isExpanded && onNodeExpand && items.length === 0) {
       setIsLoading(true);
 
-      updateNode(id, { isLoading: true });
+      updateNode(node.id, { isLoading: true });
 
       try {
         const newItems = await onNodeExpand(node);
         if (newItems) {
           setItems(newItems);
-          updateNode(id, { items: newItems, isLoading: false });
+          updateNode(node.id, { items: newItems, isLoading: false });
         }
       } catch (error) {
         console.error('Error loading items:', error);
-        updateNode(id, { isLoading: false });
+        updateNode(node.id, { isLoading: false });
       } finally {
         setIsLoading(false);
       }
@@ -42,7 +42,7 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
 
     const newNodeState = { isExpanded: newIsExpanded };
 
-    updateNode(id, newNodeState);
+    updateNode(node.id, newNodeState);
   }, [canExpand, isExpanded, items.length, node, onNodeExpand, updateNode]);
 
   const handleNodeClick = useCallback(() => {

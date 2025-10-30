@@ -28,7 +28,7 @@ export default function GetAllPersons(props: GetAllPersonsProps) {
     }
 
     fetchRecords();
-  }, []);
+  }, [setRecords]);
 
   return (
     <>
