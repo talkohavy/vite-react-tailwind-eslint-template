@@ -51,7 +51,7 @@ export default function ExpandButton(props: ExpandButtonProps) {
       aria-disabled={disabled}
       aria-label='Expand/collapse folder'
     >
-      <RightArrow className={styles.btnArrow} />
+      <RightArrow className={styles.expandButtonArrow} />
     </div>
   );
 }
