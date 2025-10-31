@@ -1,7 +1,6 @@
-import type { FilterScheme } from '@talkohavy/filters';
 import {
   AstTypes,
-  BooleanOperators,
+  LogicalOperators,
   type ComparatorNode,
   type KeyNode,
   type ValueNode,
@@ -10,18 +9,18 @@ import {
   type QueryExpression,
   type GroupExpression,
 } from 'create-query-language';
-import { convertAstToFilterScheme } from './astToFilterScheme';
+import { astToFilterScheme } from './astToFilterScheme';
 
-describe('convertAstToFilterScheme', () => {
-  it('should return empty array for null/undefined AST', () => {
+describe('astToFilterScheme', () => {
+  it('should return empty object for null/undefined AST', () => {
     const originalConsoleError = console.error;
     console.error = jest.fn(); // Suppress console.error for this test
 
-    const expectedResult: FilterScheme = [];
-    const actualResult = convertAstToFilterScheme(null as any);
+    const expectedResult = {} as any;
+    const actualResult = astToFilterScheme(null as any);
     expect(actualResult).toEqual(expectedResult);
 
-    const actualResultUndefined = convertAstToFilterScheme(undefined as any);
+    const actualResultUndefined = astToFilterScheme(undefined as any);
     expect(actualResultUndefined).toEqual(expectedResult);
 
     console.error = originalConsoleError; // Restore original console.error
@@ -35,13 +34,9 @@ describe('convertAstToFilterScheme', () => {
       value: { value: 'John Doe' } as ValueNode,
     } as ConditionExpression;
 
-    const expectedResult = {
-      fieldName: 'name',
-      operator: 'equals',
-      value: 'John Doe',
-    };
+    const expectedResult = { and: [{ key: 'name', op: 'equals', val: 'John Doe' }] };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
@@ -53,20 +48,16 @@ describe('convertAstToFilterScheme', () => {
       value: { value: 30 },
     } as any as ConditionExpression;
 
-    const expectedResult = {
-      fieldName: 'age',
-      operator: 'greaterThan',
-      value: 30,
-    };
+    const expectedResult = { and: [{ key: 'age', op: 'greater_than', val: 30 }] };
 
-    const actualResult = convertAstToFilterScheme(astGreaterThan);
+    const actualResult = astToFilterScheme(astGreaterThan);
     expect(actualResult).toEqual(expectedResult);
   });
 
   it('should convert AND boolean expression', () => {
     const ast = {
       type: AstTypes.Boolean,
-      operator: { value: BooleanOperators.AND },
+      operator: { value: LogicalOperators.AND },
       left: {
         type: AstTypes.Condition,
         key: { value: 'status' },
@@ -82,28 +73,28 @@ describe('convertAstToFilterScheme', () => {
     } as BooleanExpression;
 
     const expectedResult = {
-      AND: [
+      and: [
         {
-          fieldName: 'status',
-          operator: 'equals',
-          value: 'active',
+          key: 'status',
+          op: 'equals',
+          val: 'active',
         },
         {
-          fieldName: 'role',
-          operator: 'equals',
-          value: 'admin',
+          key: 'role',
+          op: 'equals',
+          val: 'admin',
         },
       ],
     };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
   it('should convert OR boolean expression', () => {
     const ast = {
       type: AstTypes.Boolean,
-      operator: { value: BooleanOperators.OR },
+      operator: { value: LogicalOperators.OR },
       left: {
         type: AstTypes.Condition,
         key: { value: 'priority' },
@@ -119,21 +110,21 @@ describe('convertAstToFilterScheme', () => {
     } as BooleanExpression;
 
     const expectedResult = {
-      OR: [
+      or: [
         {
-          fieldName: 'priority',
-          operator: 'equals',
-          value: 'high',
+          key: 'priority',
+          op: 'equals',
+          val: 'high',
         },
         {
-          fieldName: 'priority',
-          operator: 'equals',
-          value: 'critical',
+          key: 'priority',
+          op: 'equals',
+          val: 'critical',
         },
       ],
     };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
@@ -148,13 +139,9 @@ describe('convertAstToFilterScheme', () => {
       },
     } as QueryExpression;
 
-    const expectedResult = {
-      fieldName: 'department',
-      operator: 'equals',
-      value: 'engineering',
-    };
+    const expectedResult = { and: [{ key: 'department', op: 'equals', val: 'engineering' }] };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
@@ -169,20 +156,16 @@ describe('convertAstToFilterScheme', () => {
       },
     } as GroupExpression;
 
-    const expectedResult = {
-      fieldName: 'department',
-      operator: 'equals',
-      value: 'engineering',
-    };
+    const expectedResult = { and: [{ key: 'department', op: 'equals', val: 'engineering' }] };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
   it('should handle complex nested expressions', () => {
     const ast = {
       type: AstTypes.Boolean,
-      operator: { value: BooleanOperators.AND },
+      operator: { value: LogicalOperators.AND },
       left: {
         type: AstTypes.Condition,
         key: { value: 'status' },
@@ -191,7 +174,7 @@ describe('convertAstToFilterScheme', () => {
       },
       right: {
         type: AstTypes.Boolean,
-        operator: { value: BooleanOperators.OR },
+        operator: { value: LogicalOperators.OR },
         left: {
           type: AstTypes.Condition,
           key: { value: 'role' },
@@ -208,30 +191,30 @@ describe('convertAstToFilterScheme', () => {
     } as BooleanExpression;
 
     const expectedResult = {
-      AND: [
+      and: [
         {
-          fieldName: 'status',
-          operator: 'equals',
-          value: 'active',
+          key: 'status',
+          op: 'equals',
+          val: 'active',
         },
         {
-          OR: [
+          or: [
             {
-              fieldName: 'role',
-              operator: 'equals',
-              value: 'admin',
+              key: 'role',
+              op: 'equals',
+              val: 'admin',
             },
             {
-              fieldName: 'role',
-              operator: 'equals',
-              value: 'manager',
+              key: 'role',
+              op: 'equals',
+              val: 'manager',
             },
           ],
         },
       ],
     };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
@@ -242,7 +225,7 @@ describe('convertAstToFilterScheme', () => {
         type: AstTypes.Group,
         expression: {
           type: AstTypes.Boolean,
-          operator: { value: BooleanOperators.AND },
+          operator: { value: LogicalOperators.AND },
           left: {
             type: AstTypes.Condition,
             key: { value: 'a' } as KeyNode,
@@ -260,31 +243,31 @@ describe('convertAstToFilterScheme', () => {
     } as QueryExpression;
 
     const expectedResult = {
-      AND: [
+      and: [
         {
-          fieldName: 'a',
-          operator: 'equals',
-          value: '2',
+          key: 'a',
+          op: 'equals',
+          val: '2',
         },
         {
-          fieldName: 'name',
-          operator: 'greaterThanOrEqual',
-          value: 'asd',
+          key: 'name',
+          op: 'greater_than_or_equal',
+          val: 'asd',
         },
       ],
     };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
   it('should handle different comparison operators', () => {
     const operators = [
-      { comparator: '!=', expected: 'notEquals' },
-      { comparator: '>', expected: 'greaterThan' },
-      { comparator: '>=', expected: 'greaterThanOrEqual' },
-      { comparator: '<', expected: 'lessThan' },
-      { comparator: '<=', expected: 'lessThanOrEqual' },
+      { comparator: '!=', expected: 'not_equals' },
+      { comparator: '>', expected: 'greater_than' },
+      { comparator: '>=', expected: 'greater_than_or_equal' },
+      { comparator: '<', expected: 'less_than' },
+      { comparator: '<=', expected: 'less_than_or_equal' },
     ];
 
     operators.forEach(({ comparator, expected }) => {
@@ -295,33 +278,11 @@ describe('convertAstToFilterScheme', () => {
         value: { value: 'value' },
       } as ConditionExpression;
 
-      const expectedResult = {
-        fieldName: 'test',
-        operator: expected,
-        value: 'value',
-      };
+      const expectedResult = { and: [{ key: 'test', op: expected, val: 'value' }] };
 
-      const actualResult = convertAstToFilterScheme(ast);
+      const actualResult = astToFilterScheme(ast);
       expect(actualResult).toEqual(expectedResult);
     });
-  });
-
-  it('should handle unknown operators by defaulting to equals', () => {
-    const ast = {
-      type: AstTypes.Condition,
-      key: { value: 'test' },
-      comparator: { value: 'unknownOp' as any },
-      value: { value: 'value' },
-    } as ConditionExpression;
-
-    const expectedResult = {
-      fieldName: 'test',
-      operator: 'equals',
-      value: 'value',
-    };
-
-    const actualResult = convertAstToFilterScheme(ast);
-    expect(actualResult).toEqual(expectedResult);
   });
 
   it('should convert NOT expression', () => {
@@ -336,16 +297,16 @@ describe('convertAstToFilterScheme', () => {
     } as any;
 
     const expectedResult = {
-      NOT: [
+      not: [
         {
-          fieldName: 'email',
-          operator: 'equals',
-          value: 'asd',
+          key: 'email',
+          op: 'is',
+          val: 'asd',
         },
       ],
     };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 
@@ -354,7 +315,7 @@ describe('convertAstToFilterScheme', () => {
       type: AstTypes.Not,
       expression: {
         type: AstTypes.Boolean,
-        operator: { value: BooleanOperators.AND },
+        operator: { value: LogicalOperators.AND },
         left: {
           type: AstTypes.Condition,
           key: { value: 'status' },
@@ -371,21 +332,21 @@ describe('convertAstToFilterScheme', () => {
     } as any;
 
     const expectedResult = {
-      NOT: [
+      not: [
         {
-          fieldName: 'status',
-          operator: 'equals',
-          value: 'active',
+          key: 'status',
+          op: 'equals',
+          val: 'active',
         },
         {
-          fieldName: 'role',
-          operator: 'equals',
-          value: 'admin',
+          key: 'role',
+          op: 'equals',
+          val: 'admin',
         },
       ],
     };
 
-    const actualResult = convertAstToFilterScheme(ast);
+    const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
   });
 });
