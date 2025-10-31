@@ -1,37 +1,47 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { useOnCompletionSelect } from '../../../logic/hooks/useOnCompletionSelect';
-import { useQueryParser } from '../../../logic/hooks/useQueryParser';
-import { useSuggestionEngine } from '../../../logic/hooks/useSuggestionEngine';
-import { convertAstToFilterScheme } from '../logic/astToFilterScheme/astToFilterScheme';
-import { keyConfigs } from '../logic/constants';
+import { useState, useMemo, useRef } from 'react';
+import type { OpenChangeDetails } from '../../../../../components/controls/InputWithDropdown';
+import type { KeyConfig } from '../components/QueryInput/types';
+import { getTextWidth } from '../../../../../common/utils/getTextWidth';
+import { useOnCompletionSelect } from '../components/QueryInput/logic/hooks/useOnCompletionSelect';
+import { useQueryParser } from '../components/QueryInput/logic/hooks/useQueryParser';
+import { useSuggestionEngine } from '../components/QueryInput/logic/hooks/useSuggestionEngine';
+import { keyConfigs as initialKeyConfigs } from '../logic/constants';
+import { astToFilterScheme } from './utils/astToFilterScheme';
+import { validateKeysAndValues } from './utils/validateKeysAndValues';
 
 export function useQueryLanguageTabLogic() {
   const [query, setQuery] = useState('');
-  const [cursorPosition, setCursorPosition] = useState(0);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState(query.length);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [keyConfigs, _setKeyConfigs] = useState<KeyConfig[]>(initialKeyConfigs);
+  // const [isLoadingKeyConfigs, setIsLoadingKeyConfigs] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const parseResult = useQueryParser({ query });
 
-  const { expectedTypes, completions, firstErrorTokenIndex } = useSuggestionEngine({
-    cursorPosition,
+  const { expectedTypes, completions } = useSuggestionEngine({
     tokens: parseResult.tokens,
+    cursorPosition,
     keyConfigs,
   });
 
   const filterScheme = useMemo(() => {
-    const filterScheme = convertAstToFilterScheme(parseResult.ast);
+    const filterScheme = astToFilterScheme(parseResult.ast);
 
     return filterScheme;
   }, [parseResult.ast]);
 
-  // Update dropdown visibility based on expected types
-  useEffect(() => {
-    const shouldShowDropdown = expectedTypes.length > 0 && completions.length > 0;
-    setIsDropdownOpen(shouldShowDropdown);
-  }, [expectedTypes, completions]);
+  const validationResult = useMemo(() => {
+    return validateKeysAndValues({ keyConfigs, ast: parseResult.ast });
+  }, [parseResult.ast, keyConfigs]);
 
-  const onCompletionSelect = useOnCompletionSelect({ tokens: parseResult.tokens, cursorPosition, query });
+  const onCompletionSelect = useOnCompletionSelect({
+    tokens: parseResult.tokens,
+    cursorPosition,
+    query,
+    setIsDropdownOpen,
+  });
 
   const onQueryChange = (value: string, cursorPosition?: number) => {
     setQuery(value);
@@ -41,23 +51,57 @@ export function useQueryLanguageTabLogic() {
 
     if (cursorPosition !== undefined && cursorPosition !== inputRef.current.selectionStart) {
       inputRef.current!.setSelectionRange(cursorPosition, cursorPosition);
+
+      // Calculate pixel position of cursor and scroll to it
+      const textBeforeCursor = value.substring(0, cursorPosition);
+      const cursorPixelPosition = getTextWidth({ text: textBeforeCursor, fontSize: 13, fontFamily: 'monospace' });
+      const inputWidth = inputRef.current.clientWidth;
+
+      // Center the cursor in the view if possible
+      const scrollPosition = Math.max(0, cursorPixelPosition - inputWidth / 2) - 100;
+
+      setTimeout(() => {
+        inputRef.current!.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+      }, 0);
     }
 
     setCursorPosition(newCursorPosition);
   };
 
+  const handleDropdownOpenChange = (details: OpenChangeDetails) => {
+    if (details.reason === 'arrow-key' || details.reason === 'input-change') {
+      const shouldShowDropdown = expectedTypes.length > 0 && completions.length > 0;
+      setIsDropdownOpen(shouldShowDropdown);
+      return;
+    }
+
+    if (details.reason === 'clear-trigger') {
+      setIsDropdownOpen(true);
+      return;
+    }
+
+    setIsDropdownOpen(details.open);
+  };
+
+  const isValid = parseResult.success && validationResult.areAllKeysValid && validationResult.areAllValuesValid;
+
+  // Combine "syntax errors" and "validation errors" for display
+  const allErrors = useMemo(() => {
+    return [...parseResult.errors, ...validationResult.errors];
+  }, [parseResult.errors, validationResult.errors]);
+
   return {
+    inputRef,
     query,
     onQueryChange,
-    parseResult,
+    isDropdownOpen,
+    handleDropdownOpenChange,
     completions,
     onCompletionSelect,
-    isDropdownOpen,
-    cursorPosition,
     setCursorPosition,
-    expectedTypes,
-    inputRef,
+    isValid,
+    errors: allErrors,
     filterScheme,
-    firstErrorTokenIndex,
+    parseResult,
   };
 }
