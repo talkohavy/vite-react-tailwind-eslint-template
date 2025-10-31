@@ -25,3 +25,5 @@ dist-ssr
 **/.DS_Store
 .npmrc
 **/public/sw.js
+
+coverage
