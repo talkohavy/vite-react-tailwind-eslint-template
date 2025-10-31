@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from 'react';
-import type { OpenChangeDetails } from '../../../../../components/controls/InputWithDropdown';
-import type { KeyConfig } from '../components/QueryInput/types';
+import type { OpenChangeDetails } from '@src/components/controls/InputWithDropdown';
+import type { KeyConfig } from '@src/components/controls/QueryInput/types';
 import { getTextWidth } from '../../../../../common/utils/getTextWidth';
 import { useOnCompletionSelect } from '../components/QueryInput/logic/hooks/useOnCompletionSelect';
 import { useQueryParser } from '../components/QueryInput/logic/hooks/useQueryParser';

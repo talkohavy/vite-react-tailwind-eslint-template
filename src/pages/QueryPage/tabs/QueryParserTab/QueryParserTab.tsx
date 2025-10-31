@@ -1,4 +1,4 @@
-import QueryInput from '../QueryLanguageTab/components/QueryInput';
+import QueryInput from '@src/components/controls/QueryInput';
 import CursorPositionInfo from './content/CursorPositionInfo';
 import QueryVisualization from './content/QueryVisualization';
 import RawParseResult from './content/RawParseResult';

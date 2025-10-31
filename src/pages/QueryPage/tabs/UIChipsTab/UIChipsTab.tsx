@@ -1,4 +1,4 @@
-import QueryInput from '../QueryLanguageTab/components/QueryInput';
+import QueryInput from '@src/components/controls/QueryInput';
 import ContextInfo from './components/ContextInfo';
 import TokenBubbles from './components/TokenBubbles';
 import { useUIChipsTabLogic } from './logic/useUIChipsTabLogic';
