@@ -13,7 +13,9 @@ type TokenBubblesProps = {
 export default function TokenBubbles(props: TokenBubblesProps) {
   const { tokens, firstErrorTokenIndex } = props;
 
-  const filteredTokens = tokens.filter((token) => ![TokenTypes.Whitespace, TokenTypes.EOF].includes(token.type as any));
+  const filteredTokens = tokens.filter(
+    (token) => ![TokenTypes.Whitespace, TokenTypes.EndOfLine].includes(token.type as any),
+  );
 
   const { validTokens, errorTokens } = useMemo(() => {
     if (firstErrorTokenIndex == null) {
