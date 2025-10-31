@@ -1,5 +1,6 @@
 import type { SharedNodeEventHandlers, SharedNodeProps, TreeNode } from '../types';
-import { DEFAULT_INDENT_SIZE } from '../logic/constants';
+import { addDataAttributeWhen } from '../../../common/utils/addDataAttributeWhen';
+import { DEFAULT_INDENT_SIZE, TREE_VIEW_NODE_CLASS, TREE_VIEW_NODE_ITEMS_LIST_CLASS } from '../logic/constants';
 import DefaultTreeNodeContent from './content/DefaultTreeNodeContent';
 import { useTreeNodeItemLogic } from './logic/useTreeNodeItemLogic';
 
@@ -34,7 +35,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     useTreeNodeItemLogic(props);
 
   return (
-    <div>
+    <div className={TREE_VIEW_NODE_CLASS} data-test-id={testIdPath} data-is-expanded={addDataAttributeWhen(isExpanded)}>
       {RenderNode ? (
         RenderNode(node, DefaultTreeNodeContent)
       ) : (
@@ -52,7 +53,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
       )}
 
       {isExpanded && items.length > 0 && (
-        <div>
+        <div className={TREE_VIEW_NODE_ITEMS_LIST_CLASS}>
           {items.map((child, index) => (
             <TreeNodeItem
               key={child.id}
