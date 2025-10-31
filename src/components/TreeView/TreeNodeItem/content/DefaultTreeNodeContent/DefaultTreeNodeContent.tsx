@@ -1,7 +1,6 @@
-import type { ReactNode } from 'react';
 import { addDataAttributeWhen } from '@src/common/utils/addDataAttributeWhen';
 import clsx from 'clsx';
-import type { TreeNodeItemProps } from '../../TreeNodeItem';
+import type { TreeNodeContentProps } from '../../../types';
 import {
   TREE_VIEW_NODE_CONTENT_AS_BUTTON_CLASS,
   TREE_VIEW_NODE_CONTENT_CLASS,
@@ -10,18 +9,7 @@ import {
 import ExpandButton from '../ExpandButton';
 import styles from './DefaultTreeNodeContent.module.scss';
 
-type DefaultTreeNodeContentProps = TreeNodeItemProps & {
-  isFolderType: boolean;
-  isLoading: boolean;
-  isExpanded: boolean;
-  isSelected: boolean;
-  iconToShow: string | (() => ReactNode) | null;
-  handleNodeClick: () => void;
-  handleExpandToggle: () => void;
-  testIdPath?: string;
-};
-
-export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProps) {
+export default function DefaultTreeNodeContent(props: TreeNodeContentProps) {
   const {
     node,
     level,
@@ -34,7 +22,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
     handleNodeClick,
     handleExpandToggle,
     shouldExpandOnClick,
-    testIdPath = '',
+    testId = '',
   } = props;
 
   const { name } = node;
@@ -55,7 +43,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
         data-file-type={addDataAttributeWhen(!isFolderType)}
         data-selected={addDataAttributeWhen(isSelected)}
         style={{ marginLeft: level * indentSize }}
-        data-test-id={`${testIdPath}-node-as-button`}
+        data-test-id={`${testId}-node-as-button`}
       >
         {isFolderType && (
           <ExpandButton
@@ -70,7 +58,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
               isExpanded && styles.btnIsExpanded,
               isLoading && styles.btnIsLoading,
             )}
-            testId={testIdPath}
+            testId={testId}
           />
         )}
 
@@ -80,13 +68,13 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
           <span className={styles.nodeIcon}>{typeof IconToShow === 'string' ? IconToShow : <IconToShow />}</span>
         )}
 
-        <span className={styles.nodeLabel} data-test-id={`${testIdPath}-label`}>
+        <span className={styles.nodeLabel} data-test-id={`${testId}-label`}>
           {name}
         </span>
       </button>
 
       {isLoading && (
-        <span className={styles.loadingText} data-test-id={`${testIdPath}-is-loading`}>
+        <span className={styles.loadingText} data-test-id={`${testId}-is-loading`}>
           Loading...
         </span>
       )}

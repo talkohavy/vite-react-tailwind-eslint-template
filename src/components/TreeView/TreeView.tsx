@@ -7,7 +7,7 @@ import styles from './TreeView.module.scss';
 
 export type TreeViewProps = SharedNodeProps &
   SharedNodeEventHandlers & {
-    data: Array<TreeNode>;
+    data: TreeNode[];
     initialSelectedNodeId?: string | null;
     /**
      * This function should be memoized to prevent unnecessary re-renders.
@@ -57,7 +57,7 @@ export default function TreeView(props: TreeViewProps) {
           onNodeExpand={onNodeExpand}
           updateNode={updateNode}
           renderNode={renderNode}
-          testIdPath={`tree-view-i${index + 1}`}
+          testId={`tree-view-i${index + 1}`}
         />
       ))}
     </div>

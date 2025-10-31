@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { TreeNode } from '../../types';
-import type { TreeNodeItemProps } from '../TreeNodeItem';
+import type { TreeNode, TreeNodeItemProps } from '../../types';
 import { DEFAULT_FILE_ICON, DEFAULT_FOLDER_ICON, NodeTypes } from '../../logic/constants';
 
 export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
