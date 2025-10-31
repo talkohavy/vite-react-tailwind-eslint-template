@@ -1,12 +1,14 @@
 .InputWithDropdownControl {
   width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
+  font-size: 13px;
   font-family: monospace;
   border-radius: 8px;
   outline: none;
   background-color: #ffffff;
   border: 1px solid #d1d5db;
+}
+
+.InputWithDropdownControl input {
   color: #374151;
 }
 
@@ -27,16 +29,12 @@
 .InputWithDropdownItem {
   padding: 8px 12px;
   cursor: pointer;
-  height: 73px;
+  height: 40px;
   width: 100%;
   text-align: left;
   font-size: 12px;
-  border-bottom: 1px solid #f3f4f6;
   color: #374151;
-}
-
-.InputWithDropdownItem:last-child {
-  border-bottom: none;
+  box-sizing: border-box;
 }
 
 .InputWithDropdownItem[data-disabled] {
@@ -48,6 +46,18 @@
   outline: none;
   background-color: #ede9fe;
   color: #6d28d9;
+}
+
+.InputWithDropdownItemGroupLabel {
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  color: #35383e;
+  padding: 8px 12px;
+  cursor: default;
+  height: 40px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 html body[class*='dark'] .InputWithDropdownControl {
