@@ -1,14 +1,26 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { TreeNode } from '../../types';
 import type { TreeNodeItemProps } from '../TreeNodeItem';
 import { DEFAULT_FILE_ICON, DEFAULT_FOLDER_ICON, NodeTypes } from '../../logic/constants';
 
 export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
-  const { node, updateNode, onNodeExpand, onNodeClick, shouldExpandOnClick, showIcons } = props;
+  const {
+    node,
+    updateNode,
+    onNodeExpand,
+    onNodeClick,
+    shouldExpandOnClick,
+    showIcons,
+    selectedNodeId,
+    handleSelectNodeId,
+  } = props;
 
   const { type: nodeType, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
 
   const [isExpanded, setIsExpanded] = useState(initialIsExpanded || false);
+  const isSelected = useMemo(() => {
+    return node.id === selectedNodeId;
+  }, [selectedNodeId, node.id]);
   const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,15 +58,15 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
   }, [canExpand, isExpanded, items.length, node, onNodeExpand, updateNode]);
 
   const handleNodeClick = useCallback(() => {
-    if (isFolderType && shouldExpandOnClick) {
-      handleExpandToggle();
-    }
+    if (isFolderType && shouldExpandOnClick) handleExpandToggle();
+
+    if (selectedNodeId !== node.id) handleSelectNodeId(node.id);
 
     onNodeClick?.(node);
-  }, [shouldExpandOnClick, isFolderType, handleExpandToggle, onNodeClick, node]);
+  }, [shouldExpandOnClick, isFolderType, handleExpandToggle, onNodeClick, node, selectedNodeId, handleSelectNodeId]);
 
   const defaultIcon = nodeType === NodeTypes.Folder ? DEFAULT_FOLDER_ICON : DEFAULT_FILE_ICON;
   const iconToShow = showIcons ? icon || defaultIcon : null;
 
-  return { items, isExpanded, isFolderType, isLoading, handleNodeClick, handleExpandToggle, iconToShow };
+  return { items, isExpanded, isFolderType, isLoading, isSelected, handleNodeClick, handleExpandToggle, iconToShow };
 }

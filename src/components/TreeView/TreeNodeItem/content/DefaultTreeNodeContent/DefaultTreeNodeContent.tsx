@@ -9,6 +9,7 @@ type DefaultTreeNodeContentProps = TreeNodeItemProps & {
   isFolderType: boolean;
   isLoading: boolean;
   isExpanded: boolean;
+  isSelected: boolean;
   iconToShow: string | (() => ReactNode) | null;
   handleNodeClick: () => void;
   handleExpandToggle: () => void;
@@ -22,6 +23,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
     isFolderType,
     isLoading,
     isExpanded,
+    isSelected,
     iconToShow: IconToShow,
     indentSize,
     handleNodeClick,
@@ -36,13 +38,15 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
     <div className={styles.treeNodeContent}>
       <button
         type='button'
+        onClick={handleNodeClick}
+        data-selected={isSelected}
         className={clsx(
           styles.treeNodeInfoButton,
           nodeType === NodeTypes.File ? styles.fileType : styles.folderType,
           isFolderType && shouldExpandOnClick ? styles.pointerCursor : styles.defaultCursor,
+          isSelected && styles.selected,
         )}
         style={{ marginLeft: level * indentSize }}
-        onClick={handleNodeClick}
         data-test-id={testIdPath}
       >
         {isFolderType && (

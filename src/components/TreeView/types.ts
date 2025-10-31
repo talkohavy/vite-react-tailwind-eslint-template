@@ -31,6 +31,10 @@ export type SharedNodeProps = {
    * @default 16
    */
   indentSize?: number;
+  /**
+   * @default null
+   */
+  selectedNodeId?: string | number | null;
 };
 
 export type SharedNodeEventHandlers = {

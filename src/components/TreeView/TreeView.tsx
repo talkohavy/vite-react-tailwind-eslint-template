@@ -8,6 +8,14 @@ import styles from './TreeView.module.scss';
 export type TreeViewProps = SharedNodeProps &
   SharedNodeEventHandlers & {
     data: Array<TreeNode>;
+    initialSelectedNodeId?: string | null;
+    /**
+     * This function should be memoized to prevent unnecessary re-renders.
+     *
+     * This function let's you get the node id that is being selected,
+     * so you can do whatever you want with it.
+     */
+    onSelectedNodeIdChange?: (nodeId: string | number) => void;
     className?: string;
     testId?: string;
   };
@@ -21,11 +29,17 @@ export default function TreeView(props: TreeViewProps) {
     indentSize = DEFAULT_INDENT_SIZE,
     showIcons = false,
     shouldExpandOnClick = false,
+    initialSelectedNodeId = null,
+    onSelectedNodeIdChange,
     className,
     testId,
   } = props;
 
-  const { treeData, updateNode } = useTreeViewLogic({ data });
+  const { treeData, updateNode, selectedNodeId, handleSelectNodeId } = useTreeViewLogic({
+    data,
+    initialSelectedNodeId,
+    onSelectedNodeIdChange,
+  });
 
   return (
     <div className={clsx(styles.treeView, className)} data-test-id={testId}>
@@ -34,6 +48,8 @@ export default function TreeView(props: TreeViewProps) {
           key={node.id}
           node={node}
           level={0}
+          selectedNodeId={selectedNodeId}
+          handleSelectNodeId={handleSelectNodeId}
           showIcons={showIcons}
           indentSize={indentSize}
           shouldExpandOnClick={shouldExpandOnClick}
