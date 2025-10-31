@@ -198,7 +198,9 @@ describe('TreeView', () => {
     it('should use custom renderNode function', () => {
       const mockRenderNode = jest
         .fn()
-        .mockImplementation((node: TreeNode) => <div data-test-id={`custom-${node.id}`}>Custom: {node.name}</div>);
+        .mockImplementation((props: any) => (
+          <div data-test-id={`custom-${props.node.id}`}>Custom: {props.node.name}</div>
+        ));
 
       render(<TreeView data={mockStaticData} renderNode={mockRenderNode} />);
 
@@ -238,14 +240,14 @@ describe('TreeView', () => {
     });
 
     it('should generate correct test IDs for tree nodes', () => {
-      render(<TreeView data={mockStaticData} />);
+      render(<TreeView data={mockStaticData} testId='tree-view' />);
 
       // Check root level nodes have correct test IDs
-      const srcNode = screen.getByTestId('i1');
+      const srcNode = screen.getByTestId('tree-view-i1');
       expect(srcNode).toBeInTheDocument();
       expect(srcNode).toHaveTextContent('src');
 
-      const packageJsonNode = screen.getByTestId('i2');
+      const packageJsonNode = screen.getByTestId('tree-view-i2');
       expect(packageJsonNode).toBeInTheDocument();
       expect(packageJsonNode).toHaveTextContent('package.json');
 
@@ -255,11 +257,11 @@ describe('TreeView', () => {
       fireEvent.click(srcExpandButton);
 
       // Check second level nodes have correct test IDs
-      const componentsNode = screen.getByTestId('i1-i1');
+      const componentsNode = screen.getByTestId('tree-view-i1-i1');
       expect(componentsNode).toBeInTheDocument();
       expect(componentsNode).toHaveTextContent('components');
 
-      const appTsxNode = screen.getByTestId('i1-i2');
+      const appTsxNode = screen.getByTestId('tree-view-i1-i2');
       expect(appTsxNode).toBeInTheDocument();
       expect(appTsxNode).toHaveTextContent('App.tsx');
 
@@ -269,11 +271,11 @@ describe('TreeView', () => {
       fireEvent.click(componentsExpandButton);
 
       // Check third level nodes have correct test IDs
-      const buttonTsxNode = screen.getByTestId('i1-i1-i1');
+      const buttonTsxNode = screen.getByTestId('tree-view-i1-i1-i1');
       expect(buttonTsxNode).toBeInTheDocument();
       expect(buttonTsxNode).toHaveTextContent('Button.tsx');
 
-      const inputTsxNode = screen.getByTestId('i1-i1-i2');
+      const inputTsxNode = screen.getByTestId('tree-view-i1-i1-i2');
       expect(inputTsxNode).toBeInTheDocument();
       expect(inputTsxNode).toHaveTextContent('Input.tsx');
     });
@@ -285,8 +287,8 @@ describe('TreeView', () => {
 
       render(<TreeView data={mockStaticData} onSelectedNodeIdChange={mockOnSelectedNodeIdChange} />);
 
-      const packageJsonNode = screen.getByTestId('i2');
-      fireEvent.click(packageJsonNode);
+      const packageJsonButton = screen.getByTestId('tree-view-i2-node-as-button');
+      fireEvent.click(packageJsonButton);
 
       expect(mockOnSelectedNodeIdChange).toHaveBeenCalledWith('6');
     });
@@ -294,8 +296,8 @@ describe('TreeView', () => {
     it('should show selected state when initialSelectedNodeId matches node id', () => {
       render(<TreeView data={mockStaticData} initialSelectedNodeId='6' />);
 
-      const packageJsonNode = screen.getByTestId('i2');
-      expect(packageJsonNode).toHaveClass('selected');
+      const packageJsonButton = screen.getByTestId('tree-view-i2-node-as-button');
+      expect(packageJsonButton).toHaveClass('selected');
     });
 
     it('should not call onSelectedNodeIdChange when clicking an already selected node', () => {
@@ -309,8 +311,8 @@ describe('TreeView', () => {
         />,
       );
 
-      const packageJsonNode = screen.getByTestId('i2');
-      fireEvent.click(packageJsonNode);
+      const packageJsonButton = screen.getByTestId('tree-view-i2-node-as-button');
+      fireEvent.click(packageJsonButton);
 
       // Should not call the callback when clicking the same node
       expect(mockOnSelectedNodeIdChange).not.toHaveBeenCalled();
@@ -332,8 +334,8 @@ describe('TreeView', () => {
       const expandButton = within(srcButton).getByRole('button');
       fireEvent.click(expandButton); // Expand src folder
 
-      const appTsxNode = screen.getByTestId('i1-i2');
-      fireEvent.click(appTsxNode);
+      const appTsxButton = screen.getByTestId('tree-view-i1-i2-node-as-button');
+      fireEvent.click(appTsxButton);
 
       expect(mockOnSelectedNodeIdChange).toHaveBeenCalledWith('5');
     });
