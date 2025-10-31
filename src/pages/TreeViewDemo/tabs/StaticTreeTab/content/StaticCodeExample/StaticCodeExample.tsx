@@ -29,7 +29,7 @@ export default function StaticCodeExample() {
 ];
 
 <TreeView
-  data={treeData}
+  initialState={treeData}
   onNodeClick={(node) => {
     console.log('Selected:', node);
   }}

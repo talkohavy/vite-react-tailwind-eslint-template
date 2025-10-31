@@ -32,7 +32,7 @@ export default function DynamicTreeTab() {
           </p>
 
           <TreeView
-            data={dynamicTreeData}
+            initialState={dynamicTreeData}
             onNodeClick={handleNodeClick}
             onNodeExpand={mockAsyncLoader}
             shouldExpandOnClick
@@ -59,7 +59,7 @@ const loadChildren = async (node) => {
 };
 
 <TreeView
-  data={dynamicData}
+  initialState={dynamicData}
   onNodeExpand={loadChildren}
   onNodeClick={(node) => console.log('Selected:', node)}
 />`}</code>
