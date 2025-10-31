@@ -1,4 +1,5 @@
 import pluginJs from '@eslint/js';
+import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
 import pluginCompiler from 'eslint-plugin-react-compiler';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
@@ -19,11 +20,13 @@ export default [
       'react-compiler': pluginCompiler,
       'react-hooks': pluginReactHooks,
       perfectionist,
+      import: importPlugin,
     },
     rules: {
       'react-compiler/react-compiler': 'error',
       'react-hooks/rules-of-hooks': 'warn',
       'react-hooks/exhaustive-deps': 'warn',
+      'import/no-duplicates': ['error', { 'prefer-inline': false }],
     },
   },
   {
