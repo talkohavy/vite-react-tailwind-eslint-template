@@ -14,7 +14,6 @@ export function useUIChipsTabLogic() {
   const parseResult = useQueryParser({ query });
 
   const { completions, expectedTypes, firstErrorTokenIndex } = useSuggestionEngine({
-    query,
     cursorPosition,
     keyConfigs,
     tokens: parseResult.tokens,
