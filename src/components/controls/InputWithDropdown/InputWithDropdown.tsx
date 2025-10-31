@@ -16,7 +16,6 @@ import {
   INPUT_WITH_DROPDOWN_ROOT_CLASS,
 } from './logic/constants';
 import { useInputWithDropdownLogic } from './logic/useInputWithDropdownLogic';
-import './styles.css';
 
 const {
   RootProvider,
