@@ -13,6 +13,15 @@
   padding: 4px 8px;
 }
 
+.treeNodeInfoButton[data-file-type] {
+  color: #374151;
+}
+
+.treeNodeInfoButton[data-folder-type] {
+  color: #111827;
+  font-weight: 500;
+}
+
 .treeNodeInfoButton:not([data-selected]):hover {
   background-color: #f3f4f6;
 }
@@ -28,15 +37,6 @@
 
 .pointerCursor {
   cursor: pointer;
-}
-
-.fileType {
-  color: #374151;
-}
-
-.folderType {
-  color: #111827;
-  font-weight: 500;
 }
 
 .btnExpandFolder {
@@ -98,11 +98,11 @@ html[data-theme='dark'] .treeNodeInfoButton:not([data-selected]):hover {
   background-color: #1f2937;
 }
 
-html[data-theme='dark'] .fileType {
+html[data-theme='dark'] .treeNodeInfoButton[data-file-type] {
   color: #d1d5db;
 }
 
-html[data-theme='dark'] .folderType {
+html[data-theme='dark'] .treeNodeInfoButton[data-folder-type] {
   color: #f9fafb;
 }
 
