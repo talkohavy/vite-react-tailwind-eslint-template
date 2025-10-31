@@ -1,19 +1,39 @@
-import { forwardRef, useCallback } from 'react';
-import type { ForwardRefRenderFunction, RefObject } from 'react';
-import type { CompletionItem } from '../../../logic/hooks/useSuggestionEngine/types';
-import InputWithDropdown from '../../../../../components/controls/InputWithDropdown';
+import { useCallback, useMemo } from 'react';
+import type { OptionGroup } from '@src/components/controls/InputWithDropdown';
+import type { CompletionItem } from './hooks/useSuggestionEngine/types';
+import { GroupLabels } from './constants';
 
-type QueryInputProps = {
-  query: string;
+type UseQueryInputLogicProps = {
+  inputRef: any;
   onQueryChange: (value: string, cursorPosition?: number) => void;
-  completions: CompletionItem[];
   onCompletionSelect: (completion: CompletionItem) => { value: string; cursorPosition: number };
-  isDropdownOpen: boolean;
   setCursorPosition: (position: number) => void;
+  completions: CompletionItem[];
 };
 
-function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInputElement>) {
-  const { query, completions, onQueryChange, setCursorPosition, onCompletionSelect } = props;
+export function useQueryInputLogic(props: UseQueryInputLogicProps) {
+  const { inputRef, onQueryChange, onCompletionSelect, setCursorPosition, completions } = props;
+
+  const groupedCompletions = useMemo(() => {
+    const groupsArray: OptionGroup[] = [];
+
+    completions.forEach((completionItem) => {
+      const completionItemGroupLabel = GroupLabels[completionItem.type];
+      const group = groupsArray.find((group) => group.groupLabel === completionItemGroupLabel);
+
+      if (group) {
+        group.items.push(completionItem);
+      } else {
+        const newGroup: OptionGroup = {
+          groupLabel: completionItemGroupLabel,
+          items: [completionItem],
+        };
+        groupsArray.push(newGroup);
+      }
+    });
+
+    return groupsArray;
+  }, [completions]);
 
   const handleCompletionSelect = useCallback(
     (completion: any) => {
@@ -30,7 +50,6 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
         input.setSelectionRange(newCursorPosition, newCursorPosition);
       }, 0);
     },
-    // inputRef is a ref and doesn't need to be in dependencies array
     // eslint-disable-next-line
     [onQueryChange, onCompletionSelect],
   );
@@ -52,9 +71,7 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
         // Select all (Ctrl+A)
         (e.type === 'keydown' && e.key === 'a' && e.ctrlKey && !e.shiftKey && !e.altKey);
 
-      if (!shouldUpdateCursor) {
-        return;
-      }
+      if (!shouldUpdateCursor) return;
 
       // Update cursor position on key navigation
       setTimeout(() => {
@@ -64,24 +81,5 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
     [setCursorPosition],
   );
 
-  return (
-    <div className='relative'>
-      <InputWithDropdown
-        ref={inputRef}
-        value={query}
-        options={completions}
-        onItemSelect={handleCompletionSelect}
-        onChange={onQueryChange}
-        closeOnSelect={false}
-        onKeyDown={updateCursorPosition}
-        onMousedown={updateCursorPosition}
-        showClear
-        placeholder='Type your query... (e.g., status: active AND role: manager)'
-      />
-    </div>
-  );
+  return { handleCompletionSelect, updateCursorPosition, groupedCompletions };
 }
-
-const QueryInput = forwardRef(QueryInputToForward as ForwardRefRenderFunction<any, QueryInputProps>);
-
-export default QueryInput;
