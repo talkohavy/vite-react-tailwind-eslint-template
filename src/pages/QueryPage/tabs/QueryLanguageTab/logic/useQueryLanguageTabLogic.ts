@@ -36,6 +36,10 @@ export function useQueryLanguageTabLogic() {
     return validateKeysAndValues({ keyConfigs, ast: parseResult.ast });
   }, [parseResult.ast, keyConfigs]);
 
+  /**
+   * Generates a new query, and a cursor position, upon selection.
+   * The find-and-replace logic is handled here.
+   */
   const onCompletionSelect = useOnCompletionSelect({
     tokens: parseResult.tokens,
     cursorPosition,
@@ -43,6 +47,12 @@ export function useQueryLanguageTabLogic() {
     setIsDropdownOpen,
   });
 
+  /**
+   * Is invoked AFTER onCompletionSelect, with the new query and cursor position
+   * that onCompletionSelect generates.
+   *
+   * Handles updating the query state, and scrolling the input to keep the cursor in view.
+   */
   const onQueryChange = (value: string, cursorPosition?: number) => {
     setQuery(value);
     const newCursorPosition = cursorPosition ?? inputRef!.current?.selectionStart ?? 0;
