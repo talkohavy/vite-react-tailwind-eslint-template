@@ -6,8 +6,7 @@ import {
   type TokenContext,
   type TokenContextWithKey,
 } from 'create-query-language';
-import type { KeyConfig } from '../../../../types';
-import type { CompletionItem } from '../types';
+import type { CompletionItem, KeyConfig } from '../../../../types';
 import { areQuotesNeeded } from '../../../utils/areQuotesNeeded';
 import ValueOptionItem from '../ValueOptionItem';
 

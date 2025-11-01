@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import type { ForwardRefRenderFunction, RefObject } from 'react';
 import InputWithDropdown, { type OpenChangeDetails } from '@src/components/controls/InputWithDropdown';
-import type { CompletionItem } from './logic/hooks/useSuggestionEngine/types';
+import type { CompletionItem } from './types';
 import { useQueryInputLogic } from './logic/useQueryInputLogic';
 import styles from './QueryInput.module.scss';
 
