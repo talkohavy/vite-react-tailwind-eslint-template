@@ -2,6 +2,7 @@ import { addDataAttributeWhen } from '@src/common/utils/addDataAttributeWhen';
 import clsx from 'clsx';
 import type { TreeNodeContentProps } from '../../../types';
 import {
+  DEFAULT_INDENT_SIZE,
   TREE_VIEW_NODE_CONTENT_AS_BUTTON_CLASS,
   TREE_VIEW_NODE_CONTENT_CLASS,
   TREE_VIEW_NODE_CONTENT_EXPAND_BUTTON_CLASS,
@@ -18,7 +19,7 @@ export default function DefaultTreeNodeContent(props: TreeNodeContentProps) {
     isExpanded,
     isSelected,
     iconToShow: IconToShow,
-    indentSize,
+    indentSize = DEFAULT_INDENT_SIZE,
     handleNodeClick,
     handleExpandToggle,
     shouldExpandOnClick,
