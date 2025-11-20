@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import type { TreeNode, TreeNodeItemProps } from '../../types';
+import { useCallback, useMemo } from 'react';
+import type { TreeNodeItemProps } from '../../types';
 import { DEFAULT_FILE_ICON, DEFAULT_FOLDER_ICON, NodeTypes } from '../../logic/constants';
 
 export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
@@ -14,53 +14,37 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
     handleSelectNodeId,
   } = props;
 
-  const { type: nodeType, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
-
-  const [isExpanded, setIsExpanded] = useState(initialIsExpanded || false);
-  const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
-  const [isLoading, setIsLoading] = useState(false);
-
   const isSelected = useMemo(() => {
     return node.id === selectedNodeId;
   }, [selectedNodeId, node.id]);
 
-  const isFolderType = nodeType === NodeTypes.Folder;
-  const canExpand = isFolderType && !isLoading;
+  const isFolderType = node.type === NodeTypes.Folder;
 
   const handleExpandToggle = useCallback(async () => {
-    if (!canExpand) return;
-
-    const isCollapsedNode = !isExpanded;
+    const isCollapsedNode = !node.isExpanded;
     const hasLoadFunction = !!onNodeExpand;
-    const hasNoChildren = items.length === 0;
-    const shouldLoadChildren = isCollapsedNode && hasLoadFunction && hasNoChildren;
+    const hasChildren = !!node.items?.length;
+    const shouldFetchChildren = isCollapsedNode && hasLoadFunction && !hasChildren;
 
-    if (shouldLoadChildren) {
-      setIsLoading(true);
-
+    if (shouldFetchChildren) {
       updateNode(node.id, { isLoading: true });
 
       try {
         const newItems = await onNodeExpand(node);
         if (newItems) {
-          setItems(newItems);
           updateNode(node.id, { items: newItems, isLoading: false });
+        } else {
+          updateNode(node.id, { isLoading: false });
         }
-      } catch (error) {
-        console.error('Error loading items:', error);
+      } catch {
         updateNode(node.id, { isLoading: false });
-      } finally {
-        setIsLoading(false);
       }
     }
 
-    const newIsExpanded = !isExpanded;
-    setIsExpanded(newIsExpanded);
-
-    const newNodeState = { isExpanded: newIsExpanded };
+    const newNodeState = { isExpanded: !node.isExpanded };
 
     updateNode(node.id, newNodeState);
-  }, [canExpand, isExpanded, items.length, node, onNodeExpand, updateNode]);
+  }, [node, onNodeExpand, updateNode]);
 
   const handleNodeClick = useCallback(() => {
     if (isFolderType && shouldExpandOnClick) handleExpandToggle();
@@ -70,8 +54,17 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
     onNodeClick?.(node);
   }, [shouldExpandOnClick, isFolderType, handleExpandToggle, onNodeClick, node, selectedNodeId, handleSelectNodeId]);
 
-  const defaultIcon = nodeType === NodeTypes.Folder ? DEFAULT_FOLDER_ICON : DEFAULT_FILE_ICON;
-  const iconToShow = showIcons ? icon || defaultIcon : null;
+  const defaultIcon = node.type === NodeTypes.Folder ? DEFAULT_FOLDER_ICON : DEFAULT_FILE_ICON;
+  const iconToShow = showIcons ? node.icon || defaultIcon : null;
 
-  return { items, isExpanded, isFolderType, isLoading, isSelected, handleNodeClick, handleExpandToggle, iconToShow };
+  return {
+    items: node.items,
+    isExpanded: !!node.isExpanded,
+    isFolderType,
+    isLoading: !!node.isLoading,
+    isSelected,
+    handleNodeClick,
+    handleExpandToggle,
+    iconToShow,
+  };
 }

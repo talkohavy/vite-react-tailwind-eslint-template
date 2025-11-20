@@ -30,7 +30,6 @@ export default function ExpandButton(props: ExpandButtonProps) {
    */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (disabled) return;
-    // Trigger on Enter or Space (standard button behavior)
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault(); // Prevent space from scrolling
       onClick(e as any);

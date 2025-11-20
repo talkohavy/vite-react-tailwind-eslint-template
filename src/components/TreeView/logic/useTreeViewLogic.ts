@@ -1,5 +1,8 @@
 import { useState, useCallback, type SetStateAction } from 'react';
 import type { TreeNode } from '../types';
+import { collapseAllRecursive } from './utils/collapseAllRecursive';
+import { expandAllRecursive } from './utils/expandAllRecursive';
+import { updateTreeRecursively } from './utils/updateTreeRecursively';
 
 type UseTreeViewLogicProps = {
   initialState: TreeNode[];
@@ -21,24 +24,53 @@ export function useTreeViewLogic(props: UseTreeViewLogicProps) {
     [onSelectedNodeIdChange],
   );
 
-  const updateNode = useCallback((nodeId: string, updates: Partial<TreeNode>) => {
-    const updateNodeRecursive = (nodes: Array<TreeNode>): Array<TreeNode> => {
-      return nodes.map((node) => {
-        const { id, items } = node;
-
-        // if ids match, found the node to update
-        if (id === nodeId) return { ...node, ...updates };
-
-        // if has items, recursively check child nodes
-        if (items) return { ...node, items: updateNodeRecursive(items) };
-
-        // No changes on this node
-        return node;
-      });
-    };
-
-    setTreeData(updateNodeRecursive);
+  const updateNode = useCallback((nodeId: string, nodeUpdates: Partial<TreeNode>) => {
+    setTreeData((prevTreeState) => {
+      const predicate = (node: TreeNode) => node.id === nodeId;
+      return updateTreeRecursively({ nodes: prevTreeState, predicate, nodeUpdates });
+    });
   }, []);
 
-  return { treeData, updateNode, selectedNodeId, handleSelectNodeId };
+  const expandNode = useCallback(
+    (nodeId: string) => {
+      updateNode(nodeId, { isExpanded: true });
+    },
+    [updateNode],
+  );
+
+  const collapseNode = useCallback(
+    (nodeId: string) => {
+      updateNode(nodeId, { isExpanded: false });
+    },
+    [updateNode],
+  );
+
+  const expandAll = useCallback(() => {
+    setTreeData(expandAllRecursive);
+  }, []);
+
+  const collapseAll = useCallback(() => {
+    setTreeData(collapseAllRecursive);
+  }, []);
+
+  const getTreeData = useCallback(() => {
+    return treeData;
+  }, [treeData]);
+
+  const getSelectedNodeId = useCallback(() => {
+    return selectedNodeId;
+  }, [selectedNodeId]);
+
+  return {
+    treeData,
+    updateNode,
+    selectedNodeId,
+    handleSelectNodeId,
+    expandNode,
+    collapseNode,
+    expandAll,
+    collapseAll,
+    getTreeData,
+    getSelectedNodeId,
+  };
 }

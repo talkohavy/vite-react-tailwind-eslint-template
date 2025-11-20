@@ -10,8 +10,8 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     selectedNodeId,
     handleSelectNodeId,
     indentSize = DEFAULT_INDENT_SIZE,
-    showIcons,
-    shouldExpandOnClick,
+    showIcons = false,
+    shouldExpandOnClick = false,
     onNodeClick,
     onNodeExpand,
     updateNode,
@@ -51,9 +51,9 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
         />
       )}
 
-      {isExpanded && items.length > 0 && (
+      {isExpanded && items!.length > 0 && (
         <div className={TREE_VIEW_NODE_ITEMS_LIST_CLASS}>
-          {items.map((child, index) => (
+          {items!.map((child, index) => (
             <TreeNodeItem
               key={child.id}
               node={child}

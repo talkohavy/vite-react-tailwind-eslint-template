@@ -1,50 +1,52 @@
+import { forwardRef, useImperativeHandle } from 'react';
 import clsx from 'clsx';
-import type { SharedNodeEventHandlers, SharedNodeProps, TreeNode } from './types';
-import { DEFAULT_INDENT_SIZE, TREE_VIEW_ROOT_CLASS } from './logic/constants';
+import type { TreeViewProps, TreeViewRef } from './types';
+import { TREE_VIEW_ROOT_CLASS } from './logic/constants';
 import { useTreeViewLogic } from './logic/useTreeViewLogic';
 import TreeNodeItem from './TreeNodeItem';
 import styles from './TreeView.module.scss';
 
-export type TreeViewProps = SharedNodeProps &
-  SharedNodeEventHandlers & {
-    /**
-     * Initial data to be displayed in the tree view.
-     *
-     * NOTE! You do not need to manage the state of the tree data from outside, it will be managed internally.
-     */
-    initialState: TreeNode[];
-    initialSelectedNodeId?: string | number | null;
-    /**
-     * This function should be memoized to prevent unnecessary re-renders.
-     *
-     * NOTE! You do not need to manage the state of the selected node from outside, it will be managed internally.
-     * However, use this function to get the node id that is being selected,
-     */
-    onSelectedNodeIdChange?: (nodeId: string | number) => void;
-    className?: string;
-    testId?: string;
-  };
-
-export default function TreeView(props: TreeViewProps) {
+function TreeViewToForward(props: TreeViewProps, ref: React.Ref<TreeViewRef>) {
   const {
     initialState,
     onNodeClick,
     onNodeExpand,
     renderNode,
-    indentSize = DEFAULT_INDENT_SIZE,
-    showIcons = false,
-    shouldExpandOnClick = false,
+    indentSize,
+    showIcons,
+    shouldExpandOnClick,
     initialSelectedNodeId = null,
     onSelectedNodeIdChange,
     className,
     testId,
   } = props;
 
-  const { treeData, updateNode, selectedNodeId, handleSelectNodeId } = useTreeViewLogic({
-    initialState,
-    initialSelectedNodeId,
-    onSelectedNodeIdChange,
-  });
+  const {
+    treeData,
+    updateNode,
+    selectedNodeId,
+    handleSelectNodeId,
+    expandNode,
+    collapseNode,
+    expandAll,
+    collapseAll,
+    getTreeData,
+    getSelectedNodeId,
+  } = useTreeViewLogic({ initialState, initialSelectedNodeId, onSelectedNodeIdChange });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      expandNode,
+      collapseNode,
+      selectNode: handleSelectNodeId,
+      expandAll,
+      collapseAll,
+      getTreeData,
+      getSelectedNodeId,
+    }),
+    [expandNode, collapseNode, handleSelectNodeId, expandAll, collapseAll, getTreeData, getSelectedNodeId],
+  );
 
   return (
     <div className={clsx(TREE_VIEW_ROOT_CLASS, styles.treeView, className)} data-test-id={testId}>
@@ -68,3 +70,7 @@ export default function TreeView(props: TreeViewProps) {
     </div>
   );
 }
+
+const TreeView = forwardRef<TreeViewRef, TreeViewProps>(TreeViewToForward);
+
+export default TreeView;
