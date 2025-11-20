@@ -8,7 +8,7 @@ import styles from './TreeView.module.scss';
 export type TreeViewProps = SharedNodeProps &
   SharedNodeEventHandlers & {
     data: TreeNode[];
-    initialSelectedNodeId?: string | null;
+    initialSelectedNodeId?: string | number | null;
     /**
      * This function should be memoized to prevent unnecessary re-renders.
      *

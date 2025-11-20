@@ -3,7 +3,7 @@ import type { TreeNode } from '../types';
 
 type UseTreeViewLogicProps = {
   data: TreeNode[];
-  initialSelectedNodeId: string | null;
+  initialSelectedNodeId: string | number | null;
   onSelectedNodeIdChange?: (nodeId: string | number) => void;
 };
 
@@ -15,7 +15,7 @@ export function useTreeViewLogic(props: UseTreeViewLogicProps) {
 
   const handleSelectNodeId = useCallback(
     (nodeId: string | number) => {
-      setSelectedNodeId(nodeId as SetStateAction<string | null>);
+      setSelectedNodeId(nodeId as SetStateAction<string | number | null>);
       onSelectedNodeIdChange?.(nodeId);
     },
     [onSelectedNodeIdChange],
