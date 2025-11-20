@@ -1,13 +1,13 @@
-import { forwardRef, useImperativeHandle } from 'react';
 import clsx from 'clsx';
-import type { TreeViewProps, TreeViewRef } from './types';
+import type { TreeViewProps } from './types';
 import { TREE_VIEW_ROOT_CLASS } from './logic/constants';
 import { useTreeViewLogic } from './logic/useTreeViewLogic';
 import TreeNodeItem from './TreeNodeItem';
 import styles from './TreeView.module.scss';
 
-function TreeViewToForward(props: TreeViewProps, ref: React.Ref<TreeViewRef>) {
+export default function TreeView(props: TreeViewProps) {
   const {
+    reference,
     initialState,
     onNodeClick,
     onNodeExpand,
@@ -21,32 +21,13 @@ function TreeViewToForward(props: TreeViewProps, ref: React.Ref<TreeViewRef>) {
     testId,
   } = props;
 
-  const {
-    treeData,
-    updateNode,
-    selectedNodeId,
-    handleSelectNodeId,
-    expandNode,
-    collapseNode,
-    expandAll,
-    collapseAll,
-    getTreeData,
-    getSelectedNodeId,
-  } = useTreeViewLogic({ initialState, initialSelectedNodeId, onSelectedNodeIdChange, onNodeExpand });
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      expandNode,
-      collapseNode,
-      selectNode: handleSelectNodeId,
-      expandAll,
-      collapseAll,
-      getTreeData,
-      getSelectedNodeId,
-    }),
-    [expandNode, collapseNode, handleSelectNodeId, expandAll, collapseAll, getTreeData, getSelectedNodeId],
-  );
+  const { treeData, updateNode, selectedNodeId, handleSelectNodeId, expandNode, collapseNode } = useTreeViewLogic({
+    reference,
+    initialState,
+    initialSelectedNodeId,
+    onSelectedNodeIdChange,
+    onNodeExpand,
+  });
 
   return (
     <div className={clsx(TREE_VIEW_ROOT_CLASS, styles.treeView, className)} data-test-id={testId}>
@@ -72,7 +53,3 @@ function TreeViewToForward(props: TreeViewProps, ref: React.Ref<TreeViewRef>) {
     </div>
   );
 }
-
-const TreeView = forwardRef<TreeViewRef, TreeViewProps>(TreeViewToForward);
-
-export default TreeView;

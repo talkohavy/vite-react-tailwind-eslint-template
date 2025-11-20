@@ -1,11 +1,12 @@
-import { useState, useCallback, type SetStateAction } from 'react';
-import type { TreeNode } from '../types';
+import { useState, useCallback, type SetStateAction, useImperativeHandle } from 'react';
+import type { TreeNode, TreeViewRef } from '../types';
 import { collapseAllRecursive } from './utils/collapseAllRecursive';
 import { expandAllRecursive } from './utils/expandAllRecursive';
 import { findNodeById } from './utils/findNodeById';
 import { updateTreeRecursively } from './utils/updateTreeRecursively';
 
 type UseTreeViewLogicProps = {
+  reference?: React.Ref<TreeViewRef>;
   initialState: TreeNode[];
   initialSelectedNodeId: string | number | null;
   onSelectedNodeIdChange?: (nodeId: string | number) => void;
@@ -13,7 +14,7 @@ type UseTreeViewLogicProps = {
 };
 
 export function useTreeViewLogic(props: UseTreeViewLogicProps) {
-  const { initialState, initialSelectedNodeId, onSelectedNodeIdChange, onNodeExpand } = props;
+  const { initialState, initialSelectedNodeId, onSelectedNodeIdChange, onNodeExpand, reference } = props;
 
   const [treeData, setTreeData] = useState(initialState);
   const [selectedNodeId, setSelectedNodeId] = useState(initialSelectedNodeId);
@@ -86,6 +87,20 @@ export function useTreeViewLogic(props: UseTreeViewLogicProps) {
   const getSelectedNodeId = useCallback(() => {
     return selectedNodeId;
   }, [selectedNodeId]);
+
+  useImperativeHandle(
+    reference,
+    () => ({
+      expandNode,
+      collapseNode,
+      selectNode: handleSelectNodeId,
+      expandAll,
+      collapseAll,
+      getTreeData,
+      getSelectedNodeId,
+    }),
+    [expandNode, collapseNode, handleSelectNodeId, expandAll, collapseAll, getTreeData, getSelectedNodeId],
+  );
 
   return {
     treeData,

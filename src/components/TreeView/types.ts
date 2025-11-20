@@ -89,6 +89,10 @@ export type SharedNodeProps = {
 
 export type TreeViewProps = SharedNodeProps & {
   /**
+   * Use this to control the tree from outside via ref.
+   */
+  reference?: React.Ref<TreeViewRef>;
+  /**
    * Initial data to be displayed in the tree view.
    *
    * NOTE! You do not need to manage the state of the tree data from outside, it will be managed internally.
