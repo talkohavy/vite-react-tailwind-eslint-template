@@ -17,8 +17,8 @@ export type TreeViewProps = SharedNodeProps &
     /**
      * This function should be memoized to prevent unnecessary re-renders.
      *
-     * This function let's you get the node id that is being selected,
-     * so you can do whatever you want with it.
+     * NOTE! You do not need to manage the state of the selected node from outside, it will be managed internally.
+     * However, use this function to get the node id that is being selected,
      */
     onSelectedNodeIdChange?: (nodeId: string | number) => void;
     className?: string;
