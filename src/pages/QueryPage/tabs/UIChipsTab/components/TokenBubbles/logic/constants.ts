@@ -52,4 +52,9 @@ export const TOKEN_TYPE_TO_COLOR: Record<ColorableTokenTypes, TokenMetaInfo> = {
     color: 'text-white',
     label: 'Invalid',
   },
+  [TokenTypes.EndOfLine]: {
+    backgroundColor: 'bg-red-800',
+    color: 'text-white',
+    label: 'END_OF_LINE',
+  },
 };

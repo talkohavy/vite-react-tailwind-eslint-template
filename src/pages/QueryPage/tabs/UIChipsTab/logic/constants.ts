@@ -1,4 +1,4 @@
-import type { KeyConfig } from '../types';
+import type { KeyConfig } from '@src/components/controls/QueryInput';
 
 export const examples = [
   'name: "John Doe"',
@@ -15,7 +15,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'name',
     description: 'User full name',
-    valueType: 'string',
     values: [
       { value: 'John Doe', description: 'Software Engineer' },
       { value: 'Jane Smith', description: 'Product Manager' },
@@ -27,12 +26,10 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'email',
     description: 'User email address',
-    valueType: 'string',
   },
   {
     name: 'status',
     description: 'Account status',
-    valueType: 'enum',
     values: [
       { value: 'active', description: 'User is currently active' },
       { value: 'inactive', description: 'User account is inactive' },
@@ -44,7 +41,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'category',
     description: 'Task or item category',
-    valueType: 'enum',
     values: [
       { value: 'urgent', description: 'Requires immediate attention' },
       { value: 'normal', description: 'Standard priority' },
@@ -56,7 +52,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'department',
     description: 'Department or team',
-    valueType: 'enum',
     values: [
       { value: 'engineering', description: 'Software Engineering team' },
       { value: 'design', description: 'UI/UX Design team' },
@@ -69,7 +64,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'role',
     description: 'Job role or position',
-    valueType: 'enum',
     values: [
       { value: 'manager', description: 'Team manager' },
       { value: 'senior', description: 'Senior level position' },
@@ -82,7 +76,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'location',
     description: 'Office location or region',
-    valueType: 'enum',
     values: [
       { value: 'san-francisco', description: 'San Francisco, CA' },
       { value: 'new-york', description: 'New York, NY' },
@@ -95,7 +88,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'priority',
     description: 'Task priority level',
-    valueType: 'enum',
     values: [
       { value: 'critical', description: 'Critical - fix immediately' },
       { value: 'high', description: 'High priority' },
@@ -106,7 +98,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'assignee',
     description: 'Person assigned to task',
-    valueType: 'string',
     values: [
       { value: 'john@company.com', description: 'John Doe' },
       { value: 'jane@company.com', description: 'Jane Smith' },
@@ -118,7 +109,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'created',
     description: 'Creation date',
-    valueType: 'date',
     values: [
       { value: '2024-01-01', description: 'January 1st, 2024' },
       { value: '2024-06-01', description: 'June 1st, 2024' },
@@ -128,7 +118,6 @@ export const keyConfigs: KeyConfig[] = [
   {
     name: 'updated',
     description: 'Last update date',
-    valueType: 'date',
     values: [
       { value: '2024-08-01', description: 'August 1st, 2024' },
       { value: '2024-08-15', description: 'August 15th, 2024' },

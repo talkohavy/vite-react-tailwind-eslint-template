@@ -64,7 +64,7 @@ export default function RefControlTab() {
         <div className='bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700'>
           <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4'>TreeView Component</h3>
           <TreeView
-            ref={treeRef}
+            reference={treeRef}
             initialState={staticTreeData}
             onNodeClick={handleNodeClick}
             onSelectedNodeIdChange={handleSelectedNodeIdChange}
@@ -226,7 +226,7 @@ function MyComponent() {
   return (
     <>
       <TreeView
-        ref={treeRef}
+        reference={treeRef}
         initialState={data}
         showIcons
       />

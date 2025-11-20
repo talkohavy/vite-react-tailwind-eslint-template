@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
-import { useOnCompletionSelect } from '../../../logic/hooks/useOnCompletionSelect';
-import { useQueryParser } from '../../../logic/hooks/useQueryParser';
-import { useSuggestionEngine } from '../../../logic/hooks/useSuggestionEngine';
+import { useOnCompletionSelect } from '../../../../../components/controls/QueryInput/logic/hooks/useOnCompletionSelect';
+import { useQueryParser } from '../../../../../components/controls/QueryInput/logic/hooks/useQueryParser';
+import { useSuggestionEngine } from '../../../../../components/controls/QueryInput/logic/hooks/useSuggestionEngine';
 import { keyConfigs } from './constants';
 
 export function useSuggestionsTabLogic() {
@@ -19,7 +19,12 @@ export function useSuggestionsTabLogic() {
     tokens: parseResult.tokens,
   });
 
-  const onCompletionSelect = useOnCompletionSelect({ tokens: parseResult.tokens, cursorPosition, query });
+  const onCompletionSelect = useOnCompletionSelect({
+    tokens: parseResult.tokens,
+    cursorPosition,
+    query,
+    setIsDropdownOpen,
+  });
 
   const onQueryChange = (value: string, cursorPosition?: number) => {
     setQuery(value);

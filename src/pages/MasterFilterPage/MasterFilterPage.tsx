@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { ArrayFilter, type FilterScheme } from '@talkohavy/filters';
+import { ArrayFilter, type OperatorNames, type FilterScheme } from '@talkohavy/filters';
 import { data } from './logic/constants';
 
-const filters: FilterScheme = [
+const filters: FilterScheme<OperatorNames> = [
   {
     fieldName: 'role',
     operator: 'exists',

@@ -95,7 +95,7 @@ export default function PlaygroundTab() {
             </p>
 
             <TreeView
-              ref={treeRef}
+              reference={treeRef}
               initialState={dynamicTreeData}
               onNodeClick={handleNodeClick}
               onNodeExpand={handleNodeExpand}

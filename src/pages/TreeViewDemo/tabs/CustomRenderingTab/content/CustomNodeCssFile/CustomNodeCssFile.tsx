@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import type { TreeNodeContentProps } from '../../../../../../components/TreeView/types';
 import { addDataAttributeWhen } from '../../../../../../common/utils/addDataAttributeWhen';
+import { DEFAULT_INDENT_SIZE } from '../../../../../../components/TreeView/logic/constants';
 
 export default function CustomNodeCssFile(props: TreeNodeContentProps) {
-  const { node, level, indentSize, isSelected, handleNodeClick } = props;
+  const { node, level, indentSize = DEFAULT_INDENT_SIZE, isSelected, handleNodeClick } = props;
 
   return (
     <div

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ASTBuilder, type ParseResult } from 'create-query-language';
+import { ASTUtils, type ParseResult } from 'create-query-language';
 
 type UsePositionInfoLogicProps = {
   cursorPosition?: number;
@@ -23,7 +23,7 @@ export function usePositionInfoLogic(props: UsePositionInfoLogicProps) {
     let foundNode: any = null;
 
     // Use ASTBuilder's traverseAST method instead of our own recursive function
-    ASTBuilder.traverseAST(result.ast, null, (node: any, _parent: any): boolean => {
+    ASTUtils.traverseAST(result.ast, null, (node: any, _parent: any): boolean => {
       // Check if cursor position is within this node
       if (cursorPosition >= node.position.start && cursorPosition <= node.position.end) {
         // Update the found node if this one is more specific (smaller range)
