@@ -6,7 +6,8 @@ declare module '*.svg' {
   // 2. When importing svg as ReactComponent:
   import type React from 'react';
   const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;
-  export type { ReactComponent };
+  // biome-ignore lint: ambient module type declaration
+  export { ReactComponent };
   export default ReactComponent;
 }
 
