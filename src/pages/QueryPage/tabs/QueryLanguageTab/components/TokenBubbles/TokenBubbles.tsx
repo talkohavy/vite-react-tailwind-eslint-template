@@ -26,7 +26,7 @@ export default function TokenBubbles(props: TokenBubblesProps) {
     const errorTokens: Token[] = [];
 
     filteredTokens.forEach((token, index) => {
-      if (token.type === TokenTypes.EOF) return;
+      if (token.type === TokenTypes.EndOfLine) return;
 
       if (index < firstErrorTokenIndex) {
         validTokens.push(token);
