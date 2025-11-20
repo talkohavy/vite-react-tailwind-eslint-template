@@ -17,11 +17,12 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
   const { type: nodeType, isExpanded: initialIsExpanded, items: initialItems, icon } = node;
 
   const [isExpanded, setIsExpanded] = useState(initialIsExpanded || false);
+  const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
+  const [isLoading, setIsLoading] = useState(false);
+
   const isSelected = useMemo(() => {
     return node.id === selectedNodeId;
   }, [selectedNodeId, node.id]);
-  const [items, setItems] = useState<Array<TreeNode>>(initialItems || []);
-  const [isLoading, setIsLoading] = useState(false);
 
   const isFolderType = nodeType === NodeTypes.Folder;
   const canExpand = isFolderType && !isLoading;
