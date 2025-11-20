@@ -2,16 +2,18 @@ import { useState, useCallback, type SetStateAction } from 'react';
 import type { TreeNode } from '../types';
 import { collapseAllRecursive } from './utils/collapseAllRecursive';
 import { expandAllRecursive } from './utils/expandAllRecursive';
+import { findNodeById } from './utils/findNodeById';
 import { updateTreeRecursively } from './utils/updateTreeRecursively';
 
 type UseTreeViewLogicProps = {
   initialState: TreeNode[];
   initialSelectedNodeId: string | number | null;
   onSelectedNodeIdChange?: (nodeId: string | number) => void;
+  onNodeExpand?: (node: TreeNode) => Promise<Array<TreeNode>> | undefined;
 };
 
 export function useTreeViewLogic(props: UseTreeViewLogicProps) {
-  const { initialState, initialSelectedNodeId, onSelectedNodeIdChange } = props;
+  const { initialState, initialSelectedNodeId, onSelectedNodeIdChange, onNodeExpand } = props;
 
   const [treeData, setTreeData] = useState(initialState);
   const [selectedNodeId, setSelectedNodeId] = useState(initialSelectedNodeId);
@@ -32,10 +34,34 @@ export function useTreeViewLogic(props: UseTreeViewLogicProps) {
   }, []);
 
   const expandNode = useCallback(
-    (nodeId: string) => {
-      updateNode(nodeId, { isExpanded: true });
+    async (nodeId: string) => {
+      const node = findNodeById(treeData, nodeId);
+
+      if (!node) return;
+
+      const hasLoadFunction = !!onNodeExpand;
+      const hasChildren = !!node.items?.length;
+      const shouldFetchChildren = hasLoadFunction && !hasChildren && node.type === 'folder';
+
+      if (shouldFetchChildren) {
+        updateNode(nodeId, { isLoading: true });
+
+        try {
+          const newItems = await onNodeExpand(node);
+
+          if (newItems) {
+            updateNode(nodeId, { items: newItems, isLoading: false, isExpanded: true });
+          } else {
+            updateNode(nodeId, { isLoading: false, isExpanded: true });
+          }
+        } catch {
+          updateNode(nodeId, { isLoading: false, isExpanded: true });
+        }
+      } else {
+        updateNode(nodeId, { isExpanded: true });
+      }
     },
-    [updateNode],
+    [updateNode, treeData, onNodeExpand],
   );
 
   const collapseNode = useCallback(
