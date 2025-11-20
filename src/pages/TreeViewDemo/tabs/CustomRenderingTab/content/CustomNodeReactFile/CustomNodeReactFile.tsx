@@ -1,26 +1,36 @@
-import type { TreeNode } from '../../../../../../components/TreeView';
+import clsx from 'clsx';
+import type { TreeNodeContentProps } from '../../../../../../components/TreeView/types';
+import { addDataAttributeWhen } from '../../../../../../common/utils/addDataAttributeWhen';
 
-type CustomNodeReactFileProps = {
-  node: TreeNode;
-};
-
-export default function CustomNodeReactFile(props: CustomNodeReactFileProps) {
-  const { node } = props;
+export default function CustomNodeReactFile(props: TreeNodeContentProps) {
+  const { node, level, indentSize, isSelected, handleNodeClick } = props;
 
   return (
-    <div className='flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border border-blue-200 dark:border-blue-800 mb-1'>
-      <span className='text-blue-600 dark:text-blue-400 mr-3'>⚛️</span>
+    <div
+      style={{ marginLeft: level * indentSize }}
+      className={clsx(
+        'flex items-center p-3 rounded-md border mb-1 transition-all duration-200 cursor-pointer',
+        isSelected
+          ? 'bg-blue-100 dark:bg-blue-900/40 border-blue-400 dark:border-blue-600'
+          : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30',
+      )}
+      onClick={handleNodeClick}
+      data-selected={addDataAttributeWhen(isSelected)}
+    >
+      <span className='text-blue-600 dark:text-blue-400 mr-3 text-xl'>⚛️</span>
 
       <div className='flex-1'>
-        <span className='font-semibold text-blue-800 dark:text-blue-300'>node.name</span>node.metadata && (
-        <div className='flex items-center gap-2 mt-1'>
-          <span className='text-xs text-blue-500 dark:text-blue-400 bg-blue-100 dark:bg-blue-800/50 px-2 py-1 rounded'>
-            React Component
-          </span>
+        <span className='font-semibold text-blue-800 dark:text-blue-300'>{node.name}</span>
 
-          <span className='text-xs text-gray-500 dark:text-gray-400'>{node.metadata?.size ?? 'unknown'}</span>
-        </div>
-        )
+        {node.metadata && (
+          <div className='flex items-center gap-2 mt-1'>
+            <span className='text-xs text-blue-500 dark:text-blue-400 bg-blue-100 dark:bg-blue-800/50 px-2 py-1 rounded'>
+              React Component
+            </span>
+
+            <span className='text-xs text-gray-500 dark:text-gray-400'>{node.metadata.size ?? 'unknown'}</span>
+          </div>
+        )}
       </div>
     </div>
   );

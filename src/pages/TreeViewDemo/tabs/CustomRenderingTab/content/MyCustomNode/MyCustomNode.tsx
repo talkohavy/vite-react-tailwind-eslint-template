@@ -6,28 +6,28 @@ import CustomNodeJavascriptFile from '../CustomNodeJavascriptFile';
 import CustomNodeReactFile from '../CustomNodeReactFile';
 
 export default function MyCustomNode(props: TreeNodeContentProps) {
-  const { node } = props;
+  const { node, renderNode: DefaultTreeNodeContent } = props;
 
   // Custom rendering for React/TypeScript files
   if (node.type === NodeTypes.File && node.name.endsWith('.tsx')) {
-    return <CustomNodeReactFile node={node} />;
+    return <CustomNodeReactFile {...props} />;
   }
 
   // Custom rendering for JavaScript files
   if (node.type === NodeTypes.File && node.name.endsWith('.js')) {
-    return <CustomNodeJavascriptFile node={node} />;
+    return <CustomNodeJavascriptFile {...props} />;
   }
 
   // Custom rendering for CSS files
   if (node.type === NodeTypes.File && node.name.endsWith('.css')) {
-    return <CustomNodeCssFile node={node} />;
+    return <CustomNodeCssFile {...props} />;
   }
 
-  // Custom rendering for folders with metadata
-  if (node.type === NodeTypes.Folder && node.metadata) {
-    return <CustomNodeFolder node={node} />;
+  // Custom rendering for folders
+  if (node.type === NodeTypes.Folder) {
+    return <CustomNodeFolder {...props} />;
   }
 
-  // Use default rendering for other node types
-  return null;
+  // Use default rendering for other node types (JSON, images, etc.)
+  return DefaultTreeNodeContent ? <DefaultTreeNodeContent {...props} /> : null;
 }
