@@ -5,6 +5,7 @@ import {
   SpecialChars,
   type TokenContext,
   type TokenContextWithKey,
+  Comparators,
 } from 'create-query-language';
 import type { CompletionItem, KeyConfig } from '../../../../types';
 import { areQuotesNeeded } from '../../../utils/areQuotesNeeded';
@@ -103,19 +104,19 @@ export const TOKEN_TYPE_HANDLERS: Record<ContextTypeValues, (props: HandlerProps
   },
   // TODO: When we start supporting comparators, comment this back in.
   [ContextTypes.Comparator]: (_props) => {
-    // 	const completions: CompletionItem[] = [];
-    //
-    // 	Object.values(Comparators).forEach((comparator) => {
-    // 		completions.push({
-    // 			type: ContextTypes.Comparator,
-    // 			value: comparator,
-    // 			label: comparator,
-    // 			insertText: comparator,
-    // 		});
-    // 	});
-    //
-    // 	return completions;
-    return [];
+    const completions: CompletionItem[] = [];
+
+    Object.values(Comparators).forEach((comparator) => {
+      completions.push({
+        type: ContextTypes.Comparator,
+        value: comparator,
+        label: comparator,
+        insertText: comparator,
+        priority: 9,
+      });
+    });
+
+    return completions;
   },
   [ContextTypes.Colon]: (_props) => {
     const completions: CompletionItem[] = [];
