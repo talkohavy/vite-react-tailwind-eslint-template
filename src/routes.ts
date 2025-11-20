@@ -39,6 +39,7 @@ const TreeViewDemoPage = lazy(() => import('./pages/TreeViewDemo'));
 const StaticTreeTab = lazy(() => import('./pages/TreeViewDemo/tabs/StaticTreeTab'));
 const DynamicTreeTab = lazy(() => import('./pages/TreeViewDemo/tabs/DynamicTreeTab'));
 const CustomRenderingTab = lazy(() => import('./pages/TreeViewDemo/tabs/CustomRenderingTab'));
+const RefControlTab = lazy(() => import('./pages/TreeViewDemo/tabs/RefControlTab'));
 
 export const routes: Array<Route> = [
   {
@@ -81,6 +82,12 @@ export const routes: Array<Route> = [
         text: 'Custom Rendering',
         activeNames: [`${BASE_URL}/tree-view-demo/custom-rendering`],
         Component: CustomRenderingTab,
+      },
+      {
+        to: `${BASE_URL}/tree-view-demo/ref-control`,
+        text: 'Ref Control',
+        activeNames: [`${BASE_URL}/tree-view-demo/ref-control`],
+        Component: RefControlTab,
       },
     ],
   },
