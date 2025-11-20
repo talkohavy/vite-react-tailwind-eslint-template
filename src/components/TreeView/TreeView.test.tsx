@@ -267,8 +267,10 @@ describe('TreeView', () => {
       expect(packageJsonNode).toBeInTheDocument();
       expect(packageJsonNode).toHaveTextContent('package.json');
 
-      // Expand the src folder to access its children
-      fireEvent.click(srcNode);
+      // Expand src folder to access its children
+      const srcButton = screen.getByRole('button', { name: 'src' });
+      const srcExpandButton = within(srcButton).getByRole('button');
+      fireEvent.click(srcExpandButton);
 
       // Check second level nodes have correct test IDs
       const componentsNode = screen.getByTestId('i1-i1');
@@ -280,7 +282,9 @@ describe('TreeView', () => {
       expect(appTsxNode).toHaveTextContent('App.tsx');
 
       // Expand components folder to access its children
-      fireEvent.click(componentsNode);
+      const componentsButton = screen.getByRole('button', { name: 'components' });
+      const componentsExpandButton = within(componentsButton).getByRole('button');
+      fireEvent.click(componentsExpandButton);
 
       // Check third level nodes have correct test IDs
       const buttonTsxNode = screen.getByTestId('i1-i1-i1');
@@ -290,6 +294,88 @@ describe('TreeView', () => {
       const inputTsxNode = screen.getByTestId('i1-i1-i2');
       expect(inputTsxNode).toBeInTheDocument();
       expect(inputTsxNode).toHaveTextContent('Input.tsx');
+    });
+  });
+
+  describe('Selection Functionality', () => {
+    it('should call onSelectedNodeIdChange when a node is clicked', () => {
+      const mockOnSelectedNodeIdChange = jest.fn();
+
+      render(<TreeView data={mockStaticData} onSelectedNodeIdChange={mockOnSelectedNodeIdChange} />);
+
+      const packageJsonNode = screen.getByTestId('i2');
+      fireEvent.click(packageJsonNode);
+
+      expect(mockOnSelectedNodeIdChange).toHaveBeenCalledWith('6');
+    });
+
+    it('should show selected state when initialSelectedNodeId matches node id', () => {
+      render(<TreeView data={mockStaticData} initialSelectedNodeId='6' />);
+
+      const packageJsonNode = screen.getByTestId('i2');
+      expect(packageJsonNode).toHaveClass('selected');
+    });
+
+    it('should not call onSelectedNodeIdChange when clicking an already selected node', () => {
+      const mockOnSelectedNodeIdChange = jest.fn();
+
+      render(
+        <TreeView
+          data={mockStaticData}
+          onSelectedNodeIdChange={mockOnSelectedNodeIdChange}
+          initialSelectedNodeId='6'
+        />,
+      );
+
+      const packageJsonNode = screen.getByTestId('i2');
+      fireEvent.click(packageJsonNode);
+
+      // Should not call the callback when clicking the same node
+      expect(mockOnSelectedNodeIdChange).not.toHaveBeenCalled();
+    });
+
+    it('should select a different node when clicked', () => {
+      const mockOnSelectedNodeIdChange = jest.fn();
+
+      render(
+        <TreeView
+          data={mockStaticData}
+          onSelectedNodeIdChange={mockOnSelectedNodeIdChange}
+          initialSelectedNodeId='6' // package.json is selected
+        />,
+      );
+
+      // Click on App.tsx (which requires expanding the src folder first)
+      const srcButton = screen.getByRole('button', { name: 'src' });
+      const expandButton = within(srcButton).getByRole('button');
+      fireEvent.click(expandButton); // Expand src folder
+
+      const appTsxNode = screen.getByTestId('i1-i2');
+      fireEvent.click(appTsxNode);
+
+      expect(mockOnSelectedNodeIdChange).toHaveBeenCalledWith('5');
+    });
+
+    it('should work with nested nodes', async () => {
+      const mockOnSelectedNodeIdChange = jest.fn();
+
+      render(<TreeView data={mockStaticData} onSelectedNodeIdChange={mockOnSelectedNodeIdChange} />);
+
+      // Expand src folder
+      const srcButton = screen.getByRole('button', { name: 'src' });
+      const srcExpandButton = within(srcButton).getByRole('button');
+      fireEvent.click(srcExpandButton);
+
+      // Expand components folder
+      const componentsButton = screen.getByRole('button', { name: 'components' });
+      const componentsExpandButton = within(componentsButton).getByRole('button');
+      fireEvent.click(componentsExpandButton);
+
+      // Click on Button.tsx
+      const buttonTsxNode = screen.getByTestId('i1-i1-i1');
+      fireEvent.click(buttonTsxNode);
+
+      expect(mockOnSelectedNodeIdChange).toHaveBeenCalledWith('3');
     });
   });
 });
