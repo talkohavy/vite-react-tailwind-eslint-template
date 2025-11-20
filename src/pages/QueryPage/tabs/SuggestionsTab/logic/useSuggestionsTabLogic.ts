@@ -14,7 +14,6 @@ export function useSuggestionsTabLogic() {
   const parseResult = useQueryParser({ query });
 
   const { completions, expectedTypes } = useSuggestionEngine({
-    query,
     cursorPosition,
     keyConfigs,
     tokens: parseResult.tokens,
