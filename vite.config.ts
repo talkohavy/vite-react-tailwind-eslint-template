@@ -53,14 +53,34 @@ export default defineConfig(({ mode }) => ({
     assetsInlineLimit: 4096, // <--- default is 4096. Imported or referenced assets that are smaller than this threshold will be inlined as base64 URLs to avoid extra http requests. Set to 0 to disable inlining altogether.
     cssCodeSplit: true, // <--- default is true. Enable/disable CSS code splitting. When enabled, CSS imported in async chunks will be inlined into the async chunk itself and inserted when the chunk is loaded. If disabled, all CSS in the entire project will be extracted into a single CSS file.
     cssMinify: 'esbuild', // <--- Options are: 'esbuild' (default) | 'lightningcss'.
-    // rollupOptions: {
-    //   output: {
-    //     chunkFileNames: 'static/js/[name].[hash].js', // <--- defaults to assets/[name].[hash].js
-    //     sourcemapFileNames: 'sourcemaps/[name].[hash].js.map', // <--- defaults to [name].[hash].js.map. You can also use one that's called [chunkhash].
-    //     assetFileNames: () => 'static/css/[name].[hash:12].[ext]', // <--- this is for css files! defaults to 'assets/
-    //     // sourcemapBaseUrl: 'http://localhost:5050', // When using sourcemaps, to the end of each '.js' file, a relative path is added which points to its sourcemap. By default, this relative path points to the root of the 'dist' folder. This is fine! because then in the serving server I can modify the req.url to point to the correct path, which is `sourcemaps/${sourcemapFilename}`, as you can see at `sourcemapFileNames`.
-    //   },
-    // },
+    rollupOptions: {
+      output: {
+        entryFileNames: 'js/[name].[hash].js', // <--- JS entry files
+        chunkFileNames: 'js/[name].[hash].js', // <--- JS chunk files
+        assetFileNames: (assetInfo) => {
+          // Organize assets by file type
+          const info = assetInfo.name || '';
+
+          // CSS files
+          if (/\.css$/i.test(info)) {
+            return 'css/[name].[hash][extname]';
+          }
+
+          // Image files
+          if (/\.(png|jpe?g|gif|svg|webp|avif|ico|bmp|tiff?)$/i.test(info)) {
+            return 'images/[name].[hash][extname]';
+          }
+
+          // Font files
+          if (/\.(woff2?|eot|ttf|otf)$/i.test(info)) {
+            return 'fonts/[name].[hash][extname]';
+          }
+
+          // Other assets
+          return 'assets/[name].[hash][extname]';
+        },
+      },
+    },
   },
   preview: { port: 3000, strictPort: true, open: false }, // When running `npm run preview` locally, no loadEnvVariables process occurs, so VITE_PORT would be undefined. On a CI however, there are always ENV VARIABLES set in the global scope so it *would* work.
   css: {
@@ -68,6 +88,12 @@ export default defineConfig(({ mode }) => ({
       generateScopedName: mode === 'development' ? '[name].[local].[hash:base64:3]' : '[hash:base64:7]', // <--- A className named "sharedBtn" found at a css file named "App.module.css" would turn into: Button-module-sharedBtn-LyEfZ. `name` is the component name, and `local` is the css class name.
       localsConvention: 'camelCase', // <--- default to `undefined`. Leaving it as `undefined` doesn't work, so you need to choose one. camelCaseOnly would ignore a style like this: 'resize_none', whereas camelCase would accept it.
       scopeBehaviour: 'local', // <--- Defaults to 'local'. Always use 'local'. 'global' would disregard the .module.css extension, and make all css as global.
+    },
+    preprocessorOptions: {
+      scss: {
+        // Allow SASS to resolve imports from project root (so 'src/...' paths work)
+        loadPaths: [path.resolve(__dirname)],
+      },
     },
     devSourcemap: true, // <--- defaults to `false`. The provided value here will affect the Elements --> Styles tab. With `true`, the clickable link would read "Button.module.css", and clicking it would direct you to the file. When `false`, it would read `<style>`, and clicking it would direct you to a <style> element on the <head> element.
     transformer: 'postcss', // <--- Defaults to `postcss`. Options are: 'postcss' (default) | 'lightningcss'. While Lightning CSS handles the most commonly used PostCSS plugins like autoprefixer, postcss-preset-env, and CSS modules, you may still need PostCSS for more custom plugins like TailwindCSS. If that's the case, your PostCSS config will be picked up automatically.
