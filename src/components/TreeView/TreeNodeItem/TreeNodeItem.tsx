@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import type { TreeNodeItemProps } from '../types';
 import { addDataAttributeWhen } from '../../../common/utils/addDataAttributeWhen';
 import { DEFAULT_INDENT_SIZE, TREE_VIEW_NODE_CLASS, TREE_VIEW_NODE_ITEMS_LIST_CLASS } from '../logic/constants';
 import DefaultTreeNodeContent from './content/DefaultTreeNodeContent';
 import { useTreeNodeItemLogic } from './logic/useTreeNodeItemLogic';
 
-export default function TreeNodeItem(props: TreeNodeItemProps) {
+const TreeNodeItem = memo((props: TreeNodeItemProps) => {
   const {
     level,
     selectedNodeId,
@@ -74,4 +75,8 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
       )}
     </div>
   );
-}
+});
+
+TreeNodeItem.displayName = 'TreeNodeItem';
+
+export default TreeNodeItem;
