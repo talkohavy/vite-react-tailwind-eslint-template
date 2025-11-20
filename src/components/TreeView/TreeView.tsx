@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import type { SharedNodeEventHandlers, SharedNodeProps, TreeNode } from './types';
-import { DEFAULT_INDENT_SIZE } from './logic/constants';
+import { DEFAULT_INDENT_SIZE, TREE_VIEW_ROOT_CLASS } from './logic/constants';
 import { useTreeViewLogic } from './logic/useTreeViewLogic';
 import TreeNodeItem from './TreeNodeItem';
 import styles from './TreeView.module.scss';
@@ -42,7 +42,7 @@ export default function TreeView(props: TreeViewProps) {
   });
 
   return (
-    <div className={clsx(styles.treeView, className)} data-test-id={testId}>
+    <div className={clsx(TREE_VIEW_ROOT_CLASS, styles.treeView, className)} data-test-id={testId}>
       {treeData.map((node, index) => (
         <TreeNodeItem
           key={node.id}
@@ -57,7 +57,7 @@ export default function TreeView(props: TreeViewProps) {
           onNodeExpand={onNodeExpand}
           updateNode={updateNode}
           renderNode={renderNode}
-          testIdPath={`i${index + 1}`}
+          testIdPath={`tree-view-i${index + 1}`}
         />
       ))}
     </div>

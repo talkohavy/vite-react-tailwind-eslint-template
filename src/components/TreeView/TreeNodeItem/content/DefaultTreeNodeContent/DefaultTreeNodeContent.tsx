@@ -1,7 +1,12 @@
 import type { ReactNode } from 'react';
+import { addDataAttributeWhen } from '@src/common/utils/addDataAttributeWhen';
 import clsx from 'clsx';
 import type { TreeNodeItemProps } from '../../TreeNodeItem';
-import { NodeTypes } from '../../../logic/constants';
+import {
+  TREE_VIEW_NODE_CONTENT_AS_BUTTON_CLASS,
+  TREE_VIEW_NODE_CONTENT_CLASS,
+  TREE_VIEW_NODE_CONTENT_EXPAND_BUTTON_CLASS,
+} from '../../../logic/constants';
 import ExpandButton from '../ExpandButton';
 import styles from './DefaultTreeNodeContent.module.scss';
 
@@ -32,22 +37,25 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
     testIdPath = '',
   } = props;
 
-  const { name, type: nodeType } = node;
+  const { name } = node;
 
   return (
-    <div className={styles.treeNodeContent}>
+    <div className={clsx(TREE_VIEW_NODE_CONTENT_CLASS, styles.treeNodeContent)}>
       <button
         type='button'
         onClick={handleNodeClick}
-        data-selected={isSelected}
         className={clsx(
+          TREE_VIEW_NODE_CONTENT_AS_BUTTON_CLASS,
           styles.treeNodeInfoButton,
-          nodeType === NodeTypes.File ? styles.fileType : styles.folderType,
+          isFolderType ? styles.folderType : styles.fileType,
           isFolderType && shouldExpandOnClick ? styles.pointerCursor : styles.defaultCursor,
           isSelected && styles.selected,
         )}
+        data-folder-type={addDataAttributeWhen(isFolderType)}
+        data-file-type={addDataAttributeWhen(!isFolderType)}
+        data-selected={addDataAttributeWhen(isSelected)}
         style={{ marginLeft: level * indentSize }}
-        data-test-id={testIdPath}
+        data-test-id={`${testIdPath}-node-as-button`}
       >
         {isFolderType && (
           <ExpandButton
@@ -57,10 +65,12 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
             }}
             disabled={isLoading}
             className={clsx(
+              TREE_VIEW_NODE_CONTENT_EXPAND_BUTTON_CLASS,
               styles.btnExpandFolder,
               isExpanded && styles.btnIsExpanded,
               isLoading && styles.btnIsLoading,
             )}
+            testId={testIdPath}
           />
         )}
 
@@ -70,10 +80,16 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
           <span className={styles.nodeIcon}>{typeof IconToShow === 'string' ? IconToShow : <IconToShow />}</span>
         )}
 
-        <span className={styles.nodeLabel}>{name}</span>
+        <span className={styles.nodeLabel} data-test-id={`${testIdPath}-label`}>
+          {name}
+        </span>
       </button>
 
-      {isLoading && <span className={styles.loadingText}>Loading...</span>}
+      {isLoading && (
+        <span className={styles.loadingText} data-test-id={`${testIdPath}-is-loading`}>
+          Loading...
+        </span>
+      )}
     </div>
   );
 }
