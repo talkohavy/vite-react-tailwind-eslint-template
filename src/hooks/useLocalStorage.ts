@@ -7,7 +7,7 @@ export function useLocalStorage<T = any>(key: string, defaultValue?: T) {
     if (item) {
       try {
         return JSON.parse(item);
-      } catch (_error) {
+      } catch {
         return item;
       }
     }

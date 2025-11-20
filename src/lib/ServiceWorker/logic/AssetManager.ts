@@ -15,10 +15,10 @@ export class AssetManager {
     const cacheNames = await caches.keys();
     const cacheWhitelist = [STATIC_CACHE_NAME, DYNAMIC_CACHE_NAME];
     const cachesToDelete = cacheNames.filter((cacheName) => !cacheWhitelist.includes(cacheName));
-    const promiseArr = cachesToDelete.map((cacheName) => {
+    const promiseArr = cachesToDelete.map(async (cacheName) => {
       try {
-        caches.delete(cacheName);
-      } catch (_error) {
+        return caches.delete(cacheName);
+      } catch {
         console.log(`cacheName ${cacheName} does not exists. moving on...`);
       }
     });
