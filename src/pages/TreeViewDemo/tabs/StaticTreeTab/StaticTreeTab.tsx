@@ -17,7 +17,7 @@ export default function StaticTreeTab() {
         {/* TreeView Demo */}
         <div className='bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700'>
           <TreeView
-            data={staticTreeData}
+            initialState={staticTreeData}
             onNodeClick={handleNodeClick}
             className='max-h-96 overflow-auto'
             showIcons
