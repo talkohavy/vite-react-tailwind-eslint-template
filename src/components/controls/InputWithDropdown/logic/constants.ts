@@ -1,7 +1,6 @@
 export const INPUT_WITH_DROPDOWN_ROOT_CLASS = 'InputWithDropdownRoot';
 export const INPUT_WITH_DROPDOWN_CONTROL_CLASS = 'InputWithDropdownControl';
 export const INPUT_WITH_DROPDOWN_INPUT_CLASS = 'InputWithDropdownInput';
-export const INPUT_WITH_DROPDOWN_TRIGGER_CLASS = 'InputWithDropdownTrigger';
 export const INPUT_WITH_DROPDOWN_CLEAR_CLASS = 'InputWithDropdownClear';
 export const INPUT_WITH_DROPDOWN_ARROW_CLASS = 'InputWithDropdownArrow';
 export const INPUT_WITH_DROPDOWN_DROPDOWN_CLASS = 'InputWithDropdownDropdown';
