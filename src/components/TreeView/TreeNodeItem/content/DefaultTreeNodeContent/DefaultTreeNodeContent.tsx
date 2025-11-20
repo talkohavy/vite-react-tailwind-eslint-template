@@ -12,6 +12,7 @@ type DefaultTreeNodeContentProps = TreeNodeItemProps & {
   iconToShow: string | (() => ReactNode) | null;
   handleNodeClick: () => void;
   handleExpandToggle: () => void;
+  testIdPath?: string;
 };
 
 export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProps) {
@@ -26,6 +27,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
     handleNodeClick,
     handleExpandToggle,
     shouldExpandOnClick,
+    testIdPath = '',
   } = props;
 
   const { name, type: nodeType } = node;
@@ -41,6 +43,7 @@ export default function DefaultTreeNodeContent(props: DefaultTreeNodeContentProp
         )}
         style={{ marginLeft: level * indentSize }}
         onClick={handleNodeClick}
+        data-test-id={testIdPath}
       >
         {isFolderType && (
           <ExpandButton

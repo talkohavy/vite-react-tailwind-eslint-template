@@ -8,6 +8,8 @@ export type TreeNodeItemProps = Required<SharedNodeProps> &
     node: TreeNode;
     level: number;
     updateNode: (nodeId: string, updates: Partial<TreeNode>) => void;
+    testId?: string;
+    testIdPath?: string;
   };
 
 export default function TreeNodeItem(props: TreeNodeItemProps) {
@@ -21,6 +23,8 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
     indentSize = DEFAULT_INDENT_SIZE,
     shouldExpandOnClick,
     updateNode,
+    testId = '',
+    testIdPath = '',
   } = props;
 
   const { isFolderType, isLoading, isExpanded, iconToShow, handleNodeClick, handleExpandToggle, items } =
@@ -39,12 +43,13 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
           iconToShow={iconToShow}
           handleNodeClick={handleNodeClick}
           handleExpandToggle={handleExpandToggle}
+          testIdPath={testIdPath}
         />
       )}
 
       {isExpanded && items.length > 0 && (
         <div>
-          {items.map((child) => (
+          {items.map((child, index) => (
             <TreeNodeItem
               key={child.id}
               node={child}
@@ -56,6 +61,8 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
               indentSize={indentSize}
               shouldExpandOnClick={shouldExpandOnClick}
               updateNode={updateNode}
+              testId={testId}
+              testIdPath={`${testIdPath}-i${index + 1}`}
             />
           ))}
         </div>
