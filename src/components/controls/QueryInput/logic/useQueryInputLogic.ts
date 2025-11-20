@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import type { OptionGroup } from '@src/components/controls/InputWithDropdown';
-import type { CompletionItem } from './hooks/useSuggestionEngine/types';
+import type { CompletionItem } from '../types';
 import { GroupLabels } from './constants';
 
 type UseQueryInputLogicProps = {

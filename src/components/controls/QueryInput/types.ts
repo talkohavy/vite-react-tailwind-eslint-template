@@ -1,3 +1,6 @@
+import type { ReactNode } from 'react';
+import type { ContextTypeValues } from 'create-query-language';
+
 /**
  * Configuration for key values
  */
@@ -14,3 +17,11 @@ export interface KeyConfig {
   description?: string;
   values?: ValueConfig[];
 }
+
+export type CompletionItem = {
+  type: ContextTypeValues;
+  value: string;
+  label: string | ReactNode | (() => ReactNode);
+  insertText: string;
+  priority: number;
+};

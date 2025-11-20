@@ -1,5 +1,5 @@
 import type { Token } from 'create-query-language';
-import type { CompletionItem } from '../useSuggestionEngine/types';
+import type { CompletionItem } from '../../../types';
 
 export type InsertionContext = {
   token: Token;
