@@ -29,11 +29,14 @@ export type TreeNode = {
  * @example
  * const treeRef = useRef<TreeViewRef>(null);
  * // Later...
- * treeRef.current?.expandNode('folder-123');
+ * await treeRef.current?.expandNode('folder-123'); // Returns a promise if node needs to load children
  */
 export type TreeViewRef = {
-  /** Expand a specific node by ID */
-  expandNode: (nodeId: string) => void;
+  /**
+   * Expand a specific node by ID.
+   * Returns a promise that resolves when the node is expanded (and children are loaded if needed).
+   */
+  expandNode: (nodeId: string) => Promise<void>;
   /** Collapse a specific node by ID */
   collapseNode: (nodeId: string) => void;
   /** Select a specific node by ID */
@@ -111,6 +114,8 @@ export type TreeNodeItemProps = SharedNodeProps & {
   level: number;
   updateNode: (nodeId: string, updates: Partial<TreeNode>) => void;
   handleSelectNodeId: (nodeId: string | number) => void;
+  expandNode: (nodeId: string) => Promise<void>;
+  collapseNode: (nodeId: string) => void;
   testId?: string;
 };
 

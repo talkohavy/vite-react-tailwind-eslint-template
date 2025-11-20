@@ -16,6 +16,8 @@ const TreeNodeItem = memo((props: TreeNodeItemProps) => {
     onNodeClick,
     onNodeExpand,
     updateNode,
+    expandNode,
+    collapseNode,
     renderNode: CustomTreeNodeContent,
     testId = '',
   } = props;
@@ -67,6 +69,8 @@ const TreeNodeItem = memo((props: TreeNodeItemProps) => {
               onNodeClick={onNodeClick}
               onNodeExpand={onNodeExpand}
               updateNode={updateNode}
+              expandNode={expandNode}
+              collapseNode={collapseNode}
               renderNode={CustomTreeNodeContent}
               testId={`${testId}-i${index + 1}`}
             />

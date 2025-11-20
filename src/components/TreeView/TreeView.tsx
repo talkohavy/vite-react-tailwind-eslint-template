@@ -32,7 +32,7 @@ function TreeViewToForward(props: TreeViewProps, ref: React.Ref<TreeViewRef>) {
     collapseAll,
     getTreeData,
     getSelectedNodeId,
-  } = useTreeViewLogic({ initialState, initialSelectedNodeId, onSelectedNodeIdChange });
+  } = useTreeViewLogic({ initialState, initialSelectedNodeId, onSelectedNodeIdChange, onNodeExpand });
 
   useImperativeHandle(
     ref,
@@ -63,6 +63,8 @@ function TreeViewToForward(props: TreeViewProps, ref: React.Ref<TreeViewRef>) {
           onNodeClick={onNodeClick}
           onNodeExpand={onNodeExpand}
           updateNode={updateNode}
+          expandNode={expandNode}
+          collapseNode={collapseNode}
           renderNode={renderNode}
           testId={`tree-view-i${index + 1}`}
         />
