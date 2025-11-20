@@ -1,22 +1,21 @@
-import ContextInfo from './components/ContextInfo';
-import QueryInput from './components/QueryInput';
+import QueryInput from './components/QueryInput/QueryInput';
 import TokenBubbles from './components/TokenBubbles';
+import ParseErrorDisplayer from './content/ParseErrorDisplayer';
 import { useQueryLanguageTabLogic } from './logic/useQueryLanguageTabLogic';
 
 export default function QueryLanguageTab() {
   const {
+    inputRef,
     query,
     onQueryChange,
-    parseResult,
+    isDropdownOpen,
     completions,
     onCompletionSelect,
-    isDropdownOpen,
-    cursorPosition,
     setCursorPosition,
-    expectedTypes,
-    inputRef,
+    handleDropdownOpenChange,
+    parseResult,
     filterScheme,
-    firstErrorTokenIndex,
+    errors,
   } = useQueryLanguageTabLogic();
 
   return (
@@ -25,7 +24,7 @@ export default function QueryLanguageTab() {
         <div className='dark:bg-gray-800 rounded-lg border border-gray-700 p-6'>
           <h2 className='text-xl font-semibold mb-4'>Query Input</h2>
 
-          <TokenBubbles tokens={parseResult.tokens} firstErrorTokenIndex={firstErrorTokenIndex} />
+          <TokenBubbles tokens={parseResult.tokens} />
 
           <QueryInput
             ref={inputRef}
@@ -33,16 +32,12 @@ export default function QueryLanguageTab() {
             onQueryChange={onQueryChange}
             completions={completions}
             onCompletionSelect={onCompletionSelect}
-            isDropdownOpen={isDropdownOpen}
             setCursorPosition={setCursorPosition}
+            isDropdownOpen={isDropdownOpen}
+            onDropdownOpenChange={handleDropdownOpenChange}
           />
 
-          <ContextInfo
-            cursorPosition={cursorPosition}
-            expectedTypes={expectedTypes}
-            completions={completions}
-            query={query}
-          />
+          {errors.length > 0 && <ParseErrorDisplayer errors={errors} />}
         </div>
 
         <div className='bg-gray-800 rounded-lg border border-gray-700 p-6'>
