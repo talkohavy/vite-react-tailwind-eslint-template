@@ -1,4 +1,4 @@
-import QueryInput from './components/QueryInput/QueryInput';
+import QueryInput from '@src/components/controls/QueryInput';
 import TokenBubbles from './components/TokenBubbles';
 import ParseErrorDisplayer from './content/ParseErrorDisplayer';
 import { useQueryLanguageTabLogic } from './logic/useQueryLanguageTabLogic';
