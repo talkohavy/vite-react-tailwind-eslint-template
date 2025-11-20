@@ -1,15 +1,22 @@
-import { forwardRef, useMemo } from 'react';
-import { Combobox as ComboboxOriginal, createListCollection, useCombobox } from '@ark-ui/react/combobox';
-import { Portal } from '@ark-ui/react/portal';
+import { forwardRef } from 'react';
+import { Portal, Combobox as ComboboxOriginal } from '@ark-ui/react';
 import clsx from 'clsx';
-import type { SelectOption } from '../Select/types';
+import type { Option, OptionGroup, OpenChangeDetails } from './types';
 import CloseIcon from '../../svgs/CloseIcon';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './InputWithDropdown.module.scss';
-import { InputWithDropdownClasses } from './logic/constants';
-
-type InputValueChangeDetails = ComboboxOriginal.InputValueChangeDetails;
-type SelectionDetails = ComboboxOriginal.SelectionDetails;
+import {
+  INPUT_WITH_DROPDOWN_ARROW_CLASS,
+  INPUT_WITH_DROPDOWN_CLEAR_CLASS,
+  INPUT_WITH_DROPDOWN_CONTROL_CLASS,
+  INPUT_WITH_DROPDOWN_DROPDOWN_CLASS,
+  INPUT_WITH_DROPDOWN_INPUT_CLASS,
+  INPUT_WITH_DROPDOWN_ITEM_CLASS,
+  INPUT_WITH_DROPDOWN_ITEM_GROUP_LABEL_CLASS,
+  INPUT_WITH_DROPDOWN_ROOT_CLASS,
+} from './logic/constants';
+import { useInputWithDropdownLogic } from './logic/useInputWithDropdownLogic';
+import './styles.css';
 
 const {
   RootProvider,
@@ -21,21 +28,23 @@ const {
   Positioner,
   Content,
   ItemGroup,
+  ItemGroupLabel,
   Item,
   ItemText,
   ItemIndicator,
 } = ComboboxOriginal;
 
-type InputWithDropdownProps = {
+export type InputWithDropdownProps = {
   value: string;
   onChange: (value: string) => void;
-  onItemSelect: (item: SelectOption) => void;
+  onItemSelect: (item: Option) => void;
   onKeyDown?: (e: any) => void;
   onMousedown?: (e: any) => void;
   /**
-   * Dynamic options that can change at any time
+   * Dynamic options that can change at any time.
+   * Can be either a flat array of options or an array of option groups.
    */
-  options: Array<SelectOption>;
+  options: Array<Option> | Array<OptionGroup>;
   placeholder?: string;
   label?: string;
   /**
@@ -61,77 +70,56 @@ type InputWithDropdownProps = {
   triggerClassName?: string;
   dropdownClassName?: string;
   itemClassName?: string;
+  itemGroupLabelClassName?: string;
   clearIconClassName?: string;
+  /**
+   * Controls whether the dropdown is open
+   */
+  isOpen?: boolean;
+  /**
+   * Callback when open state changes
+   */
+  onOpenChange?: (details: OpenChangeDetails) => void;
+  /**
+   * @default false
+   */
+  showDropdownWhenEmpty?: boolean;
+  /**
+   * @default 'No results found'
+   */
+  noResultsLabel?: string;
 };
 
 function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.ForwardedRef<HTMLInputElement>) {
   const {
     value,
-    onChange,
-    onItemSelect,
     onKeyDown,
     onMousedown,
     label,
-    options,
     placeholder,
     showClear,
     showArrow = true,
-    allowCustomValue,
-    autoFocus,
-    closeOnSelect = true,
-    disabled,
-    isInvalid,
-    loop = true,
     className,
     rootClassName,
     triggerClassName,
     labelClassName,
     dropdownClassName,
     itemClassName,
+    itemGroupLabelClassName,
     clearIconClassName,
   } = props;
 
-  const collection = useMemo(() => createListCollection({ items: options }), [options]);
-
-  const handleInputChange = (details: InputValueChangeDetails) => {
-    // Just update the input value - no filtering logic
-    onChange(details.inputValue);
-  };
-
-  const handleSelect = (details: SelectionDetails) => {
-    const [selectedValue] = details.value;
-    const selectedItem = options.find((option) => option.value === selectedValue);
-
-    if (selectedItem) {
-      onItemSelect(selectedItem);
-    }
-  };
-
-  const combobox = useCombobox({
-    collection,
-    onInputValueChange: handleInputChange,
-    onSelect: handleSelect,
-    inputValue: value,
-    disabled,
-    invalid: isInvalid,
-    loopFocus: loop,
-    autoFocus,
-    allowCustomValue,
-    closeOnSelect,
-    selectionBehavior: 'preserve', // <--- This prevents the input from being replaced
-    defaultOpen: false,
-    openOnKeyPress: true, // <--- defaults to true
-  });
+  const { combobox, groupedOptions } = useInputWithDropdownLogic(props);
 
   return (
     <RootProvider value={combobox} className={rootClassName}>
-      <Label className={clsx(InputWithDropdownClasses.root, labelClassName)}>{label}</Label>
+      <Label className={clsx(INPUT_WITH_DROPDOWN_ROOT_CLASS, labelClassName)}>{label}</Label>
 
-      <Control className={clsx(InputWithDropdownClasses.control, styles.control, className)}>
+      <Control className={clsx(INPUT_WITH_DROPDOWN_CONTROL_CLASS, styles.control, className)}>
         <Input
           ref={ref}
           placeholder={placeholder}
-          className={clsx(InputWithDropdownClasses.input, styles.input)}
+          className={clsx(INPUT_WITH_DROPDOWN_INPUT_CLASS, styles.input)}
           onKeyDown={onKeyDown}
           onMouseDown={onMousedown}
         />
@@ -140,14 +128,14 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
           {showClear && (
             <ClearTrigger
               hidden={value.length === 0}
-              className={clsx(InputWithDropdownClasses.clear, styles.clearIcon, clearIconClassName)}
+              className={clsx(INPUT_WITH_DROPDOWN_CLEAR_CLASS, styles.clearIcon, clearIconClassName)}
             >
               <CloseIcon />
             </ClearTrigger>
           )}
 
           {showArrow && (
-            <Trigger className={clsx(InputWithDropdownClasses.arrow, styles.arrowTrigger, triggerClassName)}>
+            <Trigger className={clsx(INPUT_WITH_DROPDOWN_ARROW_CLASS, styles.arrowTrigger, triggerClassName)}>
               <DownArrow />
             </Trigger>
           )}
@@ -156,23 +144,42 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
 
       <Portal>
         <Positioner>
-          <Content className={clsx(InputWithDropdownClasses.dropdown, styles.dropdown, dropdownClassName)}>
-            <ItemGroup>
-              {/* <ItemGroupLabel>Frameworks</ItemGroupLabel> */}
-              {collection.items.map((item) => (
-                <Item
-                  key={item.value}
-                  item={item}
-                  className={clsx(InputWithDropdownClasses.item, styles.item, itemClassName)}
-                >
-                  <div className={styles.selectItemIndicator}>
-                    <ItemIndicator>✓</ItemIndicator>
-                  </div>
+          <Content className={clsx(INPUT_WITH_DROPDOWN_DROPDOWN_CLASS, styles.dropdown, dropdownClassName)}>
+            {groupedOptions.map((group, groupIndex) => {
+              const GroupLabel = group.groupLabel;
+              const RenderedGroupLabel = typeof GroupLabel === 'function' ? <GroupLabel /> : GroupLabel;
 
-                  <ItemText>{item.label}</ItemText>
-                </Item>
-              ))}
-            </ItemGroup>
+              return (
+                <ItemGroup key={`group-${groupIndex}`}>
+                  {RenderedGroupLabel && (
+                    <ItemGroupLabel
+                      className={clsx(INPUT_WITH_DROPDOWN_ITEM_GROUP_LABEL_CLASS, itemGroupLabelClassName)}
+                    >
+                      {RenderedGroupLabel}
+                    </ItemGroupLabel>
+                  )}
+
+                  {group.items.map((item) => {
+                    const Label = item.label;
+                    const RenderedLabel = typeof Label === 'function' ? <Label /> : Label;
+
+                    return (
+                      <Item
+                        key={item.value}
+                        item={item}
+                        className={clsx(INPUT_WITH_DROPDOWN_ITEM_CLASS, styles.item, itemClassName)}
+                      >
+                        <div className={styles.selectItemIndicator}>
+                          <ItemIndicator>✓</ItemIndicator>
+                        </div>
+
+                        <ItemText>{RenderedLabel}</ItemText>
+                      </Item>
+                    );
+                  })}
+                </ItemGroup>
+              );
+            })}
           </Content>
         </Positioner>
       </Portal>
