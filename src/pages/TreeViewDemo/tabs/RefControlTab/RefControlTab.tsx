@@ -9,8 +9,8 @@ export default function RefControlTab() {
   const [selectedNodeId, setSelectedNodeId] = useState<string | number | null>(null);
   const [treeDataState, setTreeDataState] = useState<TreeNode[] | null>(null);
 
-  function handleExpandNode(nodeId: string) {
-    treeRef.current?.expandNode(nodeId);
+  async function handleExpandNode(nodeId: string) {
+    await treeRef.current?.expandNode(nodeId);
   }
 
   function handleCollapseNode(nodeId: string) {
@@ -240,7 +240,10 @@ function MyComponent() {
         Collapse All
       </button>
       
-      <button onClick={() => treeRef.current?.expandNode('node-id')}>
+      <button onClick={async () => {
+        // expandNode is async - it loads children if needed
+        await treeRef.current?.expandNode('node-id');
+      }}>
         Expand Specific Node
       </button>
       

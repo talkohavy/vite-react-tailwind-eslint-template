@@ -16,9 +16,10 @@ export default function PlaygroundTab() {
     setLogs((prev) => [`[${timestamp}] ${message}`, ...prev].slice(0, 10));
   }
 
-  function handleExpandNode(nodeId: string) {
-    treeRef.current?.expandNode(nodeId);
+  async function handleExpandNode(nodeId: string) {
     addLog(`Expanding node: ${nodeId}`);
+    await treeRef.current?.expandNode(nodeId);
+    addLog(`Node expanded: ${nodeId}`);
   }
 
   function handleCollapseNode(nodeId: string) {
@@ -364,7 +365,11 @@ function MyPlayground() {
       />
       
       {/* Control buttons work with dynamically loaded nodes */}
-      <button onClick={() => treeRef.current?.expandNode('root')}>
+      <button onClick={async () => {
+        // expandNode is async - it will load children if needed
+        await treeRef.current?.expandNode('root');
+        console.log('Root expanded and children loaded!');
+      }}>
         Expand Root (will load children)
       </button>
       
