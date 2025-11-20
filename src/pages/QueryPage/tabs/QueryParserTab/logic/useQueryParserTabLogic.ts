@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQueryParser } from '../../../logic/hooks/useQueryParser';
+import { useQueryParser } from '@src/components/controls/QueryInput/logic/hooks/useQueryParser';
 import { usePositionInfoLogic } from './usePositionInfoLogic';
 import { useQueryInputLogic } from './useQueryInputLogic';
 
