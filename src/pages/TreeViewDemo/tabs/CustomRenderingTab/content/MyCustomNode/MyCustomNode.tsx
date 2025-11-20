@@ -1,10 +1,13 @@
-import { NodeTypes, type TreeNode } from '../../../../../../components/TreeView';
+import type { TreeNodeContentProps } from '@src/components/TreeView/types';
+import { NodeTypes } from '@src/components/TreeView';
 import CustomNodeCssFile from '../CustomNodeCssFile';
 import CustomNodeFolder from '../CustomNodeFolder';
 import CustomNodeJavascriptFile from '../CustomNodeJavascriptFile';
 import CustomNodeReactFile from '../CustomNodeReactFile';
 
-export default function MyCustomNode(node: TreeNode, defaultRender: React.ReactNode) {
+export default function MyCustomNode(props: TreeNodeContentProps) {
+  const { node } = props;
+
   // Custom rendering for React/TypeScript files
   if (node.type === NodeTypes.File && node.name.endsWith('.tsx')) {
     return <CustomNodeReactFile node={node} />;
@@ -26,5 +29,5 @@ export default function MyCustomNode(node: TreeNode, defaultRender: React.ReactN
   }
 
   // Use default rendering for other node types
-  return defaultRender;
+  return null;
 }
