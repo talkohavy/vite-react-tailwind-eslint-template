@@ -4,9 +4,9 @@
   // -----------
   // Font Sizes:
   // -----------
-  "editor.fontSize": 18,
-  "debug.console.fontSize": 16,
-  "terminal.integrated.fontSize": 16,
+  "editor.fontSize": 16,
+  "debug.console.fontSize": 12,
+  "terminal.integrated.fontSize": 12,
   "editor.suggestFontSize": 14, // <--- suggestions popover
   "gitlens.currentLine.fontSize": 15, // <--- git blame
   "editor.inlayHints.fontSize": 46,
