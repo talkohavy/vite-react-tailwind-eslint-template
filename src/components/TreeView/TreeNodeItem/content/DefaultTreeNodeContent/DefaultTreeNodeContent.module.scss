@@ -8,17 +8,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border: 1px solid transparent;
   border-radius: 4px;
   padding: 4px 8px;
-  transition: background-color 0.2s ease;
+}
 
-  &:hover {
-    background-color: #f3f4f6;
-
-    @media (prefers-color-scheme: dark) {
-      background-color: #1f2937;
-    }
-  }
+.treeNodeInfoButton:hover {
+  // Light theme styles:
+  background-color: #f3f4f6;
 }
 
 .defaultCursor {
@@ -31,19 +28,17 @@
 
 .fileType {
   color: #374151;
-
-  @media (prefers-color-scheme: dark) {
-    color: #d1d5db;
-  }
 }
 
 .folderType {
   color: #111827;
   font-weight: 500;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color: #f9fafb;
-  }
+.selected {
+  // Light theme styles:
+  background-color: #dbeafe !important; /* important because it needs to win against hover */
+  border: 1px solid #3b82f6; /* Blue border */
 }
 
 .btnExpandFolder {
@@ -88,11 +83,8 @@
 .loadingText {
   margin-left: 8px;
   font-size: 12px;
+  // Light theme styles:
   color: #6b7280;
-
-  @media (prefers-color-scheme: dark) {
-    color: #9ca3af;
-  }
 }
 
 @keyframes spin {
@@ -102,4 +94,25 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+html[data-theme='dark'] .treeNodeInfoButton:hover {
+  background-color: #1f2937;
+}
+
+html[data-theme='dark'] .fileType {
+  color: #d1d5db;
+}
+
+html[data-theme='dark'] .folderType {
+  color: #f9fafb;
+}
+
+html[data-theme='dark'] .selected {
+  background-color: #1e3a8a !important; /* important because it needs to win against hover */
+  border-color: #60a5fa; /* Light blue border in dark mode */
+}
+
+html[data-theme='dark'] .loadingText {
+  color: #9ca3af;
 }
