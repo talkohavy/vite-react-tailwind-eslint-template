@@ -40,27 +40,22 @@ export function convertAstNodeToFilterRecursively(node: Expression): FilterSchem
     case AstTypes.Boolean: {
       const operatorValue = node.operator.value;
 
-      const conditions: FilterScheme[] = [];
       const leftSideCondition = convertAstNodeToFilterRecursively(node.left);
-      conditions.push(leftSideCondition);
 
       const rightSideCondition = convertAstNodeToFilterRecursively(node.right);
-      conditions.push(rightSideCondition);
-
-      const [firstCondition, secondCondition] = conditions as [FilterScheme, FilterScheme];
 
       if (operatorValue === LogicalOperators.OR) {
         const result = [];
-        if (isOrFilter(firstCondition)) {
-          result.push(...firstCondition.OR);
+        if (isOrFilter(leftSideCondition)) {
+          result.push(...leftSideCondition.OR);
         } else {
-          result.push(firstCondition);
+          result.push(leftSideCondition);
         }
 
-        if (isOrFilter(secondCondition)) {
-          result.push(...secondCondition.OR);
+        if (isOrFilter(rightSideCondition)) {
+          result.push(...rightSideCondition.OR);
         } else {
-          result.push(secondCondition);
+          result.push(rightSideCondition);
         }
 
         return { [LogicalOperators.OR]: result } as OrFilter;
@@ -69,16 +64,16 @@ export function convertAstNodeToFilterRecursively(node: Expression): FilterSchem
       if (operatorValue === LogicalOperators.AND) {
         const result = [];
 
-        if (isAndFilter(firstCondition)) {
-          result.push(...firstCondition.AND);
+        if (isAndFilter(leftSideCondition)) {
+          result.push(...leftSideCondition.AND);
         } else {
-          result.push(firstCondition);
+          result.push(leftSideCondition);
         }
 
-        if (isAndFilter(secondCondition)) {
-          result.push(...secondCondition.AND);
+        if (isAndFilter(rightSideCondition)) {
+          result.push(...rightSideCondition.AND);
         } else {
-          result.push(secondCondition);
+          result.push(rightSideCondition);
         }
 
         return { [LogicalOperators.AND]: result } as AndFilter;
