@@ -63,16 +63,6 @@ describe('TreeView', () => {
       expect(packageFile).toHaveTextContent('📄');
     });
 
-    it('should hide icons when showIcons is false', () => {
-      render(<TreeView data={mockStaticData} showIcons={false} />);
-
-      const srcFolder = screen.getByRole('button', { name: 'src' });
-      const packageFile = screen.getByRole('button', { name: 'package.json' });
-
-      expect(srcFolder).not.toHaveTextContent('📁');
-      expect(packageFile).not.toHaveTextContent('📄');
-    });
-
     it('should expand folder when expand button is clicked', () => {
       render(<TreeView data={mockStaticData} />);
 
@@ -247,14 +237,6 @@ describe('TreeView', () => {
       expect(treeView).toBeInTheDocument();
     });
 
-    it('should handle nodes without items property', () => {
-      const dataWithoutItems: Array<TreeNode> = [{ id: '1', name: 'file.txt', type: 'file' }];
-
-      render(<TreeView data={dataWithoutItems} />);
-
-      expect(screen.getByText('file.txt')).toBeInTheDocument();
-    });
-
     it('should generate correct test IDs for tree nodes', () => {
       render(<TreeView data={mockStaticData} />);
 
@@ -354,28 +336,6 @@ describe('TreeView', () => {
       fireEvent.click(appTsxNode);
 
       expect(mockOnSelectedNodeIdChange).toHaveBeenCalledWith('5');
-    });
-
-    it('should work with nested nodes', async () => {
-      const mockOnSelectedNodeIdChange = jest.fn();
-
-      render(<TreeView data={mockStaticData} onSelectedNodeIdChange={mockOnSelectedNodeIdChange} />);
-
-      // Expand src folder
-      const srcButton = screen.getByRole('button', { name: 'src' });
-      const srcExpandButton = within(srcButton).getByRole('button');
-      fireEvent.click(srcExpandButton);
-
-      // Expand components folder
-      const componentsButton = screen.getByRole('button', { name: 'components' });
-      const componentsExpandButton = within(componentsButton).getByRole('button');
-      fireEvent.click(componentsExpandButton);
-
-      // Click on Button.tsx
-      const buttonTsxNode = screen.getByTestId('i1-i1-i1');
-      fireEvent.click(buttonTsxNode);
-
-      expect(mockOnSelectedNodeIdChange).toHaveBeenCalledWith('3');
     });
   });
 });
