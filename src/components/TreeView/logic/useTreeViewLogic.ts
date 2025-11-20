@@ -1,14 +1,25 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type SetStateAction } from 'react';
 import type { TreeNode } from '../types';
 
 type UseTreeViewLogicProps = {
   data: TreeNode[];
+  initialSelectedNodeId: string | null;
+  onSelectedNodeIdChange?: (nodeId: string | number) => void;
 };
 
 export function useTreeViewLogic(props: UseTreeViewLogicProps) {
-  const { data } = props;
+  const { data, initialSelectedNodeId, onSelectedNodeIdChange } = props;
 
   const [treeData, setTreeData] = useState(data);
+  const [selectedNodeId, setSelectedNodeId] = useState(initialSelectedNodeId);
+
+  const handleSelectNodeId = useCallback(
+    (nodeId: string | number) => {
+      setSelectedNodeId(nodeId as SetStateAction<string | null>);
+      onSelectedNodeIdChange?.(nodeId);
+    },
+    [onSelectedNodeIdChange],
+  );
 
   const updateNode = useCallback((nodeId: string, updates: Partial<TreeNode>) => {
     const updateNodeRecursive = (nodes: Array<TreeNode>): Array<TreeNode> => {
@@ -29,5 +40,5 @@ export function useTreeViewLogic(props: UseTreeViewLogicProps) {
     setTreeData(updateNodeRecursive);
   }, []);
 
-  return { treeData, updateNode };
+  return { treeData, updateNode, selectedNodeId, handleSelectNodeId };
 }

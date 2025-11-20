@@ -10,24 +10,27 @@ export type TreeNodeItemProps = Required<SharedNodeProps> &
     updateNode: (nodeId: string, updates: Partial<TreeNode>) => void;
     testId?: string;
     testIdPath?: string;
+    handleSelectNodeId: (nodeId: string | number) => void;
   };
 
 export default function TreeNodeItem(props: TreeNodeItemProps) {
   const {
     node,
     level,
+    selectedNodeId,
+    handleSelectNodeId,
+    indentSize = DEFAULT_INDENT_SIZE,
+    showIcons,
+    shouldExpandOnClick,
     onNodeClick,
     onNodeExpand,
-    renderNode: RenderNode,
-    showIcons,
-    indentSize = DEFAULT_INDENT_SIZE,
-    shouldExpandOnClick,
     updateNode,
+    renderNode: RenderNode,
     testId = '',
     testIdPath = '',
   } = props;
 
-  const { isFolderType, isLoading, isExpanded, iconToShow, handleNodeClick, handleExpandToggle, items } =
+  const { items, isFolderType, isLoading, isExpanded, isSelected, iconToShow, handleNodeClick, handleExpandToggle } =
     useTreeNodeItemLogic(props);
 
   return (
@@ -40,6 +43,7 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
           isFolderType={isFolderType}
           isLoading={isLoading}
           isExpanded={isExpanded}
+          isSelected={isSelected}
           iconToShow={iconToShow}
           handleNodeClick={handleNodeClick}
           handleExpandToggle={handleExpandToggle}
@@ -54,13 +58,15 @@ export default function TreeNodeItem(props: TreeNodeItemProps) {
               key={child.id}
               node={child}
               level={level + 1}
+              selectedNodeId={selectedNodeId}
+              handleSelectNodeId={handleSelectNodeId}
+              indentSize={indentSize}
+              showIcons={showIcons}
+              shouldExpandOnClick={shouldExpandOnClick}
               onNodeClick={onNodeClick}
               onNodeExpand={onNodeExpand}
-              renderNode={RenderNode}
-              showIcons={showIcons}
-              indentSize={indentSize}
-              shouldExpandOnClick={shouldExpandOnClick}
               updateNode={updateNode}
+              renderNode={RenderNode}
               testId={testId}
               testIdPath={`${testIdPath}-i${index + 1}`}
             />
