@@ -3,7 +3,7 @@ import { NodeTypes } from '../constants';
 import { updateTreeRecursively } from './updateTreeRecursively';
 
 function predicate(node: TreeNode) {
-  return node.type === NodeTypes.Folder;
+  return node.type === NodeTypes.Folder && !!node.items?.length;
 }
 
 export function expandAllRecursive(nodes: TreeNode[]): TreeNode[] {

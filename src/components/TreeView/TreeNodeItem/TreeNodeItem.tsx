@@ -52,9 +52,9 @@ const TreeNodeItem = memo((props: TreeNodeItemProps) => {
         />
       )}
 
-      {isExpanded && items!.length > 0 && (
+      {isExpanded && !!items?.length && (
         <div className={TREE_VIEW_NODE_ITEMS_LIST_CLASS}>
-          {items!.map((child, index) => (
+          {items.map((child, index) => (
             <TreeNodeItem
               key={child.id}
               node={child}
