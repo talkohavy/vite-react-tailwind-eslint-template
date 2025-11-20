@@ -10,6 +10,7 @@ const Tabs = {
   DynamicTree: 'dynamic-tree',
   CustomRendering: 'custom-rendering',
   RefControl: 'ref-control',
+  Playground: 'playground',
 } as const;
 
 const tabOptions = [
@@ -28,6 +29,10 @@ const tabOptions = [
   {
     value: Tabs.RefControl,
     label: 'Ref Control',
+  },
+  {
+    value: Tabs.Playground,
+    label: 'Playground',
   },
 ];
 
