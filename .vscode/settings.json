@@ -191,9 +191,7 @@
   // --------------------------
   // - Mostly for formatting using a formatter (eslint & prettier)
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always",
-    "quickfix.biome": "always",
-    "source.addMissingImports": "never"
+    "source.fixAll.biome": "explicit"
     // "source.fixAll": true, // <--- This is stronger than source.fixAll.eslint! because it also aggresively removes unreachable code!
     // "source.organizeImports": true, // <--- This also removes unused imports. I disabled it, since I'm already using eslint for that.
     // "source.organizeImports.biome": "always",
