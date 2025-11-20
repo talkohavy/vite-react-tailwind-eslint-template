@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import type { TreeNode } from './types';
 import TreeView from './TreeView';
 
@@ -47,44 +47,43 @@ describe('TreeView', () => {
 
   describe('Static Configuration', () => {
     it('should render tree structure correctly', () => {
-      render(<TreeView data={mockStaticData} />);
+      render(<TreeView data={mockStaticData} testId='tree-view' />);
 
-      expect(screen.getByText('src')).toBeInTheDocument();
-      expect(screen.getByText('package.json')).toBeInTheDocument();
+      expect(screen.getByTestId('tree-view-i1-label')).toHaveTextContent('src');
+      expect(screen.getByTestId('tree-view-i2-label')).toHaveTextContent('package.json');
     });
 
     it('should show folder and file icons when showIcons is applied', () => {
-      render(<TreeView data={mockStaticData} showIcons />);
+      render(<TreeView data={mockStaticData} showIcons testId='tree-view' />);
 
-      const srcFolder = screen.getByRole('button', { name: /📁.*src/ });
-      const packageFile = screen.getByRole('button', { name: /📄.*package\.json/ });
+      const srcButton = screen.getByTestId('tree-view-i1-node-as-button');
+      const packageButton = screen.getByTestId('tree-view-i2-node-as-button');
 
-      expect(srcFolder).toHaveTextContent('📁');
-      expect(packageFile).toHaveTextContent('📄');
+      expect(srcButton).toHaveTextContent('📁');
+      expect(packageButton).toHaveTextContent('📄');
     });
 
     it('should expand folder when expand button is clicked', () => {
-      render(<TreeView data={mockStaticData} />);
+      render(<TreeView data={mockStaticData} testId='tree-view' />);
 
       // Initially items should not be visible
-      expect(screen.queryByText('components')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('tree-view-i1-i1')).not.toBeInTheDocument();
 
-      // Get the main src button and use within to find the nested expand button
-      const srcButton = screen.getByRole('button', { name: 'src' });
-      const expandButton = within(srcButton).getByRole('button');
-
+      // Click the expand button
+      const expandButton = screen.getByTestId('tree-view-i1-expand-button');
       fireEvent.click(expandButton);
 
       // Now items should be visible
-      expect(screen.getByText('components')).toBeInTheDocument();
-      expect(screen.getByText('App.tsx')).toBeInTheDocument();
+      expect(screen.getByTestId('tree-view-i1-i1-label')).toHaveTextContent('components');
+      expect(screen.getByTestId('tree-view-i1-i2-label')).toHaveTextContent('App.tsx');
     });
 
     it('should call onNodeClick when node is clicked', () => {
       const mockOnNodeClick = jest.fn();
-      render(<TreeView data={mockStaticData} onNodeClick={mockOnNodeClick} />);
+      render(<TreeView data={mockStaticData} onNodeClick={mockOnNodeClick} testId='tree-view' />);
 
-      fireEvent.click(screen.getByText('package.json'));
+      const packageJsonButton = screen.getByTestId('tree-view-i2-node-as-button');
+      fireEvent.click(packageJsonButton);
 
       expect(mockOnNodeClick).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -96,16 +95,17 @@ describe('TreeView', () => {
     });
 
     it('should expand on node click when expandOnClick is true', () => {
-      render(<TreeView data={mockStaticData} shouldExpandOnClick />);
+      render(<TreeView data={mockStaticData} shouldExpandOnClick testId='tree-view' />);
 
       // Initially items should not be visible
-      expect(screen.queryByText('components')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('tree-view-i1-i1')).not.toBeInTheDocument();
 
-      // Click the folder name
-      fireEvent.click(screen.getByText('src'));
+      // Click the folder button
+      const srcButton = screen.getByTestId('tree-view-i1-node-as-button');
+      fireEvent.click(srcButton);
 
       // Now items should be visible
-      expect(screen.getByText('components')).toBeInTheDocument();
+      expect(screen.getByTestId('tree-view-i1-i1-label')).toHaveTextContent('components');
     });
   });
 
@@ -118,12 +118,10 @@ describe('TreeView', () => {
 
       const mockOnNodeExpand = jest.fn().mockResolvedValue(mockItems);
 
-      render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} />);
+      render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} testId='tree-view' />);
 
       // Click the expand button for project folder
-      const projectButton = screen.getByRole('button', { name: 'project' });
-      const expandButton = within(projectButton).getByRole('button');
-
+      const expandButton = screen.getByTestId('tree-view-i1-expand-button');
       fireEvent.click(expandButton);
 
       expect(mockOnNodeExpand).toHaveBeenCalledWith(
@@ -136,11 +134,11 @@ describe('TreeView', () => {
 
       // Wait for items to be loaded and displayed
       await waitFor(() => {
-        expect(screen.getByText('src')).toBeInTheDocument();
+        expect(screen.getByTestId('tree-view-i1-i1-label')).toHaveTextContent('src');
       });
 
       await waitFor(() => {
-        expect(screen.getByText('dist')).toBeInTheDocument();
+        expect(screen.getByTestId('tree-view-i1-i2-label')).toHaveTextContent('dist');
       });
     });
 
@@ -152,20 +150,18 @@ describe('TreeView', () => {
           }),
       );
 
-      render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} />);
+      render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} testId='tree-view' />);
 
       // Click the expand button for project folder
-      const projectButton = screen.getByRole('button', { name: 'project' });
-      const expandButton = within(projectButton).getByRole('button');
-
+      const expandButton = screen.getByTestId('tree-view-i1-expand-button');
       fireEvent.click(expandButton);
 
       // Should show loading state
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      expect(screen.getByTestId('tree-view-i1-is-loading')).toHaveTextContent('Loading...');
 
       // Wait for loading to complete
       await waitFor(() => {
-        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('tree-view-i1-is-loading')).not.toBeInTheDocument();
       });
     });
 
@@ -173,12 +169,10 @@ describe('TreeView', () => {
       const mockOnNodeExpand = jest.fn().mockRejectedValue(new Error('Network error'));
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} />);
+      render(<TreeView data={mockDynamicData} onNodeExpand={mockOnNodeExpand} testId='tree-view' />);
 
       // Click the expand button for project folder
-      const projectButton = screen.getByRole('button', { name: 'project' });
-      const expandButton = within(projectButton).getByRole('button');
-
+      const expandButton = screen.getByTestId('tree-view-i1-expand-button');
       fireEvent.click(expandButton);
 
       // Wait for error handling
@@ -187,7 +181,7 @@ describe('TreeView', () => {
       });
 
       await waitFor(() => {
-        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('tree-view-i1-is-loading')).not.toBeInTheDocument();
       });
 
       consoleSpy.mockRestore();
@@ -218,15 +212,14 @@ describe('TreeView', () => {
     });
 
     it('should apply custom indentSize', () => {
-      render(<TreeView data={mockStaticData} indentSize={32} />);
+      render(<TreeView data={mockStaticData} indentSize={32} testId='tree-view' />);
 
       // Expand the src folder to see indented items
-      const srcButton = screen.getByRole('button', { name: 'src' });
-      const expandButton = within(srcButton).getByRole('button');
+      const expandButton = screen.getByTestId('tree-view-i1-expand-button');
       fireEvent.click(expandButton);
 
       // Check that items have proper indentation
-      const componentsButton = screen.getByRole('button', { name: 'components' });
+      const componentsButton = screen.getByTestId('tree-view-i1-i1-node-as-button');
       expect(componentsButton).toHaveStyle('margin-left: 32px');
     });
   });
@@ -252,8 +245,7 @@ describe('TreeView', () => {
       expect(packageJsonNode).toHaveTextContent('package.json');
 
       // Expand src folder to access its children
-      const srcButton = screen.getByRole('button', { name: 'src' });
-      const srcExpandButton = within(srcButton).getByRole('button');
+      const srcExpandButton = screen.getByTestId('tree-view-i1-expand-button');
       fireEvent.click(srcExpandButton);
 
       // Check second level nodes have correct test IDs
@@ -266,8 +258,7 @@ describe('TreeView', () => {
       expect(appTsxNode).toHaveTextContent('App.tsx');
 
       // Expand components folder to access its children
-      const componentsButton = screen.getByRole('button', { name: 'components' });
-      const componentsExpandButton = within(componentsButton).getByRole('button');
+      const componentsExpandButton = screen.getByTestId('tree-view-i1-i1-expand-button');
       fireEvent.click(componentsExpandButton);
 
       // Check third level nodes have correct test IDs
@@ -285,7 +276,7 @@ describe('TreeView', () => {
     it('should call onSelectedNodeIdChange when a node is clicked', () => {
       const mockOnSelectedNodeIdChange = jest.fn();
 
-      render(<TreeView data={mockStaticData} onSelectedNodeIdChange={mockOnSelectedNodeIdChange} />);
+      render(<TreeView data={mockStaticData} onSelectedNodeIdChange={mockOnSelectedNodeIdChange} testId='tree-view' />);
 
       const packageJsonButton = screen.getByTestId('tree-view-i2-node-as-button');
       fireEvent.click(packageJsonButton);
@@ -294,7 +285,7 @@ describe('TreeView', () => {
     });
 
     it('should show selected state when initialSelectedNodeId matches node id', () => {
-      render(<TreeView data={mockStaticData} initialSelectedNodeId='6' />);
+      render(<TreeView data={mockStaticData} initialSelectedNodeId='6' testId='tree-view' />);
 
       const packageJsonButton = screen.getByTestId('tree-view-i2-node-as-button');
       expect(packageJsonButton).toHaveClass('selected');
@@ -308,6 +299,7 @@ describe('TreeView', () => {
           data={mockStaticData}
           onSelectedNodeIdChange={mockOnSelectedNodeIdChange}
           initialSelectedNodeId='6'
+          testId='tree-view'
         />,
       );
 
@@ -326,14 +318,15 @@ describe('TreeView', () => {
           data={mockStaticData}
           onSelectedNodeIdChange={mockOnSelectedNodeIdChange}
           initialSelectedNodeId='6' // package.json is selected
+          testId='tree-view'
         />,
       );
 
-      // Click on App.tsx (which requires expanding the src folder first)
-      const srcButton = screen.getByRole('button', { name: 'src' });
-      const expandButton = within(srcButton).getByRole('button');
-      fireEvent.click(expandButton); // Expand src folder
+      // Expand src folder first
+      const expandButton = screen.getByTestId('tree-view-i1-expand-button');
+      fireEvent.click(expandButton);
 
+      // Click on App.tsx
       const appTsxButton = screen.getByTestId('tree-view-i1-i2-node-as-button');
       fireEvent.click(appTsxButton);
 
