@@ -2,15 +2,15 @@ import { useState, useCallback, type SetStateAction } from 'react';
 import type { TreeNode } from '../types';
 
 type UseTreeViewLogicProps = {
-  data: TreeNode[];
+  initialState: TreeNode[];
   initialSelectedNodeId: string | number | null;
   onSelectedNodeIdChange?: (nodeId: string | number) => void;
 };
 
 export function useTreeViewLogic(props: UseTreeViewLogicProps) {
-  const { data, initialSelectedNodeId, onSelectedNodeIdChange } = props;
+  const { initialState, initialSelectedNodeId, onSelectedNodeIdChange } = props;
 
-  const [treeData, setTreeData] = useState(data);
+  const [treeData, setTreeData] = useState(initialState);
   const [selectedNodeId, setSelectedNodeId] = useState(initialSelectedNodeId);
 
   const handleSelectNodeId = useCallback(

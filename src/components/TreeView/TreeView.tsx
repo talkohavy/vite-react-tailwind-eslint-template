@@ -7,7 +7,12 @@ import styles from './TreeView.module.scss';
 
 export type TreeViewProps = SharedNodeProps &
   SharedNodeEventHandlers & {
-    data: TreeNode[];
+    /**
+     * Initial data to be displayed in the tree view.
+     *
+     * NOTE! You do not need to manage the state of the tree data from outside, it will be managed internally.
+     */
+    initialState: TreeNode[];
     initialSelectedNodeId?: string | number | null;
     /**
      * This function should be memoized to prevent unnecessary re-renders.
@@ -22,7 +27,7 @@ export type TreeViewProps = SharedNodeProps &
 
 export default function TreeView(props: TreeViewProps) {
   const {
-    data,
+    initialState,
     onNodeClick,
     onNodeExpand,
     renderNode,
@@ -36,7 +41,7 @@ export default function TreeView(props: TreeViewProps) {
   } = props;
 
   const { treeData, updateNode, selectedNodeId, handleSelectNodeId } = useTreeViewLogic({
-    data,
+    initialState,
     initialSelectedNodeId,
     onSelectedNodeIdChange,
   });
