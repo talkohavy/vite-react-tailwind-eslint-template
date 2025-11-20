@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
     svgr({
       include: '**/*.svg',
       svgrOptions: {
-        exportType: 'named',
+        exportType: 'named', // <--- if 'named', you can only import svgs like this: `import { ReactComponent as ViteIcon } from './assets/vite2.svg'`. Otherwise, import like this:`import ViteIcon from './assets/vite2.svg'`.
         // ref: true,
         // svgo: false,
         // titleProp: true,
