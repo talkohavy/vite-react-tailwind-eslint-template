@@ -26,7 +26,7 @@ echo "[34m----------------------[39m"
 echo "[34mStep 2: npm run format[39m"
 echo "[34m----------------------[39m"
 
-# npm run format
+npm run format
 
 echo ""
 echo "[32m√[39m Formatter check passed 100%"
