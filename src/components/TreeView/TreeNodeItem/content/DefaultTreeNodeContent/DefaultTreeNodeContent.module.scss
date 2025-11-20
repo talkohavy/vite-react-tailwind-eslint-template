@@ -55,7 +55,7 @@
 }
 
 .btnIsLoading {
-  animation: spin 1s linear infinite;
+  opacity: 0.5;
 }
 
 .btnExpandFolder:disabled {
@@ -82,15 +82,6 @@
   font-size: 12px;
   // Light theme styles:
   color: #6b7280;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 html[data-theme='dark'] .treeNodeInfoButton:not([data-selected]):hover {
