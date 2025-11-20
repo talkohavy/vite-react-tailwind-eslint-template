@@ -35,9 +35,7 @@ export default function DefaultTreeNodeContent(props: TreeNodeContentProps) {
         className={clsx(
           TREE_VIEW_NODE_CONTENT_AS_BUTTON_CLASS,
           styles.treeNodeInfoButton,
-          isFolderType ? styles.folderType : styles.fileType,
           isFolderType && shouldExpandOnClick ? styles.pointerCursor : styles.defaultCursor,
-          isSelected && styles.selected,
         )}
         data-folder-type={addDataAttributeWhen(isFolderType)}
         data-file-type={addDataAttributeWhen(!isFolderType)}
