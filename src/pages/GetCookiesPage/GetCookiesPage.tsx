@@ -37,7 +37,7 @@ export default function GetCookiesPage() {
     try {
       const requestBody = { email, password };
 
-      const { data } = await httpClient.post('/users/login', { body: requestBody });
+      const { data } = await httpClient.post('/api/auth/login', { body: requestBody });
 
       setLoginMessage('Login successful!');
 
@@ -52,6 +52,16 @@ export default function GetCookiesPage() {
   return (
     <div className='size-full p-6 overflow-auto bg-white dark:bg-gray-900'>
       <h1 className='text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100'>Login</h1>
+
+      <div className='max-w-md mx-auto mb-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-md p-4'>
+        <h2 className='text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2'>Test Credentials</h2>
+        <p className='text-sm text-blue-700 dark:text-blue-300'>
+          <strong>Email:</strong> dummy@gmail.com
+        </p>
+        <p className='text-sm text-blue-700 dark:text-blue-300'>
+          <strong>Password:</strong> 1111
+        </p>
+      </div>
 
       <div className='max-w-md mx-auto bg-white dark:bg-gray-800 shadow-md dark:shadow-dark-md rounded-md p-6 border border-gray-200 dark:border-gray-700'>
         <div className='mb-4'>
