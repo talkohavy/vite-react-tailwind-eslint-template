@@ -5,7 +5,6 @@ import type { Option, OptionGroup } from '../types';
 import { flattenOptions } from './utils/flattenOptions';
 import { groupOptions } from './utils/groupOptions';
 import { isGroupedOptions } from './utils/isGroupedOptions';
-import '../styles.css';
 
 type InputValueChangeDetails = ComboboxOriginal.InputValueChangeDetails;
 type SelectionDetails = ComboboxOriginal.SelectionDetails;
