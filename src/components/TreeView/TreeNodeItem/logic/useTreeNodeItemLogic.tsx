@@ -30,7 +30,12 @@ export function useTreeNodeItemLogic(props: TreeNodeItemProps) {
   const handleExpandToggle = useCallback(async () => {
     if (!canExpand) return;
 
-    if (!isExpanded && onNodeExpand && items.length === 0) {
+    const isCollapsedNode = !isExpanded;
+    const hasLoadFunction = !!onNodeExpand;
+    const hasNoChildren = items.length === 0;
+    const shouldLoadChildren = isCollapsedNode && hasLoadFunction && hasNoChildren;
+
+    if (shouldLoadChildren) {
       setIsLoading(true);
 
       updateNode(node.id, { isLoading: true });
