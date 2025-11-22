@@ -1,37 +1,14 @@
+/// <reference types="vite/client" />
+
 declare module '*.svg' {
-  // 1. When importing svg as src inside an img:
+  // 1. When config is set to: exportType: 'default':
   // const content: React.FC<React.SVGProps<SVGElement>>;
   // export default content;
 
-  // 2. When importing svg as ReactComponent:
+  // 2. When config is set to: exportType: 'named':
   import type React from 'react';
   const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;
   // biome-ignore lint: ambient module type declaration
   export { ReactComponent };
   export default ReactComponent;
-}
-
-interface ImportMetaEnv {
-  [key: string]: any;
-  BASE_URL: string;
-  MODE: string;
-  DEV: boolean;
-  PROD: boolean;
-  SSR: boolean;
-}
-
-interface ImportMeta {
-  url: string;
-
-  readonly env: ImportMetaEnv;
-}
-
-declare module '*.css' {
-  const content: Record<string, string>;
-  export default content;
-}
-
-declare module '*.scss' {
-  const content: Record<string, string>;
-  export default content;
 }

@@ -1,4 +1,3 @@
-// @ts-ignore
 import viteIconUrl from '../../../../assets/vite2.svg?url';
 import CodeBlock from '../../../../components/CodeBlock';
 
