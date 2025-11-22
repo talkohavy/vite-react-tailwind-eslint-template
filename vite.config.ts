@@ -13,12 +13,7 @@ export default defineConfig(({ mode }) => ({
     tailwindcss(),
     svgr({
       include: '**/*.svg',
-      svgrOptions: {
-        exportType: 'named', // <--- if 'named', you can only import svgs like this: `import { ReactComponent as ViteIcon } from './assets/vite2.svg'`. Otherwise, import like this:`import ViteIcon from './assets/vite2.svg'`.
-        // ref: true,
-        // svgo: false,
-        // titleProp: true,
-      },
+      svgrOptions: { exportType: 'named' }, // <--- See page "SvgImports" for more details.
     }),
   ],
   publicDir: './public', // defaults to "public". The location of the public dir relative to the index.html file.

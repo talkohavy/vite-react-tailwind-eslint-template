@@ -4,6 +4,7 @@ import { BASE_URL } from './common/constants';
 
 // Main pages
 const RedirectToHome = lazy(() => import('./pages/RedirectToHome'));
+const SvgImportsPage = lazy(() => import('./pages/SvgImports'));
 const HomePage = lazy(() => import('./pages/Home'));
 const ReduxExamplePage = lazy(() => import('./pages/ReduxExample'));
 const ShowcasePage = lazy(() => import('./pages/Showcase'));
@@ -53,6 +54,12 @@ export const routes: Array<Route> = [
     text: 'Home',
     activeNames: [BASE_URL, `${BASE_URL}/home/`],
     Component: HomePage,
+  },
+  {
+    to: `${BASE_URL}/svg-imports`,
+    text: 'SVG Imports',
+    activeNames: [`${BASE_URL}/svg-imports`],
+    Component: SvgImportsPage,
   },
   {
     to: `${BASE_URL}/showcase`,
