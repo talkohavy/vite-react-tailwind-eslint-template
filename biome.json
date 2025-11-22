@@ -21,7 +21,8 @@
         "noArrayIndexKey": "off",
         "noDebugger": "off",
         "noDoubleEquals": "off",
-        "noFocusedTests": "off"
+        "noFocusedTests": "off",
+        "noTsIgnore": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off",
