@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => ({
       svgrOptions: { exportType: 'named' }, // <--- See page "SvgImports" for more details.
     }),
   ],
-  publicDir: './public', // defaults to "public". The location of the public dir relative to the index.html file.
+  publicDir: './public', // defaults to "public". The location of the public dir relative to `root`.
   server: {
     open: true,
     port: 3004,
