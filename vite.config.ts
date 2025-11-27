@@ -19,9 +19,9 @@ export default defineConfig(({ mode }) => ({
   publicDir: './public', // defaults to "public". The location of the public dir relative to `root`.
   server: {
     open: true,
-    port: 3004,
+    port: 3000,
     strictPort: false,
-    allowedHosts: true,
+    origin: 'http://localhost:3000', // <--- Defaults to '/'. Defines the origin of the generated asset URLs during development ONLY. Without this, serving of the mf-manifest.json in micro-frontends doesn't work! Since it takes the host's origin.
   },
   resolve: {
     alias: {
