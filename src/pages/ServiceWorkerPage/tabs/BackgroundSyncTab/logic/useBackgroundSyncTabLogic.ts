@@ -14,7 +14,7 @@ export function useBackgroundSyncTabLogic() {
 
   useEffect(() => {
     async function fetchUsers() {
-      const { data } = await httpClient.get('/users');
+      const data = await httpClient.get('/users').promise;
 
       setData(data);
     }

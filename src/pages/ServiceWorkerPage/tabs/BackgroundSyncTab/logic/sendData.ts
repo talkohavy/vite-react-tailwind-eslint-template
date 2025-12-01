@@ -12,5 +12,5 @@ export async function sendDataLater(requestDetails: RequestDetails) {
 export async function sendDataNow(requestDetails: RequestDetails) {
   const { url, options } = requestDetails;
 
-  await httpClient.post(url, options);
+  await httpClient.post(url, options).promise;
 }

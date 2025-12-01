@@ -23,7 +23,7 @@ async function initServiceWorker() {
       try {
         const { id, url, options } = request;
 
-        await httpClient.post(url, options);
+        await httpClient.post(url, options).promise;
 
         await indexedDBClient.deleteRecordById({ tableName: syncRequestsTableName, id });
       } catch (error: any) {

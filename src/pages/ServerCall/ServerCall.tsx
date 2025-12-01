@@ -8,7 +8,8 @@ export default function ServerCall() {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await httpClient.get('/users');
+      const data = await httpClient.get('/users').promise;
+
       console.log('response is:', data);
 
       setData('data loaded successfully!');
@@ -19,12 +20,12 @@ export default function ServerCall() {
 
   const createUser = async () => {
     try {
-      const { data } = await httpClient.post('/users', {
+      const data = await httpClient.post('/users', {
         body: {
           name: 'John Doe',
           email: 'talkohavy@example.com',
         },
-      });
+      }).promise;
 
       console.log('response is:', data);
     } catch (error) {

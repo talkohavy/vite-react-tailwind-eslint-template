@@ -37,7 +37,7 @@ export default function GetCookiesPage() {
     try {
       const requestBody = { email, password };
 
-      const { data } = await httpClient.post('/api/auth/login', { body: requestBody });
+      const data = await httpClient.post('/api/auth/login', { body: requestBody }).promise;
 
       setLoginMessage('Login successful!');
 
