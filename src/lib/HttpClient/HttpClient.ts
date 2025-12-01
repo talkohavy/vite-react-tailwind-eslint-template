@@ -1,7 +1,7 @@
-import type { ExecuteProps, FetchOptions, HttpResponse, ResponseError } from './types';
+import type { ExecuteProps, FetchOptions, HttpRequest, RequestInfo, ResponseError } from './types';
 import { uuid } from '../../common/utils/uuid';
 import { sessionManager } from '../SessionManager';
-import { HttpHeaders, HttpMethod } from './logic/constants';
+import { HttpHeaders, HttpMethod, type HttpMethodValues } from './logic/constants';
 import { HttpError } from './logic/HttpError';
 
 export let httpClient: HttpClient;
@@ -26,7 +26,7 @@ export class HttpClient {
    *
    * The "http://localhost:8000" part is considered as BASE_URL, and is added automatically.
    */
-  public get<ResponseDto = any>(url: string, options?: FetchOptions) {
+  public get<ResponseDto = any>(url: string, options?: FetchOptions): HttpRequest<ResponseDto> {
     return this.execute<ResponseDto>({ url, method: HttpMethod.GET, ...options });
   }
 
@@ -39,27 +39,26 @@ export class HttpClient {
    *
    * The "http://localhost:8000" part is considered as BASE_URL, and is added automatically.
    */
-  public post<ResponseDto = any>(url: string, options?: FetchOptions) {
+  public post<ResponseDto = any>(url: string, options?: FetchOptions): HttpRequest<ResponseDto> {
     return this.execute<ResponseDto>({ url, method: HttpMethod.POST, ...options });
   }
 
-  public put<ResponseDto = any>(url: string, options?: FetchOptions) {
+  public put<ResponseDto = any>(url: string, options?: FetchOptions): HttpRequest<ResponseDto> {
     return this.execute<ResponseDto>({ url, method: HttpMethod.PUT, ...options });
   }
 
-  public patch<ResponseDto = any>(url: string, options?: FetchOptions) {
+  public patch<ResponseDto = any>(url: string, options?: FetchOptions): HttpRequest<ResponseDto> {
     return this.execute<ResponseDto>({ url, method: HttpMethod.PATCH, ...options });
   }
 
-  public delete<ResponseDto = any>(url: string, options?: FetchOptions) {
+  public delete<ResponseDto = any>(url: string, options?: FetchOptions): HttpRequest<ResponseDto> {
     return this.execute<ResponseDto>({ url, method: HttpMethod.DELETE, ...options });
   }
 
-  protected async execute<ResponseDto = any>(props: ExecuteProps): Promise<HttpResponse<ResponseDto>> {
+  protected execute<ResponseDto = any>(props: ExecuteProps): HttpRequest<ResponseDto> {
     const { url, method, body, headers: additionalHeaders } = props;
 
     const requestId = uuid();
-    const signal = this.addAbortControllerToList(requestId);
     const fullTargetUrl = `${this._baseUrl}${url}`;
     const headers = new Headers(additionalHeaders);
 
@@ -74,13 +73,39 @@ export class HttpClient {
       headers.set(HttpHeaders.TAB_ID, sessionStorageId!);
     }
 
-    const requestInfo = {
+    const promise = this.executeRequest<ResponseDto>({
+      fullTargetUrl,
+      headers,
+      method,
+      body,
+      requestId,
+    });
+
+    const requestInfo: RequestInfo = {
       url: fullTargetUrl,
       method,
       body,
       headers,
       requestId,
     };
+
+    const abort = () => {
+      this.abortRequestById(requestId);
+    };
+
+    return { promise, requestInfo, abort };
+  }
+
+  private async executeRequest<ResponseDto = any>(params: {
+    fullTargetUrl: string;
+    headers: Headers;
+    method: HttpMethodValues;
+    body: any;
+    requestId: string;
+  }): Promise<ResponseDto> {
+    const { fullTargetUrl, headers, method, body, requestId } = params;
+
+    const signal = this.addAbortControllerToList(requestId);
 
     try {
       const response = await fetch(fullTargetUrl, {
@@ -111,7 +136,7 @@ export class HttpClient {
         });
       }
 
-      return { data, requestInfo };
+      return data;
     } catch (error: any) {
       this.removeAbortControllerFromList(requestId);
 

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { HttpResponse } from '../lib/HttpClient/types';
-import { httpClient } from '../lib/HttpClient';
+import type { HttpRequest } from '../lib/HttpClient/types';
 
 type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
   /**
@@ -21,7 +20,7 @@ type useAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    *   dependencies: [page, viewType],
    * });
    */
-  asyncFunc: (props: any) => Promise<HttpResponse<ReturnType>>;
+  asyncFunc: (props: any) => HttpRequest<ReturnType>;
   /**
    * **IMPORTANT NOTE! Passing undefined will qualify as `true`!!! Be sure to do `Boolean(flag)` to avoid weird situations.**
    *
@@ -81,7 +80,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   const [data, setData] = useState<TransformType>();
 
   const asyncFuncRef = useRef(asyncFunc);
-  const requestIdRef = useRef<string>('');
+  const abortRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     asyncFuncRef.current = asyncFunc;
@@ -90,16 +89,18 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   const fetchData = useCallback(
     async (funcProps?: any) => {
       try {
-        if (requestIdRef.current) {
-          httpClient.abortRequestById(requestIdRef.current);
+        if (abortRef.current) {
+          abortRef.current(); // <--- Abort previous request if it exists
         }
 
         setIsLoading(true);
         setIsError(false);
 
-        const { data, requestInfo } = await asyncFuncRef.current(funcProps);
+        const { promise, abort } = asyncFuncRef.current(funcProps);
 
-        requestIdRef.current = requestInfo.requestId;
+        abortRef.current = abort; // <--- Store abort function for cleanup
+
+        const data = await promise;
 
         const updatedData = (transform ? transform(data) : data) as TransformType;
 
@@ -122,7 +123,9 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   // MUST come before the refetch useEffect! Otherwise, an outgoing request would immediately terminate.
   useEffect(() => {
     return () => {
-      if (requestIdRef.current) httpClient.abortRequestById(requestIdRef.current);
+      if (abortRef.current) {
+        abortRef.current();
+      }
     };
   }, []);
 

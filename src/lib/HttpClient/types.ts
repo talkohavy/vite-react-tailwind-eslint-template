@@ -10,15 +10,18 @@ export type ExecuteProps = {
   method: HttpMethodValues;
 } & FetchOptions;
 
-export type HttpResponse<T = any> = {
-  data: T;
-  requestInfo: {
-    url: string;
-    method: HttpMethodValues;
-    body?: any;
-    headers: HeadersInit;
-    requestId: string;
-  };
+export type RequestInfo = {
+  url: string;
+  method: HttpMethodValues;
+  body?: any;
+  headers: HeadersInit;
+  requestId: string;
+};
+
+export type HttpRequest<T = any> = {
+  promise: Promise<T>;
+  requestInfo: RequestInfo;
+  abort: () => void;
 };
 
 export type HttpErrorConstructorProps = {
