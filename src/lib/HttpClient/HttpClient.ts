@@ -26,8 +26,8 @@ export class HttpClient {
    *
    * The "http://localhost:8000" part is considered as BASE_URL, and is added automatically.
    */
-  public get<TResponse = any>(url: string, options?: FetchOptions) {
-    return this.execute<TResponse>({ url, method: HttpMethod.GET, ...options });
+  public get<ResponseDto = any>(url: string, options?: FetchOptions) {
+    return this.execute<ResponseDto>({ url, method: HttpMethod.GET, ...options });
   }
 
   /**
@@ -39,23 +39,23 @@ export class HttpClient {
    *
    * The "http://localhost:8000" part is considered as BASE_URL, and is added automatically.
    */
-  public post<TResponse = any>(url: string, options?: FetchOptions) {
-    return this.execute<TResponse>({ url, method: HttpMethod.POST, ...options });
+  public post<ResponseDto = any>(url: string, options?: FetchOptions) {
+    return this.execute<ResponseDto>({ url, method: HttpMethod.POST, ...options });
   }
 
-  public put<TResponse = any>(url: string, options?: FetchOptions) {
-    return this.execute<TResponse>({ url, method: HttpMethod.PUT, ...options });
+  public put<ResponseDto = any>(url: string, options?: FetchOptions) {
+    return this.execute<ResponseDto>({ url, method: HttpMethod.PUT, ...options });
   }
 
-  public patch<TResponse = any>(url: string, options?: FetchOptions) {
-    return this.execute<TResponse>({ url, method: HttpMethod.PATCH, ...options });
+  public patch<ResponseDto = any>(url: string, options?: FetchOptions) {
+    return this.execute<ResponseDto>({ url, method: HttpMethod.PATCH, ...options });
   }
 
-  public delete<TResponse = any>(url: string, options?: FetchOptions) {
-    return this.execute<TResponse>({ url, method: HttpMethod.DELETE, ...options });
+  public delete<ResponseDto = any>(url: string, options?: FetchOptions) {
+    return this.execute<ResponseDto>({ url, method: HttpMethod.DELETE, ...options });
   }
 
-  protected async execute<TResponse = any>(props: ExecuteProps): Promise<HttpResponse<TResponse>> {
+  protected async execute<ResponseDto = any>(props: ExecuteProps): Promise<HttpResponse<ResponseDto>> {
     const { url, method, body, headers: additionalHeaders } = props;
 
     const requestId = uuid();
