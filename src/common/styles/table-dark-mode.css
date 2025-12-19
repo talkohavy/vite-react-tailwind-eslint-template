@@ -1,0 +1,26 @@
+html[data-theme='dark'] .tk-custom-table-wrapper {
+  border-radius: 8px;
+  border: 1px solid white;
+}
+
+html[data-theme='dark'] .tk-table-header-tr {
+  background-color: #1e1e1e;
+}
+
+html[data-theme='dark'] .tk-table-header-th {
+  padding: 10px;
+}
+
+html[data-theme='dark'] .tk-table-body-tr {
+  color: #dddddd;
+  background-color: #2a2a2a;
+}
+
+html[data-theme='dark'] .tk-table-body-tr:nth-child(even) {
+  background-color: #333333;
+}
+
+html[data-theme='dark'] .tk-table-body-td {
+  padding: 10px;
+  border: 1px solid black;
+}

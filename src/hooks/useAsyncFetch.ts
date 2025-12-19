@@ -105,6 +105,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         const updatedData = (transform ? transform(data) : data) as TransformType;
 
         setData(updatedData);
+        setIsError(false);
 
         onSuccess?.(updatedData);
 

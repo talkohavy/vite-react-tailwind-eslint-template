@@ -24,6 +24,7 @@ const MasterFilterPage = lazy(() => import('./pages/MasterFilterPage'));
 const QueryPage = lazy(() => import('./pages/QueryPage'));
 const WebEditorPage = lazy(() => import('./pages/WebEditorPage'));
 const TestPage = lazy(() => import('./pages/TestPage/TestPageFixed'));
+const TableDemoPage = lazy(() => import('./pages/TableDemoPage'));
 
 // Mini-pages/tabs
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -285,5 +286,11 @@ export const routes: Array<Route> = [
     text: 'Test Page',
     activeNames: [`${BASE_URL}/test`],
     Component: TestPage,
+  },
+  {
+    to: `${BASE_URL}/table-demo`,
+    text: 'Table Demo',
+    activeNames: [`${BASE_URL}/table-demo`],
+    Component: TableDemoPage,
   },
 ];
