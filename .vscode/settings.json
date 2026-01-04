@@ -1,6 +1,14 @@
 {
   "workbench.colorTheme": "Default Dark Modern", // "Light"
 
+  "github.copilot.nextEditSuggestions.enabled": true, // <--- change to false in job-interviews
+  "github.copilot.enable": {
+    "*": true, // <--- change to false in job-interviews
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+
   // -----------
   // Font Sizes:
   // -----------
