@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react';
-import type { RadioOption } from '../../components/controls/RadioGroup/types';
-import RadioTabs from '../../components/controls/RadioGroup/RadioTabs';
+import type { RadioOption } from '../../components/controls/RadioGroup';
+import RadioTabs from '../../components/controls/RadioTabs';
 import BackgroundSyncTab from './tabs/BackgroundSyncTab';
 import CacheAssetTab from './tabs/CacheAssetTab';
 import CacheContentTab from './tabs/CacheContentTab';

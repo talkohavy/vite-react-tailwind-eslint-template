@@ -4,3 +4,12 @@ export type RadioOption<T = any> = {
   disabled?: boolean;
   item?: T;
 };
+
+export type ChildItemProps<T = any> = {
+  /**
+   * Must be a primitive value
+   */
+  value: T;
+  label: string;
+  isChecked?: boolean;
+};

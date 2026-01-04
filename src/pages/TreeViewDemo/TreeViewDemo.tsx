@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { BASE_URL } from '../../common/constants';
-import RadioTabs from '../../components/controls/RadioGroup/RadioTabs';
+import RadioTabs from '../../components/controls/RadioTabs';
 import { pageName } from './logic/constants';
 import { getInitialTabValue } from './logic/utils/getInitialValue';
 

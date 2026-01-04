@@ -1,4 +1,4 @@
-import RadioGroup, { type RadioOption } from '../RadioGroupV2';
+import RadioGroup, { type RadioOption } from '../RadioGroup';
 import SingleRadioDot from './SingleRadioDot';
 
 type RadioDotsProps<T> = {

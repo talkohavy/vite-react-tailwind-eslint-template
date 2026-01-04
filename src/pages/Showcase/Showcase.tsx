@@ -14,7 +14,7 @@ import Tag from '../../components/controls/Checkbox/Tag';
 import ColorPicker from '../../components/controls/ColorPicker';
 import Input from '../../components/controls/Input';
 import NumberInput from '../../components/controls/NumberInput';
-import RadioDots from '../../components/controls/RadioGroup/RadiosDots';
+import RadioDots from '../../components/controls/RadioDots';
 import Select from '../../components/controls/Select';
 import Textarea from '../../components/controls/Textarea';
 import Toggle from '../../components/controls/Toggle';
@@ -278,7 +278,7 @@ export default function RadixComponents() {
 
         <DropdownMenu
           triggerElement={
-            <button type='button' className='!border !border-white !p-4 !rounded-lg'>
+            <button type='button' className='border border-white p-4 rounded-lg'>
               Open Dropdown
             </button>
           }
