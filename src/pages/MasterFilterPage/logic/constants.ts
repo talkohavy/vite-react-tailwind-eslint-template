@@ -1,3 +1,30 @@
+import { ArrayFilter, type OperatorNames, type FilterScheme } from '@talkohavy/filters';
+
+export const filters: FilterScheme<OperatorNames> = [
+  {
+    fieldName: 'role',
+    operator: 'exists',
+    // NOT: true,
+  },
+  // {
+  //   OR: [
+  //     {
+  //       fieldName: 'age',
+  //       operator: 'between',
+  //       value: [25, 30],
+  //       NOT: true,
+  //     },
+  //     // {
+  //     //   fieldName: 'age',
+  //     //   operator: 'equals',
+  //     //   value: 35,
+  //     // },
+  //   ],
+  // },
+];
+
+export const arrayFilter = new ArrayFilter(filters);
+
 export const data = [
   {
     id: 1,

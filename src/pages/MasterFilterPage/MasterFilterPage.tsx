@@ -1,31 +1,5 @@
 import { useMemo } from 'react';
-import { ArrayFilter, type OperatorNames, type FilterScheme } from '@talkohavy/filters';
-import { data } from './logic/constants';
-
-const filters: FilterScheme<OperatorNames> = [
-  {
-    fieldName: 'role',
-    operator: 'exists',
-    // NOT: true,
-  },
-  // {
-  //   OR: [
-  //     {
-  //       fieldName: 'age',
-  //       operator: 'between',
-  //       value: [25, 30],
-  //       NOT: true,
-  //     },
-  //     // {
-  //     //   fieldName: 'age',
-  //     //   operator: 'equals',
-  //     //   value: 35,
-  //     // },
-  //   ],
-  // },
-];
-
-const arrayFilter = new ArrayFilter(filters);
+import { arrayFilter, data } from './logic/constants';
 
 export default function MasterFilterPage() {
   const results = useMemo(() => {
