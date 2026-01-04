@@ -26,6 +26,7 @@
     "@talkohavy/filters": "^3.0.0",
     "@talkohavy/lodash": "^1.4.1",
     "@talkohavy/table": "^1.0.12",
+    "@tanstack/react-virtual": "^3.13.16",
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
     "create-query-language": "^1.2.0",
