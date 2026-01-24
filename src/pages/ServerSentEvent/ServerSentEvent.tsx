@@ -5,7 +5,7 @@ export default function ServerSentEvent() {
   const [value, setValue] = useState<string | null>(null);
 
   useEffect(() => {
-    const eventSource = new EventSource('http://localhost:8000/sse', { withCredentials: true });
+    const eventSource = new EventSource('http://localhost:8000/api/sse', { withCredentials: true });
 
     eventSource.addEventListener('luckylove-data', (event) => {
       console.log('event is:', event);
