@@ -57,23 +57,29 @@ export default [
           internalPattern: ['^~/.+'],
           partitionByComment: false,
           partitionByNewLine: false,
-          newlinesBetween: 'never', // <--- 'always' | 'never' | 'ignore'
+          newlinesBetween: 0, // <--- number | 'ignore' (0 = no newlines, 1 = one newline, etc.)
           maxLineLength: undefined,
           groups: [
             'react',
             'type',
             ['builtin', 'external'],
-            'internal-type',
+            'type-internal',
             'internal',
-            ['parent-type', 'sibling-type', 'index-type'],
+            ['type-parent', 'type-sibling', 'type-index'],
             ['parent', 'sibling', 'index'],
-            'object',
             'unknown',
           ],
-          customGroups: {
-            value: { react: ['^react$', '^react-.+'] },
-            type: { react: ['^react$', '^react-.+'] },
-          },
+          customGroups: [
+            {
+              groupName: 'react',
+              selector: 'type',
+              elementNamePattern: ['^react$', '^react-.+'],
+            },
+            {
+              groupName: 'react',
+              elementNamePattern: ['^react$', '^react-.+'],
+            },
+          ],
           environment: 'node', // <--- Possible Options: 'node' | 'bun'
         },
       ],
