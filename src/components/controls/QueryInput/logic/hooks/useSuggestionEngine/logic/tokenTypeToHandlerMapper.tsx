@@ -1,3 +1,4 @@
+import type { CompletionItem, KeyConfig } from '../../../../types';
 import {
   LogicalOperators,
   ContextTypes,
@@ -7,7 +8,6 @@ import {
   type TokenContextWithKey,
   Comparators,
 } from 'create-query-language';
-import type { CompletionItem, KeyConfig } from '../../../../types';
 import { areQuotesNeeded } from '../../../utils/areQuotesNeeded';
 import ValueOptionItem from '../ValueOptionItem';
 

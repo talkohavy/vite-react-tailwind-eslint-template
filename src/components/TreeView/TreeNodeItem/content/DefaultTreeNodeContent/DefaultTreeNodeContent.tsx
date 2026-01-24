@@ -1,6 +1,6 @@
+import type { TreeNodeContentProps } from '../../../types';
 import { addDataAttributeWhen } from '@src/common/utils/addDataAttributeWhen';
 import clsx from 'clsx';
-import type { TreeNodeContentProps } from '../../../types';
 import {
   DEFAULT_INDENT_SIZE,
   TREE_VIEW_NODE_CONTENT_AS_BUTTON_CLASS,

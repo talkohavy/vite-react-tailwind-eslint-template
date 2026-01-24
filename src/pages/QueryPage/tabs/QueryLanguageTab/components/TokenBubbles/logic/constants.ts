@@ -1,5 +1,5 @@
-import { TokenTypes } from 'create-query-language';
 import type { ColorableTokenTypes, TokenMetaInfo } from '../types';
+import { TokenTypes } from 'create-query-language';
 
 export const TOKEN_TYPE_TO_COLOR: Record<ColorableTokenTypes, TokenMetaInfo> = {
   [TokenTypes.Identifier]: {

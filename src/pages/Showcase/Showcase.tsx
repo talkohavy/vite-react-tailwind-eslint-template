@@ -1,7 +1,7 @@
 import { useId, useRef, useState } from 'react';
+import type { SelectOption } from '../../components/controls/Select/types';
 import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
-import type { SelectOption } from '../../components/controls/Select/types';
 import FancyProgressBar from '../../components/beautiful/FancyProgressBar';
 import ToggleV1 from '../../components/beautiful/ToggleV1';
 import ToggleV2 from '../../components/beautiful/ToggleV2';

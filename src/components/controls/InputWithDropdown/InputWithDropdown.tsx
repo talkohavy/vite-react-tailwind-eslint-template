@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
+import type { Option, OptionGroup, OpenChangeDetails } from './types';
 import { Portal, Combobox as ComboboxOriginal } from '@ark-ui/react';
 import clsx from 'clsx';
-import type { Option, OptionGroup, OpenChangeDetails } from './types';
 import CloseIcon from '../../svgs/CloseIcon';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './InputWithDropdown.module.scss';

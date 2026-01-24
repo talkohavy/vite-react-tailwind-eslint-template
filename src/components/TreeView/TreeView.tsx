@@ -1,5 +1,5 @@
-import clsx from 'clsx';
 import type { TreeViewProps } from './types';
+import clsx from 'clsx';
 import { TREE_VIEW_ROOT_CLASS } from './logic/constants';
 import { useTreeViewLogic } from './logic/useTreeViewLogic';
 import TreeNodeItem from './TreeNodeItem';

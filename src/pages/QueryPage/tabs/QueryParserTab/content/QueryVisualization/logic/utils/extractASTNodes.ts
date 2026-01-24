@@ -1,5 +1,5 @@
-import type { Expression } from 'create-query-language';
 import type { VisualizationItem } from '../../types';
+import type { Expression } from 'create-query-language';
 import { AST_COLORS } from '../constants';
 
 export function extractASTNodes(expression: Expression, level = 0): VisualizationItem[] {

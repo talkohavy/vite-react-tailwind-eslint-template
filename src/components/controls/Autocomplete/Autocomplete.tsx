@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
+import type { SelectOption } from '../Select/types';
 import { Combobox as ComboboxOriginal, createListCollection, useCombobox } from '@ark-ui/react/combobox';
 import { Field } from '@ark-ui/react/field';
 import { Portal } from '@ark-ui/react/portal';
 import clsx from 'clsx';
-import type { SelectOption } from '../Select/types';
 import CloseIcon from '../../svgs/CloseIcon';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './Autocomplete.module.scss';

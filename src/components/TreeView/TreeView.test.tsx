@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import type { TreeNode } from './types';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TreeView from './TreeView';
 
 const mockStaticData: Array<TreeNode> = [

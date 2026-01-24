@@ -1,3 +1,4 @@
+import type { SelectOption } from './types';
 import {
   Arrow,
   Root,
@@ -12,7 +13,6 @@ import {
   Content,
 } from '@radix-ui/react-select';
 import clsx from 'clsx';
-import type { SelectOption } from './types';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './Select.module.scss';
 import SelectItem from './SelectItem';

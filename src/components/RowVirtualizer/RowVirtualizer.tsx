@@ -1,7 +1,7 @@
 import { type ComponentType, useCallback, useRef } from 'react';
+import type { ChildItemProps } from './types';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import clsx from 'clsx';
-import type { ChildItemProps } from './types';
 
 type RowVirtualizerProps = {
   items: any[];

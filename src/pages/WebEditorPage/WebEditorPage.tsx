@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs';
+import type { Language } from './types';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-json';
 import 'prismjs/themes/prism.css';
-import type { Language } from './types';
+import Prism from 'prismjs';
 import { codeExamples } from './logic/constants';
 
 export default function WebEditorPage() {

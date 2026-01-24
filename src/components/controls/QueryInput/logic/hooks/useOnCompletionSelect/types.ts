@@ -1,5 +1,5 @@
-import type { Token } from 'create-query-language';
 import type { CompletionItem } from '../../../types';
+import type { Token } from 'create-query-language';
 
 export type InsertionContext = {
   token: Token;

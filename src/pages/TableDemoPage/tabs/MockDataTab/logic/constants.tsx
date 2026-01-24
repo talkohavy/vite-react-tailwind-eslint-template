@@ -1,5 +1,5 @@
-import { createColumnHelper } from '@talkohavy/table';
 import type { User } from '../types';
+import { createColumnHelper } from '@talkohavy/table';
 
 export const mockUsers: User[] = [
   {

@@ -1,5 +1,5 @@
-import { ContextTypes, SpecialChars, TokenTypes } from 'create-query-language';
 import type { InsertionStrategy } from './types';
+import { ContextTypes, SpecialChars, TokenTypes } from 'create-query-language';
 
 /**
  * Base strategy with common default behavior
