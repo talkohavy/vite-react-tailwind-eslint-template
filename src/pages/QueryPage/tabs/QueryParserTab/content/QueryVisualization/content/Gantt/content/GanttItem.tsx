@@ -1,6 +1,6 @@
-import type { VisualizationItem } from '../../../types';
 import GanttInnerText from './GanttInnerText';
 import GanttTooltip from './GanttTooltip';
+import type { VisualizationItem } from '../../../types';
 
 type GanttItemProps = {
   item: VisualizationItem;

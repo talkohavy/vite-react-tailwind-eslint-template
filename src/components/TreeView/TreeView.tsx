@@ -1,9 +1,9 @@
-import type { TreeViewProps } from './types';
 import clsx from 'clsx';
 import { TREE_VIEW_ROOT_CLASS } from './logic/constants';
 import { useTreeViewLogic } from './logic/useTreeViewLogic';
 import TreeNodeItem from './TreeNodeItem';
 import styles from './TreeView.module.scss';
+import type { TreeViewProps } from './types';
 
 export default function TreeView(props: TreeViewProps) {
   const {

@@ -1,4 +1,3 @@
-import type { KeyConfig } from '@src/components/controls/QueryInput';
 import {
   ASTUtils,
   AstTypes,
@@ -7,6 +6,7 @@ import {
   type ASTNode,
   type Position,
 } from 'create-query-language';
+import type { KeyConfig } from '@src/components/controls/QueryInput';
 
 export type ValidationError = {
   type: 'invalid-key' | 'invalid-value';

@@ -1,6 +1,6 @@
 import { lazy } from 'react';
-import type { Route } from './common/types';
 import { BASE_URL } from './common/constants';
+import type { Route } from './common/types';
 
 // Main pages
 const RedirectToHome = lazy(() => import('./pages/RedirectToHome'));

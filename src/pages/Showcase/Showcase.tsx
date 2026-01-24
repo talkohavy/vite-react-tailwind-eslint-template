@@ -1,5 +1,4 @@
 import { useId, useRef, useState } from 'react';
-import type { SelectOption } from '../../components/controls/Select/types';
 import { parseColor } from '@ark-ui/react/color-picker';
 import { parseDate } from '@ark-ui/react/date-picker';
 import FancyProgressBar from '../../components/beautiful/FancyProgressBar';
@@ -29,6 +28,7 @@ import { useIsCloseToEdge } from '../../hooks/useIsCloseToEdge';
 import { useScrollToEdge } from '../../hooks/useScrollToEdge';
 import DropdownMenuContent from './components/DropdownMenuContent';
 import { useRunningProgress } from './components/useRunningProgress';
+import type { SelectOption } from '../../components/controls/Select/types';
 
 const opt = Array.from(Array(40).keys()).map((_, index) => ({ value: index || 'a', label: index.toString() }));
 

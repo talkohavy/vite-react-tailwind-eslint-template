@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import type { RequestDetails } from '../../../../../common/types';
 import { isBackgroundSyncFeatureEnabled } from '../../../../../common/utils/isBackgroundSyncFeatureEnabled';
 import { HttpMethod, httpClient } from '../../../../../lib/HttpClient';
 import { fireSyncEvent } from '../../../logic/utils/fireSyncEvent';
 import { sendDataLater, sendDataNow } from './sendData';
 import { useFormValues } from './useFormValues';
+import type { RequestDetails } from '../../../../../common/types';
 
 export function useBackgroundSyncTabLogic() {
   const { email, password, name, age, handleEmailChange, handlePasswordChange, handleNameChange, handleAgeChange } =

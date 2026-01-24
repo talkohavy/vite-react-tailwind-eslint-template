@@ -1,5 +1,5 @@
-import { build } from 'esbuild';
 import os from 'os';
+import { build } from 'esbuild';
 
 /**
  * @typedef {{

@@ -1,8 +1,8 @@
-import type { RequestDetails } from '../../../../../common/types';
 import { syncRequestsTableName } from '../../../../../common/constants';
 import { httpClient } from '../../../../../lib/HttpClient';
 import { indexedDBClient } from '../../../../../lib/IndexedDB';
 import { fireSyncEvent } from '../../../logic/utils/fireSyncEvent';
+import type { RequestDetails } from '../../../../../common/types';
 
 export async function sendDataLater(requestDetails: RequestDetails) {
   await indexedDBClient.addRecord({ tableName: syncRequestsTableName, data: requestDetails });

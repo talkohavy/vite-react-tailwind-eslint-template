@@ -1,8 +1,8 @@
+import { findTokenAtCursor } from './findTokenAtCursor';
+import { INSERTION_STRATEGIES } from './strategies';
 import type { CompletionItem } from '../../../types';
 import type { InsertionResult } from './types';
 import type { Token } from 'create-query-language';
-import { findTokenAtCursor } from './findTokenAtCursor';
-import { INSERTION_STRATEGIES } from './strategies';
 
 type UseOnCompletionSelectProps = {
   tokens: Token[];

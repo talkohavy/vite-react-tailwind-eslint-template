@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 import { Route, Routes } from 'react-router';
-import type { Route as RouteType } from './common/types';
 import Layout from './components/Layout';
 import PageNotFound from './pages/PageNotFound';
 import { routes } from './routes';
+import type { Route as RouteType } from './common/types';
 
 function renderRoute(route: RouteType, index: number) {
   const { to: path, Component, children } = route;

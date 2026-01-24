@@ -1,4 +1,3 @@
-import type { SelectOption } from './types';
 import {
   Arrow,
   Root,
@@ -16,6 +15,7 @@ import clsx from 'clsx';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './Select.module.scss';
 import SelectItem from './SelectItem';
+import type { SelectOption } from './types';
 
 type SelectProps = {
   selectedOption: SelectOption;

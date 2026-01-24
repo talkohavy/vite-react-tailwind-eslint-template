@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Message } from './types';
 import { MessageType } from './constants';
+import type { Message } from './types';
 
 function sendDisconnectedMessageWrapper(bc: BroadcastChannel) {
   return () => {

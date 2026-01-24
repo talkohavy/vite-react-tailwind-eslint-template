@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import type { ColorableTokenTypes } from './types';
 import clsx from 'clsx';
 import { type Token, TokenTypes } from 'create-query-language';
 import TokenLegend from './content/TokenLegend';
 import { TOKEN_TYPE_TO_COLOR } from './logic/constants';
+import type { ColorableTokenTypes } from './types';
 
 type TokenBubblesProps = {
   tokens: Token[];

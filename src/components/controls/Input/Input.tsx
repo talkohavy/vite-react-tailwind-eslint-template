@@ -1,6 +1,6 @@
 import { forwardRef, useState } from 'react';
-import type { RuleReturnValue } from './types';
 import InputBase from './InputBase';
+import type { RuleReturnValue } from './types';
 
 export type InputProps = {
   /**

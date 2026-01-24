@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import type { VisualizationItem } from './types';
-import type { ParseResult } from 'create-query-language';
 import Gantt from './content/Gantt';
 import OriginalQueryDisplayer from './content/OriginalQueryDisplayer';
 import ParseErrorDisplayer from './content/ParseErrorDisplayer';
 import { TOKEN_COLORS } from './logic/constants';
 import { extractASTNodes } from './logic/utils/extractASTNodes';
+import type { VisualizationItem } from './types';
+import type { ParseResult } from 'create-query-language';
 
 interface QueryVisualizationProps {
   query: string;

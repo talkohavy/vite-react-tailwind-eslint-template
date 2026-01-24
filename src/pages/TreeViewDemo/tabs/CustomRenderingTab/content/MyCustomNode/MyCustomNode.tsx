@@ -1,9 +1,9 @@
-import type { TreeNodeContentProps } from '@src/components/TreeView/types';
 import { NodeTypes } from '@src/components/TreeView';
 import CustomNodeCssFile from '../CustomNodeCssFile';
 import CustomNodeFolder from '../CustomNodeFolder';
 import CustomNodeJavascriptFile from '../CustomNodeJavascriptFile';
 import CustomNodeReactFile from '../CustomNodeReactFile';
+import type { TreeNodeContentProps } from '@src/components/TreeView/types';
 
 export default function MyCustomNode(props: TreeNodeContentProps) {
   const { node, renderNode: DefaultTreeNodeContent } = props;

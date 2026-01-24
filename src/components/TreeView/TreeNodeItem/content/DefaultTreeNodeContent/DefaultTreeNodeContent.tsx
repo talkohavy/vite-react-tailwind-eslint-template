@@ -1,6 +1,5 @@
-import type { TreeNodeContentProps } from '../../../types';
-import { addDataAttributeWhen } from '@src/common/utils/addDataAttributeWhen';
 import clsx from 'clsx';
+import { addDataAttributeWhen } from '@src/common/utils/addDataAttributeWhen';
 import {
   DEFAULT_INDENT_SIZE,
   TREE_VIEW_NODE_CONTENT_AS_BUTTON_CLASS,
@@ -9,6 +8,7 @@ import {
 } from '../../../logic/constants';
 import ExpandButton from '../ExpandButton';
 import styles from './DefaultTreeNodeContent.module.scss';
+import type { TreeNodeContentProps } from '../../../types';
 
 export default function DefaultTreeNodeContent(props: TreeNodeContentProps) {
   const {

@@ -52,21 +52,22 @@ export default [
         {
           type: 'alphabetical',
           order: 'asc',
+          sortBy: 'path', // <--- defaults to 'path'. Options are: 'path' | 'specifier'
           ignoreCase: true,
           specialCharacters: 'keep',
-          internalPattern: ['^~/.+'],
+          internalPattern: ['^@src/.+', '^~/.+'], // <--- defaults to default: ['^~/.+', '^@/.+']. Specifies a pattern for identifying internal imports. This is useful for distinguishing your own modules from external dependencies.
           partitionByComment: false,
-          partitionByNewLine: false,
           newlinesBetween: 0, // <--- number | 'ignore' (0 = no newlines, 1 = one newline, etc.)
           maxLineLength: undefined,
           groups: [
             'react',
-            'type',
-            ['builtin', 'external'],
-            'type-internal',
-            'internal',
-            ['type-parent', 'type-sibling', 'type-index'],
+            'builtin', // <--- import fs from 'fs';
+            'external', // <--- import express from 'express';
+            'internal', // <--- import myUtil from '@src/myUtil';
             ['parent', 'sibling', 'index'],
+            'type-internal',
+            'type',
+            ['type-parent', 'type-sibling', 'type-index'],
             'unknown',
           ],
           customGroups: [

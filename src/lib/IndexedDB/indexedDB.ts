@@ -1,3 +1,4 @@
+import { IndexDBFactory } from './logic/IndexDBFactory';
 import type {
   InitIndexedDB,
   AddRecordProps,
@@ -10,7 +11,6 @@ import type {
   ClearAllProps,
   GetRecordsByIndexProps,
 } from './types';
-import { IndexDBFactory } from './logic/IndexDBFactory';
 
 class IndexedDBClient {
   private db: IDBDatabase | null;

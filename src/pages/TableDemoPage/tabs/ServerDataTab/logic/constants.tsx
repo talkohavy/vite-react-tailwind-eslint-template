@@ -1,7 +1,7 @@
-import type { User } from '../types';
 import { createColumnHelper } from '@talkohavy/table';
 import { formatDate } from './utils/formatDate';
 import { formatDateTime } from './utils/formatDateTime';
+import type { User } from '../types';
 
 const columnHelper = createColumnHelper<User>();
 

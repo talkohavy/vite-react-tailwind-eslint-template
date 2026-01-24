@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
-import type { UsersResponse } from '../types';
 import { useAsyncFetch } from '../../../../../hooks/useAsyncFetch';
 import { httpClient } from '../../../../../lib/HttpClient';
 import { usePagination } from './hooks/usePagination';
+import type { UsersResponse } from '../types';
 
 export function useServerDataTabLogic() {
   const { handlePageChange, handleLimitChange, limit, page } = usePagination();

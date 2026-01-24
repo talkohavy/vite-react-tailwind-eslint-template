@@ -1,6 +1,6 @@
-import type { TreeNode } from '../../types';
 import { NodeTypes } from '../constants';
 import { updateTreeRecursively } from './updateTreeRecursively';
+import type { TreeNode } from '../../types';
 
 function predicate(node: TreeNode) {
   return node.type === NodeTypes.Folder && !!node.items?.length;

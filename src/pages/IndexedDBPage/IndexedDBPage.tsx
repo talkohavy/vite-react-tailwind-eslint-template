@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { Person } from './types';
 import AddNewPerson from './content/AddNewPerson';
 import GetAllPersons from './content/GetAllPersons';
 import GetOnePerson from './content/GetOnePerson';
+import type { Person } from './types';
 
 export default function IndexedDBPage() {
   const [records, setRecords] = useState<Person[]>([]);

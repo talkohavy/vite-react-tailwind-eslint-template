@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import type { TokenMetaInfo } from '../../types';
 import clsx from 'clsx';
 import { TOKEN_TYPE_TO_COLOR } from '../../logic/constants';
+import type { TokenMetaInfo } from '../../types';
 
 type TokenLegendProps = {
   className?: string;

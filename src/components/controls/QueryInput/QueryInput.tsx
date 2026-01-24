@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 import type { ForwardRefRenderFunction, RefObject } from 'react';
-import type { CompletionItem } from './types';
 import InputWithDropdown, { type OpenChangeDetails } from '@src/components/controls/InputWithDropdown';
 import { useQueryInputLogic } from './logic/useQueryInputLogic';
 import styles from './QueryInput.module.scss';
+import type { CompletionItem } from './types';
 
 type QueryInputProps = {
   query: string;

@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import type { User } from '../../types';
 import { dynamicTableName } from '../../../../common/constants';
 import Button from '../../../../components/controls/Button';
 import { useCachedContent } from '../../../../hooks/useCachedContent';
 import { indexedDBClient } from '../../../../lib/IndexedDB';
 import { cacheContentOnDemand } from '../../logic/utils/cacheContentOnDemand';
 import { fetchUserById } from '../../logic/utils/fetchUserById';
+import type { User } from '../../types';
 
 const id = 1;
 const isFreshData = true;

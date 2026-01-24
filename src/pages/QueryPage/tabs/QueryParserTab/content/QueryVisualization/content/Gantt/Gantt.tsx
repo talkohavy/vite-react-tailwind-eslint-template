@@ -1,8 +1,8 @@
-import type { VisualizationItem } from '../../types';
 import GanttItem from './content/GanttItem';
 import GanttLegend from './content/GanttLegend';
 import TotalItemsCounterProps from './content/TotalItemsCounter';
 import XAxis from './content/XAxis';
+import type { VisualizationItem } from '../../types';
 
 type GanttProps = {
   maxLevel: number;

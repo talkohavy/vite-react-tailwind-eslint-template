@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import type { Person } from '../../types';
 import { usersTableName } from '../../../../common/constants';
 import Button from '../../../../components/controls/Button';
 import Input from '../../../../components/controls/Input';
 import NumberInput from '../../../../components/controls/NumberInput';
 import { indexedDBClient } from '../../../../lib/IndexedDB';
 import { validatePerson } from '../../logic/personValidationSchema';
+import type { Person } from '../../types';
 
 type AddNewPersonProps = {
   setRecords: (value?: any) => void;

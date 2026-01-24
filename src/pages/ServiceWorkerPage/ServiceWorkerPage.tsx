@@ -1,11 +1,11 @@
 import { type ReactNode, useState } from 'react';
-import type { RadioOption } from '../../components/controls/RadioGroup';
 import RadioTabs from '../../components/controls/RadioTabs';
 import BackgroundSyncTab from './tabs/BackgroundSyncTab';
 import CacheAssetTab from './tabs/CacheAssetTab';
 import CacheContentTab from './tabs/CacheContentTab';
 import FullExampleTab from './tabs/FullExampleTab';
 import RegisterServiceWorkerTab from './tabs/RegisterServiceWorkerTab';
+import type { RadioOption } from '../../components/controls/RadioGroup';
 
 const contentTabs: Array<RadioOption<() => ReactNode>> = [
   { value: 0, label: 'Register', item: RegisterServiceWorkerTab },

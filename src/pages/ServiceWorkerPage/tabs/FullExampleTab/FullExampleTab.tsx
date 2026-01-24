@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import type { User } from '../../types';
 import { dynamicTableName } from '../../../../common/constants';
 import Button from '../../../../components/controls/Button';
 import FallbackImage from '../../../../components/FallbackImage';
@@ -11,6 +10,7 @@ import { cacheAssetOnDemand } from '../../logic/utils/cacheAssetOnDemand';
 import { cacheContentOnDemand } from '../../logic/utils/cacheContentOnDemand';
 import { fetchUserById } from '../../logic/utils/fetchUserById';
 import { registerServiceWorker } from '../../logic/utils/registerServiceWorker';
+import type { User } from '../../types';
 
 const id = 1;
 const assetUrl = '/heart-256x256.png';

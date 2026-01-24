@@ -1,6 +1,4 @@
 import { useState, useMemo, useRef } from 'react';
-import type { OpenChangeDetails } from '@src/components/controls/InputWithDropdown';
-import type { KeyConfig } from '@src/components/controls/QueryInput/types';
 import { useOnCompletionSelect } from '@src/components/controls/QueryInput/logic/hooks/useOnCompletionSelect';
 import { useQueryParser } from '@src/components/controls/QueryInput/logic/hooks/useQueryParser';
 import { useSuggestionEngine } from '@src/components/controls/QueryInput/logic/hooks/useSuggestionEngine';
@@ -8,6 +6,8 @@ import { getTextWidth } from '../../../../../common/utils/getTextWidth';
 import { keyConfigs as initialKeyConfigs } from '../logic/constants';
 import { astToFilterScheme } from './utils/astToFilterScheme';
 import { validateKeysAndValues } from './utils/validateKeysAndValues';
+import type { OpenChangeDetails } from '@src/components/controls/InputWithDropdown';
+import type { KeyConfig } from '@src/components/controls/QueryInput/types';
 
 export function useQueryLanguageTabLogic() {
   const [query, setQuery] = useState('');

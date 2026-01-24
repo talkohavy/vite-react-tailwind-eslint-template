@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import Editor from 'react-simple-code-editor';
-import type { Language } from './types';
+import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-json';
 import 'prismjs/themes/prism.css';
-import Prism from 'prismjs';
 import { codeExamples } from './logic/constants';
+import type { Language } from './types';
 
 export default function WebEditorPage() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('javascript');

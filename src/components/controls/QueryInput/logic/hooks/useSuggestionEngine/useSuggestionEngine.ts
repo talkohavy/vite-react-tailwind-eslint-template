@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
-import type { CompletionItem, KeyConfig } from '../../../types';
 import { ContextTypes, type Token, type TokenContext, TokenTypes } from 'create-query-language';
 import { TOKEN_TYPE_HANDLERS } from './logic/tokenTypeToHandlerMapper';
+import type { CompletionItem, KeyConfig } from '../../../types';
 
 interface UseSuggestionEngineProps {
   tokens: Token[];

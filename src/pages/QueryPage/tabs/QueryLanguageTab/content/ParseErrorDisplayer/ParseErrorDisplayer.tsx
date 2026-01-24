@@ -1,5 +1,5 @@
-import type { Position } from 'create-query-language';
 import styles from './ParseErrorDisplayer.module.scss';
+import type { Position } from 'create-query-language';
 
 type DisplayedError = {
   message: string;

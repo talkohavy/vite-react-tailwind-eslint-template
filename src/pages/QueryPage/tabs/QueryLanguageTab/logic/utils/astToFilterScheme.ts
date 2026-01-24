@@ -1,5 +1,5 @@
-import type { FilterScheme, AndFilter, NotFilter, OrFilter } from '@talkohavy/filters';
 import { AstTypes, LogicalOperators, type Expression, Comparators, SpecialChars } from 'create-query-language';
+import type { FilterScheme, AndFilter, NotFilter, OrFilter } from '@talkohavy/filters';
 
 export const COMPARATOR_SYMBOL_TO_NAME: Record<any, any> = {
   [Comparators['==']]: 'equals',

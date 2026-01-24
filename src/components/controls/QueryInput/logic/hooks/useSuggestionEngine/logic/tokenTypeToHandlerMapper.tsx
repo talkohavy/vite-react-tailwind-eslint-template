@@ -1,4 +1,3 @@
-import type { CompletionItem, KeyConfig } from '../../../../types';
 import {
   LogicalOperators,
   ContextTypes,
@@ -10,6 +9,7 @@ import {
 } from 'create-query-language';
 import { areQuotesNeeded } from '../../../utils/areQuotesNeeded';
 import ValueOptionItem from '../ValueOptionItem';
+import type { CompletionItem, KeyConfig } from '../../../../types';
 
 type HandlerProps = {
   keyConfigs: KeyConfig[];

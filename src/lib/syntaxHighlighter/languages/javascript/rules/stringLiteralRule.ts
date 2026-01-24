@@ -1,5 +1,5 @@
-import type { HLJSApi } from 'highlight.js';
 import { SUBST } from '../constants';
+import type { HLJSApi } from 'highlight.js';
 
 function getStringLiteralRule(hljs: HLJSApi) {
   return {

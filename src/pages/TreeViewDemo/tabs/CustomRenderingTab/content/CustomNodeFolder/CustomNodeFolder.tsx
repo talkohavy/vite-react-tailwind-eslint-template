@@ -1,7 +1,7 @@
-import type { TreeNodeContentProps } from '../../../../../../components/TreeView/types';
 import clsx from 'clsx';
 import { addDataAttributeWhen } from '../../../../../../common/utils/addDataAttributeWhen';
 import { DEFAULT_INDENT_SIZE } from '../../../../../../components/TreeView/logic/constants';
+import type { TreeNodeContentProps } from '../../../../../../components/TreeView/types';
 
 export default function CustomNodeFolder(props: TreeNodeContentProps) {
   const {

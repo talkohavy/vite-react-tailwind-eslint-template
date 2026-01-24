@@ -1,10 +1,10 @@
-import type { RequestDetails } from '../../common/types';
 import { API_GATEWAY_URL, dbName, syncRequestsTableName, tables } from '../../common/constants';
 import { httpClient, initHttpClient } from '../HttpClient';
 import { HttpError } from '../HttpClient/logic/HttpError';
 import { indexedDBClient, initIndexedDB } from '../IndexedDB';
 import { AssetManager } from './logic/AssetManager';
 import { MyServiceWorker } from './ServiceWorker';
+import type { RequestDetails } from '../../common/types';
 
 const assetManager = new AssetManager();
 

@@ -1,9 +1,9 @@
 import { memo } from 'react';
-import type { TreeNodeItemProps } from '../types';
 import { addDataAttributeWhen } from '../../../common/utils/addDataAttributeWhen';
 import { DEFAULT_INDENT_SIZE, TREE_VIEW_NODE_CLASS, TREE_VIEW_NODE_ITEMS_LIST_CLASS } from '../logic/constants';
 import DefaultTreeNodeContent from './content/DefaultTreeNodeContent';
 import { useTreeNodeItemLogic } from './logic/useTreeNodeItemLogic';
+import type { TreeNodeItemProps } from '../types';
 
 const TreeNodeItem = memo((props: TreeNodeItemProps) => {
   const {

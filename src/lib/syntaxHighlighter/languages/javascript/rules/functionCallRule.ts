@@ -1,5 +1,5 @@
-import type { HLJSApi } from 'highlight.js';
 import { LOWERCASED_VARIABLE_RE } from '../constants';
+import type { HLJSApi } from 'highlight.js';
 
 const FUNCTION_LIKE_GLOBALS = [
   'async',

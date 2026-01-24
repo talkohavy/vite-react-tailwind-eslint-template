@@ -1,5 +1,4 @@
 import { forwardRef } from 'react';
-import type { Option, OptionGroup, OpenChangeDetails } from './types';
 import { Portal, Combobox as ComboboxOriginal } from '@ark-ui/react';
 import clsx from 'clsx';
 import CloseIcon from '../../svgs/CloseIcon';
@@ -16,6 +15,7 @@ import {
   INPUT_WITH_DROPDOWN_ROOT_CLASS,
 } from './logic/constants';
 import { useInputWithDropdownLogic } from './logic/useInputWithDropdownLogic';
+import type { Option, OptionGroup, OpenChangeDetails } from './types';
 
 const {
   RootProvider,
