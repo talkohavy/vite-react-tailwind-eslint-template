@@ -1,0 +1,16 @@
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dotBase {
+  // size-2 rounded-full
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+}
