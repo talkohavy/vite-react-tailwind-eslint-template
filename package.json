@@ -39,7 +39,8 @@
     "react-router": "^7.13.0",
     "react-router-dom": "^7.13.0",
     "react-simple-code-editor": "^0.14.1",
-    "react-tooltip": "^5.30.0"
+    "react-tooltip": "^5.30.0",
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.12",

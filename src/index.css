@@ -83,8 +83,6 @@
     -moz-outline-radius: unset;
     outline: none;
     color: inherit;
-    scrollbar-color: rgba(93, 93, 255, 0.9) #7d8784 !important;
-    scrollbar-width: thin !important;
   }
 
   *::-webkit-scrollbar {
