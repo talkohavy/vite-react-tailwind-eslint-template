@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { WS_SERVICE_URL } from '../../../common/constants';
+import { WebSocketClient } from '../../../lib/WebSocketClient';
 import { MessageState, type MessageStateValues, WsConnectionState, type WsConnectionStateValues } from './constants';
 import { nextId } from './utils/nextId';
 
@@ -17,22 +18,25 @@ export function useWebSocketPageLogic() {
   const [connectionError, setConnectionError] = useState<Error | null>(null);
   const [log, setLog] = useState<MessageLogEntry[]>([]);
 
-  const wsRef = useRef<WebSocket | null>(null);
+  const clientRef = useRef<WebSocketClient | null>(null);
 
   const addLogEntry = useCallback((direction: MessageStateValues, data: string) => {
     setLog((prev) => [...prev, { id: nextId(), time: new Date(), direction, data }]);
   }, []);
 
   const disconnect = useCallback(() => {
-    const ws = wsRef.current;
+    const client = clientRef.current;
 
-    if (!ws) return;
+    const ws = client?.getSocket();
+
+    if (!(client && ws)) return;
 
     if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
       setConnectionState(WsConnectionState.Closing);
-      ws.close();
     }
-    wsRef.current = null;
+
+    client.disconnect();
+    clientRef.current = null;
   }, []);
 
   const connect = useCallback(
@@ -47,17 +51,22 @@ export function useWebSocketPageLogic() {
 
       setConnectionState(WsConnectionState.Connecting);
 
-      let ws: WebSocket;
+      let client: WebSocketClient;
 
       try {
-        ws = new WebSocket(targetUrl);
+        client = new WebSocketClient();
+
+        client.connect(targetUrl);
       } catch (err) {
         setConnectionState(WsConnectionState.Closed);
         setConnectionError(err instanceof Error ? err : new Error(String(err)));
         return;
       }
 
-      wsRef.current = ws;
+      clientRef.current = client;
+      const ws = client.getSocket();
+
+      if (!ws) return;
 
       ws.onopen = () => {
         setConnectionState(WsConnectionState.Open);
@@ -65,7 +74,7 @@ export function useWebSocketPageLogic() {
       };
 
       ws.onclose = () => {
-        wsRef.current = null;
+        clientRef.current = null;
         setConnectionState(WsConnectionState.Closed);
       };
 
@@ -87,22 +96,27 @@ export function useWebSocketPageLogic() {
   );
 
   const send = useCallback(() => {
-    const ws = wsRef.current;
+    const client = clientRef.current;
 
-    if (!(ws?.readyState === WebSocket.OPEN)) return;
-
-    console.log(ws.readyState);
+    if (!client?.isConnected()) return;
 
     const trimmed = messageToSend.trim();
 
     if (!trimmed) return;
 
-    ws.send(trimmed);
+    client.send(trimmed);
 
     addLogEntry(MessageState.Sent, trimmed);
 
     setMessageToSend('');
   }, [messageToSend, addLogEntry]);
+
+  useEffect(() => {
+    return () => {
+      clientRef.current?.disconnect();
+      clientRef.current = null;
+    };
+  }, []);
 
   const clearLog = useCallback(() => setLog([]), []);
 
