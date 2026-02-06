@@ -25,6 +25,7 @@ const QueryPage = lazy(() => import('./pages/QueryPage'));
 const WebEditorPage = lazy(() => import('./pages/WebEditorPage'));
 const TableDemoPage = lazy(() => import('./pages/TableDemoPage'));
 const SocketIOPage = lazy(() => import('./pages/SocketIOPage'));
+const WebSocketPage = lazy(() => import('./pages/WebSocketPage'));
 
 // Mini-pages/tabs
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -292,5 +293,11 @@ export const routes: Array<Route> = [
     text: 'Socket.IO',
     activeNames: [`${BASE_URL}/socket-io`],
     Component: SocketIOPage,
+  },
+  {
+    to: `${BASE_URL}/websocket`,
+    text: 'WebSocket',
+    activeNames: [`${BASE_URL}/websocket`],
+    Component: WebSocketPage,
   },
 ];
