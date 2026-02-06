@@ -25,18 +25,42 @@ export function useWebSocketPageLogic() {
   }, []);
 
   const disconnect = useCallback(() => {
-    const client = clientRef.current;
+    const wsClient = clientRef.current;
 
-    const ws = client?.getSocket();
+    const ws = wsClient?.getSocket();
 
-    if (!(client && ws)) return;
+    if (!(wsClient && ws)) return;
 
     if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
       setConnectionState(WsConnectionState.Closing);
     }
 
-    client.disconnect();
+    wsClient.disconnect();
     clientRef.current = null;
+  }, []);
+
+  const handleOpen = useCallback(() => {
+    setConnectionState(WsConnectionState.Open);
+    setConnectionError(null);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    clientRef.current = null;
+    setConnectionState(WsConnectionState.Closed);
+    setConnectionError(null);
+  }, []);
+
+  const handleMessage = useCallback(
+    (event: MessageEvent<string | Blob>) => {
+      const data: string = typeof event.data === 'string' ? event.data : `[Blob ${event.data.size} bytes]`;
+
+      addLogEntry(MessageState.Received, data);
+    },
+    [addLogEntry],
+  );
+
+  const handleError = useCallback(() => {
+    setConnectionError(new Error('WebSocket error'));
   }, []);
 
   const connect = useCallback(
@@ -51,60 +75,38 @@ export function useWebSocketPageLogic() {
 
       setConnectionState(WsConnectionState.Connecting);
 
-      let client: WebSocketClient;
+      let wsClient: WebSocketClient;
 
       try {
-        client = new WebSocketClient();
+        wsClient = new WebSocketClient(targetUrl, {
+          onOpen: handleOpen,
+          onClose: handleClose,
+          onError: handleError,
+          onMessage: handleMessage,
+        });
 
-        client.connect(targetUrl);
+        wsClient.connect();
       } catch (err) {
         setConnectionState(WsConnectionState.Closed);
         setConnectionError(err instanceof Error ? err : new Error(String(err)));
         return;
       }
 
-      clientRef.current = client;
-      const ws = client.getSocket();
-
-      if (!ws) return;
-
-      ws.onopen = () => {
-        setConnectionState(WsConnectionState.Open);
-        setConnectionError(null);
-      };
-
-      ws.onclose = () => {
-        clientRef.current = null;
-        setConnectionState(WsConnectionState.Closed);
-      };
-
-      ws.onerror = () => {
-        setConnectionError(new Error('WebSocket error'));
-      };
-
-      ws.onmessage = (event: MessageEvent<string | Blob>) => {
-        let data: string;
-        if (typeof event.data === 'string') {
-          data = event.data;
-        } else {
-          data = `[Blob ${event.data.size} bytes]`;
-        }
-        addLogEntry(MessageState.Received, data);
-      };
+      clientRef.current = wsClient;
     },
-    [disconnect, addLogEntry],
+    [disconnect, handleOpen, handleClose, handleError, handleMessage],
   );
 
   const send = useCallback(() => {
-    const client = clientRef.current;
+    const wsClient = clientRef.current;
 
-    if (!client?.isConnected()) return;
+    if (!wsClient?.isConnected()) return;
 
     const trimmed = messageToSend.trim();
 
     if (!trimmed) return;
 
-    client.send(trimmed);
+    wsClient.send(trimmed);
 
     addLogEntry(MessageState.Sent, trimmed);
 
