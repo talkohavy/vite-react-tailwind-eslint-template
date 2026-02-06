@@ -50,7 +50,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
           <Button
             onClick={disconnect}
             disabled={isDisconnectDisabled}
-            className='bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 disabled:opacity-50'
+            className='bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 disabled:hover:bg-gray-600'
           >
             Disconnect
           </Button>
