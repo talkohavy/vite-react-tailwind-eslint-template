@@ -16,7 +16,7 @@ export default function Button(props: ButtonProps) {
       type='button'
       onClick={onClick}
       className={twMerge(
-        'block cursor-pointer rounded-md hover:rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-500 active:rounded-xl focus:rounded-lg p-3',
+        'block cursor-pointer rounded-md hover:rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-500 active:rounded-xl focus:rounded-lg p-3 disabled:opacity-50 disabled:hover:bg-blue-500 disabled:cursor-default disabled:rounded-md',
         className,
       )}
       disabled={disabled}
