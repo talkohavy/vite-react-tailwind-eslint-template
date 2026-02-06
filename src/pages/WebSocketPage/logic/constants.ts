@@ -2,6 +2,7 @@ export const WsConnectionState = {
   Idle: 'idle',
   Connecting: 'connecting',
   Open: 'open',
+  Reconnecting: 'reconnecting',
   Closing: 'closing',
   Closed: 'closed',
 } as const;

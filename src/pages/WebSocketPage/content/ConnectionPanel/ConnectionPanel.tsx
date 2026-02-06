@@ -7,6 +7,7 @@ type ConnectionPanelProps = {
   url: string;
   setUrl: (url: string) => void;
   isConnecting: boolean;
+  isReconnecting: boolean;
   connect: (url: string) => void;
   disconnect: () => void;
   connectionState: WsConnectionStateValues;
@@ -15,9 +16,21 @@ type ConnectionPanelProps = {
 };
 
 export default function ConnectionPanel(props: ConnectionPanelProps) {
-  const { url, setUrl, isConnecting, connect, disconnect, connectionState, connectionError, isConnected } = props;
+  const {
+    url,
+    setUrl,
+    isConnecting,
+    isReconnecting,
+    connect,
+    disconnect,
+    connectionState,
+    connectionError,
+    isConnected,
+  } = props;
 
-  const isDisconnectDisabled = !isConnected && !isConnecting;
+  const isDisconnectDisabled = !isConnected && !isConnecting && !isReconnecting;
+  const isConnectDisabled = isConnecting || isReconnecting || isConnected;
+  const isUrlInputDisabled = isConnectDisabled || isDisconnectDisabled;
 
   return (
     <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
@@ -33,7 +46,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
             initialValue={url}
             onChange={setUrl}
             placeholder='ws://localhost:8000'
-            disabled={isConnecting}
+            disabled={isUrlInputDisabled}
             className='block w-full dark:bg-gray-800 dark:border-gray-600'
           />
         </div>
@@ -41,7 +54,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
         <div className='flex shrink-0 gap-2'>
           <Button
             onClick={() => connect(url)}
-            disabled={isConnecting || isConnected}
+            disabled={isConnectDisabled}
             className='bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50'
           >
             Connect

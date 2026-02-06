@@ -44,9 +44,13 @@ export function useWebSocketPageLogic() {
     setConnectionError(null);
   }, []);
 
-  const handleClose = useCallback(() => {
-    clientRef.current = null;
-    setConnectionState(WsConnectionState.Closed);
+  const handleClose = useCallback((event: { shouldRetry: boolean }) => {
+    if (event.shouldRetry) {
+      setConnectionState(WsConnectionState.Reconnecting);
+    } else {
+      clientRef.current = null;
+      setConnectionState(WsConnectionState.Closed);
+    }
     setConnectionError(null);
   }, []);
 
@@ -83,6 +87,10 @@ export function useWebSocketPageLogic() {
           onClose: handleClose,
           onError: handleError,
           onMessage: handleMessage,
+          retryStrategy: {
+            maxRetries: 5,
+            retryDelayMs: 2000,
+          },
         });
 
         wsClient.connect();
@@ -124,6 +132,7 @@ export function useWebSocketPageLogic() {
 
   const isConnected = connectionState === WsConnectionState.Open;
   const isConnecting = connectionState === WsConnectionState.Connecting;
+  const isReconnecting = connectionState === WsConnectionState.Reconnecting;
 
   return {
     url,
@@ -134,6 +143,7 @@ export function useWebSocketPageLogic() {
     connectionError,
     isConnected,
     isConnecting,
+    isReconnecting,
     connect,
     disconnect,
     send,

@@ -17,6 +17,11 @@ const config: Record<WsConnectionStateValues, { label: string; className: string
     className: 'bg-emerald-200 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200',
     dotClassName: 'bg-emerald-600 dark:bg-emerald-400 animate-pulse',
   },
+  [WsConnectionState.Reconnecting]: {
+    label: 'Reconnecting…',
+    className: 'bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-200',
+    dotClassName: 'bg-amber-500 animate-pulse',
+  },
   [WsConnectionState.Closing]: {
     label: 'Closing…',
     className: 'bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-200',

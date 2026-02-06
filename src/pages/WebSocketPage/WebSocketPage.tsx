@@ -11,6 +11,7 @@ export default function WebSocketPage() {
     setMessageToSend,
     isConnected,
     isConnecting,
+    isReconnecting,
     connect,
     disconnect,
     connectionState,
@@ -36,6 +37,7 @@ export default function WebSocketPage() {
           url={url}
           setUrl={setUrl}
           isConnecting={isConnecting}
+          isReconnecting={isReconnecting}
           connect={connect}
           disconnect={disconnect}
           connectionState={connectionState}
