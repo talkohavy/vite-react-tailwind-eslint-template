@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+echo ""
+echo "[34m--------------------[39m"
+echo "[34mStep 1: pnpm run lint[39m"
+echo "[34m--------------------[39m"
+
+start_time=$(date +%s)
+
+pnpm run lint
+
+end_time=$(date +%s)
+
+elapsed_time=$((end_time - start_time))
+
+echo "[32m√[39m lint check ran successfully! Everything seems ok."
+
+echo ""
+echo "[32m√[39m All lint checks passed."
+
+echo ""
+echo "[32mChecked all files in $elapsed_time seconds[39m"
