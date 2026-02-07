@@ -8,12 +8,17 @@
   // height: 40px; <--- do not define height here! textarea's rows attribute would always lose in a fight.
 }
 
+.textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 body[class*='dark'] .textarea {
   border-color: white;
 }
 
-.textarea:hover,
-body[class*='dark'] .textarea:hover {
+.textarea:hover:not(:disabled),
+body[class*='dark'] .textarea:hover:not(:disabled) {
   border-color: rgb(148, 148, 254);
 }
 
