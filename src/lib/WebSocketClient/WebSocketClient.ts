@@ -12,9 +12,10 @@ export class WebSocketClient {
   onClose?: (event: WebSocketCloseEvent) => void;
   onError?: (err: any) => void;
   onMessage?: (event: MessageEvent<string | Blob>) => void;
+  onRetry?: (retryCount: number) => void;
 
   constructor(url: string, options?: WebSocketClientOptions) {
-    const { onOpen, onClose, onError, onMessage, retryStrategy } = options ?? {};
+    const { onOpen, onClose, onError, onMessage, onRetry, retryStrategy } = options ?? {};
 
     const trimmedUrl = url.trim();
 
@@ -26,6 +27,7 @@ export class WebSocketClient {
     this.onClose = onClose;
     this.onError = onError;
     this.onMessage = onMessage;
+    this.onRetry = onRetry;
 
     if (retryStrategy) {
       this.retryStrategy =
@@ -80,6 +82,10 @@ export class WebSocketClient {
     return this.ws;
   }
 
+  getRetryCount(): number {
+    return this.retryCount;
+  }
+
   private handleWsClose(): void {
     this.ws = null;
 
@@ -96,6 +102,7 @@ export class WebSocketClient {
 
     if (shouldRetry) {
       this.retryCount += 1;
+      this.onRetry?.(this.retryCount);
 
       this.retryTimeoutId = setTimeout(() => {
         this.retryTimeoutId = null;

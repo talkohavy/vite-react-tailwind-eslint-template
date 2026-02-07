@@ -17,6 +17,7 @@ export function useWebSocketPageLogic() {
   const [connectionState, setConnectionState] = useState<WsConnectionStateValues>(WsConnectionState.Idle);
   const [connectionError, setConnectionError] = useState<Error | null>(null);
   const [log, setLog] = useState<MessageLogEntry[]>([]);
+  const [retryCount, setRetryCount] = useState(0);
 
   const clientRef = useRef<WebSocketClient | null>(null);
 
@@ -42,6 +43,7 @@ export function useWebSocketPageLogic() {
   const handleOpen = useCallback(() => {
     setConnectionState(WsConnectionState.Open);
     setConnectionError(null);
+    setRetryCount(0);
   }, []);
 
   const handleClose = useCallback((event: { shouldRetry: boolean }) => {
@@ -50,8 +52,13 @@ export function useWebSocketPageLogic() {
     } else {
       clientRef.current = null;
       setConnectionState(WsConnectionState.Closed);
+      setRetryCount(0);
     }
     setConnectionError(null);
+  }, []);
+
+  const handleRetry = useCallback((count: number) => {
+    setRetryCount(count);
   }, []);
 
   const handleMessage = useCallback(
@@ -71,6 +78,7 @@ export function useWebSocketPageLogic() {
     (targetUrl: string) => {
       disconnect();
       setConnectionError(null);
+      setRetryCount(0);
 
       if (!targetUrl) {
         setConnectionError(new Error('Please enter a WebSocket URL (ws:// or wss://)'));
@@ -87,6 +95,7 @@ export function useWebSocketPageLogic() {
           onClose: handleClose,
           onError: handleError,
           onMessage: handleMessage,
+          onRetry: handleRetry,
           retryStrategy: {
             maxRetries: 5,
             retryDelayMs: 2000,
@@ -102,7 +111,7 @@ export function useWebSocketPageLogic() {
 
       clientRef.current = wsClient;
     },
-    [disconnect, handleOpen, handleClose, handleError, handleMessage],
+    [disconnect, handleOpen, handleClose, handleError, handleMessage, handleRetry],
   );
 
   const send = useCallback(() => {
@@ -144,6 +153,7 @@ export function useWebSocketPageLogic() {
     isConnected,
     isConnecting,
     isReconnecting,
+    retryCount,
     connect,
     disconnect,
     send,

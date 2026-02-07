@@ -26,6 +26,10 @@ export type WebSocketClientOptions = {
   onError?: () => void;
   onMessage?: (event: MessageEvent<string | Blob>) => void;
   /**
+   * Called when a reconnection attempt is made. Receives the current retry count.
+   */
+  onRetry?: (retryCount: number) => void;
+  /**
    * Enable automatic reconnection on unexpected disconnect. Use defaults or provide custom options.
    */
   retryStrategy?: WebSocketRetryOptions | boolean;

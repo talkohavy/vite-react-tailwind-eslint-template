@@ -1,5 +1,6 @@
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
+import RetryCounter from '../RetryCounter';
 import StatusBadge from '../StatusBadge';
 import type { WsConnectionStateValues } from '../../logic/constants';
 
@@ -8,6 +9,7 @@ type ConnectionPanelProps = {
   setUrl: (url: string) => void;
   isConnecting: boolean;
   isReconnecting: boolean;
+  retryCount: number;
   connect: (url: string) => void;
   disconnect: () => void;
   connectionState: WsConnectionStateValues;
@@ -21,6 +23,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
     setUrl,
     isConnecting,
     isReconnecting,
+    retryCount,
     connect,
     disconnect,
     connectionState,
@@ -71,7 +74,11 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
       </div>
 
       <div className='flex flex-wrap items-center gap-3'>
-        <StatusBadge state={connectionState} />
+        <div className='flex justify-between items-center gap-2 w-full'>
+          <StatusBadge state={connectionState} />
+
+          {retryCount > 0 && <RetryCounter retryCount={retryCount} maxRetries={5} />}
+        </div>
 
         {connectionError && (
           <span className='text-sm text-red-600 dark:text-red-400' title={connectionError.message}>
