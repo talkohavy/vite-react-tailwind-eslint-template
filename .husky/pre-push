@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
 echo ""
-echo "[34m--------------------[39m"
+echo "[34m---------------------[39m"
 echo "[34mStep 1: pnpm run lint[39m"
-echo "[34m--------------------[39m"
+echo "[34m---------------------[39m"
 
 start_time=$(date +%s)
 
