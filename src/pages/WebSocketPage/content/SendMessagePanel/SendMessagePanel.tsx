@@ -1,5 +1,6 @@
 import Button from '@src/components/controls/Button';
 import Textarea from '@src/components/controls/Textarea';
+import CodeBlock from '../../../../components/CodeBlock';
 
 type SendMessagePanelProps = {
   messageToSend: string;
@@ -21,12 +22,27 @@ export default function SendMessagePanel(props: SendMessagePanelProps) {
         <Textarea
           value={messageToSend}
           setValue={(e) => setMessageToSend(e.target.value)}
-          placeholder='Type a message (plain text or JSON)'
+          placeholder='Type a message in JSON format'
           rows={3}
           resize='vertical'
           disabled={!isConnected}
           className='block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800'
         />
+
+        <div className='flex flex-col gap-1'>
+          <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>Example:</div>
+
+          <CodeBlock
+            language='json'
+            code={`{
+  "topic": "actions",
+  "payload": {
+    "action": "register",
+    "topic": "data"
+  }
+}`}
+          />
+        </div>
 
         <Button onClick={send} disabled={isSendDisabled} className='w-full sm:w-auto'>
           Send
