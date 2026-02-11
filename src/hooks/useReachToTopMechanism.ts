@@ -3,8 +3,11 @@ import { useCallback, useEffect } from 'react';
 const DEFAULT_GAP_TO_BOTTOM_PX = 100;
 const DEFAULT_GAP_TO_BOTTOM_PERCENT = 4;
 
-type UseReachToBottomMechanismProps = {
-  onBottomReached?: () => void;
+type UseReachToTopMechanismProps = {
+  /**
+   * Should be memoized.
+   */
+  onTopReached: () => void;
   /**
    * Needed for the on-mount first check.
    * The newly created handleBottomReached function will be invoked with the parentRef.current element as the argument.
@@ -97,35 +100,35 @@ type UseReachToBottomMechanismProps = {
  * }
  * ```
  */
-export function useReachToBottomMechanism(props: UseReachToBottomMechanismProps) {
+export function UseReachToTopMechanism(props: UseReachToTopMechanismProps) {
   const {
-    onBottomReached,
+    onTopReached,
     parentRef,
     thresholdInPx = DEFAULT_GAP_TO_BOTTOM_PX,
     thresholdInPercent = DEFAULT_GAP_TO_BOTTOM_PERCENT,
   } = props;
 
-  const handleBottomReached = useCallback(
+  const handleTopReached = useCallback(
     (containerRefElement: HTMLDivElement) => {
-      if (containerRefElement && onBottomReached) {
+      if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
 
-        const distanceToBottom = scrollHeight - scrollTop - clientHeight;
         const _100_percent = scrollHeight - clientHeight;
-        const percentageGap = (distanceToBottom / _100_percent) * 100;
+        const distanceToTop = scrollTop;
+        const percentageGap = (distanceToTop / _100_percent) * 100;
 
-        const isCloseToBottom = distanceToBottom < thresholdInPx || percentageGap < thresholdInPercent;
+        const isCloseToBottom = distanceToTop < thresholdInPx || percentageGap < thresholdInPercent;
 
-        if (isCloseToBottom) onBottomReached();
+        if (isCloseToBottom) onTopReached();
       }
     },
-    [onBottomReached, thresholdInPx, thresholdInPercent],
+    [onTopReached, thresholdInPx, thresholdInPercent],
   );
 
   // A check on mount:
   useEffect(() => {
-    handleBottomReached(parentRef.current!);
-  }, [handleBottomReached, parentRef]);
+    handleTopReached(parentRef.current!);
+  }, [handleTopReached, parentRef]);
 
-  return { handleBottomReached };
+  return { handleTopReached };
 }
