@@ -2,59 +2,94 @@ import { useCallback, useState } from 'react';
 import { wrapInDebounce } from '@talkohavy/lodash';
 import { calcGapBetweenWindowCeilingAndContainerCeiling } from './utils/calcGapBetweenWindowCeilingAndContainerCeiling';
 import { calcGapBetweenWindowFloorAndBottom } from './utils/calcGapBetweenWindowFloorAndBottom';
+
 type UseIsCloseToEdgeProps = {
   to: 'top' | 'bottom';
-  initialState?: boolean;
-  thresholdGap?: number;
+  /**
+   * Should be memoized.
+   *
+   * Called when the edge is reached.
+   *
+   * @param e - The event object.
+   * @param isCloseToEdge - Whether the edge is close to the edge.
+   */
+  onEdgeReached?: (e: React.UIEvent<HTMLDivElement>, isCloseToEdge: boolean) => void;
+  /**
+   * The initial state of isCloseToEdge.
+   *
+   * @default false
+   */
+  initialIsCloseToEdge?: boolean;
+  /**
+   * Absolute distance in pixels from the edge to trigger the state change.
+   *
+   * @default 100
+   */
+  thresholdInPx?: number;
+  /**
+   * Percentage of viewport height from the edge to trigger the state change.
+   * Defaults to 4%.
+   *
+   * @default 4
+   */
+  thresholdInPercent?: number;
   delayMs?: number;
-}; /**
+};
+
+/**
  * @description
- * You have a container and a window.
- * h1 = represents the height of the container.
- * h2 = represents the height of the window.
- *    __________
- *   |          |          }
- *   |          |          }
- *   |          |          }
- *  _|__________|_         } h1
- * |              |  ] h2  }
- * |______________|  ]     }
- *   |          |          }
- *   |__________|          }
+ * `useIsCloseToEdge` serves a different purpose than `useReachToBottomMechanism` and `useReachToTopMechanism`.
  *
- * upperGap = the distance between the container's ceiling and the window's ceiling.
- * lowerGap = the distance between the container's floor and the window's floor.
+ * `useReachToBottomMechanism` and `useReachToTopMechanism` will tell you when you're within a certain threshold
+ * from the edge, but they will never tell you when you're coming out of that threshold.
  *
- * HOW TO USE:
+ * Plus, they will trigger multiple times when you're scrolling within that threshold.
  *
- * - Step 1: call the hook, and extract the onScroll function
- * - Step 2: attach it to the container element's `onScroll` attribute.
+ * `useIsCloseToEdge` will tell you when you're within a certain threshold from the edge,
+ * and when you're coming out of that threshold. It will only trigger once when you've changed
+ * states, and not multiple times when you're scrolling within that threshold.
  *
- * When you scroll inside the container, the hook will update the `isVisible` value for you,
- * using a debounce with a delay of 100ms (default value). You can choose to override the
- * default delay, and pass a different value to `delayMs`.
  */
 export function useIsCloseToEdge(props: UseIsCloseToEdgeProps) {
-  const { to, initialState, thresholdGap = 60, delayMs = 100 } = props ?? {};
+  const {
+    to = 'bottom',
+    initialIsCloseToEdge = false,
+    thresholdInPx = 100,
+    thresholdInPercent = 4,
+    delayMs = 100,
+    onEdgeReached,
+  } = props ?? {};
 
-  const [isCloseToEdge, setIsCloseToEdge] = useState(initialState);
+  const [isCloseToEdge, setIsCloseToEdge] = useState(initialIsCloseToEdge);
 
   // eslint-disable-next-line
   const onScroll = useCallback(
     // eslint-disable-next-line
     wrapInDebounce((e) => {
       const { scrollHeight, scrollTop, clientHeight } = e.target;
-
       const calcGapFunc =
         to === 'top' ? calcGapBetweenWindowCeilingAndContainerCeiling : calcGapBetweenWindowFloorAndBottom;
 
-      const actualGap = calcGapFunc({ clientHeight, scrollHeight, scrollTop });
+      const distanceFromEdgeInPixels = calcGapFunc({ clientHeight, scrollHeight, scrollTop });
 
-      if (actualGap < thresholdGap && !isCloseToEdge) return setIsCloseToEdge(true);
+      const _100_percent = scrollHeight - clientHeight;
+      const percentageGap = (distanceFromEdgeInPixels / _100_percent) * 100;
 
-      if (actualGap >= thresholdGap && isCloseToEdge) return setIsCloseToEdge(false);
+      const isWithinThreshold = distanceFromEdgeInPixels < thresholdInPx || percentageGap < thresholdInPercent;
+
+      if (isWithinThreshold && !isCloseToEdge) {
+        setIsCloseToEdge(true);
+        onEdgeReached?.(e, isCloseToEdge);
+        return;
+      }
+
+      if (!isWithinThreshold && isCloseToEdge) {
+        setIsCloseToEdge(false);
+        onEdgeReached?.(e, isCloseToEdge);
+        return;
+      }
     }, delayMs),
-    [isCloseToEdge],
+    [isCloseToEdge, onEdgeReached, thresholdInPx, thresholdInPercent, to],
   );
 
   return { isCloseToEdge, onScroll };

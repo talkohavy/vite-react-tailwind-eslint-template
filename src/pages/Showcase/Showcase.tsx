@@ -61,11 +61,13 @@ export default function RadixComponents() {
 
   const { isCloseToEdge: isCloseToBottom, onScroll: onScrollToBottom } = useIsCloseToEdge({
     to: 'bottom',
-    initialState: true,
   });
   const { scrollToEdge: scrollToBottom } = useScrollToEdge({ refElement: refElement, to: 'bottom' });
 
-  const { isCloseToEdge: isCloseToTop, onScroll: onScrollToTop } = useIsCloseToEdge({ to: 'top' });
+  const { isCloseToEdge: isCloseToTop, onScroll: onScrollToTop } = useIsCloseToEdge({
+    to: 'top',
+    initialIsCloseToEdge: true,
+  });
   const { scrollToEdge: scrollToTop } = useScrollToEdge({ refElement: refElement, to: 'top' });
 
   return (
