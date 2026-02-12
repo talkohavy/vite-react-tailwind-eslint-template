@@ -164,7 +164,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
     fetchData().catch((error) => {
       if (error.name == 'AbortError') return;
 
-      console.error('Error loading news:', error);
+      console.error('Error fetchData:', error);
     });
     // eslint-disable-next-line
   }, [fetchData, isAutoFetch, ...dependencies]);
