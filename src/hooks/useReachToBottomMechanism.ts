@@ -9,7 +9,7 @@ type UseReachToBottomMechanismProps = {
    * Needed for the on-mount first check.
    * The newly created handleBottomReached function will be invoked with the parentRef.current element as the argument.
    */
-  parentRef: React.RefObject<HTMLDivElement>;
+  parentRef: React.RefObject<HTMLDivElement | null>;
   /**
    * Absolute distance in pixels from the bottom to trigger the callback.
    * Defaults to 100px.
