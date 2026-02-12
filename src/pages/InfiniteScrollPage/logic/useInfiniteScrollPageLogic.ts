@@ -17,6 +17,13 @@ export function useInfiniteScrollPageLogic() {
 
   const previousSearchParamsRef = useRef<PreviousSearchParams>({} as PreviousSearchParams);
 
+  const onSuccess = useCallback((data: GetBooksResponse) => {
+    const { hasMore, page } = data;
+
+    setHasMore(hasMore);
+    setCurrentPageNumber(page + 1);
+  }, []);
+
   const booksHookResult = useAsyncFetch<GetBooksResponse>({
     asyncFunc: (params?: GetBooksSearchParams) => {
       const paramString = toSearchParams(params ?? DEFAULT_SEARCH_PARAMS).toString();
@@ -25,6 +32,7 @@ export function useInfiniteScrollPageLogic() {
 
       return httpClient.get<GetBooksResponse>(targetUrl);
     },
+    onSuccess,
   });
 
   const getShouldOverridePreviousSearchResults = useCallback(
@@ -42,7 +50,7 @@ export function useInfiniteScrollPageLogic() {
 
       const params = prepareBooksSearchParams({ category, query, currentPageNumber });
       const response = await booksHookResult.fetchData(params);
-      const { data, hasMore } = response;
+      const { data } = response;
 
       const shouldOverridePreviousSearchResults = getShouldOverridePreviousSearchResults(
         previousSearchParamsRef.current,
@@ -52,18 +60,11 @@ export function useInfiniteScrollPageLogic() {
 
       if (shouldOverridePreviousSearchResults) {
         setBooks(data);
-        setHasMore(hasMore);
-        setCurrentPageNumber((prev) => prev + 1);
         setIsLoadingNextPage(false);
         return;
       }
 
       setBooks((prev) => [...prev, ...data]); // <--- Append new books to the existing books
-      setHasMore(hasMore);
-
-      if (hasMore) {
-        setCurrentPageNumber((prev) => prev + 1);
-      }
 
       setIsLoadingNextPage(false);
     } catch (error: any) {
