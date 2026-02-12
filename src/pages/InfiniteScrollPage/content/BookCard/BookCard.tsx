@@ -6,7 +6,7 @@ export default function BookCard(props: BookCardProps) {
   const { author, coverImageUrl, name, description, genre, rating, publishedYear, pageCount } = props;
 
   return (
-    <div className='flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700'>
+    <div className='flex flex-col h-full bg-white dark:bg-gray-800 rounded-lg shadow-xs dark:shadow-dark-xs border border-gray-100 dark:border-gray-700'>
       {/* Image */}
       {coverImageUrl ? (
         <img src={coverImageUrl} alt={name} className='w-full h-48 object-cover' />
