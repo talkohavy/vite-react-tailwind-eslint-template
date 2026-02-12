@@ -28,3 +28,10 @@ export type PreviousSearchParams = {
   query: string;
   currentPageNumber: number;
 };
+
+export type GetBooksSearchParams = {
+  page?: number;
+  limit?: number;
+  q?: string;
+  category?: string;
+};

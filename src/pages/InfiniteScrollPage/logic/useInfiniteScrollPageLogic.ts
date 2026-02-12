@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_URLS } from '../../../common/constants';
+import { toSearchParams } from '../../../common/utils/toSearchParams';
 import { useAsyncFetch } from '../../../hooks/useAsyncFetch';
 import { httpClient } from '../../../lib/HttpClient';
+import { DEFAULT_SEARCH_PARAMS } from './constants';
 import { prepareBooksSearchParams } from './utils/prepareBooksSearchParams';
-import type { GetBooksResponse, Book, PreviousSearchParams } from '../types';
+import type { GetBooksResponse, Book, PreviousSearchParams, GetBooksSearchParams } from '../types';
 
 export function useInfiniteScrollPageLogic() {
   const [query, setQuery] = useState('');
@@ -16,8 +18,11 @@ export function useInfiniteScrollPageLogic() {
   const previousSearchParamsRef = useRef<PreviousSearchParams>({} as PreviousSearchParams);
 
   const booksHookResult = useAsyncFetch<GetBooksResponse>({
-    asyncFunc: (params: any = '') => {
-      const targetUrl = `${API_URLS.books}?${params.toString()}`;
+    asyncFunc: (params?: GetBooksSearchParams) => {
+      const paramString = toSearchParams(params ?? DEFAULT_SEARCH_PARAMS).toString();
+      const urlSearchQuery = paramString ? `?${paramString}` : '';
+      const targetUrl = `${API_URLS.books}${urlSearchQuery}`;
+
       return httpClient.get<GetBooksResponse>(targetUrl);
     },
   });
@@ -35,12 +40,7 @@ export function useInfiniteScrollPageLogic() {
     try {
       setIsLoadingNextPage(true);
 
-      const params = prepareBooksSearchParams({
-        category,
-        query,
-        currentPageNumber,
-      });
-
+      const params = prepareBooksSearchParams({ category, query, currentPageNumber });
       const response = await booksHookResult.fetchData(params);
       const { data, hasMore } = response;
 

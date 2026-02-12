@@ -1,4 +1,5 @@
 import { PAGE_SIZE } from '../constants';
+import type { GetBooksSearchParams } from '../../types';
 
 type PrepareBooksSearchParamsProps = {
   category: string | undefined;
@@ -6,17 +7,13 @@ type PrepareBooksSearchParamsProps = {
   currentPageNumber: number;
 };
 
-export function prepareBooksSearchParams(props: PrepareBooksSearchParamsProps) {
+export function prepareBooksSearchParams(props: PrepareBooksSearchParamsProps): GetBooksSearchParams {
   const { category, query, currentPageNumber } = props;
 
-  const params = new URLSearchParams();
-
-  if (query) params.append('q', query);
-
-  if (category) params.append('category', category);
-
-  params.append('page', currentPageNumber.toString());
-  params.append('limit', PAGE_SIZE.toString());
-
-  return params;
+  return {
+    q: query,
+    category,
+    page: currentPageNumber,
+    limit: PAGE_SIZE,
+  };
 }
