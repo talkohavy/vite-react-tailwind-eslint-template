@@ -26,6 +26,7 @@ const WebEditorPage = lazy(() => import('./pages/WebEditorPage'));
 const TableDemoPage = lazy(() => import('./pages/TableDemoPage'));
 const SocketIOPage = lazy(() => import('./pages/SocketIOPage'));
 const WebSocketPage = lazy(() => import('./pages/WebSocketPage'));
+const InfiniteScrollPage = lazy(() => import('./pages/InfiniteScrollPage'));
 
 // Mini-pages/tabs
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -299,5 +300,11 @@ export const routes: Array<Route> = [
     text: 'WebSocket',
     activeNames: [`${BASE_URL}/websocket`],
     Component: WebSocketPage,
+  },
+  {
+    to: `${BASE_URL}/infinite-scroll`,
+    text: 'Infinite Scroll',
+    activeNames: [`${BASE_URL}/infinite-scroll`],
+    Component: InfiniteScrollPage,
   },
 ];

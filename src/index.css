@@ -157,4 +157,8 @@
   body::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 41, 41, 0.5);
   }
+
+  button {
+    line-height: normal;
+  }
 }

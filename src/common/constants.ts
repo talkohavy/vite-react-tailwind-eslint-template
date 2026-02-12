@@ -18,6 +18,7 @@ export const API_URLS = {
     logout: '/logout',
     users: '/users',
   },
+  books: '/api/books',
 };
 
 export const REGEX = {
