@@ -160,7 +160,12 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   useEffect(() => {
     if (!isAutoFetch) return;
 
-    fetchData();
+    // Added catch to prevent page crash on error
+    fetchData().catch((error) => {
+      if (error.name == 'AbortError') return;
+
+      console.error('Error loading news:', error);
+    });
     // eslint-disable-next-line
   }, [fetchData, isAutoFetch, ...dependencies]);
 
