@@ -4,9 +4,9 @@ import { useReachToBottomMechanism } from '@src/hooks/useReachToBottomMechanism'
 import { COLUMN_COUNT, COLUMN_WIDTH, GAP, ROW_HEIGHT } from './constants';
 import type { BooksContentProps } from '../BooksContent';
 
-type UseNewsDisplayLogicProps = BooksContentProps;
+type UseBooksContentLogicProps = BooksContentProps;
 
-export function useNewsDisplayLogic(props: UseNewsDisplayLogicProps) {
+export function useBooksContentLogic(props: UseBooksContentLogicProps) {
   const { books, onBottomReached } = props;
 
   const parentRef = useRef<HTMLDivElement>(null);

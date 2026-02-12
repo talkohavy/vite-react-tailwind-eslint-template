@@ -2,7 +2,7 @@ import BookCard from '../BookCard';
 import FillerEmptyCard from '../FillerEmptyCard';
 import LoadingMoreBooks from '../LoadingMoreBooks';
 import { GAP, ROW_HEIGHT } from './logic/constants';
-import { useNewsDisplayLogic } from './logic/useNewsDisplayLogic';
+import { useBooksContentLogic } from './logic/useBooksContentLogic';
 import type { Book } from '../../types';
 
 export type BooksContentProps = {
@@ -14,7 +14,7 @@ export type BooksContentProps = {
 export default function BooksContent(props: BooksContentProps) {
   const { books, isLoadingNextPage } = props;
 
-  const { columnCount, columnWidth, parentRef, handleScroll, totalSize, virtualRows } = useNewsDisplayLogic(props);
+  const { columnCount, columnWidth, parentRef, handleScroll, totalSize, virtualRows } = useBooksContentLogic(props);
 
   return (
     <div ref={parentRef} className='size-full overflow-auto' onScroll={handleScroll}>
