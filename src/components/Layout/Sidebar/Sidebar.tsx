@@ -22,7 +22,10 @@ export default function Sidebar() {
       </button>
 
       <div
-        className={clsx('w-full opacity-0 transition-opacity duration-300 delay-300', isSidebarOpen && 'opacity-100')}
+        className={clsx(
+          'w-full opacity-0 transition-opacity duration-300 delay-300 overflow-auto',
+          isSidebarOpen && 'opacity-100',
+        )}
       >
         {isSidebarOpen && <SideBarLinkList />}
       </div>
