@@ -94,6 +94,10 @@
     "formatter": { "enabled": false }
   },
   "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
+    },
     "formatter": {
       "enabled": false,
       "quoteStyle": "single",
