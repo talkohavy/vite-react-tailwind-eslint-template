@@ -1,4 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  clearInFlightPromise,
+  getCachedEntry,
+  getCacheKey,
+  getInFlightPromise,
+  isFresh,
+  setCachedData,
+  setInFlightPromise,
+  scheduleGc,
+} from './fetchCache';
 import type { HttpRequest } from '@src/lib/HttpClient';
 
 type UseAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
@@ -68,6 +78,29 @@ type UseAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    * @default true
    */
   shouldThrow?: boolean;
+  /**
+   * Unique key for caching (useQuery-style). Same key = same cache entry.
+   * When provided, responses are cached and reused across components/mounts.
+   *
+   * @example
+   * queryKey: ['users', page, viewType]
+   */
+  queryKey?: unknown[];
+  /**
+   * How long (ms) until cached data is considered stale. Stale data triggers a background refetch.
+   * - 0: Always refetch (cache used for deduplication only)
+   * - Infinity: Never consider stale (no background refetch)
+   * - e.g. 5 * 60 * 1000: 5 minutes
+   *
+   * @default 0
+   */
+  staleTime?: number;
+  /**
+   * How long (ms) to keep unused cache entries before garbage collection.
+   *
+   * @default 5 * 60 * 1000 (5 minutes)
+   */
+  gcTime?: number;
 };
 
 /**
@@ -83,21 +116,45 @@ type UseAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
  * `shouldThrow` defaults to `false`.
  */
 export type AsyncFetchResult<T> = {
-  fetchData: (funcProps?: any) => Promise<T>;
+  /**
+   * Pass `{ forceRefetch: true }` to bypass cache and always hit the network
+   */
+  fetchData: (funcProps?: any, options?: { forceRefetch?: boolean }) => Promise<T>;
 } & (
   | { isLoading: true; isError: false; data: undefined }
   | { isLoading: false; isError: true; data: undefined }
   | { isLoading: false; isError: false; data: T }
 );
 
+const DEFAULT_GC_TIME = 5 * 60 * 1000; // 5 minutes
+
 export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   props: UseAsyncFetchProps<ReturnType, TransformType>,
 ): AsyncFetchResult<TransformType> {
-  const { asyncFunc, transform, isAutoFetch = true, onSuccess, onError, dependencies = [], shouldThrow = true } = props;
+  const {
+    asyncFunc,
+    transform,
+    isAutoFetch = true,
+    onSuccess,
+    onError,
+    dependencies = [],
+    shouldThrow = true,
+    queryKey,
+    staleTime = 0,
+    gcTime = DEFAULT_GC_TIME,
+  } = props;
 
-  const [isLoading, setIsLoading] = useState(isAutoFetch);
+  const cacheKey = queryKey ? getCacheKey(queryKey) : null;
+  const initialCached = cacheKey ? getCachedEntry<TransformType>(cacheKey) : undefined;
+
+  const [isLoading, setIsLoading] = useState(() => {
+    // If we have cached data (fresh or stale), show it immediately without loading
+    if (initialCached) return false;
+
+    return isAutoFetch;
+  });
   const [isError, setIsError] = useState(false);
-  const [data, setData] = useState<TransformType>();
+  const [data, setData] = useState<TransformType | undefined>(initialCached?.data);
 
   const asyncFuncRef = useRef(asyncFunc);
   const abortRef = useRef<(() => void) | null>(null);
@@ -110,9 +167,48 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
   const isCurrentRequest = (requestId: number) => requestId === currentRequestIdRef.current;
 
   const fetchData = useCallback(
-    async (funcProps?: any) => {
+    async (funcProps?: any, options?: { forceRefetch?: boolean }) => {
       currentRequestIdRef.current = ++currentRequestIdRef.current % 100;
       const requestId = currentRequestIdRef.current;
+      const forceRefetch = options?.forceRefetch ?? false;
+
+      // --- Cache: stale-while-revalidate (skip when forceRefetch) ---
+      if (cacheKey && !forceRefetch) {
+        const cached = getCachedEntry<TransformType>(cacheKey);
+
+        if (cached) {
+          setData(cached.data);
+          setIsError(false);
+
+          if (isFresh(cached, staleTime)) {
+            setIsLoading(false);
+            return cached.data;
+          }
+          // else, data is stale, we need to schedule a background refetch
+        }
+
+        // Deduplication: reuse in-flight request for same key
+        const inFlight = getInFlightPromise(cacheKey);
+
+        if (inFlight) {
+          try {
+            const result = await inFlight;
+            if (isCurrentRequest(requestId)) {
+              setData(result as TransformType);
+              setIsLoading(false);
+            }
+            return result as TransformType;
+          } catch (e) {
+            if (isCurrentRequest(requestId)) {
+              setIsError(true);
+              onError?.(e);
+              setIsLoading(false);
+            }
+            if (shouldThrow) throw e;
+            return undefined as TransformType;
+          }
+        }
+      }
 
       try {
         if (abortRef.current) {
@@ -122,25 +218,43 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         setIsLoading(true);
         setIsError(false);
 
-        const { promise, abort } = asyncFuncRef.current(funcProps);
+        const doFetch = async () => {
+          const { promise, abort } = asyncFuncRef.current(funcProps);
+          abortRef.current = abort;
 
-        abortRef.current = abort; // <--- Store abort function for cleanup
+          const data = await promise;
 
-        const data = await promise;
+          if (!isCurrentRequest(requestId)) {
+            console.warn('not current request', requestId);
+            return;
+          }
 
-        if (!isCurrentRequest(requestId)) {
-          console.warn('not current request', requestId);
-          return;
+          const updatedData = (transform ? transform(data) : data) as TransformType;
+
+          if (cacheKey) {
+            setCachedData(cacheKey, updatedData);
+            scheduleGc(cacheKey, gcTime);
+          }
+
+          setData(updatedData);
+          setIsError(false);
+          onSuccess?.(updatedData);
+
+          return updatedData;
+        };
+
+        const promise = doFetch();
+
+        if (cacheKey) {
+          setInFlightPromise(cacheKey, promise);
+          promise.finally(() => {
+            clearInFlightPromise(cacheKey);
+          });
         }
 
-        const updatedData = (transform ? transform(data) : data) as TransformType;
+        const result = await promise;
 
-        setData(updatedData);
-        setIsError(false);
-
-        onSuccess?.(updatedData);
-
-        return updatedData;
+        return result;
       } catch (error: any) {
         if (isCurrentRequest(requestId)) {
           console.error(error);
@@ -154,7 +268,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         }
       }
     },
-    [transform, onSuccess, onError, shouldThrow],
+    [transform, onSuccess, onError, shouldThrow, cacheKey, staleTime, gcTime],
   );
 
   useEffect(() => {
