@@ -158,19 +158,14 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
 
   const asyncFuncRef = useRef(asyncFunc);
   const abortRef = useRef<(() => void) | null>(null);
-  const currentRequestIdRef = useRef(0);
 
   useEffect(() => {
     asyncFuncRef.current = asyncFunc;
   }, [asyncFunc]);
 
-  const isCurrentRequest = (requestId: number) => requestId === currentRequestIdRef.current;
-
   const fetchData = useCallback(
     async (funcProps?: any, options?: { forceRefetch?: boolean }) => {
-      currentRequestIdRef.current = ++currentRequestIdRef.current % 100;
-      const requestId = currentRequestIdRef.current;
-      const forceRefetch = options?.forceRefetch ?? false;
+      const forceRefetch = Boolean(options?.forceRefetch);
 
       // --- Cache: stale-while-revalidate (skip when forceRefetch) ---
       if (cacheKey && !forceRefetch) {
@@ -193,28 +188,24 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         if (inFlight) {
           try {
             const result = await inFlight;
-            if (isCurrentRequest(requestId)) {
-              setData(result as TransformType);
-              setIsLoading(false);
-            }
+
+            setData(result as TransformType);
+            setIsLoading(false);
+
             return result as TransformType;
           } catch (e) {
-            if (isCurrentRequest(requestId)) {
-              setIsError(true);
-              onError?.(e);
-              setIsLoading(false);
-            }
+            setIsError(true);
+            onError?.(e);
+            setIsLoading(false);
+
             if (shouldThrow) throw e;
-            return undefined as TransformType;
+
+            return;
           }
         }
       }
 
       try {
-        if (abortRef.current) {
-          abortRef.current(); // <--- Abort previous request if it exists
-        }
-
         setIsLoading(true);
         setIsError(false);
 
@@ -223,12 +214,6 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
           abortRef.current = abort;
 
           const data = await promise;
-
-          if (!isCurrentRequest(requestId)) {
-            console.warn('not current request', requestId);
-            return;
-          }
-
           const updatedData = (transform ? transform(data) : data) as TransformType;
 
           if (cacheKey) {
@@ -256,16 +241,12 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
 
         return result;
       } catch (error: any) {
-        if (isCurrentRequest(requestId)) {
-          console.error(error);
-          setIsError(true);
-          onError?.(error);
-        }
+        console.error(error);
+        setIsError(true);
+        onError?.(error);
         if (shouldThrow) throw error;
       } finally {
-        if (isCurrentRequest(requestId)) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     },
     [transform, onSuccess, onError, shouldThrow, cacheKey, staleTime, gcTime],
