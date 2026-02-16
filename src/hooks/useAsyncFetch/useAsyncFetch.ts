@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { HttpRequest } from '../lib/HttpClient';
+import type { HttpRequest } from '@src/lib/HttpClient';
 
 type UseAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
   /**
