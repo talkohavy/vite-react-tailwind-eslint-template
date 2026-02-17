@@ -16,7 +16,7 @@ describe('astToFilterScheme', () => {
     const originalConsoleError = console.error;
     console.error = jest.fn(); // Suppress console.error for this test
 
-    const expectedResult = {} as any;
+    const expectedResult = [] as any;
     const actualResult = astToFilterScheme(null as any);
     expect(actualResult).toEqual(expectedResult);
 
@@ -34,7 +34,7 @@ describe('astToFilterScheme', () => {
       value: { value: 'John Doe' } as ValueNode,
     } as ConditionExpression;
 
-    const expectedResult = { and: [{ key: 'name', op: 'equals', val: 'John Doe' }] };
+    const expectedResult = { fieldName: 'name', operator: 'equals', value: 'John Doe' };
 
     const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
@@ -48,7 +48,7 @@ describe('astToFilterScheme', () => {
       value: { value: 30 },
     } as any as ConditionExpression;
 
-    const expectedResult = { and: [{ key: 'age', op: 'greater_than', val: 30 }] };
+    const expectedResult = { fieldName: 'age', operator: 'greaterThan', value: 30 };
 
     const actualResult = astToFilterScheme(astGreaterThan);
     expect(actualResult).toEqual(expectedResult);
@@ -73,16 +73,16 @@ describe('astToFilterScheme', () => {
     } as BooleanExpression;
 
     const expectedResult = {
-      and: [
+      AND: [
         {
-          key: 'status',
-          op: 'equals',
-          val: 'active',
+          fieldName: 'status',
+          operator: 'equals',
+          value: 'active',
         },
         {
-          key: 'role',
-          op: 'equals',
-          val: 'admin',
+          fieldName: 'role',
+          operator: 'equals',
+          value: 'admin',
         },
       ],
     };
@@ -110,16 +110,16 @@ describe('astToFilterScheme', () => {
     } as BooleanExpression;
 
     const expectedResult = {
-      or: [
+      OR: [
         {
-          key: 'priority',
-          op: 'equals',
-          val: 'high',
+          fieldName: 'priority',
+          operator: 'equals',
+          value: 'high',
         },
         {
-          key: 'priority',
-          op: 'equals',
-          val: 'critical',
+          fieldName: 'priority',
+          operator: 'equals',
+          value: 'critical',
         },
       ],
     };
@@ -139,7 +139,7 @@ describe('astToFilterScheme', () => {
       },
     } as QueryExpression;
 
-    const expectedResult = { and: [{ key: 'department', op: 'equals', val: 'engineering' }] };
+    const expectedResult = { fieldName: 'department', operator: 'equals', value: 'engineering' };
 
     const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
@@ -156,7 +156,7 @@ describe('astToFilterScheme', () => {
       },
     } as GroupExpression;
 
-    const expectedResult = { and: [{ key: 'department', op: 'equals', val: 'engineering' }] };
+    const expectedResult = { fieldName: 'department', operator: 'equals', value: 'engineering' };
 
     const actualResult = astToFilterScheme(ast);
     expect(actualResult).toEqual(expectedResult);
@@ -191,23 +191,23 @@ describe('astToFilterScheme', () => {
     } as BooleanExpression;
 
     const expectedResult = {
-      and: [
+      AND: [
         {
-          key: 'status',
-          op: 'equals',
-          val: 'active',
+          fieldName: 'status',
+          operator: 'equals',
+          value: 'active',
         },
         {
-          or: [
+          OR: [
             {
-              key: 'role',
-              op: 'equals',
-              val: 'admin',
+              fieldName: 'role',
+              operator: 'equals',
+              value: 'admin',
             },
             {
-              key: 'role',
-              op: 'equals',
-              val: 'manager',
+              fieldName: 'role',
+              operator: 'equals',
+              value: 'manager',
             },
           ],
         },
@@ -243,16 +243,16 @@ describe('astToFilterScheme', () => {
     } as QueryExpression;
 
     const expectedResult = {
-      and: [
+      AND: [
         {
-          key: 'a',
-          op: 'equals',
-          val: '2',
+          fieldName: 'a',
+          operator: 'equals',
+          value: '2',
         },
         {
-          key: 'name',
-          op: 'greater_than_or_equal',
-          val: 'asd',
+          fieldName: 'name',
+          operator: 'greaterThanOrEqual',
+          value: 'asd',
         },
       ],
     };
@@ -263,11 +263,11 @@ describe('astToFilterScheme', () => {
 
   it('should handle different comparison operators', () => {
     const operators = [
-      { comparator: '!=', expected: 'not_equals' },
-      { comparator: '>', expected: 'greater_than' },
-      { comparator: '>=', expected: 'greater_than_or_equal' },
-      { comparator: '<', expected: 'less_than' },
-      { comparator: '<=', expected: 'less_than_or_equal' },
+      { comparator: '!=', expected: 'notEquals' },
+      { comparator: '>', expected: 'greaterThan' },
+      { comparator: '>=', expected: 'greaterThanOrEqual' },
+      { comparator: '<', expected: 'lessThan' },
+      { comparator: '<=', expected: 'lessThanOrEqual' },
     ];
 
     operators.forEach(({ comparator, expected }) => {
@@ -278,7 +278,7 @@ describe('astToFilterScheme', () => {
         value: { value: 'value' },
       } as ConditionExpression;
 
-      const expectedResult = { and: [{ key: 'test', op: expected, val: 'value' }] };
+      const expectedResult = { fieldName: 'test', operator: expected, value: 'value' };
 
       const actualResult = astToFilterScheme(ast);
       expect(actualResult).toEqual(expectedResult);
@@ -297,11 +297,11 @@ describe('astToFilterScheme', () => {
     } as any;
 
     const expectedResult = {
-      not: [
+      NOT: [
         {
-          key: 'email',
-          op: 'is',
-          val: 'asd',
+          fieldName: 'email',
+          operator: 'equals',
+          value: 'asd',
         },
       ],
     };
@@ -332,16 +332,16 @@ describe('astToFilterScheme', () => {
     } as any;
 
     const expectedResult = {
-      not: [
+      NOT: [
         {
-          key: 'status',
-          op: 'equals',
-          val: 'active',
+          fieldName: 'status',
+          operator: 'equals',
+          value: 'active',
         },
         {
-          key: 'role',
-          op: 'equals',
-          val: 'admin',
+          fieldName: 'role',
+          operator: 'equals',
+          value: 'admin',
         },
       ],
     };
