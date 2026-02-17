@@ -81,7 +81,7 @@ export default function DatePicker(props: DatePickerProps) {
 
   return (
     <>
-      {value.length && (
+      {Boolean(value.length) && (
         <button type='button' className='self-start' onClick={datePicker.clearValue}>
           Clear
         </button>

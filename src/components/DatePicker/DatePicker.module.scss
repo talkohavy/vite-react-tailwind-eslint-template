@@ -18,15 +18,19 @@
   padding-inline: 0.75rem;
   border-radius: 0.25rem;
   height: 100%;
-  border: 1px solid #494844;
+  border: 1px solid black;
+}
+
+html[data-theme='dark'] .input {
+  background-color: #0f172b;
 }
 
 .input:focus {
-  border: 1px solid #eb5e41;
+  border: 1px solid rgb(0, 94, 255);
 }
 
 .controlTrigger {
-  border: 1px solid #494844;
+  border: 1px solid black;
   height: 100%;
   width: 40px;
   // display: flex;
@@ -34,6 +38,14 @@
   // align-items: center;
   // border-radius: 0.25rem;
   // cursor: pointer;
+}
+
+.controlTrigger:focus {
+  border: 1px solid rgb(0, 94, 255);
+}
+
+html[data-theme='dark'] .controlTrigger {
+  background-color: #0f172b;
 }
 
 .controlTrigger:hover {
