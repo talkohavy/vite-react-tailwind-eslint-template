@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { type RefObject, useEffect } from 'react';
 import hljs from 'highlight.js';
 
 type useSyntaxHighlighterProps = {
-  codeRef: any;
+  codeRef: RefObject<HTMLElement | null>;
 };
 
 export default function useSyntaxHighlighter(props: useSyntaxHighlighterProps) {

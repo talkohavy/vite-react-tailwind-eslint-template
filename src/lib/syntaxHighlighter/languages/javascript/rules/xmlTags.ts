@@ -39,7 +39,7 @@ function getXmlTagRules() {
 
       // some more template typing stuff
       //  <T = any>(key?: string) => Modify<
-      if ((m = afterMatch.match(/^\s*=/))) return void response.ignoreMatch();
+      if (afterMatch.match(/^\s*=/)) return void response.ignoreMatch();
 
       // `<From extends string>`
       // technically this could be HTML, but it smells like a type

@@ -15,22 +15,19 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    name: 'react-compiler/recommended',
     plugins: {
       'react-compiler': pluginCompiler,
       'react-hooks': pluginReactHooks,
       perfectionist,
       import: importPlugin,
     },
-    rules: {
-      'react-compiler/react-compiler': 'error',
-      'react-hooks/rules-of-hooks': 'warn',
-      'react-hooks/exhaustive-deps': 'warn',
-      'import/no-duplicates': ['error', { 'prefer-inline': false }],
-    },
   },
   {
     rules: {
+      // Error Rules
+      // -----------
+      'react-compiler/react-compiler': 'error',
+      'import/no-duplicates': ['error', { 'prefer-inline': false }],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -44,9 +41,6 @@ export default [
           varsIgnorePattern: '^React$',
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-      'no-debugger': 'warn',
       'perfectionist/sort-imports': [
         'error',
         {
@@ -84,6 +78,21 @@ export default [
           environment: 'node', // <--- Possible Options: 'node' | 'bun'
         },
       ],
+
+      // Warning Rules
+      // -------------
+      'no-debugger': 'warn',
+      'react-hooks/rules-of-hooks': 'warn',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // Off Rules
+      // -------------
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      'preserve-caught-error': 'off',
+
+      // Notes
+      // -----
       // 'sort-imports': [ <--- DO NOT ENABLE! Collides with perfectionist/sort-imports
       //   'error',
       //   {
