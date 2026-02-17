@@ -1,13 +1,15 @@
 type UserInputFormProps = {
   userEmail: string;
   userPassword: string;
+  dateOfBirth: string;
   setUserEmail: (userEmail: string) => void;
   setUserPassword: (userPassword: string) => void;
+  setDateOfBirth: (dateOfBirth: string) => void;
   isLoading: boolean;
 };
 
 export default function UserInputForm(props: UserInputFormProps) {
-  const { userEmail, userPassword, setUserEmail, setUserPassword, isLoading } = props;
+  const { userEmail, userPassword, dateOfBirth, setUserEmail, setUserPassword, setDateOfBirth, isLoading } = props;
 
   return (
     <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-slate-700'>
@@ -43,6 +45,21 @@ export default function UserInputForm(props: UserInputFormProps) {
             disabled={isLoading}
             className='w-full px-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all'
             placeholder='Enter password'
+          />
+        </div>
+
+        <div>
+          <label htmlFor='dateOfBirth' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            Date of Birth
+          </label>
+
+          <input
+            id='dateOfBirth'
+            type='date'
+            value={dateOfBirth}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+            disabled={isLoading}
+            className='w-full px-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all'
           />
         </div>
       </div>

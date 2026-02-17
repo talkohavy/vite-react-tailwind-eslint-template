@@ -17,6 +17,7 @@ export default function ServerCallPage() {
 
   const [userEmail, setUserEmail] = useState('talkohavy@example.com');
   const [userPassword, setUserPassword] = useState('password123');
+  const [dateOfBirth, setDateOfBirth] = useState('1990-01-01');
 
   const fetchUsers = async () => {
     try {
@@ -39,6 +40,7 @@ export default function ServerCallPage() {
       const body = {
         email: userEmail,
         password: userPassword,
+        dateOfBirth,
       };
 
       setError(null);
@@ -77,6 +79,8 @@ export default function ServerCallPage() {
           setUserEmail={setUserEmail}
           userPassword={userPassword}
           setUserPassword={setUserPassword}
+          dateOfBirth={dateOfBirth}
+          setDateOfBirth={setDateOfBirth}
           isLoading={isLoading}
         />
 
