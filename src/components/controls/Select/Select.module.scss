@@ -7,23 +7,32 @@
   line-height: 1;
   gap: 10px;
   padding: 0 10px;
+  cursor: pointer;
   background-color: white;
-  color: purple;
-  box-shadow: 0 2px 6px rgb(176, 176, 176);
+  color: rgb(22, 22, 22);
   height: 35px;
+  border: 1px solid black;
 }
+
+html[data-theme='dark'] .selectTrigger {
+  background-color: #0f172b;
+  color: white;
+}
+
 .selectTrigger:hover {
-  background-color: #eaeaea; // var(--mauve-3)
+  background-color: #eaeaea;
 }
+
 .selectTrigger:focus {
-  box-shadow: 0 0 0 2px black;
+  border-color: rgb(0, 94, 255);
 }
+
 .selectTrigger[data-placeholder] {
-  color: purple; // var(--violet-9)
+  color: rgb(0, 72, 255);
 }
 
 .selectIcon {
-  color: purple; // Var(--violet-11)
+  color: rgb(0, 0, 128);
 }
 
 .selectContent {
@@ -33,6 +42,11 @@
   box-shadow:
     0px 10px 38px -10px rgba(22, 23, 24, 0.35),
     0px 10px 20px -15px rgba(22, 23, 24, 0.2);
+}
+
+html[data-theme='dark'] .selectContent {
+  background-color: #0f172b;
+  color: white;
 }
 
 .selectViewport {
@@ -46,7 +60,7 @@
   justify-content: center;
   height: 25px;
   background-color: white;
-  color: rosybrown; // var(--violet-11);
+  color: white;
   cursor: default;
 }
 

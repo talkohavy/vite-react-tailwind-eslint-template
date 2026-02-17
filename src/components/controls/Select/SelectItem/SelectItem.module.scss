@@ -1,7 +1,6 @@
 .selectItem {
   font-size: 13px;
   line-height: 1;
-  color: purple; // var(--violet-11)
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -9,17 +8,23 @@
   padding: 0 35px 0 25px;
   position: relative;
   user-select: none;
+  color: black;
+}
+
+html[data-theme='dark'] .selectItem {
+  color: white;
 }
 
 .selectItem[data-disabled] {
-  color: #323232; // var(--mauve-8)
+  color: #323232;
   pointer-events: none;
 }
 
 .selectItem[data-highlighted] {
   outline: none;
-  background-color: violet; // var(--violet-9)
-  color: pink; // var(--violet-1);
+  background-color: rgb(130, 188, 238);
+  color: white;
+  cursor: pointer;
 }
 
 .selectItemIndicator {
