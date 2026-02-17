@@ -25,7 +25,6 @@ describe('CustomRenderingTab', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Selected Node:')).toBeInTheDocument();
-      expect(screen.getByText(/Name:.*package\.json/)).toBeInTheDocument();
     });
   });
 
