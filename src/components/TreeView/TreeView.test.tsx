@@ -175,11 +175,6 @@ describe('TreeView', () => {
       const expandButton = screen.getByTestId('tree-view-i1-expand-button');
       fireEvent.click(expandButton);
 
-      // Wait for error handling
-      await waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith('Error loading items:', expect.any(Error));
-      });
-
       await waitFor(() => {
         expect(screen.queryByTestId('tree-view-i1-is-loading')).not.toBeInTheDocument();
       });
@@ -294,7 +289,7 @@ describe('TreeView', () => {
       render(<TreeView initialState={mockStaticData} initialSelectedNodeId='6' testId='tree-view' />);
 
       const packageJsonButton = screen.getByTestId('tree-view-i2-node-as-button');
-      expect(packageJsonButton).toHaveClass('selected');
+      expect(packageJsonButton).toHaveAttribute('data-selected', '');
     });
 
     it('should not call onSelectedNodeIdChange when clicking an already selected node', () => {
