@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { API_URLS } from '@src/common/constants';
-import { httpClient } from '@src/lib/HttpClient';
+import { httpClient, HttpMethod } from '@src/lib/HttpClient';
 import { DEFAULT_USER_FORM_DATA } from './constants';
 import type { RequestInfo, UserFormData } from './types';
 
@@ -57,7 +57,7 @@ export function useServerCallPageLogic() {
       const { abort, requestInfo: info } = httpResult;
 
       setRequestInfo({
-        method: 'POST',
+        method: HttpMethod.POST,
         url: info.url,
         requestId: info.requestId,
       });

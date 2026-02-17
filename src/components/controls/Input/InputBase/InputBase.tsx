@@ -39,7 +39,7 @@ function InputBaseToForward(props: InputBaseProps, ref: React.Ref<HTMLInputEleme
       placeholder={placeholder}
       disabled={disabled}
       autoFocus={autoFocus}
-      className={twMerge('h-10 w-full rounded-md border border-black p-2', className)}
+      className={twMerge('h-10 w-full rounded-md border border-black p-2 dark:bg-slate-900', className)}
       data-test-id={`${testId}Input`}
     />
   );

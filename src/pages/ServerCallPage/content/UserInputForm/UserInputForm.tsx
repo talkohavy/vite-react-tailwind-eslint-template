@@ -1,4 +1,15 @@
+import { parseDate, type DateValue } from '@ark-ui/react/date-picker';
+import Input from '@src/components/controls/Input';
+import Select from '@src/components/controls/Select';
+import DatePicker from '@src/components/DatePicker';
 import type { UserFormData, UserRole } from '../../logic/types';
+import type { SelectOption } from '@src/components/controls/Select/types';
+
+const roleOptions: Array<SelectOption> = [
+  { value: 'user', label: 'User' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'guest', label: 'Guest' },
+];
 
 type UserInputFormProps = {
   formData: UserFormData;
@@ -8,6 +19,24 @@ type UserInputFormProps = {
 
 export default function UserInputForm(props: UserInputFormProps) {
   const { formData, isLoading, onUpdateField } = props;
+
+  const foundRole = roleOptions.find((option) => option.value === formData.role);
+  const selectedRole = foundRole ?? roleOptions[0]!;
+
+  const dateOfBirthValue = formData.dateOfBirth ? [parseDate(formData.dateOfBirth)] : [];
+
+  function handleDateChange(value: Array<DateValue>) {
+    if (value.length > 0) {
+      const dateValue = value[0];
+
+      if (dateValue) {
+        const dateString = `${dateValue.year}-${String(dateValue.month).padStart(2, '0')}-${String(dateValue.day).padStart(2, '0')}`;
+        onUpdateField('dateOfBirth', dateString);
+      }
+    } else {
+      onUpdateField('dateOfBirth', '');
+    }
+  }
 
   return (
     <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-slate-700'>
@@ -25,7 +54,7 @@ export default function UserInputForm(props: UserInputFormProps) {
             value={formData.email}
             onChange={(e) => onUpdateField('email', e.target.value)}
             disabled={isLoading}
-            className='w-full px-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all'
+            className='h-10 w-full rounded-md border border-black p-2 disabled:opacity-50 disabled:cursor-not-allowed'
             placeholder='Enter user email'
           />
         </div>
@@ -35,13 +64,11 @@ export default function UserInputForm(props: UserInputFormProps) {
             Password
           </label>
 
-          <input
-            id='userPassword'
+          <Input
             type='password'
-            value={formData.password}
-            onChange={(e) => onUpdateField('password', e.target.value)}
+            initialValue={formData.password}
+            onChange={(value) => onUpdateField('password', value)}
             disabled={isLoading}
-            className='w-full px-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all'
             placeholder='Enter password'
           />
         </div>
@@ -51,14 +78,7 @@ export default function UserInputForm(props: UserInputFormProps) {
             Date of Birth
           </label>
 
-          <input
-            id='dateOfBirth'
-            type='date'
-            value={formData.dateOfBirth}
-            onChange={(e) => onUpdateField('dateOfBirth', e.target.value)}
-            disabled={isLoading}
-            className='w-full px-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all'
-          />
+          <DatePicker value={dateOfBirthValue} setValue={handleDateChange} disabled={isLoading} closeOnSelect={true} />
         </div>
 
         <div>
@@ -66,13 +86,11 @@ export default function UserInputForm(props: UserInputFormProps) {
             Nickname
           </label>
 
-          <input
-            id='nickname'
+          <Input
             type='text'
-            value={formData.nickname}
-            onChange={(e) => onUpdateField('nickname', e.target.value)}
+            initialValue={formData.nickname}
+            onChange={(value) => onUpdateField('nickname', value)}
             disabled={isLoading}
-            className='w-full px-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all'
             placeholder='Enter nickname (optional)'
           />
         </div>
@@ -82,17 +100,13 @@ export default function UserInputForm(props: UserInputFormProps) {
             Role
           </label>
 
-          <select
-            id='role'
-            value={formData.role}
-            onChange={(e) => onUpdateField('role', e.target.value as UserRole)}
+          <Select
+            selectedOption={selectedRole}
+            setSelectedOption={(option: SelectOption) => onUpdateField('role', option.value as UserRole)}
+            options={roleOptions}
             disabled={isLoading}
-            className='w-full px-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all'
-          >
-            <option value='user'>User</option>
-            <option value='admin'>Admin</option>
-            <option value='guest'>Guest</option>
-          </select>
+            placeholder='Select role'
+          />
         </div>
       </div>
     </div>
