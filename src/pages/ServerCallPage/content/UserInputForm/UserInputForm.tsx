@@ -48,13 +48,11 @@ export default function UserInputForm(props: UserInputFormProps) {
             Email
           </label>
 
-          <input
-            id='userEmail'
-            type='email'
-            value={formData.email}
-            onChange={(e) => onUpdateField('email', e.target.value)}
+          <Input
+            type='text'
+            initialValue={formData.email}
+            onChange={(value) => onUpdateField('email', value)}
             disabled={isLoading}
-            className='h-10 w-full rounded-md border border-black p-2 disabled:opacity-50 disabled:cursor-not-allowed'
             placeholder='Enter user email'
           />
         </div>
