@@ -1,7 +1,12 @@
 import { useRef, useState } from 'react';
-import LoadingBumpingBalls from '../../components/beautiful/LoadingBumpingBalls';
-import Button from '../../components/controls/Button';
-import { httpClient } from '../../lib/HttpClient';
+import LoadingBumpingBalls from '@src/components/beautiful/LoadingBumpingBalls';
+import Button from '@src/components/controls/Button';
+import { httpClient } from '@src/lib/HttpClient';
+import { API_URLS } from '../../common/constants';
+import ErrorResponse from './content/ErrorResponse';
+import InfoCard from './content/InfoCard';
+import ServerCallHeader from './content/ServerCallHeader';
+import UserInputForm from './content/UserInputForm';
 
 export default function ServerCallPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,11 +15,14 @@ export default function ServerCallPage() {
   const [requestInfo, setRequestInfo] = useState<{ method: string; url: string; requestId: string } | null>(null);
   const abortRef = useRef<(() => void) | null>(null);
 
+  const [userEmail, setUserEmail] = useState('talkohavy@example.com');
+  const [userPassword, setUserPassword] = useState('password123');
+
   const fetchUsers = async () => {
     try {
       setError(null);
       setIsLoading(true);
-      const { promise, requestInfo: info } = httpClient.get('/api/users');
+      const { promise, requestInfo: info } = httpClient.get(API_URLS.users);
       setRequestInfo({ method: 'GET', url: info.url, requestId: info.requestId });
 
       const data = await promise;
@@ -28,18 +36,14 @@ export default function ServerCallPage() {
 
   const createUser = async () => {
     try {
+      const body = {
+        email: userEmail,
+        password: userPassword,
+      };
+
       setError(null);
       setIsLoading(true);
-      const {
-        promise,
-        abort,
-        requestInfo: info,
-      } = httpClient.post('/api/users', {
-        body: {
-          name: 'John Doe',
-          email: 'talkohavy@example.com',
-        },
-      });
+      const { promise, abort, requestInfo: info } = httpClient.post(API_URLS.users, { body });
 
       setRequestInfo({ method: 'POST', url: info.url, requestId: info.requestId });
       abortRef.current = abort;
@@ -66,11 +70,15 @@ export default function ServerCallPage() {
   return (
     <div className='size-full overflow-auto bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8'>
       <div className='flex flex-col gap-10 max-w-5xl mx-auto space-y-6'>
-        {/* Header */}
-        <div className='text-center mb-8'>
-          <h1 className='text-4xl font-bold text-gray-900 dark:text-white mb-2'>HTTP Client Demo</h1>
-          <p className='text-gray-600 dark:text-gray-400'>Test API requests with real-time abort capability</p>
-        </div>
+        <ServerCallHeader />
+
+        <UserInputForm
+          userEmail={userEmail}
+          setUserEmail={setUserEmail}
+          userPassword={userPassword}
+          setUserPassword={setUserPassword}
+          isLoading={isLoading}
+        />
 
         {/* Action Buttons Card */}
         <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-slate-700'>
@@ -159,46 +167,9 @@ export default function ServerCallPage() {
         )}
 
         {/* Error Response */}
-        {error && (
-          <div className='bg-linear-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg p-6 border border-red-200 dark:border-red-800'>
-            <h2 className='text-lg font-semibold text-red-900 dark:text-red-300 mb-3 flex items-center gap-2'>
-              ❌ Error
-            </h2>
-            <div className='bg-white dark:bg-slate-900 rounded-lg p-4 border border-red-200 dark:border-red-800'>
-              <p className='text-red-700 dark:text-red-400 font-semibold mb-2'>
-                {error?.message || 'An error occurred'}
-              </p>
-              {error?.status && (
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
-                  Status Code: <span className='font-mono font-bold'>{error.status}</span>
-                </p>
-              )}
-            </div>
-          </div>
-        )}
+        {error && <ErrorResponse error={error} />}
 
-        {/* Info Card */}
-        {!data && !error && !isLoading && (
-          <div className='bg-linear-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-2xl shadow-lg p-6 border border-amber-200 dark:border-amber-800'>
-            <h2 className='text-lg font-semibold text-amber-900 dark:text-amber-300 mb-3 flex items-center gap-2'>
-              💡 Getting Started
-            </h2>
-            <div className='text-amber-800 dark:text-amber-300 space-y-2'>
-              <p>Click one of the buttons above to make an API request.</p>
-              <ul className='list-disc list-inside space-y-1 text-sm ml-2'>
-                <li>
-                  <strong>Fetch Users</strong> - GET request to retrieve data
-                </li>
-                <li>
-                  <strong>Create User</strong> - POST request to create a new user
-                </li>
-                <li>
-                  <strong>Abort Request</strong> - Cancel an ongoing request (appears when loading)
-                </li>
-              </ul>
-            </div>
-          </div>
-        )}
+        {!data && !error && !isLoading && <InfoCard />}
       </div>
     </div>
   );

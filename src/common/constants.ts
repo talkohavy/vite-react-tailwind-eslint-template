@@ -11,13 +11,7 @@ export const WS_SERVICE_URL = WS_SERVICE_PLACEHOLDER.includes('WS_SERVICE_URL_PL
   : WS_SERVICE_PLACEHOLDER;
 
 export const API_URLS = {
-  users_service: {
-    loginWithCredentials: '/login',
-    loginWithCookie: '/login-with-cookie',
-    loginWithSaml: '/login-with-saml',
-    logout: '/logout',
-    users: '/users',
-  },
+  users: '/api/users',
   books: '/api/books',
 };
 
