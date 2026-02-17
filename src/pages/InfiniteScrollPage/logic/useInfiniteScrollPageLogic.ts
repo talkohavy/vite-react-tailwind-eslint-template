@@ -33,6 +33,10 @@ export function useInfiniteScrollPageLogic() {
       return httpClient.get<GetBooksResponse>(targetUrl);
     },
     onSuccess,
+    queryKey: ['books', category, query, currentPageNumber],
+    staleTime: Number.POSITIVE_INFINITY, // 30 seconds
+    gcTime: 1000 * 60 * 5, // 1 minute
+    isAutoFetch: currentPageNumber === 1,
   });
 
   const getShouldOverridePreviousSearchResults = useCallback(
