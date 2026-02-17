@@ -8,7 +8,7 @@ const SvgImportsPage = lazy(() => import('./pages/SvgImports'));
 const HomePage = lazy(() => import('./pages/Home'));
 const ReduxExamplePage = lazy(() => import('./pages/ReduxExample'));
 const ShowcasePage = lazy(() => import('./pages/Showcase'));
-const ServerCallPage = lazy(() => import('./pages/ServerCall'));
+const ServerCallPage = lazy(() => import('./pages/ServerCallPage'));
 const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
 const WebWorkerPage = lazy(() => import('./pages/WebWorker'));

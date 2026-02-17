@@ -3,7 +3,7 @@ import LoadingBumpingBalls from '../../components/beautiful/LoadingBumpingBalls'
 import Button from '../../components/controls/Button';
 import { httpClient } from '../../lib/HttpClient';
 
-export default function ServerCall() {
+export default function ServerCallPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any>();
   const [error, setError] = useState<any>();
