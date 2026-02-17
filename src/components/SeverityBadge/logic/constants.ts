@@ -5,5 +5,6 @@ export const Severity = {
   Critical: 'critical',
 } as const;
 
-type SeverityKeys = keyof typeof Severity;
-export type SeverityValues = (typeof Severity)[SeverityKeys];
+type SeverityType = typeof Severity;
+type SeverityKeys = keyof SeverityType;
+export type SeverityValues = SeverityType[SeverityKeys];
