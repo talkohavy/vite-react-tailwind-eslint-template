@@ -174,6 +174,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         if (cached) {
           setData(cached.data);
           setIsError(false);
+          onSuccess?.(cached.data);
 
           if (isFresh(cached, staleTime)) {
             setIsLoading(false);
@@ -187,12 +188,13 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
 
         if (inFlight) {
           try {
-            const result = await inFlight;
+            const result = (await inFlight) as TransformType;
 
-            setData(result as TransformType);
+            setData(result);
             setIsLoading(false);
+            onSuccess?.(result);
 
-            return result as TransformType;
+            return result;
           } catch (e) {
             setIsError(true);
             onError?.(e);
