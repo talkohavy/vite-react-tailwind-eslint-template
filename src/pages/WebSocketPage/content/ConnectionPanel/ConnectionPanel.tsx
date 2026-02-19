@@ -33,7 +33,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
 
   const isDisconnectDisabled = !isConnected && !isConnecting && !isReconnecting;
   const isConnectDisabled = isConnecting || isReconnecting || isConnected;
-  const isUrlInputDisabled = isConnectDisabled || isDisconnectDisabled;
+  const isUrlInputDisabled = isConnected || isConnecting || isReconnecting;
 
   return (
     <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
