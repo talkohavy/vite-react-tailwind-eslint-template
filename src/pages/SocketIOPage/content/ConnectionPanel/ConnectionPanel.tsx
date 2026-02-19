@@ -32,7 +32,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
 
           <Input
             initialValue={url}
-            onChange={(v) => setUrl(v)}
+            onChange={setUrl}
             placeholder='http://localhost:8000'
             disabled={isConnecting}
             className='block w-full dark:bg-gray-800 dark:border-gray-600'
