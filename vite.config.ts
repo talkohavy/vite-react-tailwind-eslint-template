@@ -36,6 +36,9 @@ export default defineConfig(({ mode }) => {
       port,
       strictPort: false,
       origin: 'http://localhost:3000', // <--- Defaults to '/'. Defines the origin of the generated asset URLs during development ONLY. Without this, serving of the mf-manifest.json in micro-frontends doesn't work! Since it takes the host's origin.
+      watch: {
+        // ignored: ['**/.env'], // <--- by default, Vite watches the .env file (which is good). However, if you want to ignore it, you can do so here.
+      },
     },
     resolve: {
       alias: {
