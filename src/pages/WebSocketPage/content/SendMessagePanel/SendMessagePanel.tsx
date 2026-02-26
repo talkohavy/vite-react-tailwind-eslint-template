@@ -1,6 +1,8 @@
+import clsx from 'clsx';
 import Button from '@src/components/controls/Button';
 import Textarea from '@src/components/controls/Textarea';
 import CodeBlock from '../../../../components/CodeBlock';
+import styles from './SendMessagePanel.module.scss';
 
 type SendMessagePanelProps = {
   messageToSend: string;
@@ -23,10 +25,13 @@ export default function SendMessagePanel(props: SendMessagePanelProps) {
           value={messageToSend}
           setValue={(e) => setMessageToSend(e.target.value)}
           placeholder='Type a message in JSON format'
-          rows={3}
+          rows={7}
           resize='vertical'
           disabled={!isConnected}
-          className='block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800'
+          className={clsx(
+            styles.sendMessageTextarea,
+            'block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800',
+          )}
         />
 
         <div className='flex flex-col gap-1'>
