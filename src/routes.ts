@@ -26,25 +26,33 @@ const WebEditorPage = lazy(() => import('./pages/WebEditorPage'));
 const TableDemoPage = lazy(() => import('./pages/TableDemoPage'));
 const SocketIOPage = lazy(() => import('./pages/SocketIOPage'));
 const WebSocketPage = lazy(() => import('./pages/WebSocketPage'));
+const WebRtcPage = lazy(() => import('./pages/WebRtcPage'));
 const InfiniteScrollPage = lazy(() => import('./pages/InfiniteScrollPage'));
 
-// Mini-pages/tabs
+// OutletTabsPage tabs:
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
 const AnalyticsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
 const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
+
+// QueryPage tabs:
 const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
 const QueryParserTab = lazy(() => import('./pages/QueryPage/tabs/QueryParserTab'));
 const SuggestionsTab = lazy(() => import('./pages/QueryPage/tabs/SuggestionsTab'));
 const UIChipsTab = lazy(() => import('./pages/QueryPage/tabs/UIChipsTab'));
 const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
 
-// TreeView Main page & Demo tabs
+// TreeViewPage tabs:
 const TreeViewDemoPage = lazy(() => import('./pages/TreeViewDemo'));
 const StaticTreeTab = lazy(() => import('./pages/TreeViewDemo/tabs/StaticTreeTab'));
 const DynamicTreeTab = lazy(() => import('./pages/TreeViewDemo/tabs/DynamicTreeTab'));
 const CustomRenderingTab = lazy(() => import('./pages/TreeViewDemo/tabs/CustomRenderingTab'));
 const RefControlTab = lazy(() => import('./pages/TreeViewDemo/tabs/RefControlTab'));
 const PlaygroundTab = lazy(() => import('./pages/TreeViewDemo/tabs/PlaygroundTab'));
+
+// WebRTCPage tabs:
+const WebRtcOverviewTab = lazy(() => import('./pages/WebRtcPage/tabs/OverviewTab'));
+const WebRtcSenderTab = lazy(() => import('./pages/WebRtcPage/tabs/SenderTab'));
+const WebRtcReceiverTab = lazy(() => import('./pages/WebRtcPage/tabs/ReceiverTab'));
 
 export const routes: Array<Route> = [
   {
@@ -300,6 +308,32 @@ export const routes: Array<Route> = [
     text: 'WebSocket',
     activeNames: [`${BASE_URL}/websocket`],
     Component: WebSocketPage,
+  },
+  {
+    to: `${BASE_URL}/webrtc`,
+    text: 'WebRTC P2P',
+    activeNames: [`${BASE_URL}/webrtc`, `${BASE_URL}/webrtc/sender`, `${BASE_URL}/webrtc/receiver`],
+    Component: WebRtcPage,
+    children: [
+      {
+        to: '',
+        text: 'Overview',
+        activeNames: [],
+        Component: WebRtcOverviewTab,
+      },
+      {
+        to: 'sender',
+        text: 'Sender',
+        activeNames: [],
+        Component: WebRtcSenderTab,
+      },
+      {
+        to: 'receiver',
+        text: 'Receiver',
+        activeNames: [],
+        Component: WebRtcReceiverTab,
+      },
+    ],
   },
   {
     to: `${BASE_URL}/infinite-scroll`,
