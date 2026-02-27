@@ -40,9 +40,8 @@ export default function SendMessagePanel(props: SendMessagePanelProps) {
           <CodeBlock
             language='json'
             code={`{
-  "event": "actions",
+  "event": "register",
   "payload": {
-    "action": "register",
     "topic": "data"
   }
 }`}
@@ -56,9 +55,8 @@ export default function SendMessagePanel(props: SendMessagePanelProps) {
         <CodeBlock
           language='json'
           code={`{
-  "event": "actions",
+  "event": "send",
   "payload": {
-    "action": "send",
     "topic": "presence",
     "data": {
       "message": "Hello, world!"
