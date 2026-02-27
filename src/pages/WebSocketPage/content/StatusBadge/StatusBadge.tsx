@@ -8,7 +8,7 @@ const config: Record<WsConnectionStateValues, { label: string; className: string
     dotClassName: 'bg-gray-500',
   },
   [WsConnectionState.Connecting]: {
-    label: 'Connecting…',
+    label: 'Connecting...',
     className: 'bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-200',
     dotClassName: 'bg-amber-500 animate-pulse',
   },
@@ -18,12 +18,12 @@ const config: Record<WsConnectionStateValues, { label: string; className: string
     dotClassName: 'bg-emerald-600 dark:bg-emerald-400 animate-pulse',
   },
   [WsConnectionState.Reconnecting]: {
-    label: 'Reconnecting…',
+    label: 'Reconnecting...',
     className: 'bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-200',
     dotClassName: 'bg-amber-500 animate-pulse',
   },
   [WsConnectionState.Closing]: {
-    label: 'Closing…',
+    label: 'Closing...',
     className: 'bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-200',
     dotClassName: 'bg-amber-500 animate-pulse',
   },

@@ -55,12 +55,12 @@ export default function DropdownMenuContent(props: DropdownMenuContentProps) {
         <Portal>
           <SubContent className={styles.dropdownMenuSubContent} sideOffset={2} alignOffset={-5}>
             <Item className={styles.dropdownMenuItem}>
-              Save Page As… <div className='RightSlot'>⌘+S</div>
+              Save Page As... <div className='RightSlot'>⌘+S</div>
             </Item>
 
-            <Item className={styles.dropdownMenuItem}>Create Shortcut…</Item>
+            <Item className={styles.dropdownMenuItem}>Create Shortcut...</Item>
 
-            <Item className={styles.dropdownMenuItem}>Name Window…</Item>
+            <Item className={styles.dropdownMenuItem}>Name Window...</Item>
 
             <Separator className={styles.dropdownMenuSeparator} />
 

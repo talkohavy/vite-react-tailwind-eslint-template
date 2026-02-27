@@ -9,7 +9,7 @@ const config: Record<ConnectionStateValues, { label: string; className: string; 
     dotClassName: 'bg-gray-500',
   },
   [ConnectionState.Connecting]: {
-    label: 'Connecting…',
+    label: 'Connecting...',
     className: 'bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-200',
     dotClassName: 'bg-amber-500 animate-pulse',
   },
