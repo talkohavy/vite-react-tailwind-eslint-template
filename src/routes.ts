@@ -29,6 +29,7 @@ const WebSocketPage = lazy(() => import('./pages/WebSocketPage'));
 const WebRtcPage = lazy(() => import('./pages/WebRtcPage'));
 const InfiniteScrollPage = lazy(() => import('./pages/InfiniteScrollPage'));
 const MediaCaptureApiPage = lazy(() => import('./pages/MediaCaptureApiPage'));
+const ScreenCaptureApiPage = lazy(() => import('./pages/ScreenCaptureApiPage'));
 
 // OutletTabsPage tabs:
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -347,5 +348,11 @@ export const routes: Array<Route> = [
     text: 'Media Capture API',
     activeNames: [`${BASE_URL}/media-capture-api`],
     Component: MediaCaptureApiPage,
+  },
+  {
+    to: `${BASE_URL}/screen-capture-api`,
+    text: 'Screen Capture API',
+    activeNames: [`${BASE_URL}/screen-capture-api`],
+    Component: ScreenCaptureApiPage,
   },
 ];
