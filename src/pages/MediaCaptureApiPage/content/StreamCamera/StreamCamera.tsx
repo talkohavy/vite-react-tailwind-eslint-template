@@ -1,5 +1,7 @@
 import type { RefObject } from 'react';
+import clsx from 'clsx';
 import Button from '@src/components/controls/Button';
+import styles from './StreamCamera.module.scss';
 
 type StreamCameraProps = {
   videoRef: RefObject<HTMLVideoElement | null>;
@@ -30,9 +32,9 @@ export default function StreamCamera(props: StreamCameraProps) {
         <video
           ref={videoRef}
           onCanPlay={onVideoCanPlay}
-          className='h-auto'
           playsInline
           muted
+          className={clsx(styles.video, 'h-auto')}
           style={{ width: videoWidth || '100%' }}
         >
           Video stream not available.
