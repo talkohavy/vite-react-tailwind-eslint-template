@@ -7,10 +7,10 @@ export function useMediaCaptureApiPageLogic() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
-  const [streaming, setStreaming] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
 
   const startCameraDisabled = Boolean(stream);
-  const takePictureDisabled = !(stream && streaming);
+  const takePictureDisabled = !(stream && isStreaming);
 
   useEffect(() => {
     return () => {
@@ -44,12 +44,12 @@ export function useMediaCaptureApiPageLogic() {
   const onVideoCanPlay = useCallback(() => {
     const video = videoRef.current;
 
-    const canPlayVideo = video && !streaming;
+    const canPlayVideo = video && !isStreaming;
 
     if (!canPlayVideo) return;
 
-    setStreaming(true);
-  }, [streaming]);
+    setIsStreaming(true);
+  }, [isStreaming]);
 
   const stopCamera = useCallback(() => {
     if (stream) {
@@ -59,7 +59,7 @@ export function useMediaCaptureApiPageLogic() {
       setStream(null);
     }
 
-    setStreaming(false);
+    setIsStreaming(false);
     setPhotoDataUrl(null);
 
     const video = videoRef.current;
