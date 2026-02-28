@@ -22,6 +22,7 @@ export default function MediaCaptureApiPage() {
     startCamera,
     takePicture,
     stopCamera,
+    openFullscreen,
   } = useMediaCaptureApiPageLogic();
 
   return (
@@ -67,6 +68,7 @@ export default function MediaCaptureApiPage() {
             takePicture={takePicture}
             stopCamera={stopCamera}
             onVideoCanPlay={onVideoCanPlay}
+            openFullscreen={openFullscreen}
           />
 
           {error && (

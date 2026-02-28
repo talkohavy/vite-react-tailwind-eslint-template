@@ -12,6 +12,7 @@ type StreamCameraProps = {
   startCamera: () => void;
   takePicture: () => void;
   stopCamera: () => void;
+  openFullscreen: () => void;
 };
 
 export default function StreamCamera(props: StreamCameraProps) {
@@ -24,6 +25,7 @@ export default function StreamCamera(props: StreamCameraProps) {
     startCamera,
     takePicture,
     stopCamera,
+    openFullscreen,
   } = props;
 
   return (
@@ -64,6 +66,10 @@ export default function StreamCamera(props: StreamCameraProps) {
           className='bg-gray-600 hover:bg-gray-700 disabled:opacity-50'
         >
           Stop camera
+        </Button>
+
+        <Button onClick={openFullscreen} className='bg-gray-600 hover:bg-gray-700 disabled:opacity-50'>
+          Full screen
         </Button>
       </div>
     </div>

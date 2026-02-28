@@ -38,6 +38,7 @@ export function useMediaCaptureApiPageLogic() {
       if (!video) return;
 
       video.srcObject = mediaStream;
+
       await video.play();
     } catch (error: any) {
       const message = error.message || String(error) || error.name;
@@ -94,6 +95,23 @@ export function useMediaCaptureApiPageLogic() {
     setPhotoDataUrl(dataUrl);
   }, []);
 
+  const openFullscreen = async () => {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    const requestFs = video.requestFullscreen ?? (video as any).webkitRequestFullscreen;
+
+    if (!requestFs) return;
+
+    try {
+      await requestFs.call(video);
+    } catch (err) {
+      // Fullscreen can fail when: not in a user gesture, blocked by Permissions Policy (e.g. in iframe without allow="fullscreen"), or user denied
+      console.warn('Fullscreen request failed:', err);
+    }
+  };
+
   return {
     videoRef,
     canvasRef,
@@ -108,5 +126,6 @@ export function useMediaCaptureApiPageLogic() {
     startCamera,
     takePicture,
     stopCamera,
+    openFullscreen,
   };
 }
