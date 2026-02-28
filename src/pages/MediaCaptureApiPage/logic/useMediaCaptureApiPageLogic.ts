@@ -26,7 +26,8 @@ export function useMediaCaptureApiPageLogic() {
 
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 1920, height: 1080 }, // <--- video: true or... 3840 x 2160, 1920 x 1080, 1280 x 720,
+        // video: { width: { min: 1920 }, height: { min: 1080 }, frameRate: { min: 30 } }, // <--- video: true or... 3840 x 2160, 1920 x 1080, 1280 x 720,
+        video: { width: 1920, height: 1080 },
         audio: false,
       });
 
@@ -38,8 +39,8 @@ export function useMediaCaptureApiPageLogic() {
 
       video.srcObject = mediaStream;
       await video.play();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+    } catch (error: any) {
+      const message = error.message || String(error) || error.name;
       setError(`Camera error: ${message}`);
     }
   }, []);
