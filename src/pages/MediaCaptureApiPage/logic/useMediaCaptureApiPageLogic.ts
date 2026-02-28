@@ -25,7 +25,10 @@ export function useMediaCaptureApiPageLogic() {
     setError(null);
 
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 1920, height: 1080 }, // <--- video: true or... 3840 x 2160, 1920 x 1080, 1280 x 720,
+        audio: false,
+      });
 
       setStream(mediaStream);
 
@@ -79,8 +82,8 @@ export function useMediaCaptureApiPageLogic() {
 
     if (!ctx) return;
 
-    const canvasWidth = video.videoWidth * 2;
-    const canvasHeight = video.videoHeight * 2;
+    const canvasWidth = video.videoWidth;
+    const canvasHeight = video.videoHeight;
 
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -98,7 +101,7 @@ export function useMediaCaptureApiPageLogic() {
     startCameraDisabled,
     takePictureDisabled,
     get videoWidth() {
-      return (videoRef.current?.videoWidth ?? 0) * 2;
+      return videoRef.current?.videoWidth ?? 0;
     },
     onVideoCanPlay,
     startCamera,
