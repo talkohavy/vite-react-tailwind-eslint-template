@@ -43,8 +43,22 @@ export function useScreenCaptureApiPageLogic() {
 
     try {
       const mediaStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: false,
+        video: {
+          displaySurface: 'browser', // <--- Defaults to 'browser'. The default option to display first. Options are: 'browser' (default), 'window', 'monitor'.
+          frameRate: 60, // <--- 30 is definitely not the highest value! Not sure 60 is, but it's definitely some value higher than 30!
+        },
+        // selfBrowserSurface: 'exclude',
+        // audio: true,
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+        },
+        // @ts-ignore
+        // systemAudio: 'exclude', // <--- this key definitely exists! Defaults to 'include'. Options are: 'include' (default), 'exclude'.
+        // selfBrowserSurface: 'include', // <--- this key definitely exists! Include/Exclude the current tab as a share option. Defaults to 'exclude'. Options are: 'include', 'exclude' (default).
+        // monitorTypeSurfaces: 'exclude', // <--- this key definitely exists! Include/Exclude "Entire Screen" as a share option. Defaults to 'include'. Options are: 'include' (default), 'exclude'.
+        // preferCurrentTab: true, // <--- this key definitely exists! Show only this tab as a share option! Remove monitor, or window, or other tabs as options. Defaults to false.
       });
 
       streamRef.current = mediaStream;
