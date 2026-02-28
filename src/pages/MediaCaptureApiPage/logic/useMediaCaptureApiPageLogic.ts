@@ -23,6 +23,7 @@ export function useMediaCaptureApiPageLogic() {
 
   const startCamera = useCallback(async () => {
     setError(null);
+
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 
