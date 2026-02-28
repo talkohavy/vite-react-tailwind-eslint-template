@@ -28,6 +28,7 @@ const SocketIOPage = lazy(() => import('./pages/SocketIOPage'));
 const WebSocketPage = lazy(() => import('./pages/WebSocketPage'));
 const WebRtcPage = lazy(() => import('./pages/WebRtcPage'));
 const InfiniteScrollPage = lazy(() => import('./pages/InfiniteScrollPage'));
+const MediaCaptureApiPage = lazy(() => import('./pages/MediaCaptureApiPage'));
 
 // OutletTabsPage tabs:
 const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
@@ -340,5 +341,11 @@ export const routes: Array<Route> = [
     text: 'Infinite Scroll',
     activeNames: [`${BASE_URL}/infinite-scroll`],
     Component: InfiniteScrollPage,
+  },
+  {
+    to: `${BASE_URL}/media-capture-api`,
+    text: 'Media Capture API',
+    activeNames: [`${BASE_URL}/media-capture-api`],
+    Component: MediaCaptureApiPage,
   },
 ];
