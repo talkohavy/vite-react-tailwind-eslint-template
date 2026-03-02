@@ -21,12 +21,12 @@ export default function SenderTab() {
     <div className='flex flex-col gap-6'>
       <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
         <h2 className='text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400'>
-          Sender — share your screen
+          Sender — share screen or camera
         </h2>
 
         <p className='text-sm text-gray-600 dark:text-gray-300'>
-          Connect to the signaling server, then start sharing. The receiver (in another tab or window) will see your
-          stream.
+          Connect to the signaling server, then share your screen or camera. The receiver (in another tab or window)
+          will see your stream.
         </p>
 
         <div className='flex flex-wrap gap-2'>
@@ -47,11 +47,19 @@ export default function SenderTab() {
           </Button>
 
           <Button
-            onClick={startSharing}
+            onClick={() => startSharing('screen')}
             disabled={isStartSharingDisabled}
             className='bg-blue-600 hover:bg-blue-700 disabled:opacity-50'
           >
-            {isSharing ? 'Sharing...' : 'Start sharing screen'}
+            {isSharing ? 'Sharing...' : 'Share screen'}
+          </Button>
+
+          <Button
+            onClick={() => startSharing('camera')}
+            disabled={isStartSharingDisabled}
+            className='bg-violet-600 hover:bg-violet-700 disabled:opacity-50'
+          >
+            {isSharing ? 'Sharing...' : 'Share camera'}
           </Button>
         </div>
 
@@ -59,7 +67,7 @@ export default function SenderTab() {
 
         {isConnected && !isSharing && (
           <span className='text-sm text-emerald-600 dark:text-emerald-400'>
-            Connected. Click &quot;Start sharing screen&quot;.
+            Connected. Click &quot;Share screen&quot; or &quot;Share camera&quot;.
           </span>
         )}
 

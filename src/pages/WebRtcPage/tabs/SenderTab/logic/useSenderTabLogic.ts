@@ -2,7 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
 import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
+import { attachStreamToVideo } from './attachStreamToVideo';
+import { getMediaStream, type ShareSource } from './getMediaStream';
+import { setupWebRtcSending } from './setupWebRtcSending';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
+
+const SESSION_ID = 'aaa-bbb-ccc';
 
 export function useSenderTabLogic() {
   const [connectionState, setConnectionState] = useState<ConnectionStateValues>(ConnectionState.Idle);
@@ -11,7 +16,7 @@ export function useSenderTabLogic() {
 
   const socketRef = useRef<WebSocket | null>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const isConnected = connectionState === ConnectionState.Open;
@@ -35,7 +40,7 @@ export function useSenderTabLogic() {
         event: SocketEvents.WebRtc,
         payload: {
           type: WebRtcSignalTypes.Sender,
-          sessionId: 'aaa-bbb-ccc',
+          sessionId: SESSION_ID,
         },
       };
 
@@ -62,97 +67,35 @@ export function useSenderTabLogic() {
     socketRef.current = null;
     peerConnectionRef.current?.close();
     peerConnectionRef.current = null;
-    streamRef.current?.getTracks().forEach((track) => void track.stop());
-    streamRef.current = null;
+    mediaStreamRef.current?.getTracks().forEach((track) => void track.stop());
+    mediaStreamRef.current = null;
     if (videoRef.current) videoRef.current.srcObject = null;
 
     setConnectionState(ConnectionState.Closed);
     setIsSharing(false);
   }, []);
 
-  const startSharing = useCallback(async () => {
+  const startSharing = useCallback(async (source: ShareSource) => {
     const socket = socketRef.current;
 
     const canShare = socket?.readyState === WebSocket.OPEN;
 
     if (!canShare) return;
 
-    const videoElement = videoRef.current;
-
-    const pc = new RTCPeerConnection();
-    peerConnectionRef.current = pc;
-
-    pc.onnegotiationneeded = async () => {
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-
-      const webRtcMessage: SocketEventMessage<WebRtcSignalingPayload> = {
-        event: SocketEvents.WebRtc,
-        payload: {
-          type: WebRtcSignalTypes.CreateOffer,
-          sdp: pc.localDescription!,
-          sessionId: 'aaa-bbb-ccc',
-        },
-      };
-
-      socket.send(JSON.stringify(webRtcMessage));
-    };
-
-    pc.onicecandidate = (event) => {
-      if (!event.candidate) return;
-
-      const webRtcMessage: SocketEventMessage<WebRtcSignalingPayload> = {
-        event: SocketEvents.WebRtc,
-        payload: {
-          type: WebRtcSignalTypes.IceCandidate,
-          candidate: event.candidate,
-          sessionId: 'aaa-bbb-ccc',
-        },
-      };
-
-      socket.send(JSON.stringify(webRtcMessage));
-    };
-
-    const iceCandidateQueue: RTCIceCandidateInit[] = [];
-    let remoteDescriptionSet = false;
-
-    socket.onmessage = async (event: MessageEvent<string>) => {
-      const rawMessage = JSON.parse(event.data);
-      const payload = rawMessage.payload;
-
-      if (payload.type === WebRtcSignalTypes.CreateAnswer && payload.sdp) {
-        await pc.setRemoteDescription(payload.sdp);
-        remoteDescriptionSet = true;
-        for (const candidate of iceCandidateQueue) {
-          await pc.addIceCandidate(candidate);
-        }
-        iceCandidateQueue.length = 0;
-      } else if (payload.type === WebRtcSignalTypes.IceCandidate && payload.candidate) {
-        if (remoteDescriptionSet) {
-          await pc.addIceCandidate(payload.candidate);
-        } else {
-          iceCandidateQueue.push(payload.candidate);
-        }
-      }
-    };
-
-    let stream: MediaStream;
+    let mediaStream: MediaStream;
     try {
-      stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+      mediaStream = await getMediaStream(source);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to get display media'));
+      setError(err instanceof Error ? err : new Error('Failed to get media stream'));
       return;
     }
-    streamRef.current = stream;
 
-    const videoTrack = stream.getVideoTracks()[0];
+    mediaStreamRef.current = mediaStream;
 
-    if (videoTrack) pc.addTrack(videoTrack, stream);
+    attachStreamToVideo(mediaStream, videoRef.current);
 
-    if (videoElement) {
-      videoElement.srcObject = stream;
-      videoElement.play().catch(() => {});
-    }
+    const peerConnection = setupWebRtcSending({ socket, sessionId: SESSION_ID, mediaStream });
+    peerConnectionRef.current = peerConnection;
 
     setIsSharing(true);
   }, []);
