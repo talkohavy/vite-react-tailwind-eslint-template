@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
-import { ConnectionState, type ConnectionStateValues, WEB_RTC_EVENT } from '../../../logic/constants';
+import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
+import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
 
 export function useSenderTabLogic() {
@@ -29,8 +30,16 @@ export function useSenderTabLogic() {
 
     socket.onopen = () => {
       setConnectionState(ConnectionState.Open);
-      const payload: WebRtcSignalingPayload = { type: 'sender' };
-      socket.send(JSON.stringify({ event: WEB_RTC_EVENT, payload }));
+
+      const webRtcMessage: SocketEventMessage<WebRtcSignalingPayload> = {
+        event: SocketEvents.WebRtc,
+        payload: {
+          type: WebRtcSignalTypes.Sender,
+          sessionId: 'aaa-bbb-ccc',
+        },
+      };
+
+      socket.send(JSON.stringify(webRtcMessage));
     };
 
     socket.onclose = () => {
@@ -55,6 +64,7 @@ export function useSenderTabLogic() {
     peerConnectionRef.current = null;
     streamRef.current?.getTracks().forEach((track) => void track.stop());
     streamRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
 
     setConnectionState(ConnectionState.Closed);
     setIsSharing(false);
@@ -76,34 +86,63 @@ export function useSenderTabLogic() {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      const payload: WebRtcSignalingPayload = { type: 'createOffer', sdp: pc.localDescription! };
+      const webRtcMessage: SocketEventMessage<WebRtcSignalingPayload> = {
+        event: SocketEvents.WebRtc,
+        payload: {
+          type: WebRtcSignalTypes.CreateOffer,
+          sdp: pc.localDescription!,
+          sessionId: 'aaa-bbb-ccc',
+        },
+      };
 
-      socket.send(JSON.stringify({ event: WEB_RTC_EVENT, payload }));
+      socket.send(JSON.stringify(webRtcMessage));
     };
 
     pc.onicecandidate = (event) => {
       if (!event.candidate) return;
 
-      const payload: WebRtcSignalingPayload = { type: 'iceCandidate', candidate: event.candidate };
-
-      socket.send(JSON.stringify({ event: WEB_RTC_EVENT, payload }));
-    };
-
-    socket.onmessage = (event: MessageEvent<string>) => {
-      const message = JSON.parse(event.data) as {
-        type: string;
-        sdp?: RTCSessionDescriptionInit;
-        candidate?: RTCIceCandidateInit;
+      const webRtcMessage: SocketEventMessage<WebRtcSignalingPayload> = {
+        event: SocketEvents.WebRtc,
+        payload: {
+          type: WebRtcSignalTypes.IceCandidate,
+          candidate: event.candidate,
+          sessionId: 'aaa-bbb-ccc',
+        },
       };
 
-      if (message.type === 'createAnswer' && message.sdp) {
-        pc.setRemoteDescription(message.sdp);
-      } else if (message.type === 'iceCandidate' && message.candidate) {
-        pc.addIceCandidate(message.candidate);
+      socket.send(JSON.stringify(webRtcMessage));
+    };
+
+    const iceCandidateQueue: RTCIceCandidateInit[] = [];
+    let remoteDescriptionSet = false;
+
+    socket.onmessage = async (event: MessageEvent<string>) => {
+      const rawMessage = JSON.parse(event.data);
+      const payload = rawMessage.payload;
+
+      if (payload.type === WebRtcSignalTypes.CreateAnswer && payload.sdp) {
+        await pc.setRemoteDescription(payload.sdp);
+        remoteDescriptionSet = true;
+        for (const candidate of iceCandidateQueue) {
+          await pc.addIceCandidate(candidate);
+        }
+        iceCandidateQueue.length = 0;
+      } else if (payload.type === WebRtcSignalTypes.IceCandidate && payload.candidate) {
+        if (remoteDescriptionSet) {
+          await pc.addIceCandidate(payload.candidate);
+        } else {
+          iceCandidateQueue.push(payload.candidate);
+        }
       }
     };
 
-    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to get display media'));
+      return;
+    }
     streamRef.current = stream;
 
     const videoTrack = stream.getVideoTracks()[0];

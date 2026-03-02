@@ -18,3 +18,13 @@ export const ConnectionState = {
 } as const;
 
 export type ConnectionStateValues = (typeof ConnectionState)[keyof typeof ConnectionState];
+
+export const WebRtcSignalTypes = {
+  Sender: 'sender',
+  Receiver: 'receiver',
+  CreateOffer: 'createOffer',
+  CreateAnswer: 'createAnswer',
+  IceCandidate: 'iceCandidate',
+};
+
+export type WebRtcSignalTypesValues = (typeof WebRtcSignalTypes)[keyof typeof WebRtcSignalTypes];

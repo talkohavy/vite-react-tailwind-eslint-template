@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
-import { ConnectionState, type ConnectionStateValues, WEB_RTC_EVENT } from '../../../logic/constants';
+import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
+import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
 
 export function useReceiverTabLogic() {
@@ -11,6 +12,7 @@ export function useReceiverTabLogic() {
   const socketRef = useRef<WebSocket | null>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const iceCandidateQueueRef = useRef<RTCIceCandidateInit[]>([]);
 
   const isConnected = connectionState === ConnectionState.Open;
   const isConnecting = connectionState === ConnectionState.Connecting;
@@ -28,29 +30,38 @@ export function useReceiverTabLogic() {
     socket.onopen = () => {
       setConnectionState(ConnectionState.Open);
 
-      const payload: WebRtcSignalingPayload = { type: 'receiver' };
-      const message = { event: WEB_RTC_EVENT, payload };
+      const message: SocketEventMessage<WebRtcSignalingPayload> = {
+        event: SocketEvents.WebRtc,
+        payload: {
+          type: WebRtcSignalTypes.Receiver,
+          sessionId: 'aaa-bbb-ccc',
+        },
+      };
 
       socket.send(JSON.stringify(message));
     };
 
     socket.onmessage = async (event: MessageEvent<string>) => {
-      const message = JSON.parse(event.data) as {
-        type: string;
-        sdp?: RTCSessionDescriptionInit;
-        candidate?: RTCIceCandidateInit;
-      };
+      const rawMessage = JSON.parse(event.data);
+      const payload = rawMessage.payload;
 
-      if (message.type === 'createOffer' && message.sdp) {
+      if (payload.type === WebRtcSignalTypes.CreateOffer && payload.sdp) {
         const pc = new RTCPeerConnection();
         peerConnectionRef.current = pc;
+        iceCandidateQueueRef.current = [];
 
         pc.onicecandidate = (iceEvent) => {
           if (iceEvent.candidate) {
-            const payload: WebRtcSignalingPayload = { type: 'iceCandidate', candidate: iceEvent.candidate };
-            const message = { event: WEB_RTC_EVENT, payload };
+            const eventMessage: SocketEventMessage<WebRtcSignalingPayload> = {
+              event: SocketEvents.WebRtc,
+              payload: {
+                type: WebRtcSignalTypes.IceCandidate,
+                candidate: iceEvent.candidate,
+                sessionId: 'aaa-bbb-ccc',
+              },
+            };
 
-            socket.send(JSON.stringify(message));
+            socket.send(JSON.stringify(eventMessage));
           }
         };
 
@@ -65,17 +76,35 @@ export function useReceiverTabLogic() {
           }
         };
 
-        await pc.setRemoteDescription(message.sdp);
+        await pc.setRemoteDescription(payload.sdp);
+
+        for (const candidate of iceCandidateQueueRef.current) {
+          await pc.addIceCandidate(candidate);
+        }
+
+        iceCandidateQueueRef.current = [];
 
         const answer = await pc.createAnswer();
 
         await pc.setLocalDescription(answer);
 
-        const payload: WebRtcSignalingPayload = { type: 'createAnswer', sdp: pc.localDescription! };
+        const eventMessage: SocketEventMessage<WebRtcSignalingPayload> = {
+          event: SocketEvents.WebRtc,
+          payload: {
+            type: WebRtcSignalTypes.CreateAnswer,
+            sdp: pc.localDescription!,
+            sessionId: 'aaa-bbb-ccc',
+          },
+        };
 
-        socket.send(JSON.stringify({ event: WEB_RTC_EVENT, payload }));
-      } else if (message.type === 'iceCandidate' && message.candidate && peerConnectionRef.current) {
-        await peerConnectionRef.current.addIceCandidate(message.candidate);
+        socket.send(JSON.stringify(eventMessage));
+      } else if (payload.type === WebRtcSignalTypes.IceCandidate && payload.candidate && peerConnectionRef.current) {
+        const pc = peerConnectionRef.current;
+        if (pc.remoteDescription) {
+          await pc.addIceCandidate(payload.candidate);
+        } else {
+          iceCandidateQueueRef.current.push(payload.candidate);
+        }
       }
     };
 
@@ -101,6 +130,8 @@ export function useReceiverTabLogic() {
     socketRef.current = null;
     peerConnectionRef.current?.close();
     peerConnectionRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
+
     setRemoteStream(null);
     setConnectionState(ConnectionState.Closed);
   }, []);
