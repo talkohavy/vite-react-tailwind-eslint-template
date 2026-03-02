@@ -92,8 +92,8 @@ export default function SenderTab() {
           ref={videoRef}
           autoPlay
           controls
-          // muted
-          // playsInline
+          muted // <--- the sender doesn't need to hear themselves. if not muted, there's going to be a feedback loop.
+          playsInline // <--- so the preview plays inline on mobile instead of forcing fullscreen.
           className='w-full rounded-lg border border-gray-200 bg-black object-contain dark:border-gray-600'
         >
           <track kind='captions' />
