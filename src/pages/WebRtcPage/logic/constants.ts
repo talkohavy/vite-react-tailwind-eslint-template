@@ -1,8 +1,3 @@
-/**
- * Event name sent to the signaling server for all WebRTC signaling messages.
- */
-export const WEB_RTC_EVENT = 'web-rtc' as const;
-
 export const Tabs = {
   Overview: '',
   Sender: 'sender',
