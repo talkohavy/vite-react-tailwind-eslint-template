@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
-import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
+import {
+  ConnectionState,
+  WebRtcSignalTypes,
+  WEBRTC_SESSION_ID,
+  type ConnectionStateValues,
+} from '../../../logic/constants';
 import { attachStreamToVideo } from './attachStreamToVideo';
 import { getMediaStream, type ShareSource } from './getMediaStream';
 import { setupWebRtcSending } from './setupWebRtcSending';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
-
-const SESSION_ID = 'aaa-bbb-ccc';
 
 export function useSenderTabLogic() {
   const [connectionState, setConnectionState] = useState<ConnectionStateValues>(ConnectionState.Idle);
@@ -40,7 +43,7 @@ export function useSenderTabLogic() {
         event: SocketEvents.WebRtc,
         payload: {
           type: WebRtcSignalTypes.Sender,
-          sessionId: SESSION_ID,
+          sessionId: WEBRTC_SESSION_ID,
         },
       };
 
@@ -94,7 +97,7 @@ export function useSenderTabLogic() {
 
     attachStreamToVideo(mediaStream, videoRef.current);
 
-    const peerConnection = setupWebRtcSending({ socket, sessionId: SESSION_ID, mediaStream });
+    const peerConnection = setupWebRtcSending({ socket, sessionId: WEBRTC_SESSION_ID, mediaStream });
     peerConnectionRef.current = peerConnection;
 
     setIsSharing(true);

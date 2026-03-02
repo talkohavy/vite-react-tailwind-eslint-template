@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
-import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
+import {
+  ConnectionState,
+  WebRtcSignalTypes,
+  WEBRTC_SESSION_ID,
+  type ConnectionStateValues,
+} from '../../../logic/constants';
+import { setupWebRtcReceiving } from './setupWebRtcReceiving';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
 
 export function useReceiverTabLogic() {
@@ -13,7 +19,9 @@ export function useReceiverTabLogic() {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const iceCandidateQueueRef = useRef<RTCIceCandidateInit[]>([]);
+  const messageHandlerRef = useRef<{ handleIceCandidate: (candidate: RTCIceCandidateInit) => Promise<void> } | null>(
+    null,
+  );
 
   const isConnected = connectionState === ConnectionState.Open;
   const isConnecting = connectionState === ConnectionState.Connecting;
@@ -54,7 +62,7 @@ export function useReceiverTabLogic() {
         event: SocketEvents.WebRtc,
         payload: {
           type: WebRtcSignalTypes.Receiver,
-          sessionId: 'aaa-bbb-ccc',
+          sessionId: WEBRTC_SESSION_ID,
         },
       };
 
@@ -66,76 +74,32 @@ export function useReceiverTabLogic() {
       const payload = rawMessage.payload;
 
       if (payload.type === WebRtcSignalTypes.CreateOffer && payload.sdp) {
-        const pc = new RTCPeerConnection();
-        peerConnectionRef.current = pc;
-        iceCandidateQueueRef.current = [];
-        remoteStreamRef.current = new MediaStream();
+        peerConnectionRef.current?.close();
+        peerConnectionRef.current = null;
+        messageHandlerRef.current = null;
+        clearRemoteStreamAndVideo();
 
-        pc.onconnectionstatechange = () => {
-          const state = pc.connectionState;
-          if (state === 'disconnected' || state === 'failed' || state === 'closed') {
-            clearRemoteStreamAndVideo();
-          }
-        };
-
-        pc.onicecandidate = (iceEvent) => {
-          if (iceEvent.candidate) {
-            const eventMessage: SocketEventMessage<WebRtcSignalingPayload> = {
-              event: SocketEvents.WebRtc,
-              payload: {
-                type: WebRtcSignalTypes.IceCandidate,
-                candidate: iceEvent.candidate,
-                sessionId: 'aaa-bbb-ccc',
-              },
-            };
-
-            socket.send(JSON.stringify(eventMessage));
-          }
-        };
-
-        pc.ontrack = (trackEvent) => {
-          const mediaStream = remoteStreamRef.current;
-
-          if (!mediaStream) return;
-
-          mediaStream.addTrack(trackEvent.track);
-          setRemoteStream(mediaStream);
-
-          if (videoRef.current) {
-            videoRef.current.srcObject = mediaStream;
-            videoRef.current.play().catch(() => {});
-          }
-        };
-
-        await pc.setRemoteDescription(payload.sdp);
-
-        for (const candidate of iceCandidateQueueRef.current) {
-          await pc.addIceCandidate(candidate);
-        }
-
-        iceCandidateQueueRef.current = [];
-
-        const answer = await pc.createAnswer();
-
-        await pc.setLocalDescription(answer);
-
-        const eventMessage: SocketEventMessage<WebRtcSignalingPayload> = {
-          event: SocketEvents.WebRtc,
-          payload: {
-            type: WebRtcSignalTypes.CreateAnswer,
-            sdp: pc.localDescription!,
-            sessionId: 'aaa-bbb-ccc',
+        const { peerConnection, handleIceCandidate } = setupWebRtcReceiving({
+          socket,
+          sessionId: WEBRTC_SESSION_ID,
+          offerSdp: payload.sdp,
+          callbacks: {
+            onRemoteStream: (stream) => {
+              remoteStreamRef.current = stream;
+              setRemoteStream(stream);
+              if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+                videoRef.current.play().catch(() => {});
+              }
+            },
+            onStreamCleared: clearRemoteStreamAndVideo,
           },
-        };
+        });
 
-        socket.send(JSON.stringify(eventMessage));
-      } else if (payload.type === WebRtcSignalTypes.IceCandidate && payload.candidate && peerConnectionRef.current) {
-        const pc = peerConnectionRef.current;
-        if (pc.remoteDescription) {
-          await pc.addIceCandidate(payload.candidate);
-        } else {
-          iceCandidateQueueRef.current.push(payload.candidate);
-        }
+        peerConnectionRef.current = peerConnection;
+        messageHandlerRef.current = { handleIceCandidate };
+      } else if (payload.type === WebRtcSignalTypes.IceCandidate && payload.candidate) {
+        await messageHandlerRef.current?.handleIceCandidate(payload.candidate);
       }
     };
 
@@ -144,6 +108,7 @@ export function useReceiverTabLogic() {
       socketRef.current = null;
       peerConnectionRef.current?.close();
       peerConnectionRef.current = null;
+      messageHandlerRef.current = null;
       clearRemoteStreamAndVideo();
     };
 
@@ -161,6 +126,7 @@ export function useReceiverTabLogic() {
     socketRef.current = null;
     peerConnectionRef.current?.close();
     peerConnectionRef.current = null;
+    messageHandlerRef.current = null;
     clearRemoteStreamAndVideo();
     setConnectionState(ConnectionState.Closed);
   }, [clearRemoteStreamAndVideo]);

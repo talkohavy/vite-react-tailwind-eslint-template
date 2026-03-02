@@ -27,4 +27,6 @@ export const WebRtcSignalTypes = {
   IceCandidate: 'iceCandidate',
 };
 
+export const WEBRTC_SESSION_ID = 'aaa-bbb-ccc';
+
 export type WebRtcSignalTypesValues = (typeof WebRtcSignalTypes)[keyof typeof WebRtcSignalTypes];
