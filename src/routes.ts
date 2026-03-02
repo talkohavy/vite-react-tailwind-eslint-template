@@ -312,6 +312,24 @@ export const routes: Array<Route> = [
     Component: WebSocketPage,
   },
   {
+    to: `${BASE_URL}/infinite-scroll`,
+    text: 'Infinite Scroll',
+    activeNames: [`${BASE_URL}/infinite-scroll`],
+    Component: InfiniteScrollPage,
+  },
+  {
+    to: `${BASE_URL}/media-capture-api`,
+    text: 'Media Capture API',
+    activeNames: [`${BASE_URL}/media-capture-api`],
+    Component: MediaCaptureApiPage,
+  },
+  {
+    to: `${BASE_URL}/screen-capture-api`,
+    text: 'Screen Capture API',
+    activeNames: [`${BASE_URL}/screen-capture-api`],
+    Component: ScreenCaptureApiPage,
+  },
+  {
     to: `${BASE_URL}/webrtc`,
     text: 'WebRTC P2P',
     activeNames: [`${BASE_URL}/webrtc`, `${BASE_URL}/webrtc/sender`, `${BASE_URL}/webrtc/receiver`],
@@ -336,23 +354,5 @@ export const routes: Array<Route> = [
         Component: WebRtcReceiverTab,
       },
     ],
-  },
-  {
-    to: `${BASE_URL}/infinite-scroll`,
-    text: 'Infinite Scroll',
-    activeNames: [`${BASE_URL}/infinite-scroll`],
-    Component: InfiniteScrollPage,
-  },
-  {
-    to: `${BASE_URL}/media-capture-api`,
-    text: 'Media Capture API',
-    activeNames: [`${BASE_URL}/media-capture-api`],
-    Component: MediaCaptureApiPage,
-  },
-  {
-    to: `${BASE_URL}/screen-capture-api`,
-    text: 'Screen Capture API',
-    activeNames: [`${BASE_URL}/screen-capture-api`],
-    Component: ScreenCaptureApiPage,
   },
 ];
