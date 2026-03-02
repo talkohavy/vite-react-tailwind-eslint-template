@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
-import {
-  ConnectionState,
-  WebRtcSignalTypes,
-  WEBRTC_SESSION_ID,
-  type ConnectionStateValues,
-} from '../../../logic/constants';
+import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
 import { attachStreamToVideo } from './attachStreamToVideo';
 import { getMediaStream, type ShareSource } from './getMediaStream';
 import { setupWebRtcSending } from './setupWebRtcSending';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
 
+function generateSessionId(): string {
+  return crypto.randomUUID();
+}
+
 export function useSenderTabLogic() {
+  const [sessionId, setSessionId] = useState(generateSessionId);
   const [connectionState, setConnectionState] = useState<ConnectionStateValues>(ConnectionState.Idle);
   const [error, setError] = useState<Error | null>(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -21,6 +21,11 @@ export function useSenderTabLogic() {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const handleGenerateNewSession = () => {
+    disconnect();
+    setSessionId(generateSessionId());
+  };
 
   const isConnected = connectionState === ConnectionState.Open;
   const isConnecting = connectionState === ConnectionState.Connecting;
@@ -43,7 +48,7 @@ export function useSenderTabLogic() {
         event: SocketEvents.WebRtc,
         payload: {
           type: WebRtcSignalTypes.Sender,
-          sessionId: WEBRTC_SESSION_ID,
+          sessionId,
         },
       };
 
@@ -58,7 +63,7 @@ export function useSenderTabLogic() {
     socket.onerror = () => {
       setError(new Error('WebSocket error'));
     };
-  }, []);
+  }, [sessionId]);
 
   const disconnect = useCallback(() => {
     const socket = socketRef.current;
@@ -78,30 +83,33 @@ export function useSenderTabLogic() {
     setIsSharing(false);
   }, []);
 
-  const startSharing = useCallback(async (source: ShareSource) => {
-    const socket = socketRef.current;
+  const startSharing = useCallback(
+    async (source: ShareSource) => {
+      const socket = socketRef.current;
 
-    const canShare = socket?.readyState === WebSocket.OPEN;
+      const canShare = socket?.readyState === WebSocket.OPEN;
 
-    if (!canShare) return;
+      if (!canShare) return;
 
-    let mediaStream: MediaStream;
-    try {
-      mediaStream = await getMediaStream(source);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to get media stream'));
-      return;
-    }
+      let mediaStream: MediaStream;
+      try {
+        mediaStream = await getMediaStream(source);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Failed to get media stream'));
+        return;
+      }
 
-    mediaStreamRef.current = mediaStream;
+      mediaStreamRef.current = mediaStream;
 
-    attachStreamToVideo(mediaStream, videoRef.current);
+      attachStreamToVideo(mediaStream, videoRef.current);
 
-    const peerConnection = setupWebRtcSending({ socket, sessionId: WEBRTC_SESSION_ID, mediaStream });
-    peerConnectionRef.current = peerConnection;
+      const peerConnection = setupWebRtcSending({ socket, sessionId, mediaStream });
+      peerConnectionRef.current = peerConnection;
 
-    setIsSharing(true);
-  }, []);
+      setIsSharing(true);
+    },
+    [sessionId],
+  );
 
   useEffect(() => {
     return () => {
@@ -121,5 +129,7 @@ export function useSenderTabLogic() {
     connect,
     disconnect,
     startSharing,
+    sessionId,
+    handleGenerateNewSession,
   };
 }

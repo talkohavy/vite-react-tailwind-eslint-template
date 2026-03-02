@@ -15,6 +15,7 @@ export type InputProps = {
   autoFocus?: boolean;
   dontChangeRule?: (e: any, newValue: string) => RuleReturnValue;
   className?: string;
+  id?: string;
   testId?: string;
 };
 
@@ -29,6 +30,7 @@ function InputToForward(props: InputProps, ref: React.Ref<HTMLInputElement>) {
     autoFocus,
     dontChangeRule,
     className,
+    id,
     testId = '',
   } = props;
 
@@ -57,6 +59,7 @@ function InputToForward(props: InputProps, ref: React.Ref<HTMLInputElement>) {
       autoFocus={autoFocus}
       disabled={disabled}
       className={className}
+      id={id}
       testId={testId}
     />
   );

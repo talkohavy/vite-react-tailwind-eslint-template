@@ -13,6 +13,7 @@ type InputBaseProps = {
   autoFocus?: boolean;
   disabled?: boolean;
   className?: string;
+  id?: string;
   testId?: string;
 };
 
@@ -26,6 +27,7 @@ function InputBaseToForward(props: InputBaseProps, ref: React.Ref<HTMLInputEleme
     disabled,
     autoFocus,
     className,
+    id,
     testId = '',
   } = props;
 
@@ -33,6 +35,7 @@ function InputBaseToForward(props: InputBaseProps, ref: React.Ref<HTMLInputEleme
     <input
       ref={ref}
       type={type}
+      id={id}
       value={value}
       onChange={setValue}
       onSelect={onSelect}

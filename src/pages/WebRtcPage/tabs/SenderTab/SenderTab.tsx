@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import Button from '@src/components/controls/Button';
+import GuidDisplayer from '@src/components/GuidDisplayer';
 import { useSenderTabLogic } from './logic/useSenderTabLogic';
 
 export default function SenderTab() {
@@ -15,6 +16,8 @@ export default function SenderTab() {
     connect,
     disconnect,
     startSharing,
+    sessionId,
+    handleGenerateNewSession,
   } = useSenderTabLogic();
 
   return (
@@ -25,9 +28,14 @@ export default function SenderTab() {
         </h2>
 
         <p className='text-sm text-gray-600 dark:text-gray-300'>
-          Connect to the signaling server, then share your screen or camera. The receiver (in another tab or window)
-          will see your stream.
+          Share the session ID below with receivers (e.g. via email, Slack, WhatsApp). They paste it on the Receiver tab
+          to join this session.
         </p>
+
+        <div className='flex flex-col gap-2'>
+          <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>Session ID</span>
+          <GuidDisplayer value={sessionId} onGenerateNew={handleGenerateNewSession} />
+        </div>
 
         <div className='flex flex-wrap gap-2'>
           <Button

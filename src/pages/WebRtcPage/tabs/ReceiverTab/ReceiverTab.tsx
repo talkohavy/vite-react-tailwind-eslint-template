@@ -1,4 +1,5 @@
 import Button from '@src/components/controls/Button';
+import Input from '@src/components/controls/Input';
 import { useReceiverTabLogic } from './logic/useReceiverTabLogic';
 
 export default function ReceiverTab() {
@@ -12,6 +13,8 @@ export default function ReceiverTab() {
     connect,
     disconnect,
     setVideoRef,
+    sessionId,
+    setSessionId,
   } = useReceiverTabLogic();
 
   return (
@@ -21,16 +24,29 @@ export default function ReceiverTab() {
           Receiver — view shared screen
         </h2>
 
+        <p className='text-sm text-gray-600 dark:text-gray-300'>
+          Get the session ID from the sender (e.g. via email, Slack, WhatsApp), paste it below, then connect.
+        </p>
+
+        <div className='flex flex-col gap-2'>
+          <label htmlFor='webrtc-receiver-session-id' className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+            Session ID
+          </label>
+
+          <Input
+            id='webrtc-receiver-session-id'
+            initialValue={sessionId}
+            onChange={(value) => setSessionId(value)}
+            placeholder='Paste session ID from sender'
+            className='font-mono text-sm'
+          />
+        </div>
+
         {isConnected && (
           <span className='text-sm text-emerald-600 dark:text-emerald-400'>
             Connected. Waiting for sender to share...
           </span>
         )}
-
-        <p className='text-sm text-gray-600 dark:text-gray-300'>
-          Connect to the signaling server, then wait for the sender to start sharing. Open the sender in another tab or
-          window first.
-        </p>
 
         <div className='flex flex-wrap gap-2'>
           <Button

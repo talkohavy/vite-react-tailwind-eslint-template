@@ -1,16 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
-import {
-  ConnectionState,
-  WebRtcSignalTypes,
-  WEBRTC_SESSION_ID,
-  type ConnectionStateValues,
-} from '../../../logic/constants';
+import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
 import { setupWebRtcReceiving } from './setupWebRtcReceiving';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
 
 export function useReceiverTabLogic() {
+  const [sessionId, setSessionId] = useState('');
   const [connectionState, setConnectionState] = useState<ConnectionStateValues>(ConnectionState.Idle);
   const [error, setError] = useState<Error | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
@@ -26,7 +22,7 @@ export function useReceiverTabLogic() {
   const isConnected = connectionState === ConnectionState.Open;
   const isConnecting = connectionState === ConnectionState.Connecting;
 
-  const isConnectDisabled = isConnecting || isConnected;
+  const isConnectDisabled = isConnecting || isConnected || !sessionId.trim();
   const isDisconnectDisabled = !isConnected && !isConnecting;
 
   const clearRemoteStreamAndVideo = useCallback(() => {
@@ -62,7 +58,7 @@ export function useReceiverTabLogic() {
         event: SocketEvents.WebRtc,
         payload: {
           type: WebRtcSignalTypes.Receiver,
-          sessionId: WEBRTC_SESSION_ID,
+          sessionId,
         },
       };
 
@@ -81,7 +77,7 @@ export function useReceiverTabLogic() {
 
         const { peerConnection, handleIceCandidate } = setupWebRtcReceiving({
           socket,
-          sessionId: WEBRTC_SESSION_ID,
+          sessionId,
           offerSdp: payload.sdp,
           callbacks: {
             onRemoteStream: (stream) => {
@@ -115,7 +111,7 @@ export function useReceiverTabLogic() {
     socket.onerror = () => {
       setError(new Error('WebSocket error'));
     };
-  }, [clearRemoteStreamAndVideo]);
+  }, [clearRemoteStreamAndVideo, sessionId]);
 
   const disconnect = useCallback(() => {
     const socket = socketRef.current;
@@ -160,5 +156,7 @@ export function useReceiverTabLogic() {
     connect,
     disconnect,
     setVideoRef,
+    sessionId,
+    setSessionId,
   };
 }
