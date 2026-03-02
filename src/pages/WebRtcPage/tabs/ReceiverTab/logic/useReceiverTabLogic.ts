@@ -71,6 +71,13 @@ export function useReceiverTabLogic() {
         iceCandidateQueueRef.current = [];
         remoteStreamRef.current = new MediaStream();
 
+        pc.onconnectionstatechange = () => {
+          const state = pc.connectionState;
+          if (state === 'disconnected' || state === 'failed' || state === 'closed') {
+            clearRemoteStreamAndVideo();
+          }
+        };
+
         pc.onicecandidate = (iceEvent) => {
           if (iceEvent.candidate) {
             const eventMessage: SocketEventMessage<WebRtcSignalingPayload> = {
@@ -91,21 +98,8 @@ export function useReceiverTabLogic() {
 
           if (!mediaStream) return;
 
-          const track = trackEvent.track;
-
-          mediaStream.addTrack(track);
-
+          mediaStream.addTrack(trackEvent.track);
           setRemoteStream(mediaStream);
-
-          track.onended = () => {
-            const currentStream = remoteStreamRef.current;
-
-            if (!currentStream) return;
-
-            const allEnded = currentStream.getTracks().every((t) => t.readyState === 'ended');
-
-            if (allEnded) clearRemoteStreamAndVideo();
-          };
 
           if (videoRef.current) {
             videoRef.current.srcObject = mediaStream;
