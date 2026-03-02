@@ -21,6 +21,25 @@ export function useReceiverTabLogic() {
   const isConnectDisabled = isConnecting || isConnected;
   const isDisconnectDisabled = !isConnected && !isConnecting;
 
+  const clearRemoteStreamAndVideo = useCallback(() => {
+    const mediaStream = remoteStreamRef.current;
+
+    if (mediaStream) {
+      const tracks = mediaStream.getTracks();
+      tracks.forEach((track) => void track.stop());
+      remoteStreamRef.current = null;
+    }
+
+    setRemoteStream(null);
+
+    const videoElement = videoRef.current;
+
+    if (videoElement) {
+      videoElement.srcObject = null;
+      videoElement.load();
+    }
+  }, []);
+
   const connect = useCallback(() => {
     setError(null);
     setConnectionState(ConnectionState.Connecting);
@@ -68,15 +87,28 @@ export function useReceiverTabLogic() {
         };
 
         pc.ontrack = (trackEvent) => {
-          const stream = remoteStreamRef.current;
+          const mediaStream = remoteStreamRef.current;
 
-          if (!stream) return;
+          if (!mediaStream) return;
 
-          stream.addTrack(trackEvent.track);
-          setRemoteStream(stream);
+          const track = trackEvent.track;
+
+          mediaStream.addTrack(track);
+
+          setRemoteStream(mediaStream);
+
+          track.onended = () => {
+            const currentStream = remoteStreamRef.current;
+
+            if (!currentStream) return;
+
+            const allEnded = currentStream.getTracks().every((t) => t.readyState === 'ended');
+
+            if (allEnded) clearRemoteStreamAndVideo();
+          };
 
           if (videoRef.current) {
-            videoRef.current.srcObject = stream;
+            videoRef.current.srcObject = mediaStream;
             videoRef.current.play().catch(() => {});
           }
         };
@@ -118,14 +150,13 @@ export function useReceiverTabLogic() {
       socketRef.current = null;
       peerConnectionRef.current?.close();
       peerConnectionRef.current = null;
-      remoteStreamRef.current = null;
-      setRemoteStream(null);
+      clearRemoteStreamAndVideo();
     };
 
     socket.onerror = () => {
       setError(new Error('WebSocket error'));
     };
-  }, []);
+  }, [clearRemoteStreamAndVideo]);
 
   const disconnect = useCallback(() => {
     const socket = socketRef.current;
@@ -136,12 +167,9 @@ export function useReceiverTabLogic() {
     socketRef.current = null;
     peerConnectionRef.current?.close();
     peerConnectionRef.current = null;
-    remoteStreamRef.current = null;
-    if (videoRef.current) videoRef.current.srcObject = null;
-
-    setRemoteStream(null);
+    clearRemoteStreamAndVideo();
     setConnectionState(ConnectionState.Closed);
-  }, []);
+  }, [clearRemoteStreamAndVideo]);
 
   const setVideoRef = useCallback(
     (videoElement: HTMLVideoElement | null) => {
