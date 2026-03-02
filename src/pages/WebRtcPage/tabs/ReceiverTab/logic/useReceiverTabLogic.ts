@@ -11,6 +11,7 @@ export function useReceiverTabLogic() {
 
   const socketRef = useRef<WebSocket | null>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+  const remoteStreamRef = useRef<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const iceCandidateQueueRef = useRef<RTCIceCandidateInit[]>([]);
 
@@ -49,6 +50,7 @@ export function useReceiverTabLogic() {
         const pc = new RTCPeerConnection();
         peerConnectionRef.current = pc;
         iceCandidateQueueRef.current = [];
+        remoteStreamRef.current = new MediaStream();
 
         pc.onicecandidate = (iceEvent) => {
           if (iceEvent.candidate) {
@@ -66,8 +68,11 @@ export function useReceiverTabLogic() {
         };
 
         pc.ontrack = (trackEvent) => {
-          const stream = new MediaStream([trackEvent.track]);
+          const stream = remoteStreamRef.current;
 
+          if (!stream) return;
+
+          stream.addTrack(trackEvent.track);
           setRemoteStream(stream);
 
           if (videoRef.current) {
@@ -113,6 +118,7 @@ export function useReceiverTabLogic() {
       socketRef.current = null;
       peerConnectionRef.current?.close();
       peerConnectionRef.current = null;
+      remoteStreamRef.current = null;
       setRemoteStream(null);
     };
 
@@ -130,6 +136,7 @@ export function useReceiverTabLogic() {
     socketRef.current = null;
     peerConnectionRef.current?.close();
     peerConnectionRef.current = null;
+    remoteStreamRef.current = null;
     if (videoRef.current) videoRef.current.srcObject = null;
 
     setRemoteStream(null);
