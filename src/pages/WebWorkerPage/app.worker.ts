@@ -53,7 +53,5 @@ export function heavyCalculation(): number {
     result += i;
   }
 
-  console.log('result is:', result);
-
   return result;
 }

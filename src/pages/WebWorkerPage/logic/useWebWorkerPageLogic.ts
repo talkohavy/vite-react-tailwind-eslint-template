@@ -1,11 +1,19 @@
-import { useEffect, useRef } from 'react';
-import { Actions, type WorkerResponse } from '../app.worker';
+import { useEffect, useRef, useState } from 'react';
+import { Actions, heavyCalculation, type WorkerResponse } from '../app.worker';
+import { formatLogPayload } from './utils/formatLogPayload';
 
 export function useWebWorkerPageLogic() {
-  const webWorker = useRef<Worker>(new Worker(new URL('./app.worker.ts', import.meta.url), { type: 'module' }));
+  const webWorker = useRef<Worker>(new Worker(new URL('../app.worker.ts', import.meta.url), { type: 'module' }));
   const result = useRef(0);
+  const [logEntries, setLogEntries] = useState<string[]>([]);
+
+  const addLog = (entry: string) => {
+    setLogEntries((prev) => [...prev, `${new Date().toLocaleTimeString()} — ${entry}`]);
+  };
 
   const startHeavyCalculation = () => {
+    addLog('Sending heavy calculation to worker...');
+
     webWorker.current.postMessage({
       type: Actions.Log,
       payload: { message: 'Started heavy calculation' },
@@ -17,8 +25,20 @@ export function useWebWorkerPageLogic() {
     });
   };
 
+  const startHeavyCalculationInMainThread = () => {
+    addLog('Sending heavy calculation to main thread...');
+
+    const result = heavyCalculation();
+
+    addLog(`Main thread result: ${result}`);
+  };
+
   const checkIfFrozen = () => {
-    console.log('I am not frozen');
+    addLog('Main thread responded — not frozen');
+  };
+
+  const clearLog = () => {
+    setLogEntries([]);
   };
 
   useEffect(() => {
@@ -26,22 +46,28 @@ export function useWebWorkerPageLogic() {
       const { type, payload } = event.data;
 
       if (type === Actions.Sum) {
-        console.log('Result:', payload);
         result.current = payload;
+        setLogEntries((prev) => [...prev, `${new Date().toLocaleTimeString()} — Worker result: ${payload}`]);
         return;
       }
 
       if (type === Actions.Log) {
-        console.log('Message:', payload);
+        setLogEntries((prev) => [...prev, `${new Date().toLocaleTimeString()} — ${formatLogPayload(payload)}`]);
         return;
       }
 
       if (type === Actions.Error) {
-        console.error('Error:', payload);
+        setLogEntries((prev) => [...prev, `${new Date().toLocaleTimeString()} — Error: ${payload}`]);
         return;
       }
     };
   }, []);
 
-  return { startHeavyCalculation, checkIfFrozen };
+  return {
+    startHeavyCalculation,
+    startHeavyCalculationInMainThread,
+    checkIfFrozen,
+    clearLog,
+    logEntries,
+  };
 }
