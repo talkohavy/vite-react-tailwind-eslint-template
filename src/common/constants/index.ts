@@ -6,3 +6,4 @@ export * from './localStorageKeys';
 export * from './regex';
 export * from './indexedDB';
 export * from './apiUrls';
+export * from './websocket';
