@@ -36,6 +36,13 @@ const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
 const AnalyticsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
 const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 
+// ProgressiveWebAppPage tabs:
+const RegisterTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/RegisterServiceWorkerTab'));
+const CacheAssetTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/CacheAssetTab'));
+const CacheContentTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/CacheContentTab'));
+const BackgroundSyncTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/BackgroundSyncTab'));
+const FullExampleTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/FullExampleTab'));
+
 // QueryPage tabs:
 const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
 const QueryParserTab = lazy(() => import('./pages/QueryPage/tabs/QueryParserTab'));
@@ -147,6 +154,38 @@ export const routes: Array<Route> = [
     text: 'Progressive Web App',
     activeNames: [`${BASE_URL}/progressive-web-app`],
     Component: ProgressiveWebAppPage,
+    children: [
+      {
+        to: '',
+        text: 'Register',
+        activeNames: [],
+        Component: RegisterTab,
+      },
+      {
+        to: 'cache-asset',
+        text: 'Cache Asset',
+        activeNames: [],
+        Component: CacheAssetTab,
+      },
+      {
+        to: 'cache-content',
+        text: 'Cache Content',
+        activeNames: [],
+        Component: CacheContentTab,
+      },
+      {
+        to: 'background-sync',
+        text: 'Background Sync',
+        activeNames: [],
+        Component: BackgroundSyncTab,
+      },
+      {
+        to: 'full-example',
+        text: 'Full Example',
+        activeNames: [],
+        Component: FullExampleTab,
+      },
+    ],
   },
   {
     to: `${BASE_URL}/redux`,

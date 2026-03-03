@@ -1,35 +1,70 @@
-import { type ReactNode, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router';
+import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
-import BackgroundSyncTab from './tabs/BackgroundSyncTab';
-import CacheAssetTab from './tabs/CacheAssetTab';
-import CacheContentTab from './tabs/CacheContentTab';
-import FullExampleTab from './tabs/FullExampleTab';
-import RegisterServiceWorkerTab from './tabs/RegisterServiceWorkerTab';
-import type { RadioOptionWithItem } from '../../components/controls/RadioGroup';
+import { getInitialTabValue } from './logic/utils/getInitialTabValue';
 
-const contentTabs: Array<RadioOptionWithItem<() => ReactNode>> = [
-  { value: 0, label: 'Register', item: RegisterServiceWorkerTab },
-  { value: 1, label: 'Cache Asset', item: CacheAssetTab },
-  { value: 2, label: 'Cache Content', item: CacheContentTab },
-  { value: 3, label: 'Background Sync', item: BackgroundSyncTab },
-  { value: 4, label: 'Full Example', item: FullExampleTab },
+const Tabs = {
+  Register: '',
+  CacheAsset: 'cache-asset',
+  CacheContent: 'cache-content',
+  BackgroundSync: 'background-sync',
+  FullExample: 'full-example',
+} as const;
+
+const tabOptions = [
+  {
+    value: Tabs.Register,
+    label: 'Register',
+  },
+  {
+    value: Tabs.CacheAsset,
+    label: 'Cache Asset',
+  },
+  {
+    value: Tabs.CacheContent,
+    label: 'Cache Content',
+  },
+  {
+    value: Tabs.BackgroundSync,
+    label: 'Background Sync',
+  },
+  {
+    value: Tabs.FullExample,
+    label: 'Full Example',
+  },
 ];
 
 export default function ProgressiveWebAppPage() {
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const TabContent = contentTabs[selectedTabIndex]!.item;
+  const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
+
+  useEffect(() => {
+    const newTabValue = getInitialTabValue();
+    setCurrentTabValue(newTabValue);
+  }, [location.pathname]);
+
+  function handleTabChange(tabValue: string) {
+    setCurrentTabValue(tabValue);
+
+    const targetPath = `${BASE_URL}/progressive-web-app/${tabValue}`;
+    navigate(targetPath);
+  }
 
   return (
     <div className='flex flex-col gap-8 size-full p-4'>
       <RadioTabs
-        value={selectedTabIndex}
-        setValue={setSelectedTabIndex}
-        options={contentTabs}
-        className='flex gap-px overflow-auto shrink-0'
+        value={currentTabValue}
+        setValue={handleTabChange}
+        options={tabOptions}
+        className='flex space-x-1 mb-4'
       />
 
-      <TabContent />
+      <div className='size-full'>
+        <Outlet />
+      </div>
     </div>
   );
 }
