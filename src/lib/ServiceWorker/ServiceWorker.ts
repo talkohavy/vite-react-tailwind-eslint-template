@@ -1,4 +1,4 @@
-import { SYNC_REQUESTS } from '../../common/constants';
+import { SYNC_REQUESTS } from '../../common/constants/serviceWorker';
 
 // NOTE! The name `ServiceWorker` is already taken
 export class MyServiceWorker {

@@ -1,4 +1,5 @@
-import { API_GATEWAY_URL, dbName, syncRequestsTableName, tables } from '../../common/constants';
+import { API_GATEWAY_URL } from '../../common/constants/apiUrls';
+import { dbName, syncRequestsTableName, tables } from '../../common/constants/indexedDB';
 import { httpClient, initHttpClient } from '../HttpClient';
 import { HttpError } from '../HttpClient/logic/HttpError';
 import { indexedDBClient, initIndexedDB } from '../IndexedDB';
