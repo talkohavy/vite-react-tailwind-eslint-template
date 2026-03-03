@@ -10,15 +10,15 @@ export default function WebWorker() {
     <div className='size-full p-6 overflow-auto'>
       <div>Web Worker Tutorial</div>
 
-      <Button onClick={() => worker.startHeavyCalculation()} className='mr-6'>
-        Start Heavy Calculation
-      </Button>
+      <div className='flex flex-col md:flex-row justify-start items-start gap-4 '>
+        <Button onClick={() => worker.startHeavyCalculation()}>Start Heavy Calculation</Button>
 
-      <Button onClick={() => sum(0)} className='mr-6'>
-        Block main thread with Heavy Calculation
-      </Button>
+        <Button onClick={() => sum(0)}>Block main thread with Heavy Calculation</Button>
 
-      <Button onClick={() => worker.checkIfFrozen()}>Check if frozen</Button>
+        <Button onClick={() => worker.checkIfFrozen()} className='bg-green-500 hover:bg-green-600 active:bg-green-500'>
+          Check if frozen
+        </Button>
+      </div>
     </div>
   );
 }
