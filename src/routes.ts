@@ -12,7 +12,7 @@ const ServerCallPage = lazy(() => import('./pages/ServerCallPage'));
 const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
 const WebWorkerPage = lazy(() => import('./pages/WebWorkerPage'));
-const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorkerPage'));
+const ProgressiveWebAppPage = lazy(() => import('./pages/ProgressiveWebAppPage'));
 const PicturePage = lazy(() => import('./pages/PicturePage'));
 const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
 const GetCookiesPage = lazy(() => import('./pages/GetCookiesPage'));
@@ -143,10 +143,10 @@ export const routes: Array<Route> = [
     Component: WebWorkerPage,
   },
   {
-    to: `${BASE_URL}/service-worker`,
-    text: 'Service Worker',
-    activeNames: [`${BASE_URL}/service-worker`],
-    Component: ServiceWorkerPage,
+    to: `${BASE_URL}/progressive-web-app`,
+    text: 'Progressive Web App',
+    activeNames: [`${BASE_URL}/progressive-web-app`],
+    Component: ProgressiveWebAppPage,
   },
   {
     to: `${BASE_URL}/redux`,

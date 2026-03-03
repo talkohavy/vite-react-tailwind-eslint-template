@@ -15,7 +15,7 @@ const contentTabs: Array<RadioOptionWithItem<() => ReactNode>> = [
   { value: 4, label: 'Full Example', item: FullExampleTab },
 ];
 
-export default function ServiceWorkerPage() {
+export default function ProgressiveWebAppPage() {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   const TabContent = contentTabs[selectedTabIndex]!.item;
