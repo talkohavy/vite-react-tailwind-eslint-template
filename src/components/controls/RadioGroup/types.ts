@@ -1,8 +1,15 @@
-export type RadioOption<T = any> = {
+type RadioOptionBase = {
   value: number | string;
   label: string;
   disabled?: boolean;
+};
+
+export type RadioOption<T = any> = RadioOptionBase & {
   item?: T;
+};
+
+export type RadioOptionWithItem<T = any> = RadioOptionBase & {
+  item: T;
 };
 
 export type ChildItemProps<T = any> = {

@@ -5,9 +5,9 @@ import CacheAssetTab from './tabs/CacheAssetTab';
 import CacheContentTab from './tabs/CacheContentTab';
 import FullExampleTab from './tabs/FullExampleTab';
 import RegisterServiceWorkerTab from './tabs/RegisterServiceWorkerTab';
-import type { RadioOption } from '../../components/controls/RadioGroup';
+import type { RadioOptionWithItem } from '../../components/controls/RadioGroup';
 
-const contentTabs: Array<RadioOption<() => ReactNode>> = [
+const contentTabs: Array<RadioOptionWithItem<() => ReactNode>> = [
   { value: 0, label: 'Register', item: RegisterServiceWorkerTab },
   { value: 1, label: 'Cache Asset', item: CacheAssetTab },
   { value: 2, label: 'Cache Content', item: CacheContentTab },
@@ -18,7 +18,7 @@ const contentTabs: Array<RadioOption<() => ReactNode>> = [
 export default function ServiceWorkerPage() {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
-  const TabContent = contentTabs[selectedTabIndex]!.item!;
+  const TabContent = contentTabs[selectedTabIndex]!.item;
 
   return (
     <div className='flex flex-col gap-8 size-full p-4'>
