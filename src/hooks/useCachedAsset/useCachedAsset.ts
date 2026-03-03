@@ -21,10 +21,10 @@ export function useCachedAsset(props: useCachedAssetProps) {
 
   useEffect(() => {
     async function loadCachedAssetIfExists() {
-      const cachedResponse = await loadAssetFromCache(assetUrl);
+      const foundCachedData = await loadAssetFromCache(assetUrl);
 
-      if (cachedResponse) {
-        const objectUrl = isImage ? URL.createObjectURL(await cachedResponse.blob()) : cachedResponse;
+      if (foundCachedData) {
+        const objectUrl = isImage ? URL.createObjectURL(await foundCachedData.blob()) : foundCachedData;
         setData(objectUrl);
       }
     }

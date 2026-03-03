@@ -6,8 +6,9 @@ export async function loadAssetFromCache(requestPath: string) {
 
   try {
     const cache = await caches.open(ON_DEMAND_CACHE);
-    const cachedResponse = await cache.match(requestPath);
-    return cachedResponse;
+    const cachedData = await cache.match(requestPath);
+
+    return cachedData;
   } catch (error) {
     console.error('Failed to load cached resource:', error);
   }
