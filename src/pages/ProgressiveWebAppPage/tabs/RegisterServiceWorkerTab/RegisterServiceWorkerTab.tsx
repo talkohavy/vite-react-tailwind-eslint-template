@@ -46,17 +46,21 @@ export default function RegisterServiceWorkerTab() {
 
       <div className='flex flex-col gap-2 border rounded-md p-3 mt-4'>
         <div className='font-medium text-xl'>Where the app shell is cached</div>
+
         <p>
           The Register tab only registers the SW. The code that actually caches the app shell runs <em>inside</em> the
           service worker, in the bundle built from <LineOfCode text='src/lib/ServiceWorker/initServiceWorker.ts' /> →{' '}
           <LineOfCode text='src/public/sw.js' />.
         </p>
+
         <p className='font-medium mt-2'>1. Install: pre-cache static URLs</p>
+
         <p>
           On <strong>install</strong>, the SW runs <LineOfCode text='AssetManager.cacheStaticAssets()' /> (in{' '}
           <LineOfCode text='src/lib/ServiceWorker/logic/AssetManager.ts' />
           ). It opens a static cache and adds the app shell URLs:
         </p>
+
         <div className='mt-1'>
           <CodeBlock
             code={
@@ -65,22 +69,28 @@ export default function RegisterServiceWorkerTab() {
             language='typescript'
           />
         </div>
+
         <p className='font-medium mt-2'>2. Wiring in the SW</p>
+
         <p>
           In <LineOfCode text='initServiceWorker.ts' />, that method is attached to the install event:
         </p>
+
         <div className='mt-1'>
           <CodeBlock
             code='MyServiceWorker.addOnInstalListener(assetManager.cacheStaticAssets.bind(assetManager));'
             language='typescript'
           />
         </div>
+
         <p className='font-medium mt-2'>3. Fetch: serve cache first, fallback to index.html</p>
+
         <p>
           When a request is made, the SW uses <LineOfCode text='cacheWithNetworkFallbackStrategy' />: try cache first,
           then network; if the network fails (e.g. offline), return cached <LineOfCode text='/index.html' /> so the app
           still loads:
         </p>
+
         <div className='mt-1'>
           <CodeBlock
             code={
