@@ -11,7 +11,7 @@ const ShowcasePage = lazy(() => import('./pages/Showcase'));
 const ServerCallPage = lazy(() => import('./pages/ServerCallPage'));
 const ServerSentEventsPage = lazy(() => import('./pages/ServerSentEvent'));
 const TabCommunicationPage = lazy(() => import('./pages/TabCommunication'));
-const WebWorkerPage = lazy(() => import('./pages/WebWorker'));
+const WebWorkerPage = lazy(() => import('./pages/WebWorkerPage'));
 const ServiceWorkerPage = lazy(() => import('./pages/ServiceWorkerPage'));
 const PicturePage = lazy(() => import('./pages/PicturePage'));
 const IndexedDBPage = lazy(() => import('./pages/IndexedDBPage'));
