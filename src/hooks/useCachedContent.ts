@@ -3,6 +3,10 @@ import { dynamicTableName } from '../common/constants';
 import { indexedDBClient } from '../lib/IndexedDB';
 
 type useCachedContentProps<T> = {
+  /**
+   * The id of the cached content.
+   * Must be a primitive value.
+   */
   id: string | number;
   /**
    * A callback tht is invoked after the cached content is loaded,
@@ -33,16 +37,18 @@ export function useCachedContent<T = any>(props: useCachedContentProps<T>) {
 
   useEffect(() => {
     async function loadCachedContentIfExists() {
-      try {
-        const cachedRecord = (await indexedDBClient.getRecordById({ tableName: dynamicTableName, id })) as T | null;
+      const cachedRecord = (await indexedDBClient.getRecordById({ tableName: dynamicTableName, id })) as T | null;
 
-        if (cachedRecord) setData(cachedRecord);
+      if (cachedRecord) setData(cachedRecord);
 
-        const cb = callbackRef.current.callback;
+      const cb = callbackRef.current.callback;
 
-        if (cb) await cb(setData);
-      } catch (error) {
-        console.error('Failed to load cached resource:', error);
+      if (cb) {
+        try {
+          await cb(setData);
+        } catch {
+          // silently fail
+        }
       }
     }
 

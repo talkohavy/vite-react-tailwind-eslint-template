@@ -14,18 +14,23 @@ export function useCacheContentTabLogic() {
     const user = await fetchUserById(id);
 
     if (!user) {
-      // Expand the check to confirm you actually got back a 404
-      // Also need to think what to do when with the currently deleted User.
-      // Should we use setData to do something?
+      /**
+       * Action Required!
+       *
+       * Expand the check to confirm you actually got back a 404
+       * Also need to think what to do when with the currently deleted User.
+       * Should we use setData to do something? or not?
+       */
       await indexedDBClient.deleteRecordById({ tableName: dynamicTableName, id });
       return;
     }
 
     await cacheContentOnDemand(user);
+
     setData(user);
   }, []);
 
-  const { data: cachedContent, setData: setCachedContent } = useCachedContent<User>({
+  const { data, setData } = useCachedContent<User>({
     id,
     callback: shouldFetchFromNetworkAfterCache ? thenNetworkCallback : undefined,
   });
@@ -37,8 +42,8 @@ export function useCacheContentTabLogic() {
 
     await cacheContentOnDemand(user);
 
-    setCachedContent(user);
+    setData(user);
   };
 
-  return { cachedContent, fetchAndSaveContentOnDemand, shouldFetchFromNetworkAfterCache };
+  return { data, fetchAndSaveContentOnDemand, shouldFetchFromNetworkAfterCache };
 }

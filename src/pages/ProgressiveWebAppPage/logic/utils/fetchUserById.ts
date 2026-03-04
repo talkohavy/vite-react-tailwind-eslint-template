@@ -1,7 +1,10 @@
+import { API_GATEWAY_URL, API_URLS } from '@src/common/constants';
 import type { User } from '../../types';
 
 export async function fetchUserById(id: number) {
-  const response = await fetch(`http://localhost:8000/users/${id}`, {
+  const targetUrl = `${API_GATEWAY_URL}${API_URLS.users}/${id}`;
+
+  const response = await fetch(targetUrl, {
     headers: {
       'Content-Type': 'application/json',
       'x-request-id': 'vite-react-template',
