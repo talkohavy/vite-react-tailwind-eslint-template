@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { ChildItemProps, RadioOption } from './types';
 
-type RadioGroupV2Props<T> = {
+type RadioGroupProps<T> = {
   value: number | string;
   setValue: (value: any) => void;
   options: Array<RadioOption<T>>;
@@ -9,7 +9,7 @@ type RadioGroupV2Props<T> = {
   className?: string;
 };
 
-export default function RadioGroupV2<T>(props: RadioGroupV2Props<T>) {
+export default function RadioGroup<T>(props: RadioGroupProps<T>) {
   const { value: selectedValue, setValue, options, ChildItem, className } = props;
 
   return (
@@ -26,7 +26,7 @@ export default function RadioGroupV2<T>(props: RadioGroupV2Props<T>) {
               onChange={onChange}
               checked={isChecked}
               disabled={disabled}
-              className='z-10 opacity-0 size-full absolute inset-0 cursor-pointer disabled:cursor-default rounded-full'
+              className='z-10 opacity-0 size-full absolute inset-0 cursor-pointer disabled:cursor-default rounded-full group-has-[input:checked]/radioWrapper:cursor-default'
             />
 
             <ChildItem key={currentItemValue} value={currentItemValue} label={label} isChecked={isChecked} />
