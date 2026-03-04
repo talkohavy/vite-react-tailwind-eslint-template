@@ -1,83 +1,75 @@
-import { useCallback } from 'react';
-import { dynamicTableName } from '../../../../common/constants';
 import Button from '../../../../components/controls/Button';
-import { useCachedContent } from '../../../../hooks/useCachedContent';
-import { indexedDBClient } from '../../../../lib/IndexedDB';
-import { cacheContentOnDemand } from '../../logic/utils/cacheContentOnDemand';
-import { fetchUserById } from '../../logic/utils/fetchUserById';
-import type { User } from '../../types';
-
-const id = 1;
-const isFreshData = true;
+import LineOfCode from '../../../../components/LineOfCode';
+import { useCacheContentTabLogic } from './logic/useCacheContentTabLogic';
 
 export default function CacheContentTab() {
-  const thenNetworkCallback = useCallback(async (setData: (data: User) => void) => {
-    const user = await fetchUserById(id);
-
-    if (!user) {
-      // Expand the check to confirm you actually got back a 404
-      // Also need to think what to do when with the currently deleted User.
-      // Should we use setData to do something?
-      await indexedDBClient.deleteRecordById({ tableName: dynamicTableName, id });
-      return;
-    }
-
-    await cacheContentOnDemand(user);
-    setData(user);
-  }, []);
-
-  const { data: cachedContent, setData: setCachedContent } = useCachedContent<User>({
-    id,
-    thenNetworkCallback: isFreshData ? thenNetworkCallback : undefined,
-  });
-
-  const fetchAndSaveContentOnDemand = async () => {
-    const user = await fetchUserById(id);
-
-    if (!user) return;
-
-    await cacheContentOnDemand(user);
-
-    setCachedContent(user);
-  };
+  const { cachedContent, fetchAndSaveContentOnDemand, shouldFetchFromNetworkAfterCache } = useCacheContentTabLogic();
 
   return (
-    <div className='size-full p-6 overflow-auto'>
-      <div>Service Worker Tutorial</div>
+    <div className='flex flex-col gap-4 size-full p-4 overflow-auto'>
+      <div className='text-3xl font-medium'>Cache Content</div>
 
-      <Button className='mt-4' onClick={fetchAndSaveContentOnDemand}>
-        Fetch and cache dynamic content
-      </Button>
+      <div className='flex flex-col gap-4 overflow-auto flex-1'>
+        <div className='flex flex-col gap-2 border rounded-md p-3'>
+          <div className='font-medium text-xl'>1. What this tab shows</div>
 
-      <div>Chosen strategy: {isFreshData ? 'cache-then-network' : 'cache-only'}</div>
+          <p className='dark:text-gray-200'>
+            Caching of dynamic API data (user with <LineOfCode text='id=1' />) in IndexedDB. Two strategies are
+            controlled by the <LineOfCode text='shouldFetchFromNetworkAfterCache' /> constant in code:{' '}
+            <strong>cache-only</strong> (show only cached user; no network) and <strong>cache-then-network</strong>{' '}
+            (show cached first, then update when the API responds). Data is fetched from{' '}
+            <LineOfCode text='http://localhost:8000/users/1' />.
+          </p>
+        </div>
 
-      <div className='mt-4'>
-        <div>Cached Content:</div>
-        {cachedContent ? <div>{JSON.stringify(cachedContent)}</div> : <div>Empty</div>}
-      </div>
+        <div className='flex flex-col gap-2 border rounded-md p-3'>
+          <div className='font-medium text-xl'>2. How to test</div>
 
-      <strong className='inline-block mt-10'>Description</strong>
-      <div className='border rounded-md p-2 mt-4'>
-        The above includes implementations of `only-cache` & `cache-then-network`. When `isFreshData` value is set to
-        false, the chosen strategy is 'cache-only'. value of cache-then-network to true, not by checking the checkbox,
-        but by hardcoding the value `true` in the code. Then, try refreshing the page. The value in front of you is
-        stale. To confirm that, change the age of the user on the server to 100, and refresh the page again. You should
-        see the old value, the stale value.
-      </div>
+          <ol className='list-decimal list-inside space-y-1 dark:text-gray-200'>
+            <li>
+              Run a backend on <LineOfCode text='localhost:8000' /> that serves <LineOfCode text='GET /users/1' /> (JSON
+              with e.g. <LineOfCode text='id, name, age, email' />
+              ).
+            </li>
 
-      <strong className='inline-block mt-10'>only-cache</strong>
-      <div className='border rounded-md p-2 mt-4'>
-        When refreshing the page, the value you see in front of you is stale. To confirm that, change the age of the
-        user on the server to 100, and refresh the page again. You should see the old value, the stale value.
-      </div>
+            <li>Click &quot;Fetch and cache dynamic content&quot;. Cached user JSON should appear below.</li>
 
-      <strong className='inline-block mt-10'>cache-then-network</strong>
-      <div className='border rounded-md p-2 mt-4'>
-        When refreshing the page, for a brief moment, the value you see in front of you is stale. A fetch request is
-        being sent in the background to retrieve the up-to-date value, and when the fetch is successful, the pages
-        renders and you see the current updated value. To confirm that, refresh the page once, then go to your server
-        and change the age of the user on the server to 100, and refresh the page again. You should see the old value,
-        followed by a render with the updated value.
+            <li>
+              <strong>Cache-then-network</strong> (current when{' '}
+              <LineOfCode text='shouldFetchFromNetworkAfterCache === true' />
+              ): Refresh the page — you may briefly see cached data, then it updates when the API responds. Change the
+              user on the server (e.g. age to 100), refresh again; you should see old value then updated value.
+            </li>
+
+            <li>
+              <strong>Cache-only</strong>: Set <LineOfCode text='shouldFetchFromNetworkAfterCache = false' /> in this
+              file, refresh. You always see the last cached user; no background fetch. Change the user on the server and
+              refresh — you still see the stale cached value.
+            </li>
+          </ol>
+        </div>
+
+        <Button onClick={fetchAndSaveContentOnDemand}>Fetch and cache dynamic content</Button>
+
+        <div>Chosen strategy: {shouldFetchFromNetworkAfterCache ? 'cache-then-network' : 'cache-only'}</div>
+
+        <div>
+          <div>Cached Content:</div>
+          {cachedContent ? <div>{JSON.stringify(cachedContent)}</div> : <div>Empty</div>}
+        </div>
+
+        <strong className='inline-block'>Strategy details</strong>
+
+        <div className='border rounded-md p-2'>
+          <div>
+            <strong>cache-only:</strong> On refresh you only see cached data (stale if server changed).
+          </div>
+
+          <div>
+            <strong>cache-then-network:</strong> On refresh you see cached data first, then it updates when the network
+            returns fresh data.
+          </div>
+        </div>
       </div>
     </div>
   );
