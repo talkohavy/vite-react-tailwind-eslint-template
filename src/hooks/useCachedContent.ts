@@ -4,7 +4,13 @@ import { indexedDBClient } from '../lib/IndexedDB';
 
 type useCachedContentProps<T> = {
   id: string | number;
-  thenNetworkCallback?: (setData: (data: T | null) => void) => Promise<void>;
+  /**
+   * A callback tht is invoked after the cached content is loaded,
+   * whether it was found in the cache or not.
+   *
+   * Function doesn't have to be memoed.
+   */
+  callback?: (setData: (data: T | null) => void) => Promise<void>;
 };
 
 /**
@@ -16,14 +22,14 @@ type useCachedContentProps<T> = {
  * but that won't update the cache with the new value.
  */
 export function useCachedContent<T = any>(props: useCachedContentProps<T>) {
-  const { id, thenNetworkCallback } = props;
+  const { id, callback } = props;
 
   const [data, setData] = useState<T | null>(null);
-  const callbackRef = useRef(thenNetworkCallback);
+  const callbackRef = useRef({ callback });
 
   useEffect(() => {
-    callbackRef.current = thenNetworkCallback;
-  }, [thenNetworkCallback]);
+    callbackRef.current = { callback };
+  }, [callback]);
 
   useEffect(() => {
     async function loadCachedContentIfExists() {
@@ -32,7 +38,9 @@ export function useCachedContent<T = any>(props: useCachedContentProps<T>) {
 
         if (cachedRecord) setData(cachedRecord);
 
-        if (callbackRef.current) await callbackRef.current(setData);
+        const cb = callbackRef.current.callback;
+
+        if (cb) await cb(setData);
       } catch (error) {
         console.error('Failed to load cached resource:', error);
       }
