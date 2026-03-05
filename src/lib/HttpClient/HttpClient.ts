@@ -1,4 +1,4 @@
-import { uuid } from '../../common/utils/uuid';
+import { uuid } from '@src/common/utils/uuid';
 import { sessionManager } from '../SessionManager';
 import { HttpHeaders, HttpMethod, type HttpMethodValues } from './logic/constants';
 import { HttpError } from './logic/HttpError';
