@@ -3,26 +3,26 @@ import { Outlet, useLocation, useNavigate } from 'react-router';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
 import { getInitialTabValue } from '../OutletTabsPage/logic/utils/getInitialValue';
-import IframeTester from './content/IframeTester';
+import IframeTester from './IframeTester';
 
 const Tabs = {
-  Overview: '',
-  Analytics: 'analytics',
-  Settings: 'settings',
+  HostTab1: '',
+  HostTab2: 'host-tab-2',
+  HostTab3: 'host-tab-3',
 } as const;
 
 const tabOptions = [
   {
-    value: Tabs.Overview,
-    label: 'Overview',
+    value: Tabs.HostTab1,
+    label: 'Host route 1',
   },
   {
-    value: Tabs.Analytics,
-    label: 'Analytics',
+    value: Tabs.HostTab2,
+    label: 'Host route 2',
   },
   {
-    value: Tabs.Settings,
-    label: 'Settings',
+    value: Tabs.HostTab3,
+    label: 'Host route 3',
   },
 ];
 
@@ -41,7 +41,7 @@ export default function IFramePage() {
   function handleTabChange(tabValue: string) {
     setCurrentTabValue(tabValue);
 
-    const targetPath = `${BASE_URL}/home/${tabValue}`;
+    const targetPath = `${BASE_URL}/iframe/${tabValue}`;
     navigate(targetPath);
   }
 
@@ -53,7 +53,7 @@ export default function IFramePage() {
           value={currentTabValue}
           setValue={handleTabChange}
           options={tabOptions}
-          className='flex space-x-1 mb-4'
+          className='flex overflow-x-auto'
         />
       </div>
 
