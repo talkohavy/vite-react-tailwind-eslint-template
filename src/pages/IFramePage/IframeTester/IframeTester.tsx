@@ -46,9 +46,9 @@ export default function IframeTester(props: IframeTestComponentProps) {
         <p className='text-red-700 mb-4'>The iframe server is not running on port 3003. Please start it first:</p>
 
         <div className='bg-gray-800 text-green-400 p-4 rounded font-mono text-sm mb-4'>
-          <div>cd iframe-server</div>
-          <div>npm install</div>
-          <div>npm start</div>
+          <div>open project `vite-react-iframe`</div>
+          <div>run `pnpm install`</div>
+          <div>run `pnpm dev`</div>
         </div>
         <button
           type='button'
