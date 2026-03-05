@@ -16,11 +16,21 @@ export default function BackgroundSyncTab() {
     onSendDataClick,
     tryToSyncData,
     data,
+    errorMessage,
   } = useBackgroundSyncTabLogic();
 
   return (
     <div className='size-full p-6 overflow-auto'>
       <div className='mb-6'>Service Worker Tutorial</div>
+
+      {errorMessage && (
+        <div
+          className='mb-4 p-4 rounded border border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-200'
+          role='alert'
+        >
+          {errorMessage}
+        </div>
+      )}
 
       <div className='flex flex-col gap-4 max-w-md mb-6'>
         <div className='flex flex-col gap-2'>
@@ -58,7 +68,10 @@ export default function BackgroundSyncTab() {
 
       <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
         {data.map((user: any, index) => (
-          <div key={index} className='p-4 border rounded shadow-sm'>
+          <div
+            key={index}
+            className='p-4 border border-gray-200 rounded shadow-sm dark:border-gray-700 dark:bg-gray-800/50'
+          >
             <div className='font-medium'>Name: {user.name}</div>
             <div>Email: {user.email}</div>
             <div>Age: {user.age}</div>

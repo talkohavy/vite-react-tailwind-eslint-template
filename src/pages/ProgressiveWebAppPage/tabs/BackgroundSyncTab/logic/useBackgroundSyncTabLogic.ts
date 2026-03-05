@@ -12,15 +12,19 @@ export function useBackgroundSyncTabLogic() {
     useFormValues();
 
   const [data, setData] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     async function fetchUsers() {
       try {
+        setErrorMessage('');
+
         const data = await httpClient.get(API_URLS.users).promise;
 
         setData(data);
       } catch (error) {
         console.error(error);
+        setErrorMessage(error instanceof Error ? error.message : 'Failed to load users');
       }
     }
     fetchUsers();
@@ -36,11 +40,14 @@ export function useBackgroundSyncTabLogic() {
     };
 
     try {
+      setErrorMessage('');
+
       if (isBackgroundSyncFeatureEnabled()) return sendDataLater(requestDetails);
 
       sendDataNow(requestDetails);
     } catch (error) {
       console.error(error);
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to send data');
     }
   };
 
@@ -60,5 +67,6 @@ export function useBackgroundSyncTabLogic() {
     onSendDataClick,
     tryToSyncData,
     data,
+    errorMessage,
   };
 }
