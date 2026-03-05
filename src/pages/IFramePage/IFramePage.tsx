@@ -47,7 +47,6 @@ export default function IFramePage() {
 
   return (
     <div className='size-full flex flex-col gap-6 overflow-auto'>
-      {/* Tab Navigation */}
       <div className='border-b border-gray-200 dark:border-gray-600 px-6 pt-6'>
         <RadioTabs
           value={currentTabValue}
