@@ -1,4 +1,5 @@
-import { StatusCodes, syncRequestsTableName } from '@src/common/constants';
+import { syncRequestsTableName } from '@src/common/constants/indexedDB';
+import { StatusCodes } from '@src/common/constants/statusCodes';
 import { httpClient } from '@src/lib/HttpClient';
 import { HttpError } from '@src/lib/HttpClient/logic/HttpError';
 import { indexedDBClient } from '@src/lib/IndexedDB';

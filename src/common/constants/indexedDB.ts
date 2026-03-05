@@ -1,4 +1,4 @@
-import type { TableMetadata } from '../../lib/IndexedDB/types';
+import type { TableMetadata } from '@src/lib/IndexedDB/types';
 
 export const dbName = 'vite-react-template';
 export const dynamicTableName = 'dynamic';

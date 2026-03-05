@@ -7,3 +7,4 @@ export * from './apiUrls';
 export * from './websocket';
 export * from './serviceWorker';
 export * from './statusCodes';
+export * from './cacheNames';

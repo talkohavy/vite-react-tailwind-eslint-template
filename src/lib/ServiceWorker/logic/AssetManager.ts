@@ -1,4 +1,4 @@
-import { DYNAMIC_CACHE_NAME, STATIC_CACHE_NAME } from './constants';
+import { DYNAMIC_CACHE_NAME, STATIC_CACHE_NAME } from '@src/common/constants/cacheNames';
 
 export class AssetManager {
   cacheLimit = 50;

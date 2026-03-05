@@ -1,5 +1,5 @@
-import { dynamicTableName } from '../../../../common/constants';
-import { indexedDBClient } from '../../../../lib/IndexedDB';
+import { dynamicTableName } from '@src/common/constants/indexedDB';
+import { indexedDBClient } from '@src/lib/IndexedDB';
 
 export async function cacheContentOnDemand(record: Record<string, any>) {
   try {
