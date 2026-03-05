@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
+import { useCommunicationWithIframe } from '@src/hooks/useCommunicationWithIframe';
 
-const iframeUrl = 'http://localhost:3003';
+const IFRAME_ORIGIN = 'http://localhost:3003';
 
 interface IframeTestComponentProps {
   className?: string;
@@ -10,6 +11,9 @@ export default function IframeTester(props: IframeTestComponentProps) {
   const { className = '' } = props;
   const iframeRef = useRef<HTMLIFrameElement>({} as HTMLIFrameElement);
   const [isServerRunning, setIsServerRunning] = useState(false);
+  const [iframeWindow, setIframeWindow] = useState<Window | null>(null);
+
+  useCommunicationWithIframe({ iframeWindow, allowedOrigin: IFRAME_ORIGIN });
 
   useEffect(() => {
     checkServerStatus();
@@ -17,9 +21,9 @@ export default function IframeTester(props: IframeTestComponentProps) {
 
   async function checkServerStatus(): Promise<void> {
     try {
-      const response = await fetch('http://localhost:3003');
+      const response = await fetch(IFRAME_ORIGIN);
       setIsServerRunning(response.ok);
-    } catch (_error: any) {
+    } catch {
       setIsServerRunning(false);
     }
   }
@@ -27,12 +31,8 @@ export default function IframeTester(props: IframeTestComponentProps) {
   function onIframeLoad(): void {
     try {
       // Try to access iframe content (will work only if same-origin)
-      console.log('Iframe loaded:', iframeUrl);
-      const iframeDoc = iframeRef.current?.contentDocument;
-      const iframeWindow = iframeRef.current?.contentWindow;
-
-      console.log('Iframe document:', iframeDoc);
-      console.log('Iframe window:', iframeWindow);
+      const iframeWindow = iframeRef.current?.contentWindow ?? null;
+      setIframeWindow(iframeWindow);
     } catch (error) {
       console.log('Cannot access iframe content (same-origin policy):', error);
     }
@@ -50,6 +50,7 @@ export default function IframeTester(props: IframeTestComponentProps) {
           <div>run `pnpm install`</div>
           <div>run `pnpm dev`</div>
         </div>
+
         <button
           type='button'
           onClick={checkServerStatus}
@@ -64,7 +65,7 @@ export default function IframeTester(props: IframeTestComponentProps) {
   return (
     <iframe
       ref={iframeRef}
-      src={iframeUrl}
+      src={IFRAME_ORIGIN}
       title='Iframe Test'
       onLoad={onIframeLoad}
       // sandbox='allow-same-origin allow-forms allow-scripts allow-top-navigation-by-user-activation'
