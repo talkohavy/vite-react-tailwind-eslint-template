@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { isBackgroundSyncFeatureEnabled } from '../../../../../common/utils/isBackgroundSyncFeatureEnabled';
-import { HttpMethod, httpClient } from '../../../../../lib/HttpClient';
+import { API_URLS } from '@src/common/constants';
+import { isBackgroundSyncFeatureEnabled } from '@src/common/utils/isBackgroundSyncFeatureEnabled';
+import { HttpMethod, httpClient } from '@src/lib/HttpClient';
 import { fireSyncEvent } from '../../../logic/utils/fireSyncEvent';
 import { sendDataLater, sendDataNow } from './sendData';
 import { useFormValues } from './useFormValues';
-import type { RequestDetails } from '../../../../../common/types';
+import type { RequestDetails } from '@src/common/types';
 
 export function useBackgroundSyncTabLogic() {
   const { email, password, name, age, handleEmailChange, handlePasswordChange, handleNameChange, handleAgeChange } =
@@ -14,25 +15,33 @@ export function useBackgroundSyncTabLogic() {
 
   useEffect(() => {
     async function fetchUsers() {
-      const data = await httpClient.get('/users').promise;
+      try {
+        const data = await httpClient.get(API_URLS.users).promise;
 
-      setData(data);
+        setData(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchUsers();
   }, []);
 
   const onSendDataClick = async () => {
     const requestDetails: RequestDetails = {
-      url: '/users',
+      url: API_URLS.users,
       options: {
         method: HttpMethod.POST,
         body: { email, password, name, age },
       },
     };
 
-    if (isBackgroundSyncFeatureEnabled()) return sendDataLater(requestDetails);
+    try {
+      if (isBackgroundSyncFeatureEnabled()) return sendDataLater(requestDetails);
 
-    sendDataNow(requestDetails);
+      sendDataNow(requestDetails);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const tryToSyncData = async () => {

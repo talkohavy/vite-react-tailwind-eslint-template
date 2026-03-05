@@ -55,7 +55,12 @@ export default function ProgressiveWebAppPage() {
 
   return (
     <div className='flex flex-col size-full p-4'>
-      <RadioTabs value={currentTabValue} setValue={handleTabChange} options={tabOptions} className='flex space-x-1' />
+      <RadioTabs
+        value={currentTabValue}
+        setValue={handleTabChange}
+        options={tabOptions}
+        className='flex overflow-auto'
+      />
 
       <div className='size-full overflow-auto'>
         <Outlet />
