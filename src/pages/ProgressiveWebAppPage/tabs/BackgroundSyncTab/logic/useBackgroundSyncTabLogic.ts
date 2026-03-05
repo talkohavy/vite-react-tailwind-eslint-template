@@ -11,7 +11,7 @@ export function useBackgroundSyncTabLogic() {
   const { email, password, name, age, handleEmailChange, handlePasswordChange, handleNameChange, handleAgeChange } =
     useFormValues();
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {

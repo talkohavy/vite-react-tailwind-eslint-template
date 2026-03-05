@@ -1,6 +1,7 @@
-import Button from '../../../../components/controls/Button';
-import Input from '../../../../components/controls/Input';
-import NumberInput from '../../../../components/controls/NumberInput';
+import Button from '@src/components/controls/Button';
+import Input from '@src/components/controls/Input';
+import NumberInput from '@src/components/controls/NumberInput';
+import SuccessResponse from '../../../ServerCallPage/content/SuccessResponse/SuccessResponse';
 import { useBackgroundSyncTabLogic } from './logic/useBackgroundSyncTabLogic';
 
 export default function BackgroundSyncTab() {
@@ -20,19 +21,12 @@ export default function BackgroundSyncTab() {
   } = useBackgroundSyncTabLogic();
 
   return (
-    <div className='size-full p-6 overflow-auto'>
-      <div className='mb-6'>Service Worker Tutorial</div>
+    <div className='flex flex-col gap-6 size-full p-6 overflow-auto'>
+      <div className='text-3xl font-semibold'>Service Worker Tutorial</div>
 
-      {errorMessage && (
-        <div
-          className='mb-4 p-4 rounded border border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-200'
-          role='alert'
-        >
-          {errorMessage}
-        </div>
-      )}
+      <div className='flex flex-col gap-4 max-w-md border rounded-lg p-4'>
+        <div className='text-lg font-semibold self-center'>User Input Form</div>
 
-      <div className='flex flex-col gap-4 max-w-md mb-6'>
         <div className='flex flex-col gap-2'>
           <div className='font-medium'>Email</div>
           <Input initialValue={email} onChange={handleEmailChange} placeholder='Enter your email' testId='email' />
@@ -66,18 +60,16 @@ export default function BackgroundSyncTab() {
         <Button onClick={tryToSyncData}>Try to sync</Button>
       </div>
 
-      <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-        {data.map((user: any, index) => (
-          <div
-            key={index}
-            className='p-4 border border-gray-200 rounded shadow-sm dark:border-gray-700 dark:bg-gray-800/50'
-          >
-            <div className='font-medium'>Name: {user.name}</div>
-            <div>Email: {user.email}</div>
-            <div>Age: {user.age}</div>
-          </div>
-        ))}
-      </div>
+      {errorMessage && (
+        <div
+          className='p-4 rounded border border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-200'
+          role='alert'
+        >
+          {errorMessage}
+        </div>
+      )}
+
+      {data && <SuccessResponse data={data} />}
     </div>
   );
 }

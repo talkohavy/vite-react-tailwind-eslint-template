@@ -11,7 +11,7 @@ export default function SuccessResponse(props: SuccessResponseProps) {
         ✅ Success Response
       </h2>
 
-      <pre className='bg-white dark:bg-slate-900 rounded-lg p-4 overflow-auto text-sm border border-green-200 dark:border-green-800'>
+      <pre className='max-h-150 overflow-auto bg-white dark:bg-slate-900 rounded-lg p-4 text-sm border border-green-200 dark:border-green-800'>
         <code className='text-gray-800 dark:text-gray-200'>{JSON.stringify(data, null, 2)}</code>
       </pre>
     </div>
