@@ -21,7 +21,7 @@ const PushNotificationsPage = lazy(() => import('./pages/PushNotificationsPage')
 const OutletTabsPage = lazy(() => import('./pages/OutletTabsPage'));
 const IFramePage = lazy(() => import('./pages/IFramePage'));
 const MasterFilterPage = lazy(() => import('./pages/MasterFilterPage'));
-const QueryPage = lazy(() => import('./pages/QueryPage'));
+const QueryLanguagePage = lazy(() => import('./pages/QueryLanguagePage'));
 const WebEditorPage = lazy(() => import('./pages/WebEditorPage'));
 const TableDemoPage = lazy(() => import('./pages/TableDemoPage'));
 const SocketIOPage = lazy(() => import('./pages/SocketIOPage'));
@@ -44,11 +44,11 @@ const BackgroundSyncTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/
 const FullExampleTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/FullExampleTab'));
 
 // QueryPage tabs:
-const LexerTab = lazy(() => import('./pages/QueryPage/tabs/LexerTab'));
-const QueryParserTab = lazy(() => import('./pages/QueryPage/tabs/QueryParserTab'));
-const SuggestionsTab = lazy(() => import('./pages/QueryPage/tabs/SuggestionsTab'));
-const UIChipsTab = lazy(() => import('./pages/QueryPage/tabs/UIChipsTab'));
-const QueryLanguageTab = lazy(() => import('./pages/QueryPage/tabs/QueryLanguageTab'));
+const LexerTab = lazy(() => import('./pages/QueryLanguagePage/tabs/LexerTab'));
+const QueryParserTab = lazy(() => import('./pages/QueryLanguagePage/tabs/QueryParserTab'));
+const SuggestionsTab = lazy(() => import('./pages/QueryLanguagePage/tabs/SuggestionsTab'));
+const UIChipsTab = lazy(() => import('./pages/QueryLanguagePage/tabs/UIChipsTab'));
+const QueryLanguageTab = lazy(() => import('./pages/QueryLanguagePage/tabs/QueryLanguageTab'));
 
 // TreeViewPage tabs:
 const TreeViewDemoPage = lazy(() => import('./pages/TreeViewDemo'));
@@ -292,7 +292,7 @@ export const routes: Array<Route> = [
       `${BASE_URL}/query-language/ui-chips`,
       `${BASE_URL}/query-language/query-language`,
     ],
-    Component: QueryPage,
+    Component: QueryLanguagePage,
     children: [
       {
         to: 'lexer',
