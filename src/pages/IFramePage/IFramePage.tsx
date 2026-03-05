@@ -3,9 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
 import { getInitialTabValue } from '../OutletTabsPage/logic/utils/getInitialValue';
-import DisplayWithUseLocation from './content/DisplayWithUseLocation';
-import DisplayWithWindowLocation from './content/DisplayWithWindowLocation';
-import IframeTestComponent from './my-iframe';
+import IframeTester from './content/IframeTester';
 
 const Tabs = {
   Overview: '',
@@ -59,17 +57,13 @@ export default function IFramePage() {
         />
       </div>
 
+      {/* Overview, Analytics, and Settings tabs - Navigation within the host*/}
       <div className='size-full'>
         <Outlet />
       </div>
 
-      <div className='h-96 flex justify-between items-center gap-4 rounded-lg'>
-        <DisplayWithWindowLocation />
-        <DisplayWithUseLocation />
-      </div>
-
       <div className='h-225 shrink-0'>
-        <IframeTestComponent />
+        <IframeTester />
       </div>
     </div>
   );

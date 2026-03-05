@@ -6,7 +6,7 @@ interface IframeTestComponentProps {
   className?: string;
 }
 
-export default function IframeTestComponent(props: IframeTestComponentProps) {
+export default function IframeTester(props: IframeTestComponentProps) {
   const { className = '' } = props;
   const iframeRef = useRef<HTMLIFrameElement>({} as HTMLIFrameElement);
   const [isServerRunning, setIsServerRunning] = useState(false);
@@ -42,7 +42,9 @@ export default function IframeTestComponent(props: IframeTestComponentProps) {
     return (
       <div className={`p-6 border border-red-300 bg-red-50 rounded-lg ${className}`}>
         <h3 className='text-lg font-semibold text-red-800 mb-2'>📡 Iframe Server Not Running</h3>
+
         <p className='text-red-700 mb-4'>The iframe server is not running on port 3003. Please start it first:</p>
+
         <div className='bg-gray-800 text-green-400 p-4 rounded font-mono text-sm mb-4'>
           <div>cd iframe-server</div>
           <div>npm install</div>
