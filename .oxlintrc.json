@@ -11,7 +11,7 @@
     "node": true,
     "shared-node-browser": true
   },
-  "ignorePatterns": ["dist", "coverage", "iframe-server"],
+  "ignorePatterns": ["dist", "coverage"],
   "rules": {
     "constructor-super": "error",
     "for-direction": "error",
