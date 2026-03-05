@@ -19,9 +19,9 @@ export async function syncAllRequests(): Promise<void> {
     } catch (error: any) {
       if (error instanceof HttpError && error.status === StatusCodes.Conflict) {
         await indexedDBClient.deleteRecordById({ tableName: syncRequestsTableName, id: request.id });
-        continue;
+        continue; // <--- prevent console.log below. silently continue.
       }
-      console.log('Error processing request:', error);
+      console.log(`Error processing request with id of "${request.id}"`, error);
     }
   }
 }
