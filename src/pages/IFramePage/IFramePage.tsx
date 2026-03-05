@@ -68,7 +68,7 @@ export default function IFramePage() {
         <DisplayWithUseLocation />
       </div>
 
-      <div className='h-[900px] shrink-0'>
+      <div className='h-225 shrink-0'>
         <IframeTestComponent />
       </div>
     </div>
