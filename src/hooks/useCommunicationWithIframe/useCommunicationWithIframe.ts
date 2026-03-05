@@ -26,16 +26,13 @@ export function useCommunicationWithIframe(props: UseCommunicationWithIframeProp
       const { data: message, source: eventSource, origin: eventOrigin } = eventMessage;
       const messageType = message.type;
 
-      // Reject 1: Not the same origin
-      const isSameOrigin = allowedOrigin === eventOrigin;
+      // Reject 1: Not the same origin or No iframe window
+      if (allowedOrigin !== eventOrigin || iframeWindow == null) return;
 
-      // Reject 2: No iframe window
-      if (!isSameOrigin || iframeWindow == null) return;
-
-      // Reject 3: Invalid message
+      // Reject 2: Invalid message
       if (!isValidMessage(message)) return;
 
-      // Reject 4: Not the same source
+      // Reject 3: Not the same source
       if (eventSource !== iframeWindow) return;
 
       const messageHandler = allMessageHandlers[messageType];

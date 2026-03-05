@@ -1,7 +1,7 @@
 import { PostMessageResponseTypes } from '../logic/constants';
-import type { BridgeRequest } from '../types';
+import type { PostMessageRequest } from '../types';
 
-export function requestOriginHandler(message: BridgeRequest) {
+export function requestOriginHandler(message: PostMessageRequest) {
   const { requestId } = message;
 
   console.log('message is:', message);
