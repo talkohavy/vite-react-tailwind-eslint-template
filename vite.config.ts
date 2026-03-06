@@ -1,5 +1,6 @@
 import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
+// import basicSsl from '@vitejs/plugin-basic-ssl';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig, loadEnv } from 'vite';
 import svgr from 'vite-plugin-svgr';
@@ -24,6 +25,7 @@ export default defineConfig(({ mode }) => {
     root: `${process.cwd()}/src`, // <--- defaults to process.cwd(). where the index.html is located.
     plugins: [
       react(),
+      // basicSsl(), // <--- Enable this to have HTTPS in dev
       tailwindcss(),
       svgr({
         include: '**/*.svg',
@@ -35,7 +37,7 @@ export default defineConfig(({ mode }) => {
       open: true,
       port,
       strictPort: false,
-      origin: 'http://localhost:3004', // <--- Defaults to '/'. Defines the origin of the generated asset URLs during development ONLY. Without this, serving of the mf-manifest.json in micro-frontends doesn't work! Since it takes the host's origin.
+      origin: `http://localhost:${port}`, // <--- Defaults to '/'. Defines the origin of the generated asset URLs during development ONLY. Without this, serving of the mf-manifest.json in micro-frontends doesn't work! Since it takes the host's origin.
       watch: {
         // ignored: ['**/.env'], // <--- by default, Vite watches the .env file (which is good). However, if you want to ignore it, you can do so here.
       },
