@@ -17,7 +17,7 @@ export default function IframeTester(props: IframeTestComponentProps) {
   const [isServerRunning, setIsServerRunning] = useState(false);
   const [iframeWindow, setIframeWindow] = useState<Window | null>(null);
 
-  const { toggleDarkMode } = useDarkTheme();
+  const { toggleDarkMode, isDarkMode } = useDarkTheme();
 
   const sendLogToIframe = useCallback(() => {
     const message: PostMessageEvent<{ log: string }> = {
@@ -138,7 +138,12 @@ export default function IframeTester(props: IframeTestComponentProps) {
 
         <Button onClick={sendOriginToIframe}>Send origin to iframe</Button>
 
-        <Button onClick={toggleAndSendThemeToIframe}>Toggle light/dark theme</Button>
+        <Button
+          onClick={toggleAndSendThemeToIframe}
+          className='bg-black hover:bg-blue-950 dark:bg-yellow-500 dark:hover:bg-yellow-600 active:bg-gray-900 dark:active:bg-none'
+        >
+          Switch to {isDarkMode ? 'light' : 'dark'} theme
+        </Button>
       </div>
 
       <iframe
