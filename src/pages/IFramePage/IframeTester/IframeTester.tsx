@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { IncomingMessageEvents, PostMessageEvents } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 import { useCommunicationWithIframe } from '@src/hooks/useCommunicationWithIframe';
+import { useDarkTheme } from '@src/providers/DarkThemeProvider/DarkThemeContext';
 import type { PostMessageEvent } from '@src/common/types';
 
 const IFRAME_ORIGIN = 'http://localhost:3003';
@@ -15,6 +16,8 @@ export default function IframeTester(props: IframeTestComponentProps) {
   const iframeRef = useRef<HTMLIFrameElement>({} as HTMLIFrameElement);
   const [isServerRunning, setIsServerRunning] = useState(false);
   const [iframeWindow, setIframeWindow] = useState<Window | null>(null);
+
+  const { toggleDarkMode } = useDarkTheme();
 
   const sendLogToIframe = useCallback(() => {
     const message: PostMessageEvent<{ log: string }> = {
@@ -48,6 +51,19 @@ export default function IframeTester(props: IframeTestComponentProps) {
 
     iframeWindow.postMessage(message, '*');
   }, [iframeWindow]);
+
+  const toggleAndSendThemeToIframe = useCallback(() => {
+    const newIsDarkMode = toggleDarkMode();
+
+    const message: PostMessageEvent<{ isDarkMode: boolean }> = {
+      type: PostMessageEvents.SendTheme,
+      payload: { isDarkMode: newIsDarkMode },
+    };
+
+    if (iframeWindow == null) return;
+
+    iframeWindow.postMessage(message, '*');
+  }, [iframeWindow, toggleDarkMode]);
 
   const requestOriginHandler = useCallback(() => {
     const response: PostMessageEvent<{ origin: string }> = {
@@ -121,6 +137,8 @@ export default function IframeTester(props: IframeTestComponentProps) {
         <Button onClick={sayHiToIframe}>Render message in iframe</Button>
 
         <Button onClick={sendOriginToIframe}>Send origin to iframe</Button>
+
+        <Button onClick={toggleAndSendThemeToIframe}>Toggle light/dark theme</Button>
       </div>
 
       <iframe
