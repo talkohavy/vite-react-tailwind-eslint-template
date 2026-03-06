@@ -46,8 +46,8 @@ export default function IFramePage() {
   }
 
   return (
-    <div className='size-full flex flex-col gap-6 overflow-auto'>
-      <div className='border-b border-gray-200 dark:border-gray-600 px-6 pt-6'>
+    <div className='size-full flex flex-col gap-6 p-6 overflow-auto'>
+      <div className='border-b border-gray-200 dark:border-gray-600'>
         <RadioTabs
           value={currentTabValue}
           setValue={handleTabChange}
@@ -61,7 +61,7 @@ export default function IFramePage() {
         <Outlet />
       </div>
 
-      <div className='h-225 shrink-0'>
+      <div className='w-full h-225 shrink-0'>
         <IframeTester />
       </div>
     </div>

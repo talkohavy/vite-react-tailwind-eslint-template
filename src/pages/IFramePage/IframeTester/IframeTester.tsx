@@ -1,4 +1,6 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
+import { IncomingMessageEvents, PostMessageEvents } from '@src/common/constants';
+import Button from '@src/components/controls/Button';
 import { useCommunicationWithIframe } from '@src/hooks/useCommunicationWithIframe';
 
 const IFRAME_ORIGIN = 'http://localhost:3003';
@@ -13,7 +15,42 @@ export default function IframeTester(props: IframeTestComponentProps) {
   const [isServerRunning, setIsServerRunning] = useState(false);
   const [iframeWindow, setIframeWindow] = useState<Window | null>(null);
 
-  useCommunicationWithIframe({ iframeWindow, allowedOrigin: IFRAME_ORIGIN });
+  const sendLogToIframe = useCallback(() => {
+    const message = {
+      type: PostMessageEvents.SendLogMessage,
+      payload: { log: 'world' },
+    };
+
+    if (iframeWindow == null) return;
+
+    iframeWindow.postMessage(message, '*');
+  }, [iframeWindow]);
+
+  const sayHiToIframe = useCallback(() => {
+    const message = {
+      type: PostMessageEvents.SendHiToIframe,
+      payload: { message: `hi from ${window.location.origin} - ${new Date().toISOString()}` },
+    };
+
+    if (iframeWindow == null) return;
+
+    iframeWindow.postMessage(message, '*');
+  }, [iframeWindow]);
+
+  const requestOriginHandler = useCallback((_eventMessage: any) => {
+    return {
+      type: PostMessageEvents.SendOrigin,
+      payload: { origin: window.location.origin },
+    };
+  }, []);
+
+  const incomingMessageHandlers = useMemo(() => {
+    return {
+      [IncomingMessageEvents.RequestOrigin]: requestOriginHandler,
+    };
+  }, [requestOriginHandler]);
+
+  useCommunicationWithIframe({ incomingMessageHandlers, iframeWindow, allowedOrigin: IFRAME_ORIGIN });
 
   useEffect(() => {
     checkServerStatus();
@@ -63,13 +100,21 @@ export default function IframeTester(props: IframeTestComponentProps) {
   }
 
   return (
-    <iframe
-      ref={iframeRef}
-      src={IFRAME_ORIGIN}
-      title='Iframe Test'
-      onLoad={onIframeLoad}
-      // sandbox='allow-same-origin allow-forms allow-scripts allow-top-navigation-by-user-activation'
-      className='w-[90%] mx-auto h-full border-4 border-red-500 rounded-2xl'
-    />
+    <div className='flex flex-col size-full gap-4'>
+      <div className='flex gap-4'>
+        <Button onClick={sendLogToIframe}>Log message to iframe</Button>
+
+        <Button onClick={sayHiToIframe}>Say "hi" to iframe</Button>
+      </div>
+
+      <iframe
+        ref={iframeRef}
+        src={IFRAME_ORIGIN}
+        title='Iframe Test'
+        onLoad={onIframeLoad}
+        // sandbox='allow-same-origin allow-forms allow-scripts allow-top-navigation-by-user-activation'
+        className='h-full border-4 border-red-500 rounded-2xl'
+      />
+    </div>
   );
 }

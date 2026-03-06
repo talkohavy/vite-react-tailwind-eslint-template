@@ -1,11 +1,16 @@
 import { useEffect } from 'react';
-import { allMessageHandlers } from './handlers';
 import { isValidMessage } from './logic/utils/isValidMessage';
 import type { PostMessageRequest } from './types';
 
 const MESSAGE_EVENT = 'message';
 
 export type UseCommunicationWithIframeProps = {
+  /**
+   * MUST be memoized!
+   *
+   * All incoming message handlers.
+   */
+  incomingMessageHandlers: Record<string, (props: any) => any>;
   /**
    * The iframe's contentWindow. When null, no listener is active.
    */
@@ -17,7 +22,7 @@ export type UseCommunicationWithIframeProps = {
 };
 
 export function useCommunicationWithIframe(props: UseCommunicationWithIframeProps) {
-  const { iframeWindow, allowedOrigin } = props;
+  const { incomingMessageHandlers, iframeWindow, allowedOrigin } = props;
 
   useEffect(() => {
     if (iframeWindow == null) return;
@@ -35,7 +40,9 @@ export function useCommunicationWithIframe(props: UseCommunicationWithIframeProp
       // Reject 3: Not the same source
       if (eventSource !== iframeWindow) return;
 
-      const messageHandler = allMessageHandlers[messageType];
+      const messageHandler = incomingMessageHandlers[messageType];
+
+      if (!messageHandler) return;
 
       const response = messageHandler(message);
 
@@ -48,5 +55,5 @@ export function useCommunicationWithIframe(props: UseCommunicationWithIframeProp
     window.addEventListener(MESSAGE_EVENT, handleIncomingMessageFromIframe);
 
     return () => window.removeEventListener(MESSAGE_EVENT, handleIncomingMessageFromIframe);
-  }, [iframeWindow, allowedOrigin]);
+  }, [incomingMessageHandlers, iframeWindow, allowedOrigin]);
 }
