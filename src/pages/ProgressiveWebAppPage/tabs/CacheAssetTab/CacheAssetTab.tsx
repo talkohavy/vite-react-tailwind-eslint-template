@@ -29,7 +29,7 @@ export default function CacheAssetTab() {
   };
 
   return (
-    <div className='size-full p-6 overflow-auto'>
+    <div className='flex flex-col gap-5 size-full p-4 overflow-auto'>
       <div className='text-3xl font-medium'>Cache Asset</div>
 
       <div className='flex flex-col gap-2 border rounded-md p-3 mt-4'>

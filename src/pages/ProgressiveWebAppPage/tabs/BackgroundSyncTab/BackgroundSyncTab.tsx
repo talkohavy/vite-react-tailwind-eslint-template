@@ -21,8 +21,8 @@ export default function BackgroundSyncTab() {
   } = useBackgroundSyncTabLogic();
 
   return (
-    <div className='flex flex-col gap-6 size-full p-6 overflow-auto'>
-      <div className='text-3xl font-semibold'>Service Worker Tutorial</div>
+    <div className='flex flex-col gap-5 size-full p-4 overflow-auto'>
+      <div className='text-3xl font-medium'>Background Sync</div>
 
       <div className='flex flex-col gap-4 max-w-md border rounded-lg p-4'>
         <div className='text-lg font-semibold self-center'>User Input Form</div>
