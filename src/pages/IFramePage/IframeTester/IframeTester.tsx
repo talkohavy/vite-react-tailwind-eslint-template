@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { IncomingMessageEvents, PostMessageEvents } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 import { useCommunicationWithIframe } from '@src/hooks/useCommunicationWithIframe';
+import type { PostMessageEvent } from '@src/common/types';
 
 const IFRAME_ORIGIN = 'http://localhost:3003';
 
@@ -16,7 +17,7 @@ export default function IframeTester(props: IframeTestComponentProps) {
   const [iframeWindow, setIframeWindow] = useState<Window | null>(null);
 
   const sendLogToIframe = useCallback(() => {
-    const message = {
+    const message: PostMessageEvent<{ log: string }> = {
       type: PostMessageEvents.SendLogMessage,
       payload: { log: 'world' },
     };
@@ -27,7 +28,7 @@ export default function IframeTester(props: IframeTestComponentProps) {
   }, [iframeWindow]);
 
   const sayHiToIframe = useCallback(() => {
-    const message = {
+    const message: PostMessageEvent<{ message: string }> = {
       type: PostMessageEvents.SendHiToIframe,
       payload: { message: `hi from ${window.location.origin} - ${new Date().toISOString()}` },
     };
@@ -37,11 +38,24 @@ export default function IframeTester(props: IframeTestComponentProps) {
     iframeWindow.postMessage(message, '*');
   }, [iframeWindow]);
 
-  const requestOriginHandler = useCallback((_eventMessage: any) => {
-    return {
+  const sendOriginToIframe = useCallback(() => {
+    const message: PostMessageEvent<{ origin: string }> = {
       type: PostMessageEvents.SendOrigin,
       payload: { origin: window.location.origin },
     };
+
+    if (iframeWindow == null) return;
+
+    iframeWindow.postMessage(message, '*');
+  }, [iframeWindow]);
+
+  const requestOriginHandler = useCallback(() => {
+    const response: PostMessageEvent<{ origin: string }> = {
+      type: PostMessageEvents.SendOrigin,
+      payload: { origin: window.location.origin },
+    };
+
+    return response;
   }, []);
 
   const incomingMessageHandlers = useMemo(() => {
@@ -104,7 +118,9 @@ export default function IframeTester(props: IframeTestComponentProps) {
       <div className='flex gap-4'>
         <Button onClick={sendLogToIframe}>Log message to iframe</Button>
 
-        <Button onClick={sayHiToIframe}>Say "hi" to iframe</Button>
+        <Button onClick={sayHiToIframe}>Render message in iframe</Button>
+
+        <Button onClick={sendOriginToIframe}>Send origin to iframe</Button>
       </div>
 
       <iframe
