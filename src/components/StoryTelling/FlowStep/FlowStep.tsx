@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import clsx from 'clsx';
 
 const classesByVariant = {
@@ -10,7 +11,7 @@ const classesByVariant = {
 
 export default function FlowStep(props: {
   label: string;
-  detail: string;
+  detail: ReactNode;
   variant?: 'default' | 'success' | 'warn' | 'danger' | 'muted';
 }) {
   const { label, detail, variant = 'default' } = props;
