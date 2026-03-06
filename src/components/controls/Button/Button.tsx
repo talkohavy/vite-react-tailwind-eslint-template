@@ -1,6 +1,13 @@
 import type { PropsWithChildren } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+const base = 'block cursor-pointer rounded-md p-3';
+const lightModeNormal = 'bg-blue-500 text-white';
+const lightModeFocused = 'focus:rounded-lg';
+const lightModeHovered = 'hover:rounded-lg hover:bg-blue-600';
+const lightModeActive = 'active:bg-blue-500 active:rounded-xl';
+const lightModeDisabled = 'disabled:opacity-50 disabled:hover:bg-blue-500 disabled:cursor-default disabled:rounded-md';
+
 type ButtonProps = PropsWithChildren<{
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
@@ -16,7 +23,12 @@ export default function Button(props: ButtonProps) {
       type='button'
       onClick={onClick}
       className={twMerge(
-        'block cursor-pointer rounded-md hover:rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-500 active:rounded-xl focus:rounded-lg p-3 disabled:opacity-50 disabled:hover:bg-blue-500 disabled:cursor-default disabled:rounded-md',
+        base,
+        lightModeNormal,
+        lightModeFocused,
+        lightModeHovered,
+        lightModeActive,
+        lightModeDisabled,
         className,
       )}
       disabled={disabled}
