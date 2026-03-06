@@ -1,0 +1,1 @@
+export { useCommunicationWithIframe } from './useCommunicationWithIframe';

@@ -1,0 +1,59 @@
+import { useEffect } from 'react';
+import { isValidMessage } from './logic/utils/isValidMessage';
+import type { PostMessageRequest } from './types';
+
+const MESSAGE_EVENT = 'message';
+
+export type UseCommunicationWithIframeProps = {
+  /**
+   * MUST be memoized!
+   *
+   * All incoming message handlers.
+   */
+  incomingMessageHandlers: Record<string, (props: any) => any>;
+  /**
+   * The iframe's contentWindow. When null, no listener is active.
+   */
+  iframeWindow: Window | null;
+  /**
+   * Allowed origin for the iframe (e.g. 'http://localhost:3003'). Optional; if not set, any origin is accepted.
+   */
+  allowedOrigin?: string;
+};
+
+export function useCommunicationWithIframe(props: UseCommunicationWithIframeProps) {
+  const { incomingMessageHandlers, iframeWindow, allowedOrigin } = props;
+
+  useEffect(() => {
+    if (iframeWindow == null) return;
+
+    function handleIncomingMessageFromIframe(eventMessage: MessageEvent<PostMessageRequest>) {
+      const { data: message, source: eventSource, origin: eventOrigin } = eventMessage;
+      const messageType = message.type;
+
+      // Reject 1: Not the same origin or No iframe window
+      if (allowedOrigin !== eventOrigin || iframeWindow == null) return;
+
+      // Reject 2: Invalid message
+      if (!isValidMessage(message)) return;
+
+      // Reject 3: Not the same source
+      if (eventSource !== iframeWindow) return;
+
+      const messageHandler = incomingMessageHandlers[messageType];
+
+      if (!messageHandler) return;
+
+      const response = messageHandler(message);
+
+      // Respond back to iframe if a response exists
+      if (response) {
+        iframeWindow.postMessage(response, eventOrigin);
+      }
+    }
+
+    window.addEventListener(MESSAGE_EVENT, handleIncomingMessageFromIframe);
+
+    return () => window.removeEventListener(MESSAGE_EVENT, handleIncomingMessageFromIframe);
+  }, [incomingMessageHandlers, iframeWindow, allowedOrigin]);
+}

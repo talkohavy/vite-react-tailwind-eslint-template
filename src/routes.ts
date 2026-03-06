@@ -36,6 +36,11 @@ const OverviewTab = lazy(() => import('./pages/OutletTabsPage/tabs/Overview'));
 const AnalyticsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Analytics'));
 const SettingsTab = lazy(() => import('./pages/OutletTabsPage/tabs/Settings'));
 
+// IFramePage tabs:
+const HostTab1 = lazy(() => import('./pages/IFramePage/tabs/HostTab1'));
+const HostTab2 = lazy(() => import('./pages/IFramePage/tabs/HostTab2'));
+const HostTab3 = lazy(() => import('./pages/IFramePage/tabs/HostTab3'));
+
 // ProgressiveWebAppPage tabs:
 const RegisterTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/RegisterServiceWorkerTab'));
 const CacheAssetTab = lazy(() => import('./pages/ProgressiveWebAppPage/tabs/CacheAssetTab'));
@@ -252,26 +257,31 @@ export const routes: Array<Route> = [
   {
     to: `${BASE_URL}/iframe`,
     text: 'IFrame',
-    activeNames: [`${BASE_URL}/iframe/`, `${BASE_URL}/iframe/analytics`, `${BASE_URL}/iframe/settings`],
+    activeNames: [
+      `${BASE_URL}/iframe/`,
+      `${BASE_URL}/iframe/host-tab-1`,
+      `${BASE_URL}/iframe/host-tab-2`,
+      `${BASE_URL}/iframe/host-tab-3`,
+    ],
     Component: IFramePage,
     children: [
       {
         to: '',
         text: 'Overview',
         activeNames: [],
-        Component: OverviewTab,
+        Component: HostTab1,
       },
       {
-        to: 'analytics',
+        to: 'host-tab-2',
         text: 'Analytics',
         activeNames: [],
-        Component: AnalyticsTab,
+        Component: HostTab2,
       },
       {
-        to: 'settings',
+        to: 'host-tab-3',
         text: 'Settings',
         activeNames: [],
-        Component: SettingsTab,
+        Component: HostTab3,
       },
     ],
   },
