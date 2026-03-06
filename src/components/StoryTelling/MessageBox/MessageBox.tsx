@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from 'react';
 
-type CalloutBoxProps = PropsWithChildren<{
+type MessageBoxProps = PropsWithChildren<{
   title: string;
 }>;
 
-export default function CalloutBox(props: CalloutBoxProps) {
+export default function MessageBox(props: MessageBoxProps) {
   const { title, children } = props;
 
   return (

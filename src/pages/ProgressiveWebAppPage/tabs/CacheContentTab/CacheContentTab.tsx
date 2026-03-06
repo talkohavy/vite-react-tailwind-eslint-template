@@ -1,10 +1,10 @@
 import Button from '@src/components/controls/Button';
 import LineOfCode from '@src/components/LineOfCode';
-import Arrow from './content/Arrow';
-import CalloutBox from './content/CalloutBox';
-import FlowStep from './content/FlowStep';
-import Fork from './content/Fork';
-import Scene from './content/Scene';
+import Arrow from '@src/components/StoryTelling/Arrow';
+import FlowStep from '@src/components/StoryTelling/FlowStep';
+import Fork from '@src/components/StoryTelling/Fork';
+import CalloutBox from '@src/components/StoryTelling/MessageBox';
+import Scene from '@src/components/StoryTelling/Scene';
 import { useCacheContentTabLogic } from './logic/useCacheContentTabLogic';
 
 export default function CacheContentTab() {
