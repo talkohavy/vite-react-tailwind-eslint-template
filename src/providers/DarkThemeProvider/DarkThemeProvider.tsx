@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import { LS_KEY_THEME } from '../../common/constants';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { DarkThemeContext } from './DarkThemeContext';
+import { DarkThemeContext, type DarkThemeContextValue } from './DarkThemeContext';
 
 const THEME_OPTIONS = { dark: 'dark', light: 'light' };
 
@@ -26,18 +26,21 @@ export default function DarkThemeProvider(props: DarkThemeProviderProps) {
     return currentTheme === THEME_OPTIONS.dark;
   });
 
-  // all functions:
   const toggleDarkMode = useCallback(() => {
-    const themeToBe = isDarkMode ? THEME_OPTIONS.light : THEME_OPTIONS.dark;
-    setLocalStorageTheme(themeToBe);
+    const newTheme = isDarkMode ? THEME_OPTIONS.light : THEME_OPTIONS.dark;
+    const newIsDarkMode = !isDarkMode;
 
-    document.body.setAttribute('class', themeToBe);
-    document.documentElement.setAttribute('data-theme', themeToBe);
+    setLocalStorageTheme(newTheme);
 
-    setIsDarkMode(!isDarkMode);
+    document.body.setAttribute('class', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+
+    setIsDarkMode(newIsDarkMode);
+
+    return newIsDarkMode;
   }, [isDarkMode, setIsDarkMode, setLocalStorageTheme]);
 
-  const value = useMemo(() => ({ isDarkMode, toggleDarkMode }), [isDarkMode, toggleDarkMode]);
+  const value: DarkThemeContextValue = useMemo(() => ({ isDarkMode, toggleDarkMode }), [isDarkMode, toggleDarkMode]);
 
   return <DarkThemeContext.Provider value={value}>{children}</DarkThemeContext.Provider>;
 }
