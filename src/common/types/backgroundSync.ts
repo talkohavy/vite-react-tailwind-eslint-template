@@ -1,14 +1,4 @@
-import type { LazyExoticComponent, ReactNode } from 'react';
-import type { HttpMethodValues } from '../lib/HttpClient';
-
-export type Route = {
-  to: string;
-  text: string;
-  activeNames: Array<string>;
-  Component: (() => any) | LazyExoticComponent<() => ReactNode>;
-  hideFromSidebar?: boolean;
-  children?: Array<Route>;
-};
+import type { HttpMethodValues } from '../../lib/HttpClient';
 
 export type RequestDetails = {
   /**
@@ -30,7 +20,3 @@ export type RequestDetails = {
     [key: string]: any;
   };
 };
-
-export type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
