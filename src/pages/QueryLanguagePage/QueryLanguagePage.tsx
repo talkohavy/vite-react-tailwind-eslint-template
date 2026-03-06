@@ -1,5 +1,6 @@
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
 import { pageName } from './logic/constants';
@@ -38,8 +39,10 @@ const tabOptions = [
   },
 ];
 
-export default function QueryPage() {
-  const navigate = useNavigate();
+type QueryPageProps = { children?: ReactNode };
+
+export default function QueryPage({ children }: QueryPageProps) {
+  const history = useHistory();
   const location = useLocation();
 
   const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
@@ -54,7 +57,7 @@ export default function QueryPage() {
     setCurrentTabValue(tabValue);
 
     const targetPath = `${BASE_URL}/${pageName}/${tabValue}`;
-    navigate(targetPath);
+    history.push(targetPath);
   }
 
   return (
@@ -69,9 +72,7 @@ export default function QueryPage() {
         />
       </div>
 
-      <div className='size-full'>
-        <Outlet />
-      </div>
+      <div className='size-full'>{children}</div>
     </div>
   );
 }

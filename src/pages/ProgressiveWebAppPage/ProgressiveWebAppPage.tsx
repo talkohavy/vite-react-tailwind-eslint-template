@@ -1,5 +1,6 @@
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
 import { getInitialTabValue } from './logic/utils/getInitialTabValue';
@@ -35,8 +36,10 @@ const tabOptions = [
   },
 ];
 
-export default function ProgressiveWebAppPage() {
-  const navigate = useNavigate();
+type ProgressiveWebAppPageProps = { children?: ReactNode };
+
+export default function ProgressiveWebAppPage({ children }: ProgressiveWebAppPageProps) {
+  const history = useHistory();
   const location = useLocation();
 
   const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
@@ -50,7 +53,7 @@ export default function ProgressiveWebAppPage() {
     setCurrentTabValue(tabValue);
 
     const targetPath = `${BASE_URL}/progressive-web-app/${tabValue}`;
-    navigate(targetPath);
+    history.push(targetPath);
   }
 
   return (
@@ -62,9 +65,7 @@ export default function ProgressiveWebAppPage() {
         className='flex overflow-auto'
       />
 
-      <div className='size-full overflow-auto'>
-        <Outlet />
-      </div>
+      <div className='size-full overflow-auto'>{children}</div>
     </div>
   );
 }

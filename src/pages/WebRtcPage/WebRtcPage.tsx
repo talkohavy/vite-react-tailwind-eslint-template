@@ -1,9 +1,11 @@
-import { Outlet } from 'react-router';
+import type { ReactNode } from 'react';
 import RadioTabs from '@src/components/controls/RadioTabs';
 import { tabOptions } from './logic/constants';
 import { useWebRtcPageLogic } from './logic/useWebRtcPageLogic';
 
-export default function WebRtcPage() {
+type WebRtcPageProps = { children?: ReactNode };
+
+export default function WebRtcPage({ children }: WebRtcPageProps) {
   const { currentTabValue, handleTabChange } = useWebRtcPageLogic();
 
   return (
@@ -26,9 +28,7 @@ export default function WebRtcPage() {
           />
         </div>
 
-        <div className='size-full'>
-          <Outlet />
-        </div>
+        <div className='size-full'>{children}</div>
       </div>
     </div>
   );

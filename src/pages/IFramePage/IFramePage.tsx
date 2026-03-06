@@ -1,5 +1,6 @@
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
 import { getInitialTabValue } from '../OutletTabsPage/logic/utils/getInitialValue';
@@ -26,8 +27,10 @@ const tabOptions = [
   },
 ];
 
-export default function IFramePage() {
-  const navigate = useNavigate();
+type IFramePageProps = { children?: ReactNode };
+
+export default function IFramePage({ children }: IFramePageProps) {
+  const history = useHistory();
   const location = useLocation();
 
   const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
@@ -42,7 +45,7 @@ export default function IFramePage() {
     setCurrentTabValue(tabValue);
 
     const targetPath = `${BASE_URL}/iframe/${tabValue}`;
-    navigate(targetPath);
+    history.push(targetPath);
   }
 
   return (
@@ -57,9 +60,7 @@ export default function IFramePage() {
       </div>
 
       {/* Overview, Analytics, and Settings tabs - Navigation within the host*/}
-      <div className='size-full'>
-        <Outlet />
-      </div>
+      <div className='size-full'>{children}</div>
 
       <div className='w-full h-225 shrink-0'>
         <IframeTester />

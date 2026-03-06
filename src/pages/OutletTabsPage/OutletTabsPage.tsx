@@ -1,5 +1,6 @@
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
 import { getInitialTabValue } from './logic/utils/getInitialValue';
@@ -25,8 +26,10 @@ const tabOptions = [
   },
 ];
 
-export default function OutletTabsPage() {
-  const navigate = useNavigate();
+type OutletTabsPageProps = { children?: ReactNode };
+
+export default function OutletTabsPage({ children }: OutletTabsPageProps) {
+  const history = useHistory();
   const location = useLocation();
 
   const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
@@ -41,7 +44,7 @@ export default function OutletTabsPage() {
     setCurrentTabValue(tabValue);
 
     const targetPath = `${BASE_URL}/outlet/${tabValue}`;
-    navigate(targetPath);
+    history.push(targetPath);
   }
 
   return (
@@ -56,9 +59,7 @@ export default function OutletTabsPage() {
         />
       </div>
 
-      <div className='size-full'>
-        <Outlet />
-      </div>
+      <div className='size-full'>{children}</div>
     </div>
   );
 }

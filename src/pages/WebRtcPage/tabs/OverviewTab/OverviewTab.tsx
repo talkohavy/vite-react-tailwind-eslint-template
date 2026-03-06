@@ -1,16 +1,16 @@
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { BASE_URL } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 
 export default function OverviewTab() {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   function openSender() {
-    navigate(`${BASE_URL}/webrtc/sender`);
+    history.push(`${BASE_URL}/webrtc/sender`);
   }
 
   function openReceiver() {
-    navigate(`${BASE_URL}/webrtc/receiver`);
+    history.push(`${BASE_URL}/webrtc/receiver`);
   }
 
   return (

@@ -1,10 +1,13 @@
-import type { LazyExoticComponent, ReactNode } from 'react';
+import type { ComponentType, LazyExoticComponent, ReactNode } from 'react';
+
+/** Props for route components. Layout routes receive children (v5 nested Switch). */
+export type RouteLayoutProps = { children?: ReactNode };
 
 export type Route = {
   to: string;
-  text: string;
-  activeNames: Array<string>;
-  Component: (() => any) | LazyExoticComponent<() => ReactNode>;
+  text?: string;
+  activeNames?: Array<string>;
+  Component: ComponentType<RouteLayoutProps> | LazyExoticComponent<ComponentType<RouteLayoutProps>>;
   hideFromSidebar?: boolean;
   children?: Array<Route>;
 };

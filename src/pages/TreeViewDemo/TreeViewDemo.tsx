@@ -1,5 +1,6 @@
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { BASE_URL } from '../../common/constants';
 import RadioTabs from '../../components/controls/RadioTabs';
 import { pageName } from './logic/constants';
@@ -36,8 +37,10 @@ const tabOptions = [
   },
 ];
 
-export default function TreeViewDemo() {
-  const navigate = useNavigate();
+type TreeViewDemoProps = { children?: ReactNode };
+
+export default function TreeViewDemo({ children }: TreeViewDemoProps) {
+  const history = useHistory();
   const location = useLocation();
 
   const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
@@ -52,7 +55,7 @@ export default function TreeViewDemo() {
     setCurrentTabValue(tabValue);
 
     const targetPath = `${BASE_URL}/${pageName}/${tabValue}`;
-    navigate(targetPath);
+    history.push(targetPath);
   }
 
   return (
@@ -77,9 +80,7 @@ export default function TreeViewDemo() {
         </div>
       </div>
 
-      <div className='size-full'>
-        <Outlet />
-      </div>
+      <div className='size-full'>{children}</div>
     </div>
   );
 }
