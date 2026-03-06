@@ -8,7 +8,7 @@ export default function CapturedPicture(props: CapturedPictureProps) {
   const { photoDataUrl } = props;
 
   return (
-    <div className='w-auto space-y-3'>
+    <div className='w-full'>
       <h3 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>2. Still image output</h3>
 
       <div className='flex min-h-45 items-center justify-center rounded-lg border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800'>
