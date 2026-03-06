@@ -29,8 +29,8 @@ export default function StreamCamera(props: StreamCameraProps) {
   } = props;
 
   return (
-    <div>
-      <div className='inline-block overflow-hidden rounded-lg border border-gray-200 bg-black dark:border-gray-700'>
+    <div className='w-full'>
+      <div className='w-full inline-block overflow-hidden rounded-lg border border-gray-200 bg-black dark:border-gray-700'>
         <video
           ref={videoRef}
           onCanPlay={onVideoCanPlay}

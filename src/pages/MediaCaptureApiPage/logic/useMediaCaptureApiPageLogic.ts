@@ -8,9 +8,14 @@ export function useMediaCaptureApiPageLogic() {
   const [error, setError] = useState<string | null>(null);
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isColumnView, setIsColumnView] = useState(false);
 
   const startCameraDisabled = Boolean(stream);
   const takePictureDisabled = !(stream && isStreaming);
+
+  const toggleRowAndColumnLayout = useCallback(() => {
+    setIsColumnView((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -127,5 +132,7 @@ export function useMediaCaptureApiPageLogic() {
     takePicture,
     stopCamera,
     openFullscreen,
+    isColumnView,
+    toggleRowAndColumnLayout,
   };
 }

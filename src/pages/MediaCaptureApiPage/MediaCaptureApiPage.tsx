@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import Button from '../../components/controls/Button';
 import CapturedPicture from './content/CapturedPicture';
 import HowItWorksTutorial from './content/HowItWorksTutorial';
 import StreamCamera from './content/StreamCamera';
@@ -23,6 +25,8 @@ export default function MediaCaptureApiPage() {
     takePicture,
     stopCamera,
     openFullscreen,
+    isColumnView,
+    toggleRowAndColumnLayout,
   } = useMediaCaptureApiPageLogic();
 
   return (
@@ -54,9 +58,13 @@ export default function MediaCaptureApiPage() {
 
       <HowItWorksTutorial />
 
+      <Button onClick={toggleRowAndColumnLayout} className='w-fit mt-4'>
+        Toggle Row and Column Layout
+      </Button>
+
       {/* Demo: camera + capture */}
-      <section className='flex flex-col flex-wrap gap-8'>
-        <div className='min-w-70 flex-1 space-y-3'>
+      <section className={clsx('flex gap-8', isColumnView ? 'flex-col' : 'flex-row')}>
+        <div className='w-full'>
           <h3 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>1. Stream &amp; capture</h3>
 
           <StreamCamera
