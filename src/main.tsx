@@ -10,6 +10,7 @@ import SuspenseUntilReady from './components/SuspenseUntilReady';
 import { initHttpClient } from './lib/HttpClient';
 import { initIndexedDB } from './lib/IndexedDB/indexedDB';
 import { initSessionManager } from './lib/SessionManager';
+import { registerServiceWorker } from './pages/ProgressiveWebAppPage/logic/utils/registerServiceWorker';
 import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
 import './common/bootstrap';
@@ -57,6 +58,8 @@ function Client() {
 const rootElement = document.getElementById('root')!;
 const root = createRoot(rootElement);
 root.render(<Client />);
+
+registerServiceWorker();
 
 window.addEventListener('error', ({ error }) => ReactErrorOverlay(error));
 window.addEventListener('unhandledrejection', ({ reason }) => ReactErrorOverlay(reason));

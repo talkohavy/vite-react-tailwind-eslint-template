@@ -1,14 +1,7 @@
-import { useEffect } from 'react';
 import CodeBlock from '@src/components/CodeBlock';
 import LineOfCode from '@src/components/LineOfCode';
-import { registerServiceWorker } from '../../logic/utils/registerServiceWorker';
 
 export default function RegisterServiceWorkerTab() {
-  useEffect(() => {
-    // should essentially be called on main.tsx, but for the sake of this example, we are calling it here
-    registerServiceWorker();
-  }, []);
-
   return (
     <div className='size-full p-6 overflow-auto'>
       <div className='text-lg font-medium'>Register</div>

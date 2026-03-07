@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { dynamicTableName } from '../../../../common/constants';
 import Button from '../../../../components/controls/Button';
 import FallbackImage from '../../../../components/FallbackImage';
@@ -9,7 +9,6 @@ import { indexedDBClient } from '../../../../lib/IndexedDB';
 import { cacheAssetOnDemand } from '../../logic/utils/cacheAssetOnDemand';
 import { cacheContentOnDemand } from '../../logic/utils/cacheContentOnDemand';
 import { fetchUserById } from '../../logic/utils/fetchUserById';
-import { registerServiceWorker } from '../../logic/utils/registerServiceWorker';
 import type { User } from '../../types';
 
 const id = 1;
@@ -39,7 +38,7 @@ export default function FullExampleTab() {
 
   const { data: cachedContent, setData: setCachedContent } = useCachedContent<User>({
     id,
-    thenNetworkCallback: isFreshData ? thenNetworkCallback : undefined,
+    callback: isFreshData ? thenNetworkCallback : undefined,
   });
 
   const fetchAndSaveAssetOnDemand = async () => {
@@ -66,11 +65,6 @@ export default function FullExampleTab() {
 
     setCachedContent(user);
   };
-
-  useEffect(() => {
-    // should essentially be called on main.tsx, but for the sake of this example, we are calling it here
-    registerServiceWorker();
-  }, []);
 
   return (
     <div className='size-full p-6 overflow-auto'>

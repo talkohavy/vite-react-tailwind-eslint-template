@@ -30,9 +30,7 @@ export class MyServiceWorker {
    */
   public static addOnActivateListener(onActivate: () => Promise<any>): any {
     MyServiceWorker._self.addEventListener('activate', (event: any) => {
-      event.waitUntil(onActivate());
-
-      return MyServiceWorker._self.clients.claim();
+      event.waitUntil(onActivate().then(() => MyServiceWorker._self.clients.claim()));
     });
   }
 

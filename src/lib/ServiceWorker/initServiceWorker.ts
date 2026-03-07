@@ -8,16 +8,18 @@ import { MyServiceWorker } from './ServiceWorker';
 
 initServiceWorker();
 
-async function initServiceWorker() {
+function initServiceWorker() {
   const version = 1;
 
   const assetManager = new AssetManager();
   initHttpClient(API_GATEWAY_URL);
-  await initIndexedDB({ dbName, tables, version });
+  const indexedDBInitPromise = initIndexedDB({ dbName, tables, version });
 
   MyServiceWorker.getInstance(self);
   MyServiceWorker.addOnInstalListener(assetManager.cacheStaticAssets.bind(assetManager));
   MyServiceWorker.addOnActivateListener(assetManager.cleanUpOldCaches.bind(assetManager));
   MyServiceWorker.addOnFetchListener(assetManager.cacheWithNetworkFallbackStrategy.bind(assetManager));
-  MyServiceWorker.addOnSyncListener(syncAllRequests);
+  MyServiceWorker.addOnSyncListener((event) => {
+    event.waitUntil(indexedDBInitPromise.then(syncAllRequests));
+  });
 }
