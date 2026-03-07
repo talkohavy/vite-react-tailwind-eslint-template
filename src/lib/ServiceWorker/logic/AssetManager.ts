@@ -33,7 +33,7 @@ export class AssetManager {
    */
   async cacheWithNetworkFallbackStrategy(event: any) {
     try {
-      const cacheHit = await caches.match(event.request);
+      const cacheHit = await caches.match(event.request.url);
 
       if (cacheHit) return cacheHit;
 
@@ -68,7 +68,7 @@ export class AssetManager {
       return response;
     } catch (error) {
       console.error(error);
-      const cacheHit = await caches.match(event.request);
+      const cacheHit = await caches.match(event.request.url);
 
       if (cacheHit) return cacheHit;
 
