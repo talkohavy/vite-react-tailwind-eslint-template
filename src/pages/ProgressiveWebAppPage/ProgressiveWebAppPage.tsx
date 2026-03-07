@@ -59,7 +59,7 @@ export default function ProgressiveWebAppPage() {
         value={currentTabValue}
         setValue={handleTabChange}
         options={tabOptions}
-        className='flex overflow-auto'
+        className='flex shrink-0 overflow-auto'
       />
 
       <div className='size-full overflow-auto'>
