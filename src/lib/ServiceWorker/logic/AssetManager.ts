@@ -39,7 +39,7 @@ export class AssetManager {
 
       const response = await fetch(event.request);
 
-      if (response && response.status === 200 && response.type === 'basic') {
+      if (response.status === 200 && response.type === 'basic') {
         await this.dynamicallyCacheResponse(event, response);
       }
 
@@ -61,7 +61,7 @@ export class AssetManager {
     try {
       const response = await fetch(event.request);
 
-      if (response && response.status === 200 && response.type === 'basic') {
+      if (response.status === 200 && response.type === 'basic') {
         await this.dynamicallyCacheResponse(event, response);
       }
 
