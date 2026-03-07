@@ -4,4 +4,5 @@ export const API_GATEWAY_URL = API_PLACEHOLDER.includes('API_PLACEHOLDER') ? 'ht
 export const API_URLS = {
   users: '/api/users',
   books: '/api/books',
+  sse: '/api/sse',
 };

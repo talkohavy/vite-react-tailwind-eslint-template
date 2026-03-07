@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+import { API_URLS } from '@src/common/constants';
 import { getTime } from './logic/getTime';
 
 export default function ServerSentEvent() {
   const [value, setValue] = useState<string | null>(null);
 
   useEffect(() => {
-    const eventSource = new EventSource('http://localhost:8000/api/sse', { withCredentials: true });
+    const eventSource = new EventSource(API_URLS.sse, { withCredentials: true });
 
     eventSource.addEventListener('luckylove-data', (event) => {
       console.log('event is:', event);
