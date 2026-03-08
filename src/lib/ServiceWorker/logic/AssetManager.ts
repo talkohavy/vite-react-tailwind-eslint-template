@@ -1,9 +1,11 @@
 import { DYNAMIC_CACHE_NAME, STATIC_CACHE_NAME } from '@src/common/constants/cacheNames';
 
-export interface AssetManagerOptions {
+const DEFAULT_HTML_FILE = '/index.html';
+
+export type AssetManagerOptions = {
   cacheIgnoreList: string[];
   cacheLimit: number;
-}
+};
 
 export class AssetManager {
   private readonly cacheIgnoreList: string[];
@@ -17,7 +19,7 @@ export class AssetManager {
   async cacheStaticAssets() {
     const staticCache = await caches.open(STATIC_CACHE_NAME);
 
-    const appShell = ['/', '/index.html', '/vite.svg'];
+    const appShell = ['/', DEFAULT_HTML_FILE, '/vite.svg'];
     await staticCache.addAll(appShell);
 
     await this.precacheBuildAssets(staticCache);
@@ -102,7 +104,16 @@ export class AssetManager {
     } catch (error) {
       console.error(error);
 
-      return caches.match('/index.html');
+      if (!shouldBeCached) {
+        return new Response('Offline', { status: 503, statusText: 'Client Offline' });
+      }
+
+      // Only serve index.html for document navigation (offline SPA fallback)
+      if (event.request.mode === 'navigate') {
+        return caches.match(DEFAULT_HTML_FILE);
+      }
+
+      return new Response('Offline', { status: 503, statusText: 'Client Offline' });
     }
   }
 
@@ -127,7 +138,11 @@ export class AssetManager {
 
       if (cacheHit) return cacheHit;
 
-      return caches.match('/index.html');
+      if (event.request.mode === 'navigate') {
+        return caches.match(DEFAULT_HTML_FILE);
+      }
+
+      return new Response('Offline', { status: 503, statusText: 'Client Offline' });
     }
   }
 
