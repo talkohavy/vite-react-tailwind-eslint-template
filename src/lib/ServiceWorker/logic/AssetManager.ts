@@ -17,9 +17,41 @@ export class AssetManager {
   async cacheStaticAssets() {
     const staticCache = await caches.open(STATIC_CACHE_NAME);
 
-    const manifest = ['/', '/index.html', '/vite.svg'];
+    const appShell = ['/', '/index.html', '/vite.svg'];
+    await staticCache.addAll(appShell);
 
-    await staticCache.addAll(manifest);
+    await this.precacheBuildAssets(staticCache);
+  }
+
+  private async precacheBuildAssets(cache: Cache) {
+    try {
+      const manifestResponse = await fetch('/vite-manifest.json');
+
+      if (!manifestResponse.ok) return;
+
+      const manifest = await manifestResponse.json();
+      const assetUrls = Object.values(manifest).flatMap((entry: any) => {
+        const urls: string[] = [];
+
+        /**
+         * Case 1: `file` contains the path to the asset file under the dist folder.
+         * An asset file could be one of: [js, ts, tsx, css, html, ...]
+         */
+        urls.push(`/${entry.file}`);
+
+        /**
+         * Case 2: `css`, if exists, contains the path to the css file under the dist folder.
+         */
+        if (entry.css) urls.push(...entry.css.map((css: string) => `/${css}`));
+
+        return urls;
+      });
+
+      const uniqueUrls = [...new Set(assetUrls)];
+      await cache.addAll(uniqueUrls);
+    } catch {
+      // Manifest not available (e.g. in development) — skip pre-caching
+    }
   }
 
   async cleanUpOldCaches() {
