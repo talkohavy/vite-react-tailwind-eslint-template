@@ -1,10 +1,11 @@
-import { useState } from 'react';
 import clsx from 'clsx';
+import { LS_KEY_IS_SIDEBAR_OPEN } from '../../../common/constants';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import DownArrow from '../../svgs/DownArrow';
 import SideBarLinkList from './SideBarLinkList';
 
 export default function Sidebar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage(LS_KEY_IS_SIDEBAR_OPEN, false);
 
   return (
     <nav
