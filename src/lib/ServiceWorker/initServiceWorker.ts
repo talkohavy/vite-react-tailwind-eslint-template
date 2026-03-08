@@ -2,7 +2,7 @@ import { API_GATEWAY_URL } from '@src/common/constants/apiUrls';
 import { dbName, tables } from '@src/common/constants/indexedDB';
 import { initHttpClient } from '@src/lib/HttpClient';
 import { initIndexedDB } from '@src/lib/IndexedDB';
-import { AssetManager } from './logic/AssetManager';
+import { AssetManager, type AssetManagerOptions } from './logic/AssetManager';
 import { syncAllRequests } from './logic/utils/syncAllRequests';
 import { MyServiceWorker } from './ServiceWorker';
 
@@ -11,7 +11,12 @@ initServiceWorker();
 function initServiceWorker() {
   const version = 1;
 
-  const assetManager = new AssetManager();
+  const assetManagerOptions: AssetManagerOptions = {
+    cacheIgnoreList: ['@fs', '@react-refresh', '@vite'],
+    cacheLimit: 50,
+  };
+
+  const assetManager = new AssetManager(assetManagerOptions);
   initHttpClient(API_GATEWAY_URL);
   const indexedDBInitPromise = initIndexedDB({ dbName, tables, version });
 

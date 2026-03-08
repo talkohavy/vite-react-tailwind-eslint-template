@@ -1,7 +1,18 @@
 import { DYNAMIC_CACHE_NAME, STATIC_CACHE_NAME } from '@src/common/constants/cacheNames';
 
+export interface AssetManagerOptions {
+  cacheIgnoreList: string[];
+  cacheLimit: number;
+}
+
 export class AssetManager {
-  cacheLimit = 50;
+  private readonly cacheIgnoreList: string[];
+  private readonly cacheLimit: number;
+
+  constructor(options = {} as AssetManagerOptions) {
+    this.cacheIgnoreList = options.cacheIgnoreList ?? [];
+    this.cacheLimit = options.cacheLimit ?? 50;
+  }
 
   async cacheStaticAssets() {
     const staticCache = await caches.open(STATIC_CACHE_NAME);
@@ -26,14 +37,26 @@ export class AssetManager {
     return Promise.all(promiseArr);
   }
 
+  private shouldBeCached(url: string): boolean {
+    return !this.cacheIgnoreList.some((ignoreUrl) => url.includes(ignoreUrl));
+  }
+
   /**
    * @description
    * Fast, but not always reliable. If the network is slow, it may return a cached response instead of the latest one.
    * This is useful for assets that don't change often, like images or fonts.
    */
   async cacheWithNetworkFallbackStrategy(event: any) {
+    const eventRequestUrl = event.request.url;
+    const shouldBeCached = this.shouldBeCached(eventRequestUrl);
+
     try {
-      const cacheHit = await caches.match(event.request.url);
+      if (!shouldBeCached) {
+        const response = await fetch(event.request);
+        return response;
+      }
+
+      const cacheHit = await caches.match(eventRequestUrl);
 
       if (cacheHit) return cacheHit;
 
