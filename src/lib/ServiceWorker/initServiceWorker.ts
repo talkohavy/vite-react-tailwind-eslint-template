@@ -12,8 +12,8 @@ function initServiceWorker() {
   const version = 1;
 
   const assetManagerOptions: AssetManagerOptions = {
-    cacheIgnoreList: ['@fs', '@react-refresh', '@vite'],
-    cacheLimit: 50,
+    cacheIgnoreList: ['@fs', '@react-refresh', '@vite', 'chrome-extension://'],
+    cacheLimit: 2000,
   };
 
   const assetManager = new AssetManager(assetManagerOptions);
