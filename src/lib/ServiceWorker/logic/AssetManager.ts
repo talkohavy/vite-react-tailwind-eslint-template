@@ -53,6 +53,7 @@ export class AssetManager {
       await cache.addAll(uniqueUrls);
     } catch {
       // Manifest not available (e.g. in development) — skip pre-caching
+      console.warn('Failed to fetch vite-manifest.json. Web app will not work in offline mode.');
     }
   }
 

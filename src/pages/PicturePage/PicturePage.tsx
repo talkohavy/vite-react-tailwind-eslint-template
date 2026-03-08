@@ -6,7 +6,7 @@ export default function PicturePage() {
       <Picture
         srcSet={['/heart-256x256.png', '/heart-144x144.png', '/heart-128x128.png']}
         alt='heart'
-        className='flex items-center justify-between border border-black h-[200px] rounded-2xl w-[500px] overflow-hidden'
+        className='flex items-center justify-between border border-black h-50 rounded-2xl w-125 overflow-hidden'
         imgClassName='size-full object-fill'
       >
         <div>fallback</div>
