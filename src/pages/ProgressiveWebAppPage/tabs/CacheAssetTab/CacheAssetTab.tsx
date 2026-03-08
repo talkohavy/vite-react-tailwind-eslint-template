@@ -4,7 +4,7 @@ import Image from '@src/components/Image';
 import LineOfCode from '@src/components/LineOfCode';
 import Arrow from '@src/components/StoryTelling/Arrow';
 import FlowStep from '@src/components/StoryTelling/FlowStep';
-import CalloutBox from '@src/components/StoryTelling/MessageBox';
+import MessageBox from '@src/components/StoryTelling/MessageBox';
 import Scene from '@src/components/StoryTelling/Scene';
 import { useCachedAsset } from '@src/hooks/useCachedAsset/useCachedAsset';
 import { cacheAssetOnDemand } from '@src/pages/ProgressiveWebAppPage/logic/utils/cacheAssetOnDemand';
@@ -199,11 +199,11 @@ export default function CacheAssetTab() {
           variant='success'
         />
 
-        <CalloutBox title='Note'>
+        <MessageBox title='Note'>
           This updates React state and the Cache API. It does not re-run <LineOfCode text='useCachedAsset' />
           's effect. On the next page load, the hook will read from cache and show the image without hitting the
           network.
-        </CalloutBox>
+        </MessageBox>
       </Scene>
 
       {/* ── Scene 3: Refresh ──────────────────────────────── */}
@@ -234,10 +234,10 @@ export default function CacheAssetTab() {
           variant='success'
         />
 
-        <CalloutBox title='What you experience'>
+        <MessageBox title='What you experience'>
           The image shows up immediately from cache. No spinner, no network request — instant load after the first time
           you've primed the cache.
-        </CalloutBox>
+        </MessageBox>
       </Scene>
 
       {/* ── Scene 4: Offline ─────────────────────────────── */}
@@ -268,10 +268,10 @@ export default function CacheAssetTab() {
           variant='muted'
         />
 
-        <CalloutBox title='Optional check'>
+        <MessageBox title='Optional check'>
           In DevTools → Application → Cache Storage, open the on-demand cache and confirm the asset URL is listed. Then
           go offline (Network → Offline), reload, and open this tab — the image should still load.
-        </CalloutBox>
+        </MessageBox>
       </Scene>
     </div>
   );

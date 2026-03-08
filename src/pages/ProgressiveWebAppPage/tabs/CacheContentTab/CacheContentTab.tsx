@@ -3,7 +3,7 @@ import LineOfCode from '@src/components/LineOfCode';
 import Arrow from '@src/components/StoryTelling/Arrow';
 import FlowStep from '@src/components/StoryTelling/FlowStep';
 import Fork from '@src/components/StoryTelling/Fork';
-import CalloutBox from '@src/components/StoryTelling/MessageBox';
+import MessageBox from '@src/components/StoryTelling/MessageBox';
 import Scene from '@src/components/StoryTelling/Scene';
 import { useCacheContentTabLogic } from './logic/useCacheContentTabLogic';
 
@@ -183,10 +183,10 @@ export default function CacheContentTab() {
           variant='success'
         />
 
-        <CalloutBox title='Note'>
+        <MessageBox title='Note'>
           This only updates the React state and IndexedDB. It does not re-run <LineOfCode text='useCachedContent' />. On
           the next page load, the cache will be there waiting.
-        </CalloutBox>
+        </MessageBox>
       </Scene>
 
       {/* ── Scene 3: Refresh ──────────────────────────────── */}
@@ -250,10 +250,10 @@ export default function CacheContentTab() {
           }
         />
 
-        <CalloutBox title='What you experience'>
+        <MessageBox title='What you experience'>
           With cache-then-network you may briefly see an old value, then it snaps to the new one. That "flash of stale
           content" is intentional — it's the tradeoff for instant first paint.
-        </CalloutBox>
+        </MessageBox>
       </Scene>
 
       {/* ── Scene 4: Offline ─────────────────────────────── */}
@@ -357,10 +357,10 @@ export default function CacheContentTab() {
           variant='muted'
         />
 
-        <CalloutBox title='Next refresh'>
+        <MessageBox title='Next refresh'>
           The cache is now empty. If the user is still gone from the server and strategy is cache-only, you'll see
           nothing. If cache-then-network, you'll see nothing (cache miss) and the network will confirm it's gone again.
-        </CalloutBox>
+        </MessageBox>
       </Scene>
 
       {/* ── Try it ────────────────────────────────────────── */}
