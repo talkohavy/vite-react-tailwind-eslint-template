@@ -601,7 +601,7 @@ var STATIC_CACHE_NAME = "static-cache";
 var DYNAMIC_CACHE_NAME = "dynamic-cache";
 
 // src/lib/ServiceWorker/logic/AssetManager.ts
-var DEFAULT_HTML_FILE = "/index.html";
+var DEFAULT_HTML_FILE = "/vite-react-tailwind-eslint-template/index.html";
 var AssetManager = class {
   cacheIgnoreList;
   cacheLimit;
@@ -611,7 +611,7 @@ var AssetManager = class {
   }
   async cacheStaticAssets() {
     const staticCache = await caches.open(STATIC_CACHE_NAME);
-    const appShell = ["/", DEFAULT_HTML_FILE, "/vite.svg"];
+    const appShell = ["/vite-react-tailwind-eslint-template", DEFAULT_HTML_FILE, "/vite-react-tailwind-eslint-template/vite.svg"];
     await staticCache.addAll(appShell);
     await this.precacheBuildAssets(staticCache);
   }
