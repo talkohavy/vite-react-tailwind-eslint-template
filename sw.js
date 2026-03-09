@@ -622,8 +622,8 @@ var AssetManager = class {
       const manifest = await manifestResponse.json();
       const assetUrls = Object.values(manifest).flatMap((entry) => {
         const urls = [];
-        urls.push(`/${entry.file}`);
-        if (entry.css) urls.push(...entry.css.map((css) => `/${css}`));
+        urls.push(`/vite-react-tailwind-eslint-template/${entry.file}`);
+        if (entry.css) urls.push(...entry.css.map((css) => `/vite-react-tailwind-eslint-template/${css}`));
         return urls;
       });
       const uniqueUrls = [...new Set(assetUrls)];
