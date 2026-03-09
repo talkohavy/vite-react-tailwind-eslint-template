@@ -1,0 +1,3 @@
+import{P as i,w as l}from"./index.DelqeHV3.js";import{t as s}from"./bundle-mjs._MF_IAgM.js";var u=i(l()),b="block cursor-pointer rounded-md p-3",n="bg-blue-500 text-white",c="focus:rounded-lg",v="hover:rounded-lg hover:bg-blue-600",g="active:bg-blue-500 active:rounded-xl",m="disabled:opacity-50 disabled:hover:bg-blue-500 disabled:cursor-default disabled:rounded-md";function M(e){const{children:r,onClick:o,disabled:t,className:d,...a}=e;return(0,u.jsx)("button",{type:"button",onClick:o,className:s(b,n,c,v,g,m,d),disabled:t,...a,children:r})}export{M as t};
+
+//# sourceMappingURL=Button.0uQVDOlP.js.map

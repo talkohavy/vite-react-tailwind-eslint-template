@@ -1,6 +1,0 @@
-.video {
-  /* grayscale(100%) invert(1) brightness(1.2) contrast(1.4) saturate(1.2) blur(1px) hue-rotate(180deg) sepia(100%)
-    opacity(0.5) */
-  filter: opacity(1);
-  transform: rotateY(180deg); /* <--- Without this, the image is mirrored */
-}

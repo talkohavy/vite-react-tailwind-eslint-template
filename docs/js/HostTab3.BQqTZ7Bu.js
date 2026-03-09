@@ -1,3 +1,0 @@
-import{P as t,w as r}from"./index.B8AALybY.js";var e=t(r());function a(){return(0,e.jsxs)("div",{className:"p-6",children:[(0,e.jsx)("h2",{className:"text-2xl font-bold mb-4",children:"HostTab3"}),(0,e.jsx)("a",{href:"http://localhost:3004/base/iframe/host-route-3",target:"_blank",rel:"noopener",className:"text-blue-600 hover:underline hover:text-red-500",children:"http://localhost:3004/base/iframe/host-route-3"})]})}export{a as default};
-
-//# sourceMappingURL=HostTab3.BQqTZ7Bu.js.map

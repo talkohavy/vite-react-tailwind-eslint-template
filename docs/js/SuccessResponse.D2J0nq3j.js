@@ -1,3 +1,0 @@
-import{P as t,w as a}from"./index.B8AALybY.js";var e=t(a());function d(r){const{data:s}=r;return(0,e.jsxs)("div",{className:"bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl shadow-lg p-6 border border-green-200 dark:border-green-800",children:[(0,e.jsx)("h2",{className:"text-lg font-semibold text-green-900 dark:text-green-300 mb-3 flex items-center gap-2",children:"✅ Success Response"}),(0,e.jsx)("pre",{className:"max-h-150 overflow-auto bg-white dark:bg-slate-900 rounded-lg p-4 text-sm border border-green-200 dark:border-green-800",children:(0,e.jsx)("code",{className:"text-gray-800 dark:text-gray-200",children:JSON.stringify(s,null,2)})})]})}export{d as t};
-
-//# sourceMappingURL=SuccessResponse.D2J0nq3j.js.map

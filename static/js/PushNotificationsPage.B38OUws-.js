@@ -1,0 +1,3 @@
+import{P as t,j as s,w as n}from"./index.DelqeHV3.js";var r=t(s());function a(){return"Notification"in window}var o=t(n());function c(){return(0,r.useEffect)(()=>{async function e(){if(a()){console.log("props is:");const i=await Notification.requestPermission();if(console.log("Notification permission status:",i),i==="denied"){console.log("You suck!");return}i==="granted"&&new Notification("Push Notifications Enabled",{body:"You have successfully enabled push notifications."})}}e()},[]),(0,o.jsx)("div",{className:"size-full p-6 overflow-auto",children:(0,o.jsx)("h1",{children:"Hello World"})})}export{c as default};
+
+//# sourceMappingURL=PushNotificationsPage.B38OUws-.js.map

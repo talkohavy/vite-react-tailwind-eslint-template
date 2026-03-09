@@ -1,1 +1,0 @@
-{"version":3,"file":"HostTab1.BuONhPHL.js","names":[],"sources":["../../src/pages/IFramePage/tabs/HostTab1.tsx"],"sourcesContent":["export default function HostTab1() {\n  return (\n    <div>\n      <h2 className='text-2xl font-bold'>HostTab1</h2>\n    </div>\n  );\n}\n"],"mappings":"4DAAA,SAAwB,GAAW,CACjC,SACE,EAAA,KAAC,MAAA,CAAA,YACC,EAAA,KAAC,KAAA,CAAG,UAAU,8BAAqB,YAAa,CAAA"}

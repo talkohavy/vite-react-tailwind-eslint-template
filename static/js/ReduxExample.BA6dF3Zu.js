@@ -1,0 +1,3 @@
+import{O as d,P as l,k as t,n as c,w as n}from"./index.DelqeHV3.js";const u=e=>e.user.data,i=e=>e.user.data?.id;var s=l(n()),x=0;function m(){const e=t(u),r=t(i),a=d(),o=()=>{a(c({user:{id:x},isLogged:!0}))};return console.log("i rendered!"),console.log("userDataId",r),console.log("userData is:",e),(0,s.jsxs)("div",{className:"flex size-full flex-col items-start justify-start gap-6 p-6 dark:text-white",children:[(0,s.jsx)("h1",{className:"self-center text-3xl font-bold",children:"Redux Advanced Middleware Example"}),(0,s.jsx)("button",{type:"button",onClick:o,className:"self-center rounded-lg border border-black bg-red-500 px-3 py-2 hover:bg-red-600",children:"Click"})]})}export{m as default};
+
+//# sourceMappingURL=ReduxExample.BA6dF3Zu.js.map

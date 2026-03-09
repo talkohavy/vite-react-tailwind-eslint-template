@@ -1,0 +1,3 @@
+const e={Overview:"",Sender:"sender",Receiver:"receiver"},n=[{value:e.Overview,label:"Overview"},{value:e.Sender,label:"Sender"},{value:e.Receiver,label:"Receiver"}],r={Idle:"idle",Connecting:"connecting",Open:"open",Closed:"closed"},a={Sender:"sender",Receiver:"receiver",CreateOffer:"createOffer",CreateAnswer:"createAnswer",IceCandidate:"iceCandidate"};export{n as i,e as n,a as r,r as t};
+
+//# sourceMappingURL=constants.CoLLq1_8.js.map
