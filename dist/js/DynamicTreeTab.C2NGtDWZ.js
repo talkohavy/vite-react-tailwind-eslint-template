@@ -1,0 +1,18 @@
+import{P as d,j as n,w as o}from"./index.B8AALybY.js";import"./RightArrow.sCMnm3RK.js";import{t as l}from"./constants.Bs1BpDRO.js";import{t as i}from"./TreeView.DcD5AAAq.js";import{t as c}from"./mockAsyncLoader.BWhnc9Yh.js";var x=d(n()),e=d(o());function m(r){const{selectedNode:a}=r,t=a?.icon?a.icon:()=>null;return(0,e.jsxs)("div",{className:"bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700",children:[(0,e.jsx)("h3",{className:"text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4",children:"Selected Node Info"}),a?(0,e.jsxs)("div",{className:"space-y-3",children:[(0,e.jsxs)("div",{children:[(0,e.jsx)("span",{className:"text-sm font-medium text-gray-500 dark:text-gray-400",children:"Name:"}),(0,e.jsx)("p",{className:"text-gray-900 dark:text-gray-100",children:a.name})]}),(0,e.jsxs)("div",{children:[(0,e.jsx)("span",{className:"text-sm font-medium text-gray-500 dark:text-gray-400",children:"Type:"}),(0,e.jsx)("p",{className:"text-gray-900 dark:text-gray-100 capitalize",children:a.type})]}),(0,e.jsxs)("div",{children:[(0,e.jsx)("span",{className:"text-sm font-medium text-gray-500 dark:text-gray-400",children:"ID:"}),(0,e.jsx)("p",{className:"text-gray-900 dark:text-gray-100 font-mono text-sm",children:a.id})]}),a.icon&&(0,e.jsxs)("div",{children:[(0,e.jsx)("span",{className:"text-sm font-medium text-gray-500 dark:text-gray-400",children:"Icon:"}),(0,e.jsx)("p",{className:"text-gray-900 dark:text-gray-100",children:(0,e.jsx)(t,{})})]})]}):(0,e.jsx)("p",{className:"text-gray-500 dark:text-gray-400",children:"Click on a node to see its details"})]})}function N(){const[r,a]=(0,x.useState)(null);function t(s){a(s),console.log("Selected node:",s)}return(0,e.jsxs)("div",{className:"p-6",children:[(0,e.jsxs)("div",{className:"mb-6",children:[(0,e.jsx)("h2",{className:"text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2",children:"Dynamic Configuration"}),(0,e.jsx)("p",{className:"text-gray-600 dark:text-gray-400",children:"Tree nodes are loaded asynchronously when expanded. Perfect for large datasets, remote file systems, or any scenario where you want to load data on-demand."})]}),(0,e.jsxs)("div",{className:"grid grid-cols-1 lg:grid-cols-2 gap-6",children:[(0,e.jsxs)("div",{className:"bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700",children:[(0,e.jsx)("h3",{className:"text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4",children:"Interactive Demo"}),(0,e.jsx)("p",{className:"text-sm text-gray-600 dark:text-gray-400 mb-4",children:"Try expanding folders to see loading states and async data loading in action!"}),(0,e.jsx)(i,{initialState:l,onNodeClick:t,onNodeExpand:c,shouldExpandOnClick:!0,className:"max-h-96 overflow-auto"})]}),(0,e.jsx)(m,{selectedNode:r})]}),(0,e.jsx)("div",{className:"mt-8",children:(0,e.jsxs)("div",{className:"bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700",children:[(0,e.jsx)("h4",{className:"text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4",children:"Code Example"}),(0,e.jsx)("pre",{className:"text-sm overflow-x-auto bg-gray-50 dark:bg-gray-900 p-4 rounded",children:(0,e.jsx)("code",{className:"text-gray-800 dark:text-gray-200",children:`const dynamicData = [
+  { id: 'root', name: 'My Project', type: 'folder' },
+  { id: 'config', name: 'config.json', type: 'file' },
+];
+
+const loadChildren = async (node) => {
+  // Simulate API call
+  const response = await fetch(\`/api/files/\${node.id}\`);
+  return response.json();
+};
+
+<TreeView
+  initialState={dynamicData}
+  onNodeExpand={loadChildren}
+  onNodeClick={(node) => console.log('Selected:', node)}
+/>`})})]})})]})}export{N as default};
+
+//# sourceMappingURL=DynamicTreeTab.C2NGtDWZ.js.map

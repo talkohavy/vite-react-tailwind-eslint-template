@@ -1,0 +1,3 @@
+import{P as n,w as h}from"./index.B8AALybY.js";var e=n(h());function x(o){const{value:i,setValue:r,options:d,ChildItem:l,className:p}=o;return(0,e.jsx)("div",{className:p,children:d.map(({value:s,label:t,disabled:u})=>{const a=i===s,c=()=>r(s);return(0,e.jsxs)("div",{className:"group/radioWrapper relative",children:[(0,e.jsx)("input",{type:"radio",value:s,onChange:c,checked:a,disabled:u,className:"z-10 opacity-0 size-full absolute inset-0 cursor-pointer disabled:cursor-default rounded-full group-has-[input:checked]/radioWrapper:cursor-default"}),(0,e.jsx)(l,{value:s,label:t,isChecked:a},s)]},s)})})}export{x as t};
+
+//# sourceMappingURL=RadioGroup.Dc1myB8m.js.map

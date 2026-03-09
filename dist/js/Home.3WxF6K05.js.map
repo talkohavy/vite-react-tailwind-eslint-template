@@ -1,0 +1,1 @@
+{"version":3,"file":"Home.3WxF6K05.js","names":[],"sources":["../../src/pages/Home/Home.tsx"],"sourcesContent":["export default function HomePage() {\n  return <div className='size-full flex flex-col gap-6 overflow-auto'>Home</div>;\n}\n"],"mappings":"4DAAA,SAAwB,GAAW,CACjC,SAAO,EAAA,KAAC,MAAA,CAAI,UAAU,uDAA8C"}

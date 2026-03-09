@@ -1,0 +1,3 @@
+(function(){const r={Log:"log",Sum:"sum",Error:"error"};addEventListener("message",t=>{const{type:e,payload:a}=t.data;try{if(e===r.Sum){const o=s();return postMessage({type:r.Sum,payload:o})}if(e===r.Log)return postMessage({type:r.Log,payload:{message:`${a.message} in worker`}});throw new Error(`Unknown action type: ${e}`)}catch(o){postMessage({type:r.Error,payload:o.message})}});function s(){let t=0;for(let e=0;e<1e10;e++)t+=e;return t}})();
+
+//# sourceMappingURL=app.worker-DQoR3voE.js.map

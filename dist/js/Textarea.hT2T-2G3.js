@@ -1,0 +1,3 @@
+import{P as z,w as d,x as m}from"./index.B8AALybY.js";const v="AZvfxdi",w="OYIOocq",f="OYIOocq",h="E-sWwek",p="E-sWwek",O="swgQLvx",g="swgQLvx",j="_-05A61G",q="_-05A61G";var e={textarea:v,resize_none:w,resizeNone:f,resize_vertical:h,resizeVertical:p,resize_horizontal:O,resizeHorizontal:g,resize_both:j,resizeBoth:q},A=z(d());function I(s){const{value:t,setValue:a,placeholder:r="",disabled:o,rows:n=4,cols:i,resize:c="none",autoFocus:l,className:_,testId:x="",...u}=s;return(0,A.jsx)("textarea",{value:t,onChange:a,placeholder:r,disabled:o,rows:n,cols:i,autoFocus:l,className:m(e.textarea,e[`resize_${c}`],_),"data-test-id":`${x}Textarea`,...u})}export{I as t};
+
+//# sourceMappingURL=Textarea.hT2T-2G3.js.map
