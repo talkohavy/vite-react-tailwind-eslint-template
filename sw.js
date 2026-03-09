@@ -617,7 +617,7 @@ var AssetManager = class {
   }
   async precacheBuildAssets(cache) {
     try {
-      const manifestResponse = await fetch("/vite-manifest.json");
+      const manifestResponse = await fetch("/vite-react-tailwind-eslint-template/vite-manifest.json");
       if (!manifestResponse.ok) return;
       const manifest = await manifestResponse.json();
       const assetUrls = Object.values(manifest).flatMap((entry) => {
