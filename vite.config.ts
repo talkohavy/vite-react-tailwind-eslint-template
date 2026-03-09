@@ -69,29 +69,29 @@ export default defineConfig(({ mode }) => {
       cssMinify: 'esbuild', // <--- Options are: 'esbuild' (default) | 'lightningcss'.
       rollupOptions: {
         output: {
-          entryFileNames: 'js/[name].[hash].js', // <--- JS entry files
-          chunkFileNames: 'js/[name].[hash].js', // <--- JS chunk files
+          entryFileNames: 'static/js/[name].[hash].js', // <--- JS entry files
+          chunkFileNames: 'static/js/[name].[hash].js', // <--- JS chunk files
           assetFileNames: (assetInfo) => {
             // Organize assets by file type
             const info = assetInfo.name || '';
 
             // CSS files
             if (/\.css$/i.test(info)) {
-              return 'css/[name].[hash][extname]';
+              return 'static/css/[name].[hash][extname]';
             }
 
             // Image files
             if (/\.(png|jpe?g|gif|svg|webp|avif|ico|bmp|tiff?)$/i.test(info)) {
-              return 'images/[name].[hash][extname]';
+              return 'static/images/[name].[hash][extname]';
             }
 
             // Font files
             if (/\.(woff2?|eot|ttf|otf)$/i.test(info)) {
-              return 'fonts/[name].[hash][extname]';
+              return 'static/fonts/[name].[hash][extname]';
             }
 
             // Other assets
-            return 'assets/[name].[hash][extname]';
+            return 'static/assets/[name].[hash][extname]';
           },
         },
       },
