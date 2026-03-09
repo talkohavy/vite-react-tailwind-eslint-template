@@ -36,6 +36,20 @@
   "scope": ".",
   "screenshots": [
     {
+      "src": "/vite-demo-650x692.png",
+      "sizes": "650x692",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Site Screenshot 1"
+    },
+    {
+      "src": "/vite-demo-650x692.png",
+      "sizes": "650x692",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Site Screenshot 2"
+    },
+    {
       "src": "/screenshot-640x549.png",
       "sizes": "640x549",
       "type": "image/png",
