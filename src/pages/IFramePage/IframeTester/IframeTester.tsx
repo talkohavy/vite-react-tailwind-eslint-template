@@ -151,6 +151,7 @@ export default function IframeTester(props: IframeTestComponentProps) {
         src={IFRAME_ORIGIN}
         title='Iframe Test'
         onLoad={onIframeLoad}
+        allow='clipboard-write; clipboard-read'
         // sandbox='allow-same-origin allow-forms allow-scripts allow-top-navigation-by-user-activation'
         className='h-full border-4 border-red-500 rounded-2xl'
       />
