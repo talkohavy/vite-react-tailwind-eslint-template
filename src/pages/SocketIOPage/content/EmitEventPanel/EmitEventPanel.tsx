@@ -15,7 +15,7 @@ type EmitEventPanelProps = {
 export default function EmitEventPanel(props: EmitEventPanelProps) {
   const { eventName, setEventName, isConnected, handleEmit, payloadText, setPayloadText } = props;
 
-  const isEmitDisabled = !isConnected || !eventName.trim();
+  const isEmitDisabled = !(isConnected && eventName.trim() && payloadText.trim());
 
   return (
     <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
