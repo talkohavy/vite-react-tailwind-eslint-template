@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { WS_SERVICE_URL } from '../../../common/constants';
 import { ConnectionState } from '../../../lib/SocketIOClient/logic/constants';
 import { useSocketIO } from '../../../lib/SocketIOClient/useSocketIO';
+import { useStreaming } from './hooks/useStreaming';
 
 export function useSocketIOPageLogic() {
   const [url, setUrl] = useState(WS_SERVICE_URL);
@@ -31,7 +32,11 @@ export function useSocketIOPageLogic() {
     emit(trimmedEventName, data);
   };
 
+  const [topic, setTopic] = useState('');
+  const { startStreamingTo, stopStreaming, isStreaming } = useStreaming({ emit });
+
   return {
+    // Connection:
     url,
     setUrl,
     isConnected,
@@ -40,11 +45,19 @@ export function useSocketIOPageLogic() {
     disconnect,
     connectionState,
     connectionError,
+    // Emit Event:
     eventName,
     setEventName,
     handleEmit,
     payloadText,
     setPayloadText,
+    // Data Streaming:
+    topic,
+    setTopic,
+    startStreamingTo,
+    stopStreaming,
+    isStreaming,
+    // Event Log:
     clearLog,
     eventLog,
   };

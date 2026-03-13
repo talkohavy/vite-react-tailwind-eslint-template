@@ -2,6 +2,7 @@ import ConnectionPanel from './content/ConnectionPanel';
 import EmitEventPanel from './content/EmitEventPanel';
 import EventLogPanel from './content/EventLogPanel';
 import Examples from './content/Examples';
+import StreamEventsPanel from './content/StreamEventsPanel';
 import { useSocketIOPageLogic } from './logic/useSocketIOPageLogic';
 
 export default function SocketIOPage() {
@@ -21,6 +22,12 @@ export default function SocketIOPage() {
     setPayloadText,
     clearLog,
     eventLog,
+    // Data Streaming:
+    topic,
+    setTopic,
+    startStreamingTo,
+    stopStreaming,
+    isStreaming,
   } = useSocketIOPageLogic();
 
   return (
@@ -52,6 +59,15 @@ export default function SocketIOPage() {
           handleEmit={handleEmit}
           payloadText={payloadText}
           setPayloadText={setPayloadText}
+        />
+
+        <StreamEventsPanel
+          topic={topic}
+          setTopic={setTopic}
+          isConnected={isConnected}
+          startStreamingTo={startStreamingTo}
+          stopStreaming={stopStreaming}
+          isStreaming={isStreaming}
         />
 
         <EventLogPanel clearLog={clearLog} eventLog={eventLog} isConnected={isConnected} />
