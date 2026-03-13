@@ -1,3 +1,4 @@
+import { SocketIOTopics } from '@src/common/constants';
 import CodeBlock from '@src/components/CodeBlock';
 
 export default function Examples() {
@@ -9,14 +10,14 @@ export default function Examples() {
         <CodeBlock
           language='json'
           code={`{
-  "topic": "topics:events-stream"
+  "topic": "${SocketIOTopics.EventStream}"
 }`}
         />
       </div>
 
       <div className='flex flex-col gap-1'>
         <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>
-          Example 2: send message to a topic ("presence" or "topics:events-stream")
+          Example 2: send message to a topic ("{SocketIOTopics.Presence}" or "{SocketIOTopics.EventStream}")
         </div>
 
         <CodeBlock
