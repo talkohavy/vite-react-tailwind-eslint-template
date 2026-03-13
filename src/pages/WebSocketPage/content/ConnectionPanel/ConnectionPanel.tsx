@@ -1,3 +1,4 @@
+import { WS_SERVICE_URL } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
 import RetryCounter from '../RetryCounter';
@@ -48,7 +49,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
           <Input
             initialValue={url}
             onChange={setUrl}
-            placeholder='ws://localhost:8000'
+            placeholder={WS_SERVICE_URL}
             disabled={isUrlInputDisabled}
             className='block w-full dark:bg-gray-800 dark:border-gray-600'
           />

@@ -1,7 +1,8 @@
+import { WS_SERVICE_URL } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
 import StatusBadge from '../StatusBadge';
-import type { ConnectionStateValues } from '../../../../lib/SocketIOClient/logic/constants';
+import type { ConnectionStateValues } from '@src/lib/SocketIOClient/logic/constants';
 
 type ConnectionPanelProps = {
   url: string;
@@ -33,7 +34,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
           <Input
             initialValue={url}
             onChange={setUrl}
-            placeholder='http://localhost:8000'
+            placeholder={WS_SERVICE_URL}
             disabled={isConnecting}
             className='block w-full dark:bg-gray-800 dark:border-gray-600'
           />
