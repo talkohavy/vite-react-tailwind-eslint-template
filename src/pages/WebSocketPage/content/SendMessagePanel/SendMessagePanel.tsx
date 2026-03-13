@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import Button from '@src/components/controls/Button';
 import Textarea from '@src/components/controls/Textarea';
-import CodeBlock from '../../../../components/CodeBlock';
 import styles from './SendMessagePanel.module.scss';
 
 type SendMessagePanelProps = {
@@ -18,7 +17,13 @@ export default function SendMessagePanel(props: SendMessagePanelProps) {
 
   return (
     <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
-      <h2 className='text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400'>Send message</h2>
+      <h2 className='text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400'>
+        Send "message" event
+      </h2>
+
+      <p className='text-xs font-semibold text-gray-500 dark:text-gray-400'>
+        (the only supported event in websocket protocol for incoming data is "message")
+      </p>
 
       <div className='flex flex-col gap-3'>
         <Textarea
@@ -32,37 +37,6 @@ export default function SendMessagePanel(props: SendMessagePanelProps) {
             styles.sendMessageTextarea,
             'block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800',
           )}
-        />
-
-        <div className='flex flex-col gap-1'>
-          <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>Example 1: Register to a topic</div>
-
-          <CodeBlock
-            language='json'
-            code={`{
-  "event": "register",
-  "payload": {
-    "topic": "data"
-  }
-}`}
-          />
-        </div>
-
-        <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>
-          Example 2: send message to a topic ("presence" or "topics:events-stream")
-        </div>
-
-        <CodeBlock
-          language='json'
-          code={`{
-  "event": "send",
-  "payload": {
-    "topic": "presence",
-    "data": {
-      "message": "Hello, world!"
-    }
-  }
-}`}
         />
 
         <Button onClick={send} disabled={isSendDisabled} className='w-full sm:w-auto'>

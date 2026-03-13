@@ -1,4 +1,5 @@
 import ConnectionPanel from './content/ConnectionPanel';
+import Examples from './content/Examples';
 import MessageLogPanel from './content/MessageLogPanel';
 import SendMessagePanel from './content/SendMessagePanel';
 import { useWebSocketPageLogic } from './logic/useWebSocketPageLogic';
@@ -55,6 +56,8 @@ export default function WebSocketPage() {
         />
 
         <MessageLogPanel clearLog={clearLog} log={log} isConnected={isConnected} />
+
+        <Examples />
       </div>
     </div>
   );
