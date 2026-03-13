@@ -1,3 +1,4 @@
+import { SocketIOEvents, SocketIOTopics } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
 import Textarea from '@src/components/controls/Textarea';
@@ -34,7 +35,7 @@ export default function EmitEventPanel(props: EmitEventPanelProps) {
           <Input
             initialValue={eventName}
             onChange={setEventName}
-            placeholder='e.g. register-to-topic'
+            placeholder={`e.g. ${SocketIOEvents.RegisterToTopic}`}
             disabled={!isConnected}
             className='block w-full dark:bg-gray-800 dark:border-gray-600'
           />
@@ -56,7 +57,7 @@ export default function EmitEventPanel(props: EmitEventPanelProps) {
           <Textarea
             value={payloadText}
             setValue={(e) => setPayloadText(e.target.value)}
-            placeholder='{"topic": "topics:events-stream"}'
+            placeholder={`{"topic": "${SocketIOTopics.EventStream}"}`}
             rows={3}
             resize='vertical'
             disabled={!isConnected}
