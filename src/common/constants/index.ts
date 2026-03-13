@@ -9,3 +9,4 @@ export * from './serviceWorker';
 export * from './statusCodes';
 export * from './cacheNames';
 export * from './postMessageEvents';
+export * from './socketIO';
