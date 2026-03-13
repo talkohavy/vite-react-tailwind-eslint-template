@@ -1,6 +1,7 @@
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
 import Textarea from '@src/components/controls/Textarea';
+import CodeBlock from '../../../../components/CodeBlock';
 
 type EmitEventPanelProps = {
   eventName: string;
@@ -45,20 +46,49 @@ export default function EmitEventPanel(props: EmitEventPanelProps) {
         </div>
       </div>
 
-      <div>
-        <label htmlFor='socket-payload' className='mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300'>
-          Payload (optional JSON)
-        </label>
+      <div className='flex flex-col gap-2'>
+        <div>
+          <label htmlFor='socket-payload' className='mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            Payload (optional JSON)
+          </label>
 
-        <Textarea
-          value={payloadText}
-          setValue={(e) => setPayloadText(e.target.value)}
-          placeholder='{"topic": "topics:events-stream"}'
-          rows={3}
-          resize='vertical'
-          disabled={!isConnected}
-          className='block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800'
-        />
+          <Textarea
+            value={payloadText}
+            setValue={(e) => setPayloadText(e.target.value)}
+            placeholder='{"topic": "topics:events-stream"}'
+            rows={3}
+            resize='vertical'
+            disabled={!isConnected}
+            className='block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800'
+          />
+        </div>
+
+        <div className='flex flex-col gap-1'>
+          <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>Example 1: Register to a topic</div>
+
+          <CodeBlock
+            language='json'
+            code={`{
+  "topic": "topics:events-stream"
+}`}
+          />
+        </div>
+
+        <div className='flex flex-col gap-1'>
+          <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>
+            Example 2: send message to a topic ("presence" or "topics:events-stream")
+          </div>
+
+          <CodeBlock
+            language='json'
+            code={`{
+  "topic": "presence",
+  "data": {
+    "message": "Hello, world!"
+  }
+}`}
+          />
+        </div>
       </div>
     </section>
   );
