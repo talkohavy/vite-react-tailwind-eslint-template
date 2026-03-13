@@ -1,7 +1,6 @@
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
 import Textarea from '@src/components/controls/Textarea';
-import CodeBlock from '../../../../components/CodeBlock';
 
 type EmitEventPanelProps = {
   eventName: string;
@@ -19,7 +18,9 @@ export default function EmitEventPanel(props: EmitEventPanelProps) {
 
   return (
     <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
-      <h2 className='text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400'>Emit event</h2>
+      <h2 className='text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400'>
+        Case 1: Emit single event
+      </h2>
 
       <div className='grid gap-3 sm:grid-cols-[1fr_auto]'>
         <div>
@@ -60,33 +61,6 @@ export default function EmitEventPanel(props: EmitEventPanelProps) {
             resize='vertical'
             disabled={!isConnected}
             className='block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800'
-          />
-        </div>
-
-        <div className='flex flex-col gap-1'>
-          <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>Example 1: Register to a topic</div>
-
-          <CodeBlock
-            language='json'
-            code={`{
-  "topic": "topics:events-stream"
-}`}
-          />
-        </div>
-
-        <div className='flex flex-col gap-1'>
-          <div className='text-sm font-medium text-gray-700 dark:text-gray-500'>
-            Example 2: send message to a topic ("presence" or "topics:events-stream")
-          </div>
-
-          <CodeBlock
-            language='json'
-            code={`{
-  "topic": "presence",
-  "data": {
-    "message": "Hello, world!"
-  }
-}`}
           />
         </div>
       </div>

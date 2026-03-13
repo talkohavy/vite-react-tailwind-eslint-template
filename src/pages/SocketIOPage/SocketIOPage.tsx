@@ -1,6 +1,7 @@
 import ConnectionPanel from './content/ConnectionPanel';
 import EmitEventPanel from './content/EmitEventPanel';
 import EventLogPanel from './content/EventLogPanel';
+import Examples from './content/Examples';
 import { useSocketIOPageLogic } from './logic/useSocketIOPageLogic';
 
 export default function SocketIOPage() {
@@ -54,6 +55,8 @@ export default function SocketIOPage() {
         />
 
         <EventLogPanel clearLog={clearLog} eventLog={eventLog} isConnected={isConnected} />
+
+        <Examples />
       </div>
     </div>
   );
