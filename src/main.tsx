@@ -59,7 +59,9 @@ const rootElement = document.getElementById('root')!;
 const root = createRoot(rootElement);
 root.render(<Client />);
 
-registerServiceWorker();
+if (import.meta.env.VITE_SHOULD_REGISTER_SERVICE_WORKER === 'true') {
+  registerServiceWorker();
+}
 
 window.addEventListener('error', ({ error }) => ReactErrorOverlay(error));
 window.addEventListener('unhandledrejection', ({ reason }) => ReactErrorOverlay(reason));
