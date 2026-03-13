@@ -59,7 +59,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-basic-ssl": "^2.1.4",
-    "@vitejs/plugin-react-swc": "^4.2.3",
+    "@vitejs/plugin-react": "^6.0.0",
     "esbuild": "^0.27.3",
     "eslint": "^10.0.0",
     "eslint-plugin-import": "^2.32.0",
