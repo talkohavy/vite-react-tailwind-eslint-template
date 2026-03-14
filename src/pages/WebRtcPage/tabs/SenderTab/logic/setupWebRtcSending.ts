@@ -53,8 +53,7 @@ export function setupWebRtcSending(props: SetupWebRtcSendingProps): RTCPeerConne
   let remoteDescriptionSet = false;
 
   socket.onmessage = async (event: MessageEvent<string>) => {
-    const rawMessage = JSON.parse(event.data);
-    const payload = rawMessage.payload;
+    const payload = JSON.parse(event.data);
 
     if (payload.type === WebRtcSignalTypes.CreateAnswer && payload.sdp) {
       await peerConnection.setRemoteDescription(payload.sdp);

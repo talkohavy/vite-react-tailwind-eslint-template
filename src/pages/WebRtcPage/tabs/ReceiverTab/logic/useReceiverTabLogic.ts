@@ -66,8 +66,7 @@ export function useReceiverTabLogic() {
     };
 
     socket.onmessage = async (event: MessageEvent<string>) => {
-      const rawMessage = JSON.parse(event.data);
-      const payload = rawMessage.payload;
+      const payload = JSON.parse(event.data);
 
       if (payload.type === WebRtcSignalTypes.CreateOffer && payload.sdp) {
         peerConnectionRef.current?.close();
