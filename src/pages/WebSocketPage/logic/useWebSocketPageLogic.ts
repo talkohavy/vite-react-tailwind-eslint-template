@@ -19,14 +19,14 @@ export function useWebSocketPageLogic() {
   const [log, setLog] = useState<MessageLogEntry[]>([]);
   const [retryCount, setRetryCount] = useState(0);
 
-  const clientRef = useRef<WebSocketClient | null>(null);
+  const wsClientRef = useRef<WebSocketClient | null>(null);
 
   const addLogEntry = useCallback((direction: MessageStateValues, data: string) => {
     setLog((prev) => [...prev, { id: nextId(), time: new Date(), direction, data }]);
   }, []);
 
   const disconnect = useCallback(() => {
-    const wsClient = clientRef.current;
+    const wsClient = wsClientRef.current;
 
     const ws = wsClient?.getSocket();
 
@@ -37,7 +37,7 @@ export function useWebSocketPageLogic() {
     }
 
     wsClient.disconnect();
-    clientRef.current = null;
+    wsClientRef.current = null;
   }, []);
 
   const handleOpen = useCallback(() => {
@@ -50,7 +50,7 @@ export function useWebSocketPageLogic() {
     if (event.shouldRetry) {
       setConnectionState(WsConnectionState.Reconnecting);
     } else {
-      clientRef.current = null;
+      wsClientRef.current = null;
       setConnectionState(WsConnectionState.Closed);
       setRetryCount(0);
     }
@@ -109,13 +109,13 @@ export function useWebSocketPageLogic() {
         return;
       }
 
-      clientRef.current = wsClient;
+      wsClientRef.current = wsClient;
     },
     [disconnect, handleOpen, handleClose, handleError, handleMessage, handleRetry],
   );
 
   const send = useCallback(() => {
-    const wsClient = clientRef.current;
+    const wsClient = wsClientRef.current;
 
     if (!wsClient?.isConnected()) return;
 
@@ -132,8 +132,8 @@ export function useWebSocketPageLogic() {
 
   useEffect(() => {
     return () => {
-      clientRef.current?.disconnect();
-      clientRef.current = null;
+      wsClientRef.current?.disconnect();
+      wsClientRef.current = null;
     };
   }, []);
 
