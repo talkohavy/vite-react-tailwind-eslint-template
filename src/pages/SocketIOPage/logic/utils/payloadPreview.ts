@@ -1,9 +1,17 @@
-export function payloadPreview(payload: unknown): string {
-  if (payload === undefined || payload === null) return '—';
+import { parseJson } from '@src/common/utils/parseJson';
 
-  try {
-    return typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
-  } catch {
-    return String(payload);
+export function payloadPreview(payload: unknown): string {
+  if (payload == null) return '—';
+
+  let updatedPayload: any = '';
+
+  if (typeof payload === 'string') {
+    updatedPayload = parseJson(payload);
   }
+
+  if (updatedPayload === null) return '-';
+
+  const prettyJson = JSON.stringify(updatedPayload, null, 2);
+
+  return prettyJson;
 }
