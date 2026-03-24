@@ -51,7 +51,7 @@ export class WebSocketClient {
    * so that stale async events from superseded sockets are ignored.
    */
   private createConnection(): void {
-    this.connectionGeneration = (this.connectionGeneration + 1) % 100;
+    this.connectionGeneration = (this.connectionGeneration + 1) % 10000;
     const generation = this.connectionGeneration;
     const ws = new WebSocket(this.url);
     this.ws = ws;
