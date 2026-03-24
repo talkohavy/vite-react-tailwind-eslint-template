@@ -3,6 +3,7 @@ import type { WebSocketClientOptions, WebSocketCloseEvent, WebSocketRetryOptions
 
 export class WebSocketClient {
   private ws: WebSocket | null = null;
+  private connectionGeneration = 0;
   private intentionalDisconnect = false;
   private retryCount = 0;
   private retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -45,13 +46,48 @@ export class WebSocketClient {
     this.createConnection();
   }
 
+  /**
+   * createConnection uses connectionGeneration (incremented mod 100),
+   * so that stale async events from superseded sockets are ignored.
+   */
   private createConnection(): void {
-    this.ws = new WebSocket(this.url);
+    this.connectionGeneration = (this.connectionGeneration + 1) % 100;
+    const generation = this.connectionGeneration;
+    const ws = new WebSocket(this.url);
+    this.ws = ws;
 
-    this.ws.onopen = this.onOpen ?? null;
-    this.ws.onclose = this.handleWsClose.bind(this);
-    this.ws.onerror = this.onError ?? null;
-    this.ws.onmessage = this.onMessage ?? null;
+    ws.onopen = () => {
+      if (generation !== this.connectionGeneration) {
+        console.log('ignoring onopen of superseded socket');
+        return;
+      }
+
+      this.onOpen?.();
+    };
+    ws.onclose = () => {
+      if (generation !== this.connectionGeneration) {
+        console.log('ignoring onclose of superseded socket');
+        return;
+      }
+
+      this.handleWsClose();
+    };
+    ws.onerror = (event) => {
+      if (generation !== this.connectionGeneration) {
+        console.log('ignoring onerror of superseded socket');
+        return;
+      }
+
+      this.onError?.(event);
+    };
+    ws.onmessage = (event) => {
+      if (generation !== this.connectionGeneration) {
+        console.log('ignoring onmessage of superseded socket');
+        return;
+      }
+
+      this.onMessage?.(event);
+    };
   }
 
   disconnect(): void {
