@@ -118,6 +118,10 @@ export class WebSocketClient {
     return this.ws;
   }
 
+  getConnectionStatus() {
+    return this.ws?.readyState ?? WebSocket.CLOSED;
+  }
+
   getRetryCount(): number {
     return this.retryCount;
   }
