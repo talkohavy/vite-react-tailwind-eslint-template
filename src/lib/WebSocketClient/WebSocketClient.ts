@@ -8,6 +8,7 @@ export class WebSocketClient {
   private retryCount = 0;
   private retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
   private retryStrategy: Required<WebSocketRetryOptions> | null = null;
+  private pendingConnect: { resolve: () => void; reject: (reason: Error) => void } | null = null;
 
   onOpen?: () => void;
   onClose?: (event: WebSocketCloseEvent) => void;
@@ -38,12 +39,35 @@ export class WebSocketClient {
 
   private readonly url: string;
 
-  connect(): void {
+  /**
+   * Opens a connection and resolves when the socket reaches OPEN.
+   * Rejects if disconnected, superseded by another connect(), or retries are exhausted without success.
+   * @throws {Error} If the connection is superseded by a new connect() call.
+   */
+  connect(): Promise<void> {
+    this.rejectPendingConnectIfExists(new Error('Connection superseded by a new connect() call'));
     this.disconnect();
     this.intentionalDisconnect = false;
     this.retryCount = 0;
 
-    this.createConnection();
+    return new Promise((resolve, reject) => {
+      this.pendingConnect = { resolve, reject };
+      this.createConnection();
+    });
+  }
+
+  private rejectPendingConnectIfExists(reason: Error): void {
+    if (!this.pendingConnect) return;
+
+    this.pendingConnect.reject(reason);
+    this.pendingConnect = null;
+  }
+
+  private fulfillPendingConnectIfExists(): void {
+    if (!this.pendingConnect) return;
+
+    this.pendingConnect.resolve();
+    this.pendingConnect = null;
   }
 
   /**
@@ -63,6 +87,7 @@ export class WebSocketClient {
       }
 
       this.onOpen?.();
+      this.fulfillPendingConnectIfExists();
     };
     ws.onclose = () => {
       if (generation !== this.connectionGeneration) {
@@ -91,6 +116,7 @@ export class WebSocketClient {
   }
 
   disconnect(): void {
+    this.rejectPendingConnectIfExists(new Error('WebSocket disconnected'));
     this.intentionalDisconnect = true;
 
     if (this.retryTimeoutId !== null) {
@@ -129,14 +155,21 @@ export class WebSocketClient {
   private handleWsClose(): void {
     this.ws = null;
 
+    if (this.intentionalDisconnect) {
+      this.onClose?.({ shouldRetry: false });
+      this.rejectPendingConnectIfExists(new Error('WebSocket disconnected'));
+      return;
+    }
+
     if (!this.retryStrategy) {
       this.onClose?.({ shouldRetry: false });
+      this.rejectPendingConnectIfExists(new Error('WebSocket connection failed'));
       return;
     }
 
     const { maxRetries, retryDelayMs } = this.retryStrategy;
 
-    const shouldRetry = !this.intentionalDisconnect && this.retryCount < maxRetries;
+    const shouldRetry = this.retryCount < maxRetries;
 
     this.onClose?.({ shouldRetry });
 
@@ -148,6 +181,8 @@ export class WebSocketClient {
         this.retryTimeoutId = null;
         this.createConnection();
       }, retryDelayMs);
+    } else {
+      this.rejectPendingConnectIfExists(new Error('WebSocket connection failed after maximum retries'));
     }
   }
 }
