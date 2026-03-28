@@ -1,9 +1,17 @@
 import type { LazyExoticComponent, ReactNode } from 'react';
 
-export type Route = {
-  to: string;
+export type RouteWithTo = {
+  to: any;
+  index?: never;
+};
+
+export type RouteWithIndex = {
+  index: true;
+  to?: never;
+};
+
+export type Route = (RouteWithTo | RouteWithIndex) & {
   text: string;
-  activeNames: Array<string>;
   Component: (() => any) | LazyExoticComponent<() => ReactNode>;
   hideFromSidebar?: boolean;
   children?: Array<Route>;

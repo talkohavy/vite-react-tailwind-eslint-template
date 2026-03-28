@@ -6,7 +6,7 @@ import { pageName } from './logic/constants';
 import { getInitialTabValue } from './logic/utils/getInitialValue';
 
 const Tabs = {
-  StaticTree: 'static-tree',
+  StaticTree: '',
   DynamicTree: 'dynamic-tree',
   CustomRendering: 'custom-rendering',
   RefControl: 'ref-control',

@@ -1,18 +1,20 @@
-import { Link } from 'react-router';
+import { NavLink } from 'react-router';
 import clsx from 'clsx';
 
 type SideBarLinkItemProps = {
   to: string;
   text: string;
-  isActive?: boolean;
 };
 
 export default function SideBarLinkItem(props: SideBarLinkItemProps) {
-  const { to, text, isActive } = props;
+  const { to, text } = props;
 
   return (
-    <Link to={to} className={clsx('text-lg hover:text-red-500 active:text-red-400', isActive && 'font-medium')}>
+    <NavLink
+      to={to}
+      className={({ isActive }) => clsx('text-lg hover:text-red-500 active:text-red-400', isActive && 'font-medium')}
+    >
       {text}
-    </Link>
+    </NavLink>
   );
 }

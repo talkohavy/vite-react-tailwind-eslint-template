@@ -6,7 +6,7 @@ import { pageName } from './logic/constants';
 import { getInitialTabValue } from './logic/utils/getInitialValue';
 
 const Tabs = {
-  Lexer: 'lexer',
+  Lexer: '',
   TokenStream: 'token-stream',
   QueryParser: 'query-parser',
   ContextAnalyzer: 'context-analyzer',
