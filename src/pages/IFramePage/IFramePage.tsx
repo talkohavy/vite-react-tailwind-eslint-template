@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { BASE_URL } from '../../common/constants';
+import { extractTabValueFromPathname } from '../../common/utils/extractTabValueFromPathname';
 import RadioTabs from '../../components/controls/RadioTabs';
-import { getInitialTabValue } from '../OutletTabsPage/logic/utils/getInitialValue';
 import IframeTester from './IframeTester';
+
+const pageSlug = 'iframe';
 
 const Tabs = {
   HostTab1: '',
@@ -30,11 +32,11 @@ export default function IFramePage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
+  const [currentTabValue, setCurrentTabValue] = useState(() => extractTabValueFromPathname(pageSlug));
 
   // Update currentTabValue when the URL changes (e.g., browser back/forward)
   useEffect(() => {
-    const newTabValue = getInitialTabValue();
+    const newTabValue = extractTabValueFromPathname(pageSlug);
     setCurrentTabValue(newTabValue);
   }, [location.pathname]);
 

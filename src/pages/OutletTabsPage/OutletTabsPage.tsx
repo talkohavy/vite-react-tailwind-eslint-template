@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
-import { BASE_URL } from '../../common/constants';
-import RadioTabs from '../../components/controls/RadioTabs';
-import { getInitialTabValue } from './logic/utils/getInitialValue';
+import { BASE_URL } from '@src/common/constants';
+import { extractTabValueFromPathname } from '@src/common/utils/extractTabValueFromPathname';
+import RadioTabs from '@src/components/controls/RadioTabs';
+
+const pageSlug = 'outlet';
 
 const Tabs = {
   Overview: '',
@@ -29,18 +31,18 @@ export default function OutletTabsPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
+  const [currentTabValue, setCurrentTabValue] = useState(() => extractTabValueFromPathname(pageSlug));
 
   // Update currentTabValue when the URL changes (e.g., browser back/forward)
   useEffect(() => {
-    const newTabValue = getInitialTabValue();
+    const newTabValue = extractTabValueFromPathname(pageSlug);
     setCurrentTabValue(newTabValue);
   }, [location.pathname]);
 
   function handleTabChange(tabValue: string) {
     setCurrentTabValue(tabValue);
 
-    const targetPath = `${BASE_URL}/outlet/${tabValue}`;
+    const targetPath = `${BASE_URL}/${pageSlug}/${tabValue}`;
     navigate(targetPath);
   }
 

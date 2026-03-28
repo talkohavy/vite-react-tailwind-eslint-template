@@ -1,3 +1,5 @@
+export const pageSlug = 'webrtc';
+
 export const Tabs = {
   Overview: '',
   Sender: 'sender',

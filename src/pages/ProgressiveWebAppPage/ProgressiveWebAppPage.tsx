@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
-import { BASE_URL } from '../../common/constants';
-import RadioTabs from '../../components/controls/RadioTabs';
-import { getInitialTabValue } from './logic/utils/getInitialTabValue';
+import { BASE_URL } from '@src/common/constants';
+import { extractTabValueFromPathname } from '@src/common/utils/extractTabValueFromPathname';
+import RadioTabs from '@src/components/controls/RadioTabs';
+
+const pageSlug = 'progressive-web-app';
 
 const Tabs = {
   Register: '',
@@ -39,10 +41,10 @@ export default function ProgressiveWebAppPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [currentTabValue, setCurrentTabValue] = useState(getInitialTabValue);
+  const [currentTabValue, setCurrentTabValue] = useState(() => extractTabValueFromPathname(pageSlug));
 
   useEffect(() => {
-    const newTabValue = getInitialTabValue();
+    const newTabValue = extractTabValueFromPathname(pageSlug);
     setCurrentTabValue(newTabValue);
   }, [location.pathname]);
 
