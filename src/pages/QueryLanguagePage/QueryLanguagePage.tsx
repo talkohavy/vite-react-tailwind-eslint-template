@@ -71,7 +71,7 @@ export default function QueryPage() {
         />
       </div>
 
-      <div className='size-full'>
+      <div className='size-full overflow-auto'>
         <Outlet />
       </div>
     </div>

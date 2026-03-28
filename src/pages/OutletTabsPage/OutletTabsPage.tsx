@@ -58,7 +58,7 @@ export default function OutletTabsPage() {
         />
       </div>
 
-      <div className='size-full'>
+      <div className='size-full overflow-auto'>
         <Outlet />
       </div>
     </div>

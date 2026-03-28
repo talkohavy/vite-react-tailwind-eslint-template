@@ -59,7 +59,7 @@ export default function IFramePage() {
       </div>
 
       {/* Overview, Analytics, and Settings tabs - Navigation within the host*/}
-      <div className='size-full'>
+      <div className='size-full overflow-auto'>
         <Outlet />
       </div>
 

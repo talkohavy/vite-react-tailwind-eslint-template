@@ -79,7 +79,7 @@ export default function TreeViewDemo() {
         </div>
       </div>
 
-      <div className='size-full'>
+      <div className='size-full overflow-auto'>
         <Outlet />
       </div>
     </div>
