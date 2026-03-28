@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router';
 import App from '@src/App';
-import { API_GATEWAY_URL, dbName, tables } from './common/constants';
+import { API_GATEWAY_URL, dbName, tables, WS_SERVICE_URL } from './common/constants';
 import GlobalErrorBoundaryDevelopment from './components/ErrorBoundaries/ErrorBoundaryWithModalFallback';
 import ReactErrorOverlay from './components/ReactErrorOverlay';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
@@ -12,6 +12,7 @@ import { initIndexedDB } from './lib/IndexedDB/indexedDB';
 import { initSessionManager } from './lib/SessionManager';
 import { registerServiceWorker } from './pages/ProgressiveWebAppPage/logic/utils/registerServiceWorker';
 import DarkThemeProvider from './providers/DarkThemeProvider';
+import WebSocketProvider from './providers/WebSocketProvider';
 import { createStore } from './store';
 import './common/bootstrap';
 import './index.css';
@@ -45,7 +46,13 @@ function Client() {
           <StoreProvider store={store}>
             <BrowserRouter>
               <DarkThemeProvider>
-                <App />
+                <WebSocketProvider
+                  url={WS_SERVICE_URL}
+                  retryStrategy={{ maxRetries: 5, retryDelayMs: 2000 }}
+                  autoConnect={false}
+                >
+                  <App />
+                </WebSocketProvider>
               </DarkThemeProvider>
             </BrowserRouter>
           </StoreProvider>
