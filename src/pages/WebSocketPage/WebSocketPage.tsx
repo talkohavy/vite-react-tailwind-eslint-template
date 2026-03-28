@@ -1,63 +1,59 @@
-import ConnectionPanel from './content/ConnectionPanel';
-import Examples from './content/Examples';
-import MessageLogPanel from './content/MessageLogPanel';
-import SendMessagePanel from './content/SendMessagePanel';
-import { useWebSocketPageLogic } from './logic/useWebSocketPageLogic';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router';
+import { BASE_URL } from '../../common/constants';
+import { extractTabValueFromPathname } from '../../common/utils/extractTabValueFromPathname';
+import RadioTabs from '../../components/controls/RadioTabs';
+
+const pageSlug = 'websocket';
+
+const Tabs = {
+  WebsocketHookConnection: '',
+  WebsocketManagerConnection: 'websocket-manager',
+} as const;
+
+const tabOptions = [
+  {
+    value: Tabs.WebsocketHookConnection,
+    label: 'Hook',
+  },
+  {
+    value: Tabs.WebsocketManagerConnection,
+    label: 'Manager',
+  },
+];
 
 export default function WebSocketPage() {
-  const {
-    url,
-    setUrl,
-    messageToSend,
-    setMessageToSend,
-    isConnected,
-    isConnecting,
-    isReconnecting,
-    retryCount,
-    connect,
-    disconnect,
-    connectionState,
-    connectionError,
-    send,
-    clearLog,
-    log,
-  } = useWebSocketPageLogic();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [currentTabValue, setCurrentTabValue] = useState(() => extractTabValueFromPathname(pageSlug));
+
+  // Update currentTabValue when the URL changes (e.g., browser back/forward)
+  useEffect(() => {
+    const newTabValue = extractTabValueFromPathname(pageSlug);
+    setCurrentTabValue(newTabValue);
+  }, [location.pathname]);
+
+  function handleTabChange(tabValue: string) {
+    setCurrentTabValue(tabValue);
+
+    const targetPath = `${BASE_URL}/${pageSlug}/${tabValue}`;
+    navigate(targetPath);
+  }
 
   return (
-    <div className='size-full overflow-auto p-6'>
-      <div className='mx-auto flex max-w-2xl flex-col gap-8'>
-        <header>
-          <h1 className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>WebSocket Client</h1>
-
-          <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
-            Connect to a WebSocket server (e.g. backend using the &quot;ws&quot; package), send messages, and see
-            incoming messages in the log.
-          </p>
-        </header>
-
-        <ConnectionPanel
-          url={url}
-          setUrl={setUrl}
-          isConnecting={isConnecting}
-          isReconnecting={isReconnecting}
-          retryCount={retryCount}
-          connect={connect}
-          disconnect={disconnect}
-          connectionState={connectionState}
-          connectionError={connectionError}
-          isConnected={isConnected}
+    <div className='size-full flex flex-col gap-6 overflow-auto'>
+      <div className='border-b border-gray-200 dark:border-gray-600 px-6 pt-6'>
+        <RadioTabs
+          value={currentTabValue}
+          setValue={handleTabChange}
+          options={tabOptions}
+          className='flex space-x-1 mb-4'
         />
+      </div>
 
-        <SendMessagePanel
-          messageToSend={messageToSend}
-          setMessageToSend={setMessageToSend}
-          isConnected={isConnected}
-          send={send}
-        />
-
-        <MessageLogPanel clearLog={clearLog} log={log} isConnected={isConnected} />
-
-        <Examples />
+      <div className='size-full overflow-auto'>
+        <Outlet />
       </div>
     </div>
   );

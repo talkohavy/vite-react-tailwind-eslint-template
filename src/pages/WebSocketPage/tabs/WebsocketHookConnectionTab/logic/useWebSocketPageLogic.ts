@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { WS_SERVICE_URL } from '../../../common/constants';
-import { WebSocketClient } from '../../../lib/WebSocketClient';
+import { WS_SERVICE_URL } from '@src/common/constants';
+import { WebSocketClient } from '@src/lib/WebSocketClient';
 import { MessageState, type MessageStateValues, WsConnectionState, type WsConnectionStateValues } from './constants';
 import { nextId } from './utils/nextId';
 

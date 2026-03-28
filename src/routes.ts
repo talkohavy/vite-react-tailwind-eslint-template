@@ -66,6 +66,10 @@ const WebRtcOverviewTab = lazy(() => import('./pages/WebRtcPage/tabs/OverviewTab
 const WebRtcSenderTab = lazy(() => import('./pages/WebRtcPage/tabs/SenderTab'));
 const WebRtcReceiverTab = lazy(() => import('./pages/WebRtcPage/tabs/ReceiverTab'));
 
+// WebSocketPage tabs:
+const WebsocketHookConnectionTab = lazy(() => import('./pages/WebSocketPage/tabs/WebsocketHookConnectionTab'));
+const WebsocketManagerConnectionTab = lazy(() => import('./pages/WebSocketPage/tabs/WebsocketManagerConnection'));
+
 export const routes: Array<Route> = [
   {
     to: 'home',
@@ -296,6 +300,18 @@ export const routes: Array<Route> = [
     to: 'websocket',
     text: 'WebSocket',
     Component: WebSocketPage,
+    children: [
+      {
+        index: true,
+        text: 'Hook',
+        Component: WebsocketHookConnectionTab,
+      },
+      {
+        to: 'websocket-manager',
+        text: 'Manager',
+        Component: WebsocketManagerConnectionTab,
+      },
+    ],
   },
   {
     to: 'infinite-scroll',
