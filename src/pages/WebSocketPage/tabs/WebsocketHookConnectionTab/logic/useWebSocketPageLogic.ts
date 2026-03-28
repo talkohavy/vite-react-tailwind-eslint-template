@@ -140,8 +140,6 @@ export function useWebSocketPageLogic() {
   const clearLog = useCallback(() => setLog([]), []);
 
   const isConnected = connectionState === WsConnectionState.Open;
-  const isConnecting = connectionState === WsConnectionState.Connecting;
-  const isReconnecting = connectionState === WsConnectionState.Reconnecting;
 
   return {
     url,
@@ -151,8 +149,6 @@ export function useWebSocketPageLogic() {
     connectionState,
     connectionError,
     isConnected,
-    isConnecting,
-    isReconnecting,
     retryCount,
     connect,
     disconnect,

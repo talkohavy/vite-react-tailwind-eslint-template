@@ -1,6 +1,7 @@
 import { WS_SERVICE_URL } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
+import { WsConnectionStatus } from '@src/providers/WebSocketProvider';
 import RetryCounter from '../RetryCounter';
 import StatusBadge from '../StatusBadge';
 import type { WsConnectionStateValues } from '../../logic/constants';
@@ -8,29 +9,19 @@ import type { WsConnectionStateValues } from '../../logic/constants';
 type ConnectionPanelProps = {
   url: string;
   setUrl: (url: string) => void;
-  isConnecting: boolean;
-  isReconnecting: boolean;
   retryCount: number;
   connect: (url: string) => void;
   disconnect: () => void;
-  connectionState: WsConnectionStateValues;
+  connectionStatus: WsConnectionStateValues;
   connectionError: Error | null;
-  isConnected: boolean;
 };
 
 export default function ConnectionPanel(props: ConnectionPanelProps) {
-  const {
-    url,
-    setUrl,
-    isConnecting,
-    isReconnecting,
-    retryCount,
-    connect,
-    disconnect,
-    connectionState,
-    connectionError,
-    isConnected,
-  } = props;
+  const { url, setUrl, retryCount, connect, disconnect, connectionStatus, connectionError } = props;
+
+  const isConnected = connectionStatus === WsConnectionStatus.Open;
+  const isConnecting = connectionStatus === WsConnectionStatus.Connecting;
+  const isReconnecting = connectionStatus === WsConnectionStatus.Reconnecting;
 
   const isDisconnectDisabled = !isConnected && !isConnecting && !isReconnecting;
   const isConnectDisabled = isConnecting || isReconnecting || isConnected;
@@ -76,7 +67,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
 
       <div className='flex flex-wrap items-center gap-3'>
         <div className='flex justify-between items-center gap-2 w-full'>
-          <StatusBadge state={connectionState} />
+          <StatusBadge state={connectionStatus} />
 
           {retryCount > 0 && <RetryCounter retryCount={retryCount} maxRetries={5} />}
         </div>

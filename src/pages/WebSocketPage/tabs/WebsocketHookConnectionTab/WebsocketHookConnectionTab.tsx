@@ -11,8 +11,6 @@ export default function WebsocketHookConnectionTab() {
     messageToSend,
     setMessageToSend,
     isConnected,
-    isConnecting,
-    isReconnecting,
     retryCount,
     connect,
     disconnect,
@@ -38,14 +36,11 @@ export default function WebsocketHookConnectionTab() {
         <ConnectionPanel
           url={url}
           setUrl={setUrl}
-          isConnecting={isConnecting}
-          isReconnecting={isReconnecting}
           retryCount={retryCount}
           connect={connect}
           disconnect={disconnect}
-          connectionState={connectionState}
+          connectionStatus={connectionState}
           connectionError={connectionError}
-          isConnected={isConnected}
         />
 
         <SendMessagePanel
