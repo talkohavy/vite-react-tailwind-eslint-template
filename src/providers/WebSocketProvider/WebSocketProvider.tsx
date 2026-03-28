@@ -39,6 +39,11 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     };
   }, []);
 
+  const clearErrorAndRetryCount = useCallback(() => {
+    setConnectionError(null);
+    setRetryCount(0);
+  }, []);
+
   const disconnect = useCallback(() => {
     const wsClient = wsClientRef.current;
 
@@ -56,9 +61,8 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
   const handleOpen = useCallback(() => {
     setConnectionStatus(WsConnectionStatus.Open);
-    setConnectionError(null);
-    setRetryCount(0);
-  }, []);
+    clearErrorAndRetryCount();
+  }, [clearErrorAndRetryCount]);
 
   const handleClose = useCallback((event: { shouldRetry: boolean }) => {
     if (event.shouldRetry) {
@@ -92,8 +96,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
   const connect = useCallback(() => {
     disconnect();
-    setConnectionError(null);
-    setRetryCount(0);
+    clearErrorAndRetryCount();
 
     const trimmedUrl = url.trim();
 
@@ -130,7 +133,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     }
 
     wsClientRef.current = wsClient;
-  }, [disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry]);
+  }, [clearErrorAndRetryCount, disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry]);
 
   useEffect(() => {
     if (autoConnect) {
