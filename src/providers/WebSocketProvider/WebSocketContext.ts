@@ -24,9 +24,9 @@ export type WebSocketContextValue = {
   subscribeMessages: (listener: (message: string) => void) => () => void;
 };
 
-const INITIAL_STATE = {} as WebSocketContextValue;
+const INITIAL_STATE = null;
 
-export const WebSocketContext = createContext<WebSocketContextValue>(INITIAL_STATE);
+export const WebSocketContext = createContext<WebSocketContextValue | null>(INITIAL_STATE);
 export const useWebSocket = (): WebSocketContextValue => {
   const ctx = useContext(WebSocketContext);
 

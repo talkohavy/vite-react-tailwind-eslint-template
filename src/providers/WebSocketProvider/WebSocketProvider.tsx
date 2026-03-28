@@ -18,11 +18,16 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
   const [lastMessage, setLastMessage] = useState<string | null>(null);
 
   const wsClientRef = useRef<WebSocketClient | null>(null);
+  const prevAutoConnectRef = useRef(false);
   const messageListenersRef = useRef(new Set<(message: string) => void>());
 
   const notifyMessageListeners = useCallback((message: string) => {
     messageListenersRef.current.forEach((listener) => {
-      listener(message);
+      try {
+        listener(message);
+      } catch (err) {
+        console.error(err);
+      }
     });
   }, []);
 
@@ -36,11 +41,12 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
   const disconnect = useCallback(() => {
     const wsClient = wsClientRef.current;
-    const ws = wsClient?.getSocket();
 
-    if (!(wsClient && ws)) return;
+    if (!wsClient) return;
 
-    if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+    const ws = wsClient.getSocket();
+
+    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
       setConnectionStatus(WsConnectionStatus.Closing);
     }
 
@@ -127,22 +133,21 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
   }, [disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry]);
 
   useEffect(() => {
-    if (!autoConnect) return;
+    if (autoConnect) {
+      connect();
+    } else if (prevAutoConnectRef.current) {
+      // If autoConnect is false and it was true before, disconnect.
+      disconnect();
+    }
 
-    connect();
-
-    return () => {
-      wsClientRef.current?.disconnect();
-      wsClientRef.current = null;
-    };
-  }, [autoConnect, connect]);
+    prevAutoConnectRef.current = autoConnect;
+  }, [autoConnect, connect, disconnect]);
 
   useEffect(() => {
     return () => {
-      wsClientRef.current?.disconnect();
-      wsClientRef.current = null;
+      disconnect();
     };
-  }, []);
+  }, [disconnect]);
 
   const send = useCallback((data: string) => {
     const wsClient = wsClientRef.current;
