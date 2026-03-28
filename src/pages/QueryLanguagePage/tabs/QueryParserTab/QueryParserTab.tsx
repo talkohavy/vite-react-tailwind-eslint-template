@@ -1,7 +1,6 @@
 import QueryInput from '@src/components/controls/QueryInput';
 import CursorPositionInfo from './content/CursorPositionInfo';
 import QueryVisualization from './content/QueryVisualization';
-import RawParseResult from './content/RawParseResult';
 import { useQueryParserTabLogic } from './logic/useQueryParserTabLogic';
 
 export default function QueryParserTab() {
@@ -46,8 +45,6 @@ export default function QueryParserTab() {
         </div>
 
         {query && <QueryVisualization query={query} parseResult={result} />}
-
-        <RawParseResult result={result} />
       </div>
     </div>
   );
