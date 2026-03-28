@@ -13,6 +13,7 @@ export type WebSocketContextValue = {
   isReconnecting: boolean;
   lastMessage: string | null;
   // - Actions:
+  setUrl: (url: string) => void;
   connect: () => void;
   disconnect: () => void;
   send: (data: string) => void;
@@ -26,4 +27,12 @@ export type WebSocketContextValue = {
 const INITIAL_STATE = {} as WebSocketContextValue;
 
 export const WebSocketContext = createContext<WebSocketContextValue>(INITIAL_STATE);
-export const useWebSocket = (): WebSocketContextValue => useContext(WebSocketContext);
+export const useWebSocket = (): WebSocketContextValue => {
+  const ctx = useContext(WebSocketContext);
+
+  if (!ctx) {
+    throw new Error('useWebSocket must be used within WebSocketProvider');
+  }
+
+  return ctx;
+};

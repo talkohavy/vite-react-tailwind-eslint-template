@@ -2,17 +2,16 @@ import { type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useSta
 import { WebSocketClient } from '@src/lib/WebSocketClient';
 import { WebSocketContext, type WebSocketContextValue } from './WebSocketContext';
 import { WsConnectionStatus, type WsConnectionStatusValues } from './wsConnectionStatus';
-import type { WebSocketRetryOptions } from '@src/lib/WebSocketClient/WebSocketClient.interface';
 
 type WebSocketProviderProps = PropsWithChildren<{
   url: string;
   autoConnect?: boolean;
-  retryStrategy?: WebSocketRetryOptions | boolean;
 }>;
 
 export default function WebSocketProvider(props: WebSocketProviderProps) {
-  const { url, autoConnect = false, retryStrategy, children } = props;
+  const { url: initialUrl, autoConnect = false, children } = props;
 
+  const [url, setUrl] = useState(initialUrl);
   const [connectionStatus, setConnectionStatus] = useState<WsConnectionStatusValues>(WsConnectionStatus.Idle);
   const [connectionError, setConnectionError] = useState<Error | null>(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -108,7 +107,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
         onError: handleError,
         onMessage: handleMessage,
         onRetry: handleRetry,
-        retryStrategy: retryStrategy ?? {
+        retryStrategy: {
           maxRetries: 5,
           retryDelayMs: 2000,
         },
@@ -125,7 +124,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     }
 
     wsClientRef.current = wsClient;
-  }, [disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry, retryStrategy]);
+  }, [disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry]);
 
   useEffect(() => {
     if (!autoConnect) return;
@@ -160,6 +159,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
   const value: WebSocketContextValue = useMemo(
     () => ({
       url,
+      setUrl,
       connectionStatus,
       connectionError,
       retryCount,
@@ -174,6 +174,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     }),
     [
       url,
+      setUrl,
       connectionStatus,
       connectionError,
       retryCount,
