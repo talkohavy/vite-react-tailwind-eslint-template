@@ -49,14 +49,10 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
     if (!wsClient) return;
 
-    const ws = wsClient.getSocket();
-
-    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
-      setConnectionStatus(WsConnectionStatus.Closing);
-    }
-
     wsClient.disconnect();
+
     wsClientRef.current = null;
+    setConnectionStatus(WsConnectionStatus.Closed);
   }, []);
 
   const handleOpen = useCallback(() => {
