@@ -6,6 +6,8 @@ import type { MessageLogEntry } from '../../WebsocketHookConnectionTab/logic/use
 
 export function useWebsocketManagerConnectionLogic() {
   const {
+    url,
+    setUrl,
     connectionStatus,
     connectionError,
     retryCount,
@@ -44,6 +46,8 @@ export function useWebsocketManagerConnectionLogic() {
   const clearLog = useCallback(() => setLog([]), []);
 
   return {
+    url,
+    setUrl,
     connectionStatus,
     connectionError,
     retryCount,

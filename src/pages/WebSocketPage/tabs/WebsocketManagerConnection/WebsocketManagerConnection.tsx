@@ -1,20 +1,13 @@
-import { useState } from 'react';
-import { WS_SERVICE_URL } from '@src/common/constants';
 import ConnectionPanel from '../WebsocketHookConnectionTab/content/ConnectionPanel';
 import Examples from '../WebsocketHookConnectionTab/content/Examples';
 import MessageLogPanel from '../WebsocketHookConnectionTab/content/MessageLogPanel';
 import SendMessagePanel from '../WebsocketHookConnectionTab/content/SendMessagePanel';
 import { useWebsocketManagerConnectionLogic } from './logic/useWebsocketManagerConnectionLogic';
 
-type WebsocketManagerConnectionContentProps = {
-  url: string;
-  setUrl: (url: string) => void;
-};
-
-function WebsocketManagerConnectionContent(props: WebsocketManagerConnectionContentProps) {
-  const { url, setUrl } = props;
-
+export default function WebsocketManagerConnectionTab() {
   const {
+    url,
+    setUrl,
     connectionStatus,
     connectionError,
     retryCount,
@@ -64,10 +57,4 @@ function WebsocketManagerConnectionContent(props: WebsocketManagerConnectionCont
       </div>
     </div>
   );
-}
-
-export default function WebsocketManagerConnectionTab() {
-  const [url, setUrl] = useState(WS_SERVICE_URL);
-
-  return <WebsocketManagerConnectionContent url={url} setUrl={setUrl} />;
 }

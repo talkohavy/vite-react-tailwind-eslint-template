@@ -46,11 +46,7 @@ function Client() {
           <StoreProvider store={store}>
             <BrowserRouter>
               <DarkThemeProvider>
-                <WebSocketProvider
-                  url={WS_SERVICE_URL}
-                  retryStrategy={{ maxRetries: 5, retryDelayMs: 2000 }}
-                  autoConnect={false}
-                >
+                <WebSocketProvider url={WS_SERVICE_URL} autoConnect={false}>
                   <App />
                 </WebSocketProvider>
               </DarkThemeProvider>
