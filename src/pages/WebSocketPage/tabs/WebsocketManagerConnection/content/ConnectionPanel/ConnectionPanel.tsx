@@ -3,7 +3,7 @@ import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
 import { WsConnectionStatus } from '@src/providers/WebSocketProvider';
 import RetryCounter from '../../../WebsocketHookConnectionTab/content/RetryCounter';
-import StatusBadge from '../../../WebsocketHookConnectionTab/content/StatusBadge';
+import StatusBadge from '../StatusBadge';
 import type { WsConnectionStateValues } from '../../../WebsocketHookConnectionTab/logic/constants';
 
 type ConnectionPanelProps = {
@@ -12,7 +12,7 @@ type ConnectionPanelProps = {
   retryCount: number;
   onConnectClick: () => void;
   disconnect: () => void;
-  connectionStatus: WsConnectionStateValues;
+  connectionStatus: WsConnectionStateValues | 'connection_acknowledged';
   connectionError: Error | null;
 };
 

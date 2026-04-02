@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
+import { parseJson } from '@src/common/utils/parseJson';
 import { useWebSocket } from '@src/providers/WebSocketProvider';
-import { MessageState, type MessageStateValues } from '../../WebsocketHookConnectionTab/logic/constants';
+import {
+  MessageState,
+  type WsConnectionStateValues,
+  type MessageStateValues,
+} from '../../WebsocketHookConnectionTab/logic/constants';
 import { nextId } from '../../WebsocketHookConnectionTab/logic/utils/nextId';
 import type { MessageLogEntry } from '../../WebsocketHookConnectionTab/logic/useWebSocketPageLogic';
 
@@ -20,11 +25,14 @@ export function useWebsocketManagerConnectionLogic() {
     subscribeMessages,
   } = useWebSocket();
 
+  const [connectionAcknowledged, setConnectionAcknowledged] = useState(false);
+
   const onConnected = useCallback(() => {
     console.log('I am connected');
   }, []);
 
   const onConnectClick = useCallback(() => {
+    setConnectionAcknowledged(false);
     connect(onConnected);
   }, [connect, onConnected]);
 
@@ -37,6 +45,12 @@ export function useWebsocketManagerConnectionLogic() {
 
   useEffect(() => {
     return subscribeMessages((data) => {
+      const parsedData = parseJson(data);
+
+      if (parsedData.type === 'connection_acknowledged') {
+        setConnectionAcknowledged(true);
+      }
+
       addLogEntry(MessageState.Received, data);
     });
   }, [subscribeMessages, addLogEntry]);
@@ -53,10 +67,14 @@ export function useWebsocketManagerConnectionLogic() {
 
   const clearLog = useCallback(() => setLog([]), []);
 
+  const connectionStatusWithAcknowledged = (connectionAcknowledged ? 'connection_acknowledged' : connectionStatus) as
+    | WsConnectionStateValues
+    | 'connection_acknowledged';
+
   return {
     url,
     setUrl,
-    connectionStatus,
+    connectionStatus: connectionStatusWithAcknowledged,
     connectionError,
     retryCount,
     isConnected,
