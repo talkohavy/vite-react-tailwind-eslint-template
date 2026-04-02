@@ -1,7 +1,7 @@
-import ConnectionPanel from '../WebsocketHookConnectionTab/content/ConnectionPanel';
 import Examples from '../WebsocketHookConnectionTab/content/Examples';
 import MessageLogPanel from '../WebsocketHookConnectionTab/content/MessageLogPanel';
 import SendMessagePanel from '../WebsocketHookConnectionTab/content/SendMessagePanel';
+import ConnectionPanel from './content/ConnectionPanel';
 import { useWebsocketManagerConnectionLogic } from './logic/useWebsocketManagerConnectionLogic';
 
 export default function WebsocketManagerConnectionTab() {
@@ -12,7 +12,7 @@ export default function WebsocketManagerConnectionTab() {
     connectionError,
     retryCount,
     isConnected,
-    connect,
+    onConnectClick,
     disconnect,
     send,
     clearLog,
@@ -38,7 +38,7 @@ export default function WebsocketManagerConnectionTab() {
           url={url}
           setUrl={setUrl}
           retryCount={retryCount}
-          connect={() => connect()}
+          onConnectClick={onConnectClick}
           disconnect={disconnect}
           connectionStatus={connectionStatus}
           connectionError={connectionError}

@@ -20,6 +20,14 @@ export function useWebsocketManagerConnectionLogic() {
     subscribeMessages,
   } = useWebSocket();
 
+  const onConnected = useCallback(() => {
+    console.log('I am connected');
+  }, []);
+
+  const onConnectClick = useCallback(() => {
+    connect(onConnected);
+  }, [connect, onConnected]);
+
   const [messageToSend, setMessageToSend] = useState('');
   const [log, setLog] = useState<MessageLogEntry[]>([]);
 
@@ -54,7 +62,7 @@ export function useWebsocketManagerConnectionLogic() {
     isConnected,
     isConnecting,
     isReconnecting,
-    connect,
+    onConnectClick,
     disconnect,
     send,
     clearLog,
