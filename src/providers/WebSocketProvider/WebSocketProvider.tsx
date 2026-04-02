@@ -55,10 +55,14 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     setConnectionStatus(WsConnectionStatus.Closed);
   }, []);
 
-  const handleOpen = useCallback(() => {
-    setConnectionStatus(WsConnectionStatus.Open);
-    clearErrorAndRetryCount();
-  }, [clearErrorAndRetryCount]);
+  const handleOpen = useCallback(
+    (onConnected?: () => void) => {
+      setConnectionStatus(WsConnectionStatus.Open);
+      clearErrorAndRetryCount();
+      onConnected?.();
+    },
+    [clearErrorAndRetryCount],
+  );
 
   const handleClose = useCallback((event: { shouldRetry: boolean }) => {
     if (event.shouldRetry) {
@@ -90,46 +94,49 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     setConnectionError(new Error('WebSocket error'));
   }, []);
 
-  const connect = useCallback(() => {
-    disconnect();
-    clearErrorAndRetryCount();
+  const connect = useCallback(
+    (onConnected?: () => void) => {
+      disconnect();
+      clearErrorAndRetryCount();
 
-    const trimmedUrl = url.trim();
+      const trimmedUrl = url.trim();
 
-    if (!trimmedUrl) {
-      setConnectionError(new Error('WebSocket URL is empty'));
-      return;
-    }
+      if (!trimmedUrl) {
+        setConnectionError(new Error('WebSocket URL is empty'));
+        return;
+      }
 
-    setConnectionStatus(WsConnectionStatus.Connecting);
+      setConnectionStatus(WsConnectionStatus.Connecting);
 
-    let wsClient: WebSocketClient;
+      let wsClient: WebSocketClient;
 
-    try {
-      wsClient = new WebSocketClient(trimmedUrl, {
-        onOpen: handleOpen,
-        onClose: handleClose,
-        onError: handleError,
-        onMessage: handleMessage,
-        onRetry: handleRetry,
-        retryStrategy: {
-          maxRetries: 5,
-          retryDelayMs: 2000,
-        },
-      });
+      try {
+        wsClient = new WebSocketClient(trimmedUrl, {
+          onOpen: () => handleOpen(onConnected),
+          onClose: handleClose,
+          onError: handleError,
+          onMessage: handleMessage,
+          onRetry: handleRetry,
+          retryStrategy: {
+            maxRetries: 5,
+            retryDelayMs: 2000,
+          },
+        });
 
-      wsClient.connect().catch((err: unknown) => {
+        wsClient.connect().catch((err: unknown) => {
+          setConnectionStatus(WsConnectionStatus.Closed);
+          setConnectionError(err instanceof Error ? err : new Error(String(err)));
+        });
+      } catch (err) {
         setConnectionStatus(WsConnectionStatus.Closed);
         setConnectionError(err instanceof Error ? err : new Error(String(err)));
-      });
-    } catch (err) {
-      setConnectionStatus(WsConnectionStatus.Closed);
-      setConnectionError(err instanceof Error ? err : new Error(String(err)));
-      return;
-    }
+        return;
+      }
 
-    wsClientRef.current = wsClient;
-  }, [clearErrorAndRetryCount, disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry]);
+      wsClientRef.current = wsClient;
+    },
+    [clearErrorAndRetryCount, disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry],
+  );
 
   useEffect(() => {
     if (autoConnect) {

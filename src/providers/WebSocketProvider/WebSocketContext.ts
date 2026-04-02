@@ -14,7 +14,7 @@ export type WebSocketContextValue = {
   lastMessage: string | null;
   // - Actions:
   setUrl: (url: string) => void;
-  connect: () => void;
+  connect: (onConnected?: () => void) => void;
   disconnect: () => void;
   send: (data: string) => void;
   /**
