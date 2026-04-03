@@ -2,7 +2,6 @@ import { createContext, useContext } from 'react';
 import type { WsConnectionStatusValues } from './wsConnectionStatus';
 
 export type WebSocketContextValue = {
-  url: string;
   connectionError: Error | null;
   retryCount: number;
   // - Latest message (updates on every message).
@@ -13,8 +12,7 @@ export type WebSocketContextValue = {
   isReconnecting: boolean;
   lastMessage: string | null;
   // - Actions:
-  setUrl: (url: string) => void;
-  connect: (onConnected?: () => void) => void;
+  connect: (targetUrl: string, onConnected?: () => void) => void;
   disconnect: () => void;
   send: (data: string) => void;
   /**

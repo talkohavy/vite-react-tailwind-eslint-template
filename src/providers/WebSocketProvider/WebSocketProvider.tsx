@@ -1,24 +1,19 @@
-import { type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react';
 import { WebSocketClient } from '@src/lib/WebSocketClient';
 import { WebSocketContext, type WebSocketContextValue } from './WebSocketContext';
 import { WsConnectionStatus, type WsConnectionStatusValues } from './wsConnectionStatus';
 
-type WebSocketProviderProps = PropsWithChildren<{
-  url: string;
-  autoConnect?: boolean;
-}>;
+type WebSocketProviderProps = PropsWithChildren;
 
 export default function WebSocketProvider(props: WebSocketProviderProps) {
-  const { url: initialUrl, autoConnect = false, children } = props;
+  const { children } = props;
 
-  const [url, setUrl] = useState(initialUrl);
   const [connectionStatus, setConnectionStatus] = useState<WsConnectionStatusValues>(WsConnectionStatus.Idle);
   const [connectionError, setConnectionError] = useState<Error | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [lastMessage, setLastMessage] = useState<string | null>(null);
 
   const wsClientRef = useRef<WebSocketClient | null>(null);
-  const prevAutoConnectRef = useRef(false);
   const messageListenersRef = useRef(new Set<(message: string) => void>());
 
   const notifyMessageListeners = useCallback((message: string) => {
@@ -95,11 +90,11 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
   }, []);
 
   const connect = useCallback(
-    (onConnected?: () => void) => {
+    (targetUrl: string, onConnected?: () => void) => {
       disconnect();
       clearErrorAndRetryCount();
 
-      const trimmedUrl = url.trim();
+      const trimmedUrl = targetUrl.trim();
 
       if (!trimmedUrl) {
         setConnectionError(new Error('WebSocket URL is empty'));
@@ -135,25 +130,8 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
       wsClientRef.current = wsClient;
     },
-    [clearErrorAndRetryCount, disconnect, url, handleOpen, handleClose, handleError, handleMessage, handleRetry],
+    [clearErrorAndRetryCount, disconnect, handleOpen, handleClose, handleError, handleMessage, handleRetry],
   );
-
-  useEffect(() => {
-    if (autoConnect) {
-      connect();
-    } else if (prevAutoConnectRef.current) {
-      // If autoConnect is false and it was true before, disconnect.
-      disconnect();
-    }
-
-    prevAutoConnectRef.current = autoConnect;
-  }, [autoConnect, connect, disconnect]);
-
-  useEffect(() => {
-    return () => {
-      disconnect();
-    };
-  }, [disconnect]);
 
   const send = useCallback((data: string) => {
     const wsClient = wsClientRef.current;
@@ -169,8 +147,6 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
   const value: WebSocketContextValue = useMemo(
     () => ({
-      url,
-      setUrl,
       connectionStatus,
       connectionError,
       retryCount,
@@ -184,8 +160,6 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
       subscribeMessages,
     }),
     [
-      url,
-      setUrl,
       connectionStatus,
       connectionError,
       retryCount,

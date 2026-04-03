@@ -11,8 +11,6 @@ import type { MessageLogEntry } from '../../WebsocketHookConnectionTab/logic/use
 
 export function useWebsocketManagerConnectionLogic() {
   const {
-    url,
-    setUrl,
     connectionStatus,
     connectionError,
     retryCount,
@@ -25,6 +23,8 @@ export function useWebsocketManagerConnectionLogic() {
     subscribeMessages,
   } = useWebSocket();
 
+  const [url, setUrl] = useState(WS_SERVICE_URL);
+
   const [connectionAcknowledged, setConnectionAcknowledged] = useState(false);
 
   const onConnected = useCallback(() => {
@@ -33,8 +33,8 @@ export function useWebsocketManagerConnectionLogic() {
 
   const onConnectClick = useCallback(() => {
     setConnectionAcknowledged(false);
-    connect(onConnected);
-  }, [connect, onConnected]);
+    connect(url, onConnected);
+  }, [connect, onConnected, url]);
 
   const [messageToSend, setMessageToSend] = useState('');
   const [log, setLog] = useState<MessageLogEntry[]>([]);
