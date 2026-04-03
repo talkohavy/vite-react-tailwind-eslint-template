@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { parseJson } from '@src/common/utils/parseJson';
+import { WS_SERVICE_URL } from '@src/common/constants';
 import { useWebSocket } from '@src/providers/WebSocketProvider';
 import {
   MessageState,
@@ -45,13 +45,11 @@ export function useWebsocketManagerConnectionLogic() {
 
   useEffect(() => {
     return subscribeMessages((data) => {
-      const parsedData = parseJson(data);
-
-      if (parsedData.type === 'connection_acknowledged') {
+      if (data.type === 'connection_acknowledged') {
         setConnectionAcknowledged(true);
       }
 
-      addLogEntry(MessageState.Received, data);
+      addLogEntry(MessageState.Received, JSON.stringify(data, null, 2));
     });
   }, [subscribeMessages, addLogEntry]);
 

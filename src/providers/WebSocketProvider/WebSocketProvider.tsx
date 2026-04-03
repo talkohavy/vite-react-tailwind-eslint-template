@@ -1,5 +1,6 @@
 import { type PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react';
 import { WebSocketClient } from '@src/lib/WebSocketClient';
+import { parseJson } from '../../common/utils/parseJson';
 import { WebSocketContext, type WebSocketContextValue } from './WebSocketContext';
 import { WsConnectionStatus, type WsConnectionStatusValues } from './wsConnectionStatus';
 
@@ -14,19 +15,20 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
   const [lastMessage, setLastMessage] = useState<string | null>(null);
 
   const wsClientRef = useRef<WebSocketClient | null>(null);
-  const messageListenersRef = useRef(new Set<(message: string) => void>());
+  const messageListenersRef = useRef(new Set<(message: Record<string, unknown>) => void>());
 
   const notifyMessageListeners = useCallback((message: string) => {
     messageListenersRef.current.forEach((listener) => {
       try {
-        listener(message);
+        const parsedMessage = parseJson(message) ?? message;
+        listener(parsedMessage);
       } catch (err) {
         console.error(err);
       }
     });
   }, []);
 
-  const subscribeMessages = useCallback((listener: (message: string) => void) => {
+  const subscribeMessages = useCallback((listener: (message: Record<string, unknown>) => void) => {
     messageListenersRef.current.add(listener);
 
     return () => {

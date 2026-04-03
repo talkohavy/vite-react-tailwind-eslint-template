@@ -19,7 +19,7 @@ export type WebSocketContextValue = {
    * Subscribe to all incoming text messages. Call the returned function to unsubscribe.
    * Use inside useEffect when a component needs to react to messages (e.g. setState).
    */
-  subscribeMessages: (listener: (message: string) => void) => () => void;
+  subscribeMessages: (listener: (message: Record<string, unknown>) => void) => () => void;
 };
 
 const INITIAL_STATE = null;
