@@ -1,8 +1,9 @@
-import { type PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react';
+import { type PropsWithChildren, useCallback, useMemo, useRef } from 'react';
 import { useSubscribeMessages } from './logic/hooks/useSubscribeMessages';
 import { useWebsocketConnect } from './logic/hooks/useWebsocketConnect';
+import { useWebsocketState } from './logic/hooks/useWebsocketState';
 import { WebSocketContext, type WebSocketContextValue } from './WebSocketContext';
-import { WsConnectionStatus, type WsConnectionStatusValues } from './wsConnectionStatus';
+import { WsConnectionStatus } from './wsConnectionStatus';
 import type { WebSocketClient } from '@src/lib/WebSocketClient';
 
 type WebSocketProviderProps = PropsWithChildren;
@@ -12,14 +13,19 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
   const wsClientRef = useRef<WebSocketClient | null>(null);
 
-  const [connectionStatus, setConnectionStatus] = useState<WsConnectionStatusValues>(WsConnectionStatus.Idle);
-  const [connectionError, setConnectionError] = useState<Error | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
-  const [lastMessage, setLastMessage] = useState<string | null>(null);
-
-  const isConnected = connectionStatus === WsConnectionStatus.Open;
-  const isConnecting = connectionStatus === WsConnectionStatus.Connecting;
-  const isReconnecting = connectionStatus === WsConnectionStatus.Reconnecting;
+  const {
+    connectionStatus,
+    connectionError,
+    retryCount,
+    lastMessage,
+    isConnected,
+    isConnecting,
+    isReconnecting,
+    setConnectionStatus,
+    setConnectionError,
+    setRetryCount,
+    setLastMessage,
+  } = useWebsocketState();
 
   const { subscribeMessages, notifyMessageListeners } = useSubscribeMessages();
 
@@ -32,7 +38,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
     wsClientRef.current = null;
     setConnectionStatus(WsConnectionStatus.Closed);
-  }, []);
+  }, [setConnectionStatus]);
 
   const { connect } = useWebsocketConnect({
     wsClientRef,
