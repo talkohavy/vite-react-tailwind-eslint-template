@@ -3,6 +3,7 @@ export const WsConnectionStatus = {
   Connecting: 'connecting',
   Open: 'open',
   Reconnecting: 'reconnecting',
+  ConnectionAcknowledged: 'connection_acknowledged',
   Closing: 'closing',
   Closed: 'closed',
 } as const;

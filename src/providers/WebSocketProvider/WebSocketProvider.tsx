@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useCallback, useMemo, useRef } from 'react';
+import { type PropsWithChildren, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSubscribeMessages } from './logic/hooks/useSubscribeMessages';
 import { useWebsocketConnect } from './logic/hooks/useWebsocketConnect';
 import { useWebsocketState } from './logic/hooks/useWebsocketState';
@@ -57,6 +57,15 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
     wsClient.send(data);
   }, []);
+
+  // Server implementation required! Server sends a connection_acknowledged message when the connection is established.
+  useEffect(() => {
+    return subscribeMessages((data) => {
+      if (data.type === WsConnectionStatus.ConnectionAcknowledged) {
+        setConnectionStatus(WsConnectionStatus.ConnectionAcknowledged);
+      }
+    });
+  }, [subscribeMessages, setConnectionStatus]);
 
   const value: WebSocketContextValue = useMemo(
     () => ({
