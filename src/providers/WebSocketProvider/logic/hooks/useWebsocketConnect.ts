@@ -29,10 +29,10 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
   }, [setConnectionError, setRetryCount]);
 
   const handleOpen = useCallback(
-    (onConnected?: () => void) => {
+    (onConnectionOpen?: () => void) => {
       setConnectionStatus(WsConnectionStatus.Open);
       clearErrorAndRetryCount();
-      onConnected?.();
+      onConnectionOpen?.();
     },
     [clearErrorAndRetryCount, setConnectionStatus],
   );
@@ -75,7 +75,7 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
   }, [setConnectionError]);
 
   const connect = useCallback(
-    (targetUrl: string, onConnected?: () => void) => {
+    (targetUrl: string, onConnectionOpen?: () => void) => {
       disconnect();
       clearErrorAndRetryCount();
 
@@ -92,7 +92,7 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
 
       try {
         wsClient = new WebSocketClient(trimmedUrl, {
-          onOpen: () => handleOpen(onConnected),
+          onOpen: () => handleOpen(onConnectionOpen),
           onClose: handleClose,
           onError: handleError,
           onMessage: handleMessage,

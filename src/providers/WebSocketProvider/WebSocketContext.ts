@@ -12,7 +12,7 @@ export type WebSocketContextValue = {
   isReconnecting: boolean;
   lastMessage: string | null;
   // - Actions:
-  connect: (targetUrl: string, onConnected?: () => void) => void;
+  connect: (targetUrl: string, onConnectionOpen?: () => void) => void;
   disconnect: () => void;
   send: (data: string) => void;
   /**
