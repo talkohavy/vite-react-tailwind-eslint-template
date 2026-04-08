@@ -1,15 +1,30 @@
-import { forwardRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputBase from './InputBase';
 import type { RuleReturnValue } from './types';
 
 export type InputProps = {
+  refElement?: React.Ref<HTMLInputElement>;
   /**
    * @default 'text'
    */
   type?: 'text' | 'password';
   onChange: (value: string, e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelect?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /**
+   * The initial value on mount.
+   */
   initialValue?: string;
+  /**
+   * Do NOT use arbitrary! Would cause two renders!
+   *
+   * This is used to sync the internal display state when the parent pushes a new value from outside.
+   *
+   * Example case: loading data from an API, when the Input is already mounted (e.g. auto-fill, import).
+   *
+   * This is intentionally separate from `initialValue`, since this one
+   * means that two renders will happen, where as for `initialValue` it would only happen once.
+   */
+  value?: string;
   placeholder?: string;
   disabled?: boolean;
   autoFocus?: boolean;
@@ -19,12 +34,14 @@ export type InputProps = {
   testId?: string;
 };
 
-function InputToForward(props: InputProps, ref: React.Ref<HTMLInputElement>) {
+export default function Input(props: InputProps) {
   const {
+    refElement,
     type = 'text',
     onChange,
     onSelect,
     initialValue = '',
+    value,
     disabled,
     placeholder,
     autoFocus,
@@ -35,6 +52,17 @@ function InputToForward(props: InputProps, ref: React.Ref<HTMLInputElement>) {
   } = props;
 
   const [innerValue, setInnerValue] = useState(initialValue);
+
+  /**
+   * Sync internal display state when the parent pushes a new value from outside
+   * (e.g. auto-fill, import). Only fires on external changes — never on user keystrokes —
+   * so dontChangeRule gating and debounced onChange remain fully intact.
+   */
+  useEffect(() => {
+    if (value !== innerValue && value !== undefined) {
+      setInnerValue(value);
+    }
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onTargetValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { shouldChange, newValue } = dontChangeRule?.(e, e.target.value) ?? {
@@ -50,7 +78,7 @@ function InputToForward(props: InputProps, ref: React.Ref<HTMLInputElement>) {
 
   return (
     <InputBase
-      ref={ref}
+      ref={refElement}
       type={type}
       value={innerValue}
       setValue={onTargetValueChange}
@@ -64,7 +92,3 @@ function InputToForward(props: InputProps, ref: React.Ref<HTMLInputElement>) {
     />
   );
 }
-
-const Input = forwardRef(InputToForward);
-
-export default Input;
