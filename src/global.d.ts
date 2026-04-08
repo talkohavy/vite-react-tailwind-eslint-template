@@ -12,3 +12,11 @@ declare module '*.svg' {
   export { ReactComponent };
   export default ReactComponent;
 }
+
+declare global {
+  interface Performance {
+    memory: any;
+  }
+}
+
+export {};

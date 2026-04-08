@@ -1,4 +1,6 @@
 import type { PropsWithChildren } from 'react';
+import { MemoryMonitor } from '../MemoryMonitor';
+import { Position } from '../MemoryMonitor/logic/constants';
 import Header from './Header';
 import Main from './Main';
 import Sidebar from './Sidebar';
@@ -16,6 +18,8 @@ export default function Layout(props: LayoutProps) {
         <Sidebar />
 
         <Main>{children}</Main>
+
+        <MemoryMonitor position={Position.BottomRight} />
       </div>
     </div>
   );
