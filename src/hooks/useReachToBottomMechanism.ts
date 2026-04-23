@@ -20,6 +20,10 @@ type UseReachToBottomMechanismProps = {
    * Defaults to 4%.
    */
   thresholdInPercent?: number;
+  /**
+   * @default true
+   */
+  shouldTriggerOnMount?: boolean;
 };
 
 /**
@@ -103,6 +107,7 @@ export function useReachToBottomMechanism(props: UseReachToBottomMechanismProps)
     parentRef,
     thresholdInPx = DEFAULT_GAP_TO_BOTTOM_PX,
     thresholdInPercent = DEFAULT_GAP_TO_BOTTOM_PERCENT,
+    shouldTriggerOnMount = true,
   } = props;
 
   const handleBottomReached = useCallback(
@@ -124,8 +129,10 @@ export function useReachToBottomMechanism(props: UseReachToBottomMechanismProps)
 
   // A check on mount:
   useEffect(() => {
+    if (!shouldTriggerOnMount) return;
+
     handleBottomReached(parentRef.current!);
-  }, [handleBottomReached, parentRef]);
+  }, [handleBottomReached, parentRef, shouldTriggerOnMount]);
 
   return { handleBottomReached };
 }
