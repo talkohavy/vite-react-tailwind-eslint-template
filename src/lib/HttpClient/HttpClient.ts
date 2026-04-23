@@ -9,12 +9,12 @@ export let httpClient: HttpClient;
 export class HttpClient {
   abortControllers: Map<string, AbortController>;
 
-  constructor(protected _baseUrl?: string) {
+  constructor(private _baseUrl?: string) {
     this.abortControllers = new Map();
   }
 
   set baseUrl(url: string) {
-    this.baseUrl = url;
+    this._baseUrl = url;
   }
 
   /**
