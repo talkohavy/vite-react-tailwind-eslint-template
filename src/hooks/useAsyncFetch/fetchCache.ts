@@ -30,11 +30,11 @@ export function setCachedData(key: string, data: unknown): void {
   fetchCache.set(key, { data, timestamp: Date.now() });
 }
 
-export function scheduleGc(key: string, gcTime: number): void {
+export function scheduleGc(key: string, cacheDuration: number): void {
   setTimeout(() => {
     fetchCache.delete(key);
     inFlightPromises.delete(key);
-  }, gcTime);
+  }, cacheDuration);
 }
 
 export function getInFlightPromise(key: string): Promise<unknown> | undefined {

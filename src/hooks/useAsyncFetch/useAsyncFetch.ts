@@ -96,11 +96,11 @@ type UseAsyncFetchProps<ReturnType, TransformType = ReturnType> = {
    */
   staleTime?: number;
   /**
-   * How long (ms) to keep unused cache entries before garbage collection.
+   * For how long (ms) to keep data in cache before clearing it up.
    *
    * @default 5 * 60 * 1000 (5 minutes)
    */
-  gcTime?: number;
+  cacheDuration?: number;
 };
 
 /**
@@ -141,7 +141,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
     shouldThrow = true,
     queryKey,
     staleTime = 0,
-    gcTime = DEFAULT_GC_TIME,
+    cacheDuration = DEFAULT_GC_TIME,
   } = props;
 
   const cacheKey = queryKey ? getCacheKey(queryKey) : null;
@@ -220,7 +220,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
 
           if (cacheKey) {
             setCachedData(cacheKey, updatedData);
-            scheduleGc(cacheKey, gcTime);
+            scheduleGc(cacheKey, cacheDuration);
           }
 
           setData(updatedData);
@@ -251,7 +251,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         setIsLoading(false);
       }
     },
-    [transform, onSuccess, onError, shouldThrow, cacheKey, staleTime, gcTime],
+    [transform, onSuccess, onError, shouldThrow, cacheKey, staleTime, cacheDuration],
   );
 
   useEffect(() => {
