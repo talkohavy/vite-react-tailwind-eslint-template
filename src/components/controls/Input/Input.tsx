@@ -78,7 +78,7 @@ export default function Input(props: InputProps) {
 
   return (
     <InputBase
-      ref={refElement}
+      refElement={refElement}
       type={type}
       value={innerValue}
       setValue={onTargetValueChange}

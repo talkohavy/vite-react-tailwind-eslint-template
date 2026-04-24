@@ -1,7 +1,7 @@
-import { forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type InputBaseProps = {
+  refElement?: React.Ref<HTMLInputElement>;
   /**
    * @default 'text'
    */
@@ -17,8 +17,9 @@ type InputBaseProps = {
   testId?: string;
 };
 
-function InputBaseToForward(props: InputBaseProps, ref: React.Ref<HTMLInputElement>) {
+export default function InputBase(props: InputBaseProps) {
   const {
+    refElement,
     type = 'text',
     value,
     setValue,
@@ -33,7 +34,7 @@ function InputBaseToForward(props: InputBaseProps, ref: React.Ref<HTMLInputEleme
 
   return (
     <input
-      ref={ref}
+      ref={refElement}
       type={type}
       id={id}
       value={value}
@@ -50,7 +51,3 @@ function InputBaseToForward(props: InputBaseProps, ref: React.Ref<HTMLInputEleme
     />
   );
 }
-
-const InputBase = forwardRef(InputBaseToForward);
-
-export default InputBase;
