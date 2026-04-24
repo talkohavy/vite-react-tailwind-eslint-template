@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
+import { parseJson } from '../common/utils/parseJson';
 
 export function useLocalStorage<T = any>(key: string, defaultValue?: T) {
-  const [value, setValue] = useState<T>(() => {
+  const [value, setValue] = useState<T | string | undefined>(() => {
     const item = localStorage.getItem(key);
 
     if (item) {
-      try {
-        return JSON.parse(item);
-      } catch {
-        return item;
-      }
+      const parsedItem = parseJson<T>(item);
+      const returnedValue = parsedItem ?? item;
+      return returnedValue;
     }
 
     return defaultValue;
