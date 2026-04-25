@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { ChildItemProps, RadioOption } from './types';
+import type { ChildItemProps, RadioOption } from '../types';
 
 type RadioGroupProps<T> = {
   value: number | string;

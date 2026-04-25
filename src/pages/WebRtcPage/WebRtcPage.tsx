@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router';
-import RadioTabs from '@src/components/controls/RadioTabs';
+import RadioTabs from '@src/components/controls/RadioButtons/RadioTabs';
 import { tabOptions } from './logic/constants';
 import { useWebRtcPageLogic } from './logic/useWebRtcPageLogic';
 

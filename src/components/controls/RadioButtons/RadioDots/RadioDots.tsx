@@ -1,5 +1,6 @@
-import RadioGroup, { type RadioOption } from '../RadioGroup';
+import RadioGroup from '../content/RadioGroup';
 import SingleRadioDot from './SingleRadioDot';
+import type { RadioOption } from '../types';
 
 type RadioDotsProps<T> = {
   value: number | string;

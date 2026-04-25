@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { BASE_URL } from '@src/common/constants';
 import { extractTabValueFromPathname } from '@src/common/utils/extractTabValueFromPathname';
-import RadioTabs from '@src/components/controls/RadioTabs';
+import RadioTabs from '@src/components/controls/RadioButtons/RadioTabs';
 import { pageName } from './logic/constants';
 
 const pageSlug = 'tree-view-demo';

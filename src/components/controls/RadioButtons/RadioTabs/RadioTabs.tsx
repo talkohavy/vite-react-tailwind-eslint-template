@@ -1,5 +1,6 @@
-import RadioGroup, { type RadioOption } from '../RadioGroup';
+import RadioGroup from '../content/RadioGroup';
 import FakeRadioTab from './SingleRadioTab';
+import type { RadioOption } from '../types';
 
 type RadioTabsProps<T> = {
   value: number | string;

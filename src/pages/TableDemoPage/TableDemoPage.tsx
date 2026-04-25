@@ -1,8 +1,8 @@
 import { type ReactNode, useState } from 'react';
-import RadioTabs from '../../components/controls/RadioTabs';
+import RadioTabs from '../../components/controls/RadioButtons/RadioTabs';
 import MockDataTab from './tabs/MockDataTab';
 import ServerDataTab from './tabs/ServerDataTab';
-import type { RadioOption } from '../../components/controls/RadioGroup';
+import type { RadioOption } from '../../components/controls/RadioButtons';
 
 const contentTabs: Array<RadioOption<() => ReactNode>> = [
   { value: 0, label: 'Mock Data', item: MockDataTab },

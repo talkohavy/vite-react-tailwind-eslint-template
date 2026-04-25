@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ArrayFilter, type OperatorNames, type FilterScheme } from '@talkohavy/filters';
 import clsx from 'clsx';
 import Input from '../../components/controls/Input';
-import RadioGroup, { type ChildItemProps } from '../../components/controls/RadioGroup';
+import RadioButtons, { type ChildItemProps } from '../../components/controls/RadioButtons';
 import { data } from './logic/constants';
 
 const options = [
@@ -66,7 +66,7 @@ export default function MasterFilterPage() {
           <div>
             <div>Role:</div>
 
-            <RadioGroup
+            <RadioButtons
               options={options}
               value={role}
               setValue={setRole}

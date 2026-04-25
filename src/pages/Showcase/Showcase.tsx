@@ -13,7 +13,7 @@ import Tag from '../../components/controls/Checkbox/Tag';
 import ColorPicker from '../../components/controls/ColorPicker';
 import Input from '../../components/controls/Input';
 import NumberInput from '../../components/controls/NumberInput';
-import RadioDots from '../../components/controls/RadioDots';
+import RadioDots from '../../components/controls/RadioButtons/RadioDots';
 import Select from '../../components/controls/Select';
 import Textarea from '../../components/controls/Textarea';
 import Toggle from '../../components/controls/Toggle';
