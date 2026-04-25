@@ -1,11 +1,10 @@
-import { forwardRef } from 'react';
-import type { ForwardRefRenderFunction, RefObject } from 'react';
 import InputWithDropdown, { type OpenChangeDetails } from '@src/components/controls/InputWithDropdown';
 import { useQueryInputLogic } from './logic/useQueryInputLogic';
 import styles from './QueryInput.module.scss';
 import type { CompletionItem } from './types';
 
 type QueryInputProps = {
+  inputRef?: React.ForwardedRef<HTMLInputElement>;
   query: string;
   onQueryChange: (value: string, cursorPosition?: number) => void;
   completions: CompletionItem[];
@@ -15,8 +14,9 @@ type QueryInputProps = {
   onDropdownOpenChange?: (details: OpenChangeDetails) => void;
 };
 
-function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInputElement>) {
+export default function QueryInput(props: QueryInputProps) {
   const {
+    inputRef,
     query,
     completions,
     onQueryChange,
@@ -37,7 +37,7 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
   return (
     <div className='relative'>
       <InputWithDropdown
-        ref={inputRef}
+        refElement={inputRef}
         value={query}
         options={groupedCompletions}
         isOpen={isDropdownOpen}
@@ -56,7 +56,3 @@ function QueryInputToForward(props: QueryInputProps, inputRef: RefObject<HTMLInp
     </div>
   );
 }
-
-const QueryInput = forwardRef(QueryInputToForward as ForwardRefRenderFunction<any, QueryInputProps>);
-
-export default QueryInput;

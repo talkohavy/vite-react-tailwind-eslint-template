@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import { Portal, Combobox as ComboboxOriginal } from '@ark-ui/react';
 import clsx from 'clsx';
 import CloseIcon from '../../svgs/CloseIcon';
@@ -34,6 +33,7 @@ const {
 } = ComboboxOriginal;
 
 export type InputWithDropdownProps = {
+  refElement?: React.ForwardedRef<HTMLInputElement>;
   value: string;
   onChange: (value: string) => void;
   onItemSelect: (item: Option) => void;
@@ -89,8 +89,9 @@ export type InputWithDropdownProps = {
   noResultsLabel?: string;
 };
 
-function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.ForwardedRef<HTMLInputElement>) {
+export default function InputWithDropdown(props: InputWithDropdownProps) {
   const {
+    refElement,
     value,
     onKeyDown,
     onMousedown,
@@ -116,7 +117,7 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
 
       <Control className={clsx(INPUT_WITH_DROPDOWN_CONTROL_CLASS, styles.control, className)}>
         <Input
-          ref={ref}
+          ref={refElement}
           placeholder={placeholder}
           className={clsx(INPUT_WITH_DROPDOWN_INPUT_CLASS, styles.input)}
           onKeyDown={onKeyDown}
@@ -185,7 +186,3 @@ function InputWithDropdownToForward(props: InputWithDropdownProps, ref: React.Fo
     </RootProvider>
   );
 }
-
-const InputWithDropdown = forwardRef<HTMLInputElement, InputWithDropdownProps>(InputWithDropdownToForward);
-
-export default InputWithDropdown;
