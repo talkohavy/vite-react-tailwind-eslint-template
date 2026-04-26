@@ -17,7 +17,6 @@ export type ModalProps = PropsWithChildren<{
    * Setter to open or close the modal. Place your trigger button(s) anywhere — just call setIsOpen(true).
    */
   setIsOpen: (open: boolean) => void;
-
   /**
    * Modal header title
    */
@@ -26,9 +25,6 @@ export type ModalProps = PropsWithChildren<{
    * Subtitle / description rendered below the title
    */
   description?: ReactNode;
-
-  // ─── Behavior ────────────────────────────────────────────────────────────────
-
   /**
    * Close when the Escape key is pressed.
    * @default true
@@ -157,7 +153,7 @@ export default function Modal(props: ModalProps) {
       onExitComplete={onExitComplete}
     >
       <Portal>
-        <Backdrop className={clsx(styles.backdrop, backdropClassName)} />
+        {isModal && <Backdrop className={clsx(styles.backdrop, backdropClassName)} />}
 
         <Positioner className={styles.positioner}>
           <Content className={clsx(styles.content, contentClassName)}>
