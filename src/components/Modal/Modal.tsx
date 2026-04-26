@@ -3,7 +3,7 @@ import { Dialog } from '@ark-ui/react/dialog';
 import { Portal } from '@ark-ui/react/portal';
 import clsx from 'clsx';
 import CloseIcon from '../svgs/CloseIcon';
-import styles from './Modal.module.css';
+import styles from './Modal.module.scss';
 import type { OpenChangeDetails } from '../controls/InputWithDropdown';
 
 const { Root, Backdrop, Positioner, Content, Title, Description, CloseTrigger } = Dialog;
