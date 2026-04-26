@@ -1,6 +1,8 @@
 export const MB = 1024 * 1024;
 
 export const WIDGET_WIDTH = 208; // w-52
+/** Square edge length when the widget is minimized (matches Tailwind `w-6` / `h-6`). */
+export const COLLAPSED_WIDGET_SIZE = 24;
 export const OFFSET = 16; // 1rem
 
 export const Position = {

@@ -3,10 +3,12 @@ import { POSITION_CYCLE, type PositionValues } from '../constants';
 
 type UsePositionChangeProps = {
   initialPosition: PositionValues;
+  /** When the widget is minimized, the ref height/width change — remeasure for corner math. */
+  collapsed: boolean;
 };
 
 export function usePositionChange(props: UsePositionChangeProps) {
-  const { initialPosition } = props;
+  const { initialPosition, collapsed } = props;
 
   const [position, setPosition] = useState<PositionValues>(initialPosition);
   const [winSize, setWinSize] = useState({ w: window.innerWidth, h: window.innerHeight });
@@ -15,7 +17,7 @@ export function usePositionChange(props: UsePositionChangeProps) {
 
   useLayoutEffect(() => {
     if (widgetRef.current) setWidgetHeight(widgetRef.current.offsetHeight);
-  }, []);
+  }, [collapsed]);
 
   useLayoutEffect(() => {
     const onResize = () => setWinSize({ w: window.innerWidth, h: window.innerHeight });

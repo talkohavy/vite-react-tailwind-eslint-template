@@ -1,0 +1,7 @@
+export default function MinimizeIcon() {
+  return (
+    <svg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg' aria-hidden>
+      <path d='M2 6h8' stroke='currentColor' strokeLinecap='round' strokeWidth='1.2' />
+    </svg>
+  );
+}

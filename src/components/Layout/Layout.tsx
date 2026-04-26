@@ -19,7 +19,7 @@ export default function Layout(props: LayoutProps) {
 
         <Main>{children}</Main>
 
-        <MemoryMonitor position={Position.BottomRight} />
+        <MemoryMonitor position={Position.BottomRight} startMinimized />
       </div>
     </div>
   );
