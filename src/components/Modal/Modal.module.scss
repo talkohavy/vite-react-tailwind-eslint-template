@@ -27,26 +27,12 @@
 }
 
 .content {
-  --px: 1.5rem;
-
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
-  gap: 0.5rem;
-  width: 24rem;
-  max-width: calc(100vw - 2rem);
-  max-height: calc(100vh - 2rem);
-  padding: var(--px);
-  border-radius: 8px;
-  border: 1px solid var(--demo-border);
-  background: var(--demo-bg-popover);
-  box-shadow: var(--demo-shadow-xl);
-  z-index: calc(var(--demo-popover-z-index) + var(--layer-index, 0));
-  outline: 0;
-  transition: transform 0.1s ease-in-out;
-  /* Offset for scrollbar width when body scroll is locked (prevents visual shift) */
-  translate: calc(-1 * var(--scrollbar-width, 0px) / 2) 0;
+  width: 500px;
+  max-width: 100%;
 
   &[data-has-nested] {
     transform: scale(calc(1 - var(--nested-layer-count) * 0.05));

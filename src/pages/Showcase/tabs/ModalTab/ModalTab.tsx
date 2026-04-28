@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from '@src/components/controls/Button';
 import Modal from '@src/components/Modal';
+import styles from './ModalTab.module.scss';
 
 function LazyCounter() {
   const [count, setCount] = useState(0);
@@ -45,7 +46,13 @@ export default function ModalTab() {
         </div>
       </section>
 
-      <Modal isOpen={isBasicOpen} setIsOpen={setIsBasicOpen} title='Welcome Back' description='Sign in to continue.'>
+      <Modal
+        isOpen={isBasicOpen}
+        setIsOpen={setIsBasicOpen}
+        title='Welcome Back'
+        description='Sign in to continue.'
+        contentClassName={styles.modalContent}
+      >
         <p className='text-sm text-white/70'>
           Both trigger buttons share the same state. Click outside, press Escape, or use the × button to close.
         </p>
@@ -79,6 +86,7 @@ export default function ModalTab() {
         closeOnEscape={false}
         closeOnInteractOutside={false}
         showCloseButton={false}
+        contentClassName={styles.modalContent}
       >
         <p className='text-sm text-white/70'>
           All your data, settings, and history will be permanently erased. You will not be able to recover this account.
@@ -107,7 +115,8 @@ export default function ModalTab() {
         isOpen={isLazyOpen}
         setIsOpen={setIsLazyOpen}
         title='Lazy Mounted Content'
-        // isLazyMount
+        isLazyMount
+        contentClassName={styles.modalContent}
       >
         <LazyCounter />
       </Modal>
@@ -130,6 +139,7 @@ export default function ModalTab() {
         title='New Message'
         description='You have an unread notification.'
         isModal={false}
+        contentClassName={styles.modalContent}
       >
         <p className='text-sm text-white/70'>
           Focus is not trapped — you can still interact with elements behind this panel. Click outside or press Escape
