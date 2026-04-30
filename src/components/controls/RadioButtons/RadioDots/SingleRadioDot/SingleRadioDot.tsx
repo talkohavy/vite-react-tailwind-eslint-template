@@ -5,7 +5,7 @@ const singleDotBase =
   'relative flex justify-center items-center bg-neutral-500 size-5 cursor-pointer rounded-full border border-black shrink-0';
 const singleDotInputChecked = 'group-has-[input:checked]/radioWrapper:bg-blue-500';
 const singleDotInputFocused =
-  'group-has-[input:focus:not(:checked)]/radioWrapper:bg-slate-300 group-has-[input:focus:not(:checked)]/radioWrapper:border-blue-400';
+  'group-has-[input:focus:not(:checked)]/radioWrapper:bg-slate-300 group-has-[input:focus:not(:checked)]/radioWrapper:border-blue-400 group-has-[input:focus]/radioWrapper:ring-2 group-has-[input:focus]/radioWrapper:ring-blue-400 group-has-[input:focus]/radioWrapper:ring-offset-2';
 const singleDotInputHovered = 'group-has-[input:hover:not(:disabled)]/radioWrapper:bg-blue-400';
 const singleDotInputDisabled =
   'group-has-[input:disabled]/radioWrapper:bg-neutral-400 group-has-[input:disabled]/radioWrapper:opacity-40';
