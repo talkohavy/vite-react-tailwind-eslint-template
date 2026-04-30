@@ -14,7 +14,7 @@ export default function SingleRadioDot(props: ChildItemProps) {
   const { label, className } = props;
 
   return (
-    <div className={clsx('flex items-center gap-2', className)}>
+    <div className={clsx('flex items-center gap-2 rtl:flex-row-reverse', className)}>
       <div
         className={clsx(
           singleDotBase,
