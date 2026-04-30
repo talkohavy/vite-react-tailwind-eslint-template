@@ -1,16 +1,7 @@
-import type { ReactNode } from 'react';
-import type { ChildItemProps, RadioOption } from '../types';
+import type { _RadioGroupProps } from '../types';
 
-type RadioGroupProps<T> = {
-  value: number | string;
-  setValue: (value: any) => void;
-  options: Array<RadioOption<T>>;
-  ChildItem: (props: ChildItemProps) => ReactNode;
-  className?: string;
-};
-
-export default function RadioGroup<T>(props: RadioGroupProps<T>) {
-  const { value: selectedValue, setValue, options, ChildItem, className } = props;
+export default function RadioGroup<T>(props: _RadioGroupProps<T>) {
+  const { value: selectedValue, setValue, options, ChildItem, className, childClassName } = props;
 
   return (
     <div className={className}>
@@ -29,7 +20,13 @@ export default function RadioGroup<T>(props: RadioGroupProps<T>) {
               className='z-10 opacity-0 size-full absolute inset-0 cursor-pointer disabled:cursor-default rounded-full group-has-[input:checked]/radioWrapper:cursor-default'
             />
 
-            <ChildItem key={currentItemValue} value={currentItemValue} label={label} isChecked={isChecked} />
+            <ChildItem
+              key={currentItemValue}
+              value={currentItemValue}
+              label={label}
+              isChecked={isChecked}
+              className={childClassName}
+            />
           </div>
         );
       })}
