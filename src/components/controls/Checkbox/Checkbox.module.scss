@@ -13,8 +13,8 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-button:focus .checkboxHolder,
-body[class*='dark'] button:focus .checkboxHolder {
+input:focus-visible ~ .checkboxHolder,
+body[class*='dark'] input:focus-visible ~ .checkboxHolder {
   border-color: seagreen;
 }
 

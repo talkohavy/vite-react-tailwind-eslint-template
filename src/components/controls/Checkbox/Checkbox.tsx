@@ -4,7 +4,7 @@ import CheckboxLogic from './CheckboxLogic';
 
 export type CheckboxProps = {
   isChecked: boolean;
-  setIsChecked: (value: any) => void;
+  setIsChecked: (value: boolean) => void;
   disabled?: boolean;
   label?: string;
   className?: string;
