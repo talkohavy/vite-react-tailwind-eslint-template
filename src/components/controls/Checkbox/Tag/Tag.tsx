@@ -3,7 +3,7 @@ import styles from './Tag.module.scss';
 
 export type TagProps = {
   isChecked: boolean;
-  setIsChecked: (value: any) => void;
+  setIsChecked: (value: boolean) => void;
   disabled?: boolean;
   label?: string;
   className?: string;
