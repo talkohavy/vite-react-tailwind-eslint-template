@@ -11,17 +11,24 @@ export function useRadioGroupLogic<T>(props: _RadioGroupProps<T>) {
   const selectedIndex = options.findIndex((opt) => opt.value === value);
   const tabbableIndex = selectedIndex >= 0 ? selectedIndex : 0;
 
+  /**
+   * `index` is the index of the current input element.
+   * On mount, each input element is assigned an index.
+   */
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>, index: number) {
     const isNext = e.key === 'ArrowDown' || e.key === 'ArrowRight';
     const isPrev = e.key === 'ArrowUp' || e.key === 'ArrowLeft';
+
     if (!isNext && !isPrev) return;
 
     e.preventDefault();
+
     const direction = isNext ? 1 : -1;
 
     for (let i = 1; i <= options.length; i++) {
       const candidate = (index + direction * i + options.length) % options.length;
       const candidateOption = options[candidate];
+
       if (candidateOption && !candidateOption.disabled) {
         setValue(candidateOption.value);
         inputRefs.current[candidate]?.focus();
