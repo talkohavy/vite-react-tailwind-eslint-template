@@ -15,7 +15,7 @@
 
 input:focus-visible ~ .checkboxHolder,
 body[class*='dark'] input:focus-visible ~ .checkboxHolder {
-  border-color: seagreen;
+  box-shadow: 0 0 2px 1px rgba(241, 241, 241, 0.877);
 }
 
 body[class*='dark'] .checkboxHolder {
