@@ -11,22 +11,33 @@ export function useRadioGroupLogic<T>(props: _RadioGroupProps<T>) {
   const selectedIndex = options.findIndex((opt) => opt.value === value);
   const tabbableIndex = selectedIndex >= 0 ? selectedIndex : 0;
 
+  function setInputRefAtIndex(index: number, element: HTMLInputElement | null) {
+    inputRefs.current[index] = element;
+  }
+
   /**
    * `index` is the index of the current input element.
    * On mount, each input element is assigned an index.
    */
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>, index: number) {
-    const isNext = e.key === 'ArrowDown' || e.key === 'ArrowRight';
-    const isPrev = e.key === 'ArrowUp' || e.key === 'ArrowLeft';
+    const direction = getNavigationDirection(e.key);
 
-    if (!isNext && !isPrev) return;
+    if (!direction) return;
 
     e.preventDefault();
 
-    const direction = isNext ? 1 : -1;
+    focusNextEnabledOption(index, direction);
+  }
 
+  function getNavigationDirection(key: string): 1 | -1 | null {
+    if (key === 'ArrowDown' || key === 'ArrowRight') return 1;
+    if (key === 'ArrowUp' || key === 'ArrowLeft') return -1;
+    return null;
+  }
+
+  function focusNextEnabledOption(fromIndex: number, direction: 1 | -1) {
     for (let i = 1; i <= options.length; i++) {
-      const candidate = (index + direction * i + options.length) % options.length;
+      const candidate = (fromIndex + direction * i + options.length) % options.length;
       const candidateOption = options[candidate];
 
       if (candidateOption && !candidateOption.disabled) {
@@ -35,10 +46,6 @@ export function useRadioGroupLogic<T>(props: _RadioGroupProps<T>) {
         break;
       }
     }
-  }
-
-  function setInputRefAtIndex(index: number, element: HTMLInputElement | null) {
-    inputRefs.current[index] = element;
   }
 
   return { tabbableIndex, setInputRefAtIndex, handleKeyDown };
