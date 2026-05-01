@@ -27,7 +27,7 @@ export default function QueryLanguageTab() {
           <TokenBubbles tokens={parseResult.tokens} />
 
           <QueryInput
-            ref={inputRef}
+            inputRef={inputRef}
             query={query}
             onQueryChange={onQueryChange}
             completions={completions}

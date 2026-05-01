@@ -1,6 +1,6 @@
 import { formatTime } from '../../logic/utils/formatTime';
 import { payloadPreview } from '../../logic/utils/payloadPreview';
-import type { EventLogEntry } from '../../../../lib/SocketIOClient/useSocketIO';
+import type { EventLogEntry } from '@src/lib/SocketIOClient';
 
 type LogEntryRowProps = {
   entry: EventLogEntry;
