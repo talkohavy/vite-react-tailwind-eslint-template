@@ -1,36 +1,17 @@
 import { useState } from 'react';
 import Button from '@src/components/controls/Button';
 import Modal from '@src/components/Modal';
+import LazyCounter from './content/LazyCounter';
 import styles from './ModalTab.module.scss';
-
-function LazyCounter() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <div className='flex flex-col gap-3'>
-      <p className='text-sm dark:text-white/70'>
-        <strong>NOTE!</strong> If this was NOT lazy, you'd see the same count value from the previous session.
-      </p>
-
-      <p className='text-sm dark:text-white/70'>
-        This content is lazily mounted — it unmounts when the modal closes. Increment the counter, close, and reopen to
-        see it reset.
-      </p>
-
-      <div className='flex items-center gap-3'>
-        <Button onClick={() => setCount((c) => c - 1)}>−</Button>
-        <span className='text-xl font-semibold w-6 text-center dark:text-white'>{count}</span>
-        <Button onClick={() => setCount((c) => c + 1)}>+</Button>
-      </div>
-    </div>
-  );
-}
 
 export default function ModalTab() {
   const [isBasicOpen, setIsBasicOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isLazyOpen, setIsLazyOpen] = useState(false);
   const [isNonModalOpen, setIsNonModalOpen] = useState(false);
+  const [isStack1Open, setIsStack1Open] = useState(false);
+  const [isStack2Open, setIsStack2Open] = useState(false);
+  const [isStack3Open, setIsStack3Open] = useState(false);
 
   return (
     <div className='flex flex-col gap-8 w-full'>
@@ -148,6 +129,70 @@ export default function ModalTab() {
         <div className='flex gap-3 justify-end w-full'>
           <Button onClick={() => setIsNonModalOpen(false)}>Dismiss</Button>
           <Button onClick={() => setIsNonModalOpen(false)}>View Message</Button>
+        </div>
+      </Modal>
+
+      {/* ── 5. Stacked Modals ─────────────────────────────────────────────── */}
+      <section className='flex flex-col gap-2'>
+        <p className='text-sm font-semibold text-white/50 uppercase tracking-wider'>Stacked Modals</p>
+        <p className='text-xs text-white/40'>
+          Three modals layered on top of each other. Each modal opens the next. Underlying modals scale back as new
+          layers stack above them, and restore when the layers above close.
+        </p>
+        <div className='flex flex-wrap gap-3'>
+          <Button onClick={() => setIsStack1Open(true)}>Open First Modal</Button>
+        </div>
+      </section>
+
+      {/* Layer 1 — scales back when layer 2 or 3 are open */}
+      <Modal
+        isOpen={isStack1Open}
+        setIsOpen={setIsStack1Open}
+        title='Level 1 — First Modal'
+        description='This is the first modal. Open the next one to stack on top.'
+        contentClassName={styles.modalContent}
+      >
+        <p className='text-sm text-white/70'>
+          Click the button below to open a second modal on top of this one. Notice how this modal scales back as more
+          layers stack above it.
+        </p>
+        <div className='flex gap-3 justify-end w-full'>
+          <Button onClick={() => setIsStack1Open(false)}>Close</Button>
+          <Button onClick={() => setIsStack2Open(true)}>Open Second Modal</Button>
+        </div>
+      </Modal>
+
+      {/* Layer 2 — scales back when layer 3 is open */}
+      <Modal
+        isOpen={isStack2Open}
+        setIsOpen={setIsStack2Open}
+        title='Level 2 — Second Modal'
+        description='A second modal stacked on top of the first.'
+        contentClassName={styles.modalContent}
+      >
+        <p className='text-sm text-white/70'>
+          The first modal is still open behind this one. Click below to open a third modal on top.
+        </p>
+        <div className='flex gap-3 justify-end w-full'>
+          <Button onClick={() => setIsStack2Open(false)}>Close</Button>
+          <Button onClick={() => setIsStack3Open(true)}>Open Third Modal</Button>
+        </div>
+      </Modal>
+
+      {/* Layer 3 — topmost */}
+      <Modal
+        isOpen={isStack3Open}
+        setIsOpen={setIsStack3Open}
+        title='Level 3 — Third Modal'
+        description='The topmost modal in the stack.'
+        contentClassName={styles.modalContent}
+      >
+        <p className='text-sm text-white/70'>
+          You have reached the third level. Two modals are stacked behind this one. Close this modal to return to the
+          second, then close that to return to the first.
+        </p>
+        <div className='flex gap-3 justify-end w-full'>
+          <Button onClick={() => setIsStack3Open(false)}>Close This Modal</Button>
         </div>
       </Modal>
     </div>
