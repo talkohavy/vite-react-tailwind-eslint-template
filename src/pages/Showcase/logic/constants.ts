@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import ButtonTab from '../tabs/ButtonTab';
 import CheckboxesTab from '../tabs/CheckboxesTab';
 import CodeBlockTab from '../tabs/CodeBlockTab';
 import DatePickerTab from '../tabs/DatePickerTab';
@@ -22,4 +23,5 @@ export const tabs: Array<RadioOption<() => ReactNode>> = [
   { value: 7, label: 'Modal', item: ModalTab },
   { value: 8, label: 'Menu', item: DropdownMenuTab },
   { value: 9, label: 'Loaders', item: LoadersTab },
+  { value: 10, label: 'Button', item: ButtonTab },
 ];

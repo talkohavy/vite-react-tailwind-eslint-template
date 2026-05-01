@@ -1,7 +1,23 @@
 :root {
   --my-color: red;
+
+  /* Focus Button using shadow */
+  /* --btn-shadow-color-focus: rgba(45, 45, 45, 0.645);
+  --btn-shadow-width-focus: 2px; */
+
+  /* Focus Button using ring */
+  --btn-ring-color-focus: #3991f6;
+  --btn-ring-width-focus: 3px;
 }
 
 html[data-theme='dark'] {
   --my-color: blue;
+
+  /* Dark - Focus Button using shadow */
+  /* --btn-shadow-width-focus: 3px;
+  --btn-shadow-color-focus: rgba(237, 243, 253, 0.743); */
+
+  /* Dark - Focus Button using ring */
+  --btn-ring-color-focus: #93c5fd;
+  --btn-ring-width-focus: 2px;
 }
