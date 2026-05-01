@@ -1,6 +1,6 @@
 import Button from '@src/components/controls/Button';
 import LogEntryRow from '../LogEntryRow';
-import type { EventLogEntry } from '../../../../lib/SocketIOClient/useSocketIO';
+import type { EventLogEntry } from '@src/lib/SocketIOClient';
 
 type EventLogPanelProps = {
   clearLog: () => void;
