@@ -1,10 +1,9 @@
 .modalContent {
-  background: var(--modal-content-bg-color);
-  border: 1px solid var(--modal-content-border-color);
-  box-shadow: var(--modal-content-shadow);
-  padding: 1.5rem;
-  border-radius: 8px;
+  // Base Variables:
+  --modal-z-index: 50;
+  --modal-content-border-radius: 8px;
 
+  // Light Mode Variables:
   --close-btn-color: #82827c;
   --close-btn-bg-hover: #e2e1de;
   --close-btn-ring-color-focus: #ffb2a8;
@@ -12,7 +11,7 @@
   --modal-description-color: #61605b;
   --modal-content-bg-color: white;
   --modal-content-border-color: #e9e8e6;
-  --modal-z-index: 50;
+  --modal-content-padding: 1.5rem;
   --modal-content-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --modal-content-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
   --modal-content-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
@@ -29,7 +28,6 @@ html[data-theme='dark'] .modalContent {
   --modal-description-color: #a9a9a3;
   --modal-content-border-color: #2a2a28;
   --modal-content-bg-color: #111110;
-
   --modal-content-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.15);
   --modal-content-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
   --modal-content-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.12);

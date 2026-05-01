@@ -33,6 +33,11 @@
   flex-direction: column;
   width: 500px;
   max-width: 100%;
+  background-color: var(--modal-content-bg-color);
+  border: 1px solid var(--modal-content-border-color);
+  box-shadow: var(--modal-content-shadow);
+  border-radius: var(--modal-content-border-radius);
+  padding: var(--modal-content-padding);
 
   &[data-has-nested] {
     transform: scale(calc(1 - var(--modal-nested-layer-count) * 0.05));
