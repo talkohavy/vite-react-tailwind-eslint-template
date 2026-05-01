@@ -1,33 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ConnectionState, type ConnectionStateValues } from './logic/constants';
+import { nextId } from './logic/utils/nextId';
 import { SocketIOClient } from './SocketIOClient';
-import type { Socket } from 'socket.io-client';
+import type { EventLogEntry } from './types';
 
-export type EventLogEntry = {
-  id: number;
-  type: 'sent' | 'received';
-  event: string;
-  payload: unknown;
-  time: Date;
-};
-
-type UseSocketIOReturn = {
-  connectionState: ConnectionStateValues;
-  connectionError: Error | null;
-  client: SocketIOClient | null;
-  socket: Socket | null;
-  eventLog: EventLogEntry[];
-  connect: (url: string) => void;
-  disconnect: () => void;
-  emit: (event: string, data?: unknown) => void;
-  clearLog: () => void;
-};
-
-function nextId() {
-  return Date.now() * 1000 + Math.floor(Math.random() * 1000);
-}
-
-export function useSocketIO(): UseSocketIOReturn {
+export function useSocketIO() {
   const clientRef = useRef<SocketIOClient | null>(null);
   const [connectionState, setConnectionState] = useState<ConnectionStateValues>(ConnectionState.Disconnected);
   const [connectionError, setConnectionError] = useState<Error | null>(null);
@@ -109,6 +86,14 @@ export function useSocketIO(): UseSocketIOReturn {
 
   const clearLog = useCallback(() => setEventLog([]), []);
 
+  function getClient() {
+    return clientRef.current;
+  }
+
+  function getSocket() {
+    return clientRef.current?.getSocket() ?? null;
+  }
+
   useEffect(() => {
     return () => {
       cleanupClient();
@@ -118,12 +103,8 @@ export function useSocketIO(): UseSocketIOReturn {
   return {
     connectionState,
     connectionError,
-    get client() {
-      return clientRef.current;
-    },
-    get socket() {
-      return clientRef.current?.getSocket() ?? null;
-    },
+    getClient,
+    getSocket,
     eventLog,
     connect,
     disconnect,
