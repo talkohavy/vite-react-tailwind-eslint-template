@@ -16,7 +16,7 @@ export type ModalProps = PropsWithChildren<{
   /**
    * Setter to open or close the modal. Place your trigger button(s) anywhere — just call setIsOpen(true).
    */
-  setIsOpen: (open: boolean) => void;
+  setIsOpen?: (open: boolean) => void;
   /**
    * Modal header title
    */
@@ -59,25 +59,30 @@ export type ModalProps = PropsWithChildren<{
    * @default true
    */
   preventScroll?: boolean;
-  /** Element that receives focus when the dialog opens (overrides default auto-focus). */
+  /**
+   * Element that receives focus when the dialog opens (overrides default auto-focus).
+   */
   initialFocusEl?: () => HTMLElement | null;
-  /** Element that receives focus when the dialog closes (defaults to the trigger that opened it). */
+  /**
+   * Element that receives focus when the dialog closes (defaults to the trigger that opened it).
+   */
   finalFocusEl?: () => HTMLElement | null;
   /**
    * Show the × close button in the top-right corner of the content panel.
    * @default true
    */
   showCloseButton?: boolean;
-  /** Extra className merged onto the Content panel (e.g. to override width / max-height). */
-  contentClassName?: string;
-  /** Extra className merged onto the Backdrop overlay. */
   backdropClassName?: string;
+  positionerClassName?: string;
+  contentClassName?: string;
   /**
-   * Called when the Escape key is pressed. Call `e.preventDefault()` to suppress default close.
+   * Called when the Escape key is pressed.
+   * Call `e.preventDefault()` to suppress default close.
    */
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   /**
-   * Called when an interaction occurs outside the dialog. Call `e.preventDefault()` to suppress default close.
+   * Called when an interaction occurs outside the dialog.
+   * Call `e.preventDefault()` to suppress default close.
    */
   onInteractOutside?: (e: Event) => void;
   /**
@@ -121,8 +126,9 @@ export default function Modal(props: ModalProps) {
     initialFocusEl,
     finalFocusEl,
     showCloseButton = true,
-    contentClassName,
     backdropClassName,
+    positionerClassName,
+    contentClassName,
     onEscapeKeyDown,
     onInteractOutside,
     onExitComplete,
@@ -130,7 +136,7 @@ export default function Modal(props: ModalProps) {
 
   const onOpenChange = useCallback(
     (e: OpenChangeDetails) => {
-      setIsOpen(e.open);
+      setIsOpen?.(e.open);
     },
     [setIsOpen],
   );
@@ -155,7 +161,7 @@ export default function Modal(props: ModalProps) {
       <Portal>
         {isModal && <Backdrop className={clsx(styles.backdrop, backdropClassName)} />}
 
-        <Positioner className={styles.positioner}>
+        <Positioner className={clsx(styles.positioner, positionerClassName)}>
           <Content className={clsx(styles.content, contentClassName)}>
             {(title || description) && (
               <div className={styles.header}>

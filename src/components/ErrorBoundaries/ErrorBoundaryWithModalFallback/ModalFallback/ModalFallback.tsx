@@ -12,9 +12,9 @@ export default function ModalFallback(props: ModalFallbackProps) {
   const { error } = props;
 
   return (
-    <Modal id='error-modal' className='bg-[#030303] bg-opacity-100 p-6'>
+    <Modal isOpen positionerClassName='bg-black' backdropClassName='bg-red-500' showCloseButton={false}>
       <div
-        className='relative top-1/2 flex h-auto w-full max-w-5xl -translate-y-1/2 animate-appear flex-col items-start justify-between gap-6 rounded-xl bg-[#181818] p-10 text-center'
+        className='relative flex flex-col items-start justify-between gap-6 w-2xl p-10 bg-[#181818] text-center'
         style={{ direction: 'ltr' }}
       >
         <TopRedRibbon />
