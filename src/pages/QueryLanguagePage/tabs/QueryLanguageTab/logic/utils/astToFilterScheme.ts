@@ -44,7 +44,7 @@ export function convertAstNodeToFilterRecursively(node: Expression): FilterSchem
       const rightSideCondition = convertAstNodeToFilterRecursively(node.right);
 
       if (operatorValue === LogicalOperators.OR) {
-        const result = [];
+        const result = [] as any;
         if (isOrFilter(leftSideCondition)) {
           result.push(...leftSideCondition.OR);
         } else {
@@ -61,7 +61,7 @@ export function convertAstNodeToFilterRecursively(node: Expression): FilterSchem
       }
 
       if (operatorValue === LogicalOperators.AND) {
-        const result = [];
+        const result = [] as any;
 
         if (isAndFilter(leftSideCondition)) {
           result.push(...leftSideCondition.AND);
@@ -83,7 +83,7 @@ export function convertAstNodeToFilterRecursively(node: Expression): FilterSchem
     }
 
     case AstTypes.Not: {
-      const result = [];
+      const result = [] as any;
 
       const innerFilter = convertAstNodeToFilterRecursively(node.expression);
 
@@ -106,6 +106,10 @@ export function convertAstNodeToFilterRecursively(node: Expression): FilterSchem
       const result: FilterScheme = { fieldName, operator, value };
 
       return result;
+    }
+
+    default: {
+      throw new Error(`Unsupported AST node type: ${node.type}`);
     }
   }
 }
