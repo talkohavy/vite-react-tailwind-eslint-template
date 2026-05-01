@@ -27,7 +27,7 @@ export default function UIChipsTab() {
           <TokenBubbles tokens={parseResult.tokens} firstErrorTokenIndex={firstErrorTokenIndex} />
 
           <QueryInput
-            ref={inputRef}
+            inputRef={inputRef}
             query={query}
             onQueryChange={onQueryChange}
             completions={completions}

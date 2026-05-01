@@ -22,7 +22,7 @@ export default function SuggestionsTab() {
           <h2 className='text-xl font-semibold mb-4'>Query Input</h2>
 
           <QueryInput
-            ref={inputRef}
+            inputRef={inputRef}
             query={query}
             onQueryChange={onQueryChange}
             completions={completions}
