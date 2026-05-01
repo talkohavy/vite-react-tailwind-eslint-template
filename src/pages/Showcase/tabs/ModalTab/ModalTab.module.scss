@@ -5,7 +5,7 @@
 
   // Light Mode Variables:
   --close-btn-color: #82827c;
-  --close-btn-bg-hover: #e2e1de;
+  --close-btn-bg-color-hover: #e2e1de;
   --close-btn-ring-color-focus: #ffb2a8;
   --modal-title-color: #21201c;
   --modal-description-color: #61605b;
@@ -22,7 +22,7 @@
 
 html[data-theme='dark'] .modalContent {
   --close-btn-color: #7c7b74;
-  --close-btn-bg-hover: #31312e;
+  --close-btn-bg-color-hover: #31312e;
   --close-btn-ring-color-focus: #e2503f;
   --modal-title-color: #eeeeec;
   --modal-description-color: #a9a9a3;
