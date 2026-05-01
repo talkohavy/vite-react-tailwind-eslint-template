@@ -17,7 +17,7 @@ export default function MediaCaptureApiPage() {
     canvasRef,
     error,
     photoDataUrl,
-    videoWidth,
+    getVideoWidth,
     startCameraDisabled,
     takePictureDisabled,
     onVideoCanPlay,
@@ -71,7 +71,7 @@ export default function MediaCaptureApiPage() {
             videoRef={videoRef}
             startCameraDisabled={startCameraDisabled}
             takePictureDisabled={takePictureDisabled}
-            videoWidth={videoWidth}
+            videoWidth={getVideoWidth()}
             startCamera={startCamera}
             takePicture={takePicture}
             stopCamera={stopCamera}

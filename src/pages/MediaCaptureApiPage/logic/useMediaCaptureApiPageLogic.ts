@@ -117,6 +117,10 @@ export function useMediaCaptureApiPageLogic() {
     }
   };
 
+  function getVideoWidth() {
+    return videoRef.current?.videoWidth ?? 0;
+  }
+
   return {
     videoRef,
     canvasRef,
@@ -124,9 +128,7 @@ export function useMediaCaptureApiPageLogic() {
     photoDataUrl,
     startCameraDisabled,
     takePictureDisabled,
-    get videoWidth() {
-      return videoRef.current?.videoWidth ?? 0;
-    },
+    getVideoWidth,
     onVideoCanPlay,
     startCamera,
     takePicture,
