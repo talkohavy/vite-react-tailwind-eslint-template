@@ -1,58 +1,39 @@
 .modalContent {
-  background: var(--demo-bg-popover);
-  border: 1px solid var(--demo-border);
-  box-shadow: var(--demo-shadow-xl);
+  background: var(--modal-content-bg-color);
+  border: 1px solid var(--modal-content-border-color);
+  box-shadow: var(--modal-content-shadow);
   padding: 1.5rem;
   border-radius: 8px;
 
-  /* Coral semantic tokens */
-  --demo-coral-focus-ring: #ffb2a8;
-
-  /* Neutral semantic tokens (Sand from park-ui) */
-  --demo-neutral-emphasized: #82827c;
-  --demo-neutral-muted: #e2e1de;
-  --demo-neutral-fg: #21201c;
-  --demo-neutral-fg-muted: #61605b;
-
-  /* Border semantic tokens */
-  --demo-border: #e9e8e6;
-
-  /* Popover */
-  --demo-bg-popover: white;
-
-  /* Z-index tokens */
-  --demo-popover-z-index: 50;
-
-  /* Shadow tokens (soft, modern shadows) */
-  --demo-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --demo-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
-  --demo-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
-  --demo-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
-  --demo-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
-  --demo-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+  --close-btn-color: #82827c;
+  --close-btn-bg-hover: #e2e1de;
+  --close-btn-ring-color-focus: #ffb2a8;
+  --modal-title-color: #21201c;
+  --modal-description-color: #61605b;
+  --modal-content-bg-color: white;
+  --modal-content-border-color: #e9e8e6;
+  --modal-z-index: 50;
+  --modal-content-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --modal-content-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --modal-content-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --modal-content-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+  --modal-content-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+  --modal-content-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
 }
 
 html[data-theme='dark'] .modalContent {
-  /* Coral dark mode */
-  --demo-coral-focus-ring: #e2503f;
+  --close-btn-color: #7c7b74;
+  --close-btn-bg-hover: #31312e;
+  --close-btn-ring-color-focus: #e2503f;
+  --modal-title-color: #eeeeec;
+  --modal-description-color: #a9a9a3;
+  --modal-content-border-color: #2a2a28;
+  --modal-content-bg-color: #111110;
 
-  /* Neutral dark mode (Sand from park-ui) */
-  --demo-neutral-emphasized: #7c7b74;
-  --demo-neutral-muted: #31312e;
-  --demo-neutral-fg: #eeeeec;
-  --demo-neutral-fg-muted: #a9a9a3;
-
-  /* Border dark mode */
-  --demo-border: #2a2a28;
-
-  /* Popover dark mode */
-  --demo-bg-popover: #111110;
-
-  /* Shadow tokens dark mode (slightly higher opacity for visibility) */
-  --demo-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.15);
-  --demo-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
-  --demo-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.12);
-  --demo-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --demo-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --demo-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.35);
+  --modal-content-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --modal-content-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.15);
+  --modal-content-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.12);
+  --modal-content-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --modal-content-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --modal-content-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.35);
 }
