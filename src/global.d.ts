@@ -13,10 +13,10 @@ declare module '*.svg' {
   export default ReactComponent;
 }
 
-declare global {
-  interface Performance {
-    memory: any;
-  }
+interface Performance {
+  memory: {
+    usedJSHeapSize: number;
+    totalJSHeapSize: number;
+    jsHeapSizeLimit: number;
+  };
 }
-
-export {};
