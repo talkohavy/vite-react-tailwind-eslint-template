@@ -9,7 +9,7 @@
   padding: 0 10px;
   cursor: pointer;
   background-color: var(--select-trigger-bg-color, white);
-  color: var(--select-trigger-color, rgb(22, 22, 22));
+  color: var(--select-trigger-text-color, rgb(22, 22, 22));
   height: 35px;
   border: 1px solid var(--select-trigger-border-color, black);
 }
@@ -24,8 +24,8 @@
   box-shadow: 0 0 0 1px var(--select-border-color-focus, rgb(53, 93, 255));
 }
 
-.selectTrigger[data-placeholder] {
-  color: var(--select-placeholder-color, white);
+.selectTrigger span[data-placeholder] {
+  color: var(--select-trigger-placeholder-color, #7f7f7f);
 }
 
 .selectIcon {

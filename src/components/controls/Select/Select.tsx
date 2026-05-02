@@ -18,7 +18,7 @@ import styles from './Select.module.scss';
 import SelectItem from './SelectItem';
 import type { SelectOption } from './types';
 
-type SelectProps = {
+export type SelectProps = {
   selectedOption: SelectOption;
   setSelectedOption: (value: any) => void;
   options: Array<SelectOption>;
@@ -103,7 +103,7 @@ export default function Select(props: SelectProps) {
       // name='' // <--- The name of the select. Submitted with its owning form as part of a name/value pair.
     >
       <Trigger className={clsx(styles.selectTrigger, className)} aria-label={ariaLabel}>
-        <Value placeholder={placeholder} />
+        <Value placeholder={placeholder} data-placeholder={placeholder} />
 
         <Icon className={styles.selectIcon}>
           <DownArrow className='size-2.5' />
