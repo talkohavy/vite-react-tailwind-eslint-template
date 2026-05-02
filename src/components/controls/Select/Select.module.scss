@@ -14,6 +14,11 @@
   border: 1px solid var(--select-trigger-border-color, black);
 }
 
+// This is to win against: `body[dir='rtl'] * { direction: rtl; }`
+button[dir='ltr'].selectTrigger {
+  direction: ltr;
+}
+
 .selectTrigger:hover {
   background-color: var(--select-trigger-bg-color-hover, #eaeaea);
 }
