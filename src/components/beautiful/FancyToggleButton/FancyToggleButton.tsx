@@ -9,11 +9,11 @@ type ToggleButtonProps = {
 };
 
 export default function FancyToggleButton(props: ToggleButtonProps) {
-  const { isChecked, setIsChecked, size = 26, className = '' } = props;
+  const { isChecked, setIsChecked, size = 14, className = '' } = props;
 
   return (
     // @ts-ignore
-    <label className={clsx(styles.fancyToggleButton, className)} style={{ '--size': `${size}px` }}>
+    <label className={clsx(styles.fancyToggleButton, className)} style={{ '--height': `${size}px` }}>
       <input
         type='checkbox'
         checked={isChecked}
