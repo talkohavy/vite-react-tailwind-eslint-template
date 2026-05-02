@@ -13,6 +13,7 @@ import {
   Content,
 } from '@radix-ui/react-select';
 import clsx from 'clsx';
+import { addDataAttributeWhen } from '@src/common/utils/addDataAttributeWhen';
 import DownArrow from '../../svgs/DownArrow';
 import styles from './Select.module.scss';
 import SelectItem from './SelectItem';
@@ -111,7 +112,7 @@ export default function Select(props: SelectProps) {
       // name='' // <--- The name of the select. Submitted with its owning form as part of a name/value pair.
     >
       <Trigger className={clsx(styles.selectTrigger, className)} aria-label={ariaLabel}>
-        <Value placeholder={placeholder} data-placeholder={placeholder} />
+        <Value placeholder={placeholder} data-is-expanded={addDataAttributeWhen(!selectedOption?.value)} />
         <Icon className={styles.selectIcon}>
           <DownArrow className='size-2.5' />
         </Icon>
