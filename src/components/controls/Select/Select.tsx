@@ -46,6 +46,12 @@ export type SelectProps = {
   alignOffset?: number;
   ariaLabel?: string;
   showArrow?: boolean;
+  /**
+   * Show scroll buttons on the content menu.
+   *
+   * @default false
+   */
+  showScrollButtons?: boolean;
   className?: string;
   dropdownClassName?: string;
   /**
@@ -72,6 +78,7 @@ export default function Select(props: SelectProps) {
     align,
     alignOffset,
     showArrow,
+    showScrollButtons = false,
     ariaLabel,
     className,
     dropdownClassName,
@@ -80,7 +87,8 @@ export default function Select(props: SelectProps) {
 
   const onValueChange = useCallback(
     (chosenValue: string) => {
-      const selectedOption = options.find(({ value }) => value === chosenValue);
+      const chosenValueAsString = chosenValue.toString();
+      const selectedOption = options.find(({ value }) => value.toString() === chosenValueAsString);
 
       if (!selectedOption) {
         throw new Error("Select component couldn't find an option to match chosenValue on onValueChange");
@@ -104,7 +112,6 @@ export default function Select(props: SelectProps) {
     >
       <Trigger className={clsx(styles.selectTrigger, className)} aria-label={ariaLabel}>
         <Value placeholder={placeholder} data-placeholder={placeholder} />
-
         <Icon className={styles.selectIcon}>
           <DownArrow className='size-2.5' />
         </Icon>
@@ -125,9 +132,11 @@ export default function Select(props: SelectProps) {
           // arrowPadding={arrowPadding}
           // hideWhenDetached // <--- defaults to false
         >
-          <ScrollUpButton className={styles.selectScrollButton}>
-            <DownArrow className='rotate-180 size-2.5' />
-          </ScrollUpButton>
+          {showScrollButtons && (
+            <ScrollUpButton className={styles.selectScrollButton}>
+              <DownArrow className='rotate-180 size-2.5' />
+            </ScrollUpButton>
+          )}
 
           <Viewport className={styles.selectViewport}>
             <Group>
@@ -139,9 +148,11 @@ export default function Select(props: SelectProps) {
             </Group>
           </Viewport>
 
-          <ScrollDownButton className={styles.selectScrollButton}>
-            <DownArrow className='size-2.5' />
-          </ScrollDownButton>
+          {showScrollButtons && (
+            <ScrollDownButton className={styles.selectScrollButton}>
+              <DownArrow className='size-2.5' />
+            </ScrollDownButton>
+          )}
 
           {showArrow && <Arrow className={styles.dropdownMenuArrow} />}
         </Content>
