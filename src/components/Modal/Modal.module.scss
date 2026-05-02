@@ -16,7 +16,7 @@
 .positioner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: var(--modal-positioner-justify-content, center);
   position: fixed;
   inset: 0;
   z-index: calc(var(--modal-z-index) + var(--layer-index, 0));
