@@ -9,6 +9,8 @@
 }
 
 .checkboxInputAndFakeCheckMark {
+  // do NOT remove the position: relative! Without it, you'll see a double scrollbar (e.g. on RegisterModal).
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
