@@ -39,9 +39,20 @@ const config = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
 
+  /**
+   * ts-jest does not support `"moduleResolution": "Bundler"` (the value used in tsconfig.json, which
+   * is correct for Vite). When ts-jest encounters it, it silently falls back to `"node"` (a.k.a.
+   * `node10`), which TypeScript 6+ flags as deprecated (TS5107), causing all test suites to fail.
+   *
+   * The fix: override `moduleResolution` to `"node16"` specifically for ts-jest (the right value for
+   * a Node.js/Jest environment), and add `ignoreDeprecations: "6.0"` to silence any remaining
+   * deprecation noise from the ts-jest tsconfig override.
+   *
+   * The main tsconfig.json is untouched and continues to use `"Bundler"` as intended.
+   */
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+.tsx?$': ['ts-jest', {}],
+    '^.+.tsx?$': ['ts-jest', { tsconfig: { moduleResolution: 'node16', ignoreDeprecations: '6.0' } }],
   },
 
   // All imported modules in your tests should be mocked automatically
