@@ -19,6 +19,9 @@ export default function WebsocketManagerConnectionTab() {
     log,
     messageToSend,
     setMessageToSend,
+    isConnectButtonDisabled,
+    isDisconnectButtonDisabled,
+    isSendButtonDisabled,
   } = useWebsocketManagerConnectionLogic();
 
   return (
@@ -42,13 +45,15 @@ export default function WebsocketManagerConnectionTab() {
           disconnect={disconnect}
           connectionStatus={connectionStatus}
           connectionError={connectionError}
+          isConnectButtonDisabled={isConnectButtonDisabled}
+          isDisconnectButtonDisabled={isDisconnectButtonDisabled}
         />
 
         <SendMessagePanel
           messageToSend={messageToSend}
           setMessageToSend={setMessageToSend}
-          isConnected={isConnected}
           send={send}
+          isSendButtonDisabled={isSendButtonDisabled}
         />
 
         <MessageLogPanel clearLog={clearLog} log={log} isConnected={isConnected} />

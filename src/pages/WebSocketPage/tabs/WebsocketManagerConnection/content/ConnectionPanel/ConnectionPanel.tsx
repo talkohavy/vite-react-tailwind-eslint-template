@@ -1,7 +1,6 @@
 import { WS_SERVICE_URL } from '@src/common/constants';
 import Button from '@src/components/controls/Button';
 import Input from '@src/components/controls/Input';
-import { WsConnectionStatus } from '@src/providers/WebSocketProvider';
 import RetryCounter from '../../../WebsocketHookConnectionTab/content/RetryCounter';
 import StatusBadge from '../StatusBadge';
 import type { WsConnectionStateValues } from '../../../WebsocketHookConnectionTab/logic/constants';
@@ -14,18 +13,22 @@ type ConnectionPanelProps = {
   disconnect: () => void;
   connectionStatus: WsConnectionStateValues | 'connection_acknowledged';
   connectionError: Error | null;
+  isConnectButtonDisabled: boolean;
+  isDisconnectButtonDisabled: boolean;
 };
 
 export default function ConnectionPanel(props: ConnectionPanelProps) {
-  const { url, setUrl, retryCount, onConnectClick, disconnect, connectionStatus, connectionError } = props;
-
-  const isConnected = connectionStatus === WsConnectionStatus.Open;
-  const isConnecting = connectionStatus === WsConnectionStatus.Connecting;
-  const isReconnecting = connectionStatus === WsConnectionStatus.Reconnecting;
-
-  const isDisconnectDisabled = !isConnected && !isConnecting && !isReconnecting;
-  const isConnectDisabled = isConnecting || isReconnecting || isConnected;
-  const isUrlInputDisabled = isConnected || isConnecting || isReconnecting;
+  const {
+    url,
+    setUrl,
+    retryCount,
+    onConnectClick,
+    disconnect,
+    connectionStatus,
+    connectionError,
+    isConnectButtonDisabled,
+    isDisconnectButtonDisabled,
+  } = props;
 
   return (
     <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
@@ -41,7 +44,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
             initialValue={url}
             onChange={setUrl}
             placeholder={WS_SERVICE_URL}
-            disabled={isUrlInputDisabled}
+            disabled={isConnectButtonDisabled}
             className='block w-full dark:bg-gray-800 dark:border-gray-600'
           />
         </div>
@@ -49,7 +52,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
         <div className='flex shrink-0 gap-2'>
           <Button
             onClick={onConnectClick}
-            disabled={isConnectDisabled}
+            disabled={isConnectButtonDisabled}
             className='bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50'
           >
             Connect
@@ -57,7 +60,7 @@ export default function ConnectionPanel(props: ConnectionPanelProps) {
 
           <Button
             onClick={disconnect}
-            disabled={isDisconnectDisabled}
+            disabled={isDisconnectButtonDisabled}
             className='bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 disabled:hover:bg-gray-600'
           >
             Disconnect

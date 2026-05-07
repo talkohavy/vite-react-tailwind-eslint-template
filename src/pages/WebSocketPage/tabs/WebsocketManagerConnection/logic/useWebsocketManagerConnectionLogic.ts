@@ -13,6 +13,7 @@ export function useWebsocketManagerConnectionLogic() {
     isConnected,
     isConnecting,
     isReconnecting,
+    isConnectionAcknowledged,
     connect,
     disconnect,
     send: sendRaw,
@@ -58,6 +59,10 @@ export function useWebsocketManagerConnectionLogic() {
 
   const clearLog = useCallback(() => setLog([]), []);
 
+  const isConnectButtonDisabled = isConnecting || isReconnecting || isConnected || isConnectionAcknowledged;
+  const isDisconnectButtonDisabled = !isConnected && !isConnecting && !isReconnecting;
+  const isSendButtonDisabled = !((isConnected || isConnectionAcknowledged) && messageToSend.trim());
+
   return {
     url,
     setUrl,
@@ -67,6 +72,7 @@ export function useWebsocketManagerConnectionLogic() {
     isConnected,
     isConnecting,
     isReconnecting,
+    isConnectionAcknowledged,
     onConnectClick,
     disconnect,
     send,
@@ -74,5 +80,8 @@ export function useWebsocketManagerConnectionLogic() {
     log,
     messageToSend,
     setMessageToSend,
+    isConnectButtonDisabled,
+    isDisconnectButtonDisabled,
+    isSendButtonDisabled,
   };
 }

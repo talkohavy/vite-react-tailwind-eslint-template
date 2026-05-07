@@ -6,14 +6,12 @@ import styles from './SendMessagePanel.module.scss';
 type SendMessagePanelProps = {
   messageToSend: string;
   setMessageToSend: (value: string) => void;
-  isConnected: boolean;
   send: () => void;
+  isSendButtonDisabled: boolean;
 };
 
 export default function SendMessagePanel(props: SendMessagePanelProps) {
-  const { messageToSend, setMessageToSend, isConnected, send } = props;
-
-  const isSendDisabled = !(isConnected && messageToSend.trim());
+  const { messageToSend, setMessageToSend, send, isSendButtonDisabled } = props;
 
   return (
     <section className='flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
@@ -32,14 +30,13 @@ export default function SendMessagePanel(props: SendMessagePanelProps) {
           placeholder='Type a message in JSON format'
           rows={7}
           resize='vertical'
-          disabled={!isConnected}
           className={clsx(
             styles.sendMessageTextarea,
             'block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800',
           )}
         />
 
-        <Button onClick={send} disabled={isSendDisabled} className='w-full sm:w-auto'>
+        <Button onClick={send} disabled={isSendButtonDisabled} className='w-full sm:w-auto'>
           Send
         </Button>
       </div>
