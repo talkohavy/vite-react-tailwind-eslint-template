@@ -8,6 +8,7 @@ export type WebSocketContextValue = {
   // - Connection Status:
   connectionStatus: WsConnectionStatusValues;
   isConnected: boolean;
+  isConnectionAcknowledged: boolean;
   isConnecting: boolean;
   isReconnecting: boolean;
   lastMessage: string | null;

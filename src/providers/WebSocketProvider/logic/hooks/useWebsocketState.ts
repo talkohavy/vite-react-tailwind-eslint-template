@@ -10,6 +10,7 @@ export function useWebsocketState() {
   const isConnected = connectionStatus === WsConnectionStatus.Open;
   const isConnecting = connectionStatus === WsConnectionStatus.Connecting;
   const isReconnecting = connectionStatus === WsConnectionStatus.Reconnecting;
+  const isConnectionAcknowledged = connectionStatus === WsConnectionStatus.ConnectionAcknowledged;
 
   return {
     connectionStatus,
@@ -19,6 +20,7 @@ export function useWebsocketState() {
     isConnected,
     isConnecting,
     isReconnecting,
+    isConnectionAcknowledged,
     setConnectionStatus,
     setConnectionError,
     setRetryCount,
