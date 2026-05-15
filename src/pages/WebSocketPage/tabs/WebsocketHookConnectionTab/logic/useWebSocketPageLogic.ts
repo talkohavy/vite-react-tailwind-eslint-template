@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { WS_SERVICE_URL } from '@src/common/constants';
 import { WebSocketClient } from '@src/lib/WebSocketClient';
-import { MessageState, type MessageStateValues, WsConnectionState, type WsConnectionStateValues } from './constants';
+import { MessageState, WsConnectionState, type MessageStateValues, type WsConnectionStateValues } from './constants';
 import { nextId } from './utils/nextId';
 
 export type MessageLogEntry = {

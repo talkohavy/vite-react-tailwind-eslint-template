@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import RadioTabs from '../../components/controls/RadioButtons/RadioTabs';
 import MockDataTab from './tabs/MockDataTab';
 import ServerDataTab from './tabs/ServerDataTab';

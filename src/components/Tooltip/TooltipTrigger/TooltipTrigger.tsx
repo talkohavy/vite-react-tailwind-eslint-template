@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useMemo } from 'react';
+import { useMemo, type PropsWithChildren } from 'react';
 import type { PlacementValues, VariantValues } from '../logic/constants';
 
 type TooltipTriggerProps = PropsWithChildren<{

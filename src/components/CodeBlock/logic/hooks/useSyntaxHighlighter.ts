@@ -1,4 +1,4 @@
-import { type RefObject, useEffect } from 'react';
+import { useEffect, type RefObject } from 'react';
 import hljs from 'highlight.js';
 
 type useSyntaxHighlighterProps = {

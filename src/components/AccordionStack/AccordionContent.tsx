@@ -1,4 +1,4 @@
-import { type PropsWithChildren, forwardRef } from 'react';
+import { forwardRef, type PropsWithChildren } from 'react';
 import { Content } from '@radix-ui/react-accordion';
 import clsx from 'clsx';
 

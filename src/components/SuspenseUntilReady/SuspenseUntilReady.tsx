@@ -1,4 +1,4 @@
-import { type PropsWithChildren, type ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState, type PropsWithChildren, type ReactNode } from 'react';
 
 type SuspenseUntilReadyProps = PropsWithChildren<{
   asyncFn: () => Promise<void>;

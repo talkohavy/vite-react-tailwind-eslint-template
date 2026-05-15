@@ -1,4 +1,4 @@
-import { type Token, TokenTypes } from 'create-query-language';
+import { TokenTypes, type Token } from 'create-query-language';
 
 /**
  * Finds the token at the cursor position

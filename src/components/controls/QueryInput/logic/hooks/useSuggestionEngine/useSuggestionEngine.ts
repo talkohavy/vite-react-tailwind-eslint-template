@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { ContextTypes, type Token, type TokenContext, TokenTypes } from 'create-query-language';
+import { ContextTypes, TokenTypes, type Token, type TokenContext } from 'create-query-language';
 import { TOKEN_TYPE_HANDLERS } from './logic/tokenTypeToHandlerMapper';
 import type { CompletionItem, KeyConfig } from '../../../types';
 

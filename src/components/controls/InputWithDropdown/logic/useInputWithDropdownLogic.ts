@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type Combobox as ComboboxOriginal, createListCollection, useCombobox } from '@ark-ui/react';
+import { createListCollection, useCombobox, type Combobox as ComboboxOriginal } from '@ark-ui/react';
 import { flattenOptions } from './utils/flattenOptions';
 import { groupOptions } from './utils/groupOptions';
 import { isGroupedOptions } from './utils/isGroupedOptions';

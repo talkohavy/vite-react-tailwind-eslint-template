@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect, useState } from 'react';
+import { useEffect, useState, type PropsWithChildren } from 'react';
 import clsx from 'clsx';
 
 type DisappearingMessageProps = PropsWithChildren<{

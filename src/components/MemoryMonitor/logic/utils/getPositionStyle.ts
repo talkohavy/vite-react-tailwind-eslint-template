@@ -1,4 +1,4 @@
-import { OFFSET, type PositionValues, WIDGET_WIDTH } from '../constants';
+import { OFFSET, WIDGET_WIDTH, type PositionValues } from '../constants';
 
 export function getPositionStyle(
   position: PositionValues,

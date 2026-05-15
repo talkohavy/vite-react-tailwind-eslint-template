@@ -1,11 +1,11 @@
 import {
   LogicalOperators,
   ContextTypes,
-  type ContextTypeValues,
   SpecialChars,
+  Comparators,
+  type ContextTypeValues,
   type TokenContext,
   type TokenContextWithKey,
-  Comparators,
 } from 'create-query-language';
 import { areQuotesNeeded } from '../../../utils/areQuotesNeeded';
 import ValueOptionItem from '../ValueOptionItem';

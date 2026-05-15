@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { type ChildrenType, Tooltip as TooltipOriginal } from 'react-tooltip';
+import { Tooltip as TooltipOriginal, type ChildrenType } from 'react-tooltip';
 import { Placement, type PlacementValues, type VariantValues } from './logic/constants';
 import styles from './Tooltip.module.scss';
 

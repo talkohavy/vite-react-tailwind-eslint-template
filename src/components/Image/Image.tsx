@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useCallback, useState } from 'react';
+import { useCallback, useState, type PropsWithChildren } from 'react';
 
 type ImageProps = PropsWithChildren<{
   src: string;

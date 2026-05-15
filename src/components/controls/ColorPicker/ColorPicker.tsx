@@ -1,4 +1,4 @@
-import { type Color, ColorPicker as ColorPickerOriginal } from '@ark-ui/react/color-picker';
+import { ColorPicker as ColorPickerOriginal, type Color } from '@ark-ui/react/color-picker';
 import clsx from 'clsx';
 import EyeDropIcon from '../../svgs/EyeDropIcon';
 import styles from './ColorPicker.module.scss';

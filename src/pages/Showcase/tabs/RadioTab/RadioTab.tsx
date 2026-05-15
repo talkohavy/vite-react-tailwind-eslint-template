@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useState } from 'react';
+import { useState, type PropsWithChildren } from 'react';
 import RadioDots from '@src/components/controls/RadioButtons/RadioDots';
 
 export default function RadioTab() {

@@ -1,4 +1,4 @@
-import { type ComponentType, useCallback, useRef } from 'react';
+import { useCallback, useRef, type ComponentType } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import clsx from 'clsx';
 import type { ChildItemProps } from './types';

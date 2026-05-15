@@ -1,4 +1,4 @@
-import { useState, useCallback, type SetStateAction, useImperativeHandle } from 'react';
+import { useState, useCallback, useImperativeHandle, type SetStateAction } from 'react';
 import { collapseAllRecursive } from './utils/collapseAllRecursive';
 import { expandAllRecursive } from './utils/expandAllRecursive';
 import { findNodeById } from './utils/findNodeById';

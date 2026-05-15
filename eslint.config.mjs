@@ -14,10 +14,6 @@ export default [
   {
     languageOptions: {
       globals: { ...globals.node, ...globals.browser },
-      parserOptions: {
-        tsconfigRootDir: import.meta.dirname,
-        project: ['./tsconfig.json'],
-      },
     },
   },
   pluginJs.configs.recommended,
