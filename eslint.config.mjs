@@ -11,7 +11,15 @@ export default [
     // when an `ignores` key is used without any other keys in the configuration object, then it acts as global `ignores`.
     ignores: ['dist', 'coverage', 'iframe-server'],
   },
-  { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
+  {
+    languageOptions: {
+      globals: { ...globals.node, ...globals.browser },
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+        project: ['./tsconfig.json'],
+      },
+    },
+  },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -28,6 +36,22 @@ export default [
       // -----------
       'react-compiler/react-compiler': 'error',
       'import/no-duplicates': ['error', { 'prefer-inline': false }],
+      // Named specifiers: values before inline `type` imports; do not reorder import lines (perfectionist/sort-imports owns that).
+      'import/order': [
+        'error',
+        {
+          groups: [['builtin', 'external', 'internal', 'unknown', 'parent', 'sibling', 'index', 'object', 'type']],
+          'newlines-between': 'ignore',
+          alphabetize: {
+            order: 'ignore',
+            caseInsensitive: true,
+          },
+          named: {
+            enabled: true,
+            types: 'types-last',
+          },
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
