@@ -1,5 +1,13 @@
 /// <reference types="vite/client" />
 
+/**
+ * This following svg import only works if this file doesn't include:
+ * - A global `import` statement
+ * - An `export {}` statement
+ *
+ * If it does, then the following code will work in runtime, but will produce a type error:
+ * import { ReactComponent as ViteIconComponent } from '@src/assets/vite2.svg';
+ */
 declare module '*.svg' {
   // 1. When config is set to: exportType: 'default':
   // const content: React.FC<React.SVGProps<SVGElement>>;
