@@ -46,8 +46,8 @@ export default function WebsocketHookConnectionTab() {
         <SendMessagePanel
           messageToSend={messageToSend}
           setMessageToSend={setMessageToSend}
-          isConnected={isConnected}
           send={send}
+          isSendButtonDisabled={!isConnected}
         />
 
         <MessageLogPanel clearLog={clearLog} log={log} isConnected={isConnected} />
