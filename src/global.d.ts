@@ -7,6 +7,10 @@
  *
  * If it does, then the following code will work in runtime, but will produce a type error:
  * import { ReactComponent as ViteIconComponent } from '@src/assets/vite2.svg';
+ *
+ * That's because it doesn't work on regex paths.
+ * If the path was EXACTLY like this: '../../../../assets/vite2.svg', then it would work.
+ * But since it's a regex path, it doesn't work.
  */
 declare module '*.svg' {
   // 1. When config is set to: exportType: 'default':
