@@ -17,7 +17,6 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     connectionStatus,
     connectionError,
     retryCount,
-    lastMessage,
     isConnected,
     isConnecting,
     isReconnecting,
@@ -25,7 +24,6 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     setConnectionStatus,
     setConnectionError,
     setRetryCount,
-    setLastMessage,
   } = useWebsocketState();
 
   const { subscribeMessages, notifyMessageListeners } = useSubscribeMessages();
@@ -46,7 +44,6 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
     setConnectionStatus,
     setConnectionError,
     setRetryCount,
-    setLastMessage,
     notifyMessageListeners,
     disconnect,
   });
@@ -70,6 +67,7 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
 
   const value: WebSocketContextValue = useMemo(
     () => ({
+      getSocket: () => wsClientRef.current?.getSocket() ?? null,
       connectionStatus,
       connectionError,
       retryCount,
@@ -77,7 +75,6 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
       isConnectionAcknowledged,
       isConnecting,
       isReconnecting,
-      lastMessage,
       connect,
       disconnect,
       send,
@@ -91,7 +88,6 @@ export default function WebSocketProvider(props: WebSocketProviderProps) {
       isConnectionAcknowledged,
       isConnecting,
       isReconnecting,
-      lastMessage,
       connect,
       disconnect,
       send,

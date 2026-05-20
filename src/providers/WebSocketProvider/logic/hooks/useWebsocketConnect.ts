@@ -7,21 +7,13 @@ type UseWebsocketConnectProps = {
   setConnectionStatus: (status: WsConnectionStatusValues) => void;
   setConnectionError: (error: Error | null) => void;
   setRetryCount: (count: number) => void;
-  setLastMessage: (message: string) => void;
   notifyMessageListeners: (message: string) => void;
   disconnect: () => void;
 };
 
 export function useWebsocketConnect(props: UseWebsocketConnectProps) {
-  const {
-    wsClientRef,
-    setConnectionStatus,
-    setConnectionError,
-    setRetryCount,
-    setLastMessage,
-    notifyMessageListeners,
-    disconnect,
-  } = props;
+  const { wsClientRef, setConnectionStatus, setConnectionError, setRetryCount, notifyMessageListeners, disconnect } =
+    props;
 
   const clearErrorAndRetryCount = useCallback(() => {
     setConnectionError(null);
@@ -64,10 +56,9 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
     (event: MessageEvent<string | Blob>) => {
       const data: string = typeof event.data === 'string' ? event.data : `[Blob ${event.data.size} bytes]`;
 
-      setLastMessage(data);
       notifyMessageListeners(data);
     },
-    [notifyMessageListeners, setLastMessage],
+    [notifyMessageListeners],
   );
 
   const handleError = useCallback(() => {

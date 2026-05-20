@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 import type { WsConnectionStatusValues } from './wsConnectionStatus';
 
 export type WebSocketContextValue = {
+  getSocket: () => WebSocket | null;
   connectionError: Error | null;
   retryCount: number;
   // - Latest message (updates on every message).
@@ -11,7 +12,6 @@ export type WebSocketContextValue = {
   isConnectionAcknowledged: boolean;
   isConnecting: boolean;
   isReconnecting: boolean;
-  lastMessage: string | null;
   // - Actions:
   connect: (targetUrl: string, onConnectionOpen?: () => void) => void;
   disconnect: () => void;
@@ -20,7 +20,7 @@ export type WebSocketContextValue = {
    * Subscribe to all incoming text messages. Call the returned function to unsubscribe.
    * Use inside useEffect when a component needs to react to messages (e.g. setState).
    */
-  subscribeMessages: (listener: (message: Record<string, unknown>) => void) => () => void;
+  subscribeMessages: <T = any>(listener: (message: T) => void) => () => void;
 };
 
 const INITIAL_STATE = null;
