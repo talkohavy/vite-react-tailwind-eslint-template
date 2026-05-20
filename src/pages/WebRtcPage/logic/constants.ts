@@ -12,21 +12,12 @@ export const tabOptions = [
   { value: Tabs.Receiver, label: 'Receiver' },
 ];
 
-export const ConnectionState = {
-  Idle: 'idle',
-  Connecting: 'connecting',
-  Open: 'open',
-  Closed: 'closed',
-} as const;
-
-export type ConnectionStateValues = (typeof ConnectionState)[keyof typeof ConnectionState];
-
 export const WebRtcSignalTypes = {
   Sender: 'sender',
   Receiver: 'receiver',
   CreateOffer: 'createOffer',
   CreateAnswer: 'createAnswer',
   IceCandidate: 'iceCandidate',
-};
+} as const;
 
 export type WebRtcSignalTypesValues = (typeof WebRtcSignalTypes)[keyof typeof WebRtcSignalTypes];

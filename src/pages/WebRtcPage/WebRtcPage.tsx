@@ -13,7 +13,10 @@ export default function WebRtcPage() {
           <h1 className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>WebRTC P2P</h1>
 
           <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
-            Peer-to-peer screen sharing via a signaling server. Use Sender in one tab and Receiver in another.
+            Peer-to-peer screen sharing via a signaling server. Signaling uses{' '}
+            <span className='font-medium text-gray-700 dark:text-gray-300'>WebSocketProvider</span> +{' '}
+            <span className='font-medium text-gray-700 dark:text-gray-300'>useWebSocket()</span>. Use Sender in one tab
+            and Receiver in another.
           </p>
         </header>
 
