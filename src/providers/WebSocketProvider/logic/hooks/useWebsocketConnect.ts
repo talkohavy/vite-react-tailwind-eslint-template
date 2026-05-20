@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { WebSocketClient } from '@src/lib/WebSocketClient';
 import { WsConnectionStatus, type WsConnectionStatusValues } from '../../wsConnectionStatus';
+import type { ConnectOptions } from '../../types';
 
 type UseWebsocketConnectProps = {
   wsClientRef: any;
@@ -30,8 +31,8 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
   );
 
   const handleClose = useCallback(
-    (event: { shouldRetry: boolean }) => {
-      if (event.shouldRetry) {
+    (props: { shouldRetry: boolean }, onConnectionClose?: () => void) => {
+      if (props.shouldRetry) {
         setConnectionStatus(WsConnectionStatus.Reconnecting);
       } else {
         // eslint-disable-next-line
@@ -41,6 +42,7 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
       }
 
       setConnectionError(null);
+      onConnectionClose?.();
     },
     [setConnectionStatus, setConnectionError, setRetryCount, wsClientRef],
   );
@@ -66,7 +68,9 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
   }, [setConnectionError]);
 
   const connect = useCallback(
-    (targetUrl: string, onConnectionOpen?: () => void) => {
+    (targetUrl: string, options?: ConnectOptions) => {
+      const { onConnectionOpen, onConnectionClose } = options ?? {};
+
       disconnect();
       clearErrorAndRetryCount();
 
@@ -84,7 +88,7 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
       try {
         wsClient = new WebSocketClient(trimmedUrl, {
           onOpen: () => handleOpen(onConnectionOpen),
-          onClose: handleClose,
+          onClose: (event) => handleClose(event, onConnectionClose),
           onError: handleError,
           onMessage: handleMessage,
           onRetry: handleRetry,

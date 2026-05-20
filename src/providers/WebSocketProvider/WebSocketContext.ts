@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+import type { ConnectOptions } from './types';
 import type { WsConnectionStatusValues } from './wsConnectionStatus';
 
 export type WebSocketContextValue = {
@@ -13,7 +14,7 @@ export type WebSocketContextValue = {
   isConnecting: boolean;
   isReconnecting: boolean;
   // - Actions:
-  connect: (targetUrl: string, onConnectionOpen?: () => void) => void;
+  connect: (targetUrl: string, options?: ConnectOptions) => void;
   disconnect: () => void;
   send: (data: string) => void;
   /**

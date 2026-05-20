@@ -46,8 +46,8 @@ export function useWebSocketPageLogic() {
     setRetryCount(0);
   }, []);
 
-  const handleClose = useCallback((event: { shouldRetry: boolean }) => {
-    if (event.shouldRetry) {
+  const handleClose = useCallback((props: { shouldRetry: boolean }) => {
+    if (props.shouldRetry) {
       setConnectionState(WsConnectionState.Reconnecting);
     } else {
       wsClientRef.current = null;
