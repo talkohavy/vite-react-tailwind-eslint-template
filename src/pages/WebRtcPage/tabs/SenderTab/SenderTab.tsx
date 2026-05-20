@@ -6,15 +6,14 @@ import { useSenderTabLogic } from './logic/useSenderTabLogic';
 export default function SenderTab() {
   const {
     videoRef,
-    error,
     isSharing,
     isConnected,
     isConnecting,
     isConnectDisabled,
     isDisconnectDisabled,
     isStartSharingDisabled,
-    connect,
-    disconnect,
+    connectSender,
+    disconnectSender,
     startSharing,
     sessionId,
     handleGenerateNewSession,
@@ -39,7 +38,7 @@ export default function SenderTab() {
 
         <div className='flex flex-wrap gap-2'>
           <Button
-            onClick={connect}
+            onClick={connectSender}
             disabled={isConnectDisabled}
             className='bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50'
           >
@@ -47,7 +46,7 @@ export default function SenderTab() {
           </Button>
 
           <Button
-            onClick={disconnect}
+            onClick={disconnectSender}
             disabled={isDisconnectDisabled}
             className='bg-gray-600 hover:bg-gray-700 disabled:opacity-50'
           >
@@ -79,11 +78,11 @@ export default function SenderTab() {
           </span>
         )}
 
-        {error && (
+        {/* {error && (
           <span className='text-sm text-red-600 dark:text-red-400' title={error.message}>
             {error.message}
           </span>
-        )}
+        )} */}
       </section>
 
       <section
