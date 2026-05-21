@@ -31,8 +31,8 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
   );
 
   const handleClose = useCallback(
-    (props: { shouldRetry: boolean }, onConnectionClose?: () => void) => {
-      if (props.shouldRetry) {
+    (context: { shouldRetry: boolean }, onConnectionClose?: () => void) => {
+      if (context.shouldRetry) {
         setConnectionStatus(WsConnectionStatus.Reconnecting);
       } else {
         // eslint-disable-next-line
@@ -88,7 +88,7 @@ export function useWebsocketConnect(props: UseWebsocketConnectProps) {
       try {
         wsClient = new WebSocketClient(trimmedUrl, {
           onOpen: () => handleOpen(onConnectionOpen),
-          onClose: (event) => handleClose(event, onConnectionClose),
+          onClose: (context) => handleClose(context, onConnectionClose),
           onError: handleError,
           onMessage: handleMessage,
           onRetry: handleRetry,

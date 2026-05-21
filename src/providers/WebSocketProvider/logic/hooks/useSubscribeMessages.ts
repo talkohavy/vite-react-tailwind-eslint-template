@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { parseJson } from '../../../../common/utils/parseJson';
+import { parseJson } from '@src/common/utils/parseJson';
 
 export function useSubscribeMessages() {
   const messageListenersRef = useRef(new Set<(message: any) => void>());

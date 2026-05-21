@@ -6,7 +6,6 @@ export type WebSocketContextValue = {
   getSocket: () => WebSocket | null;
   connectionError: Error | null;
   retryCount: number;
-  // - Latest message (updates on every message).
   // - Connection Status:
   connectionStatus: WsConnectionStatusValues;
   isConnected: boolean;
