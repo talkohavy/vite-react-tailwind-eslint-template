@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents } from '@src/common/constants/websocket';
+import { isServerMessage } from '@src/common/utils/isServerMessage';
 import { isTopicMessage } from '@src/common/utils/isTopicMessage';
 import { useWebSocket, WsConnectionStatus } from '@src/providers/WebSocketProvider';
 import { WebRtcSignalTypes } from '../../../logic/constants';
@@ -53,13 +54,16 @@ export function useReceiverTabLogic() {
 
   useEffect(() => {
     return subscribeMessages(async (message) => {
-      if (message.type === WsConnectionStatus.ConnectionAcknowledged) {
-        const message: ClientMessage<WebRtcSignalingPayload> = {
-          event: SocketEvents.WebRtc,
-          payload: { type: WebRtcSignalTypes.Receiver, sessionId },
-        };
+      if (isServerMessage(message)) {
+        if (message.type === WsConnectionStatus.ConnectionAcknowledged) {
+          const message: ClientMessage<WebRtcSignalingPayload> = {
+            event: SocketEvents.WebRtc,
+            payload: { type: WebRtcSignalTypes.Receiver, sessionId },
+          };
 
-        send(JSON.stringify(message));
+          send(JSON.stringify(message));
+        }
+        return;
       }
 
       if (isTopicMessage(message)) {
