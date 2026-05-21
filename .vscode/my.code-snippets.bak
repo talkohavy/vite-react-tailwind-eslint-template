@@ -1,21 +1,21 @@
 {
-  "className": {
+  "className with string": {
     "prefix": ["cl"],
     "body": ["className=''"],
     "description": "className with string",
   },
-  "classStyle": {
+  "className with style.name": {
     "prefix": ["clas", "class"],
     "body": ["className={styles.${1}}"],
     "description": "className with style",
   },
-  "forEach": {
-    "prefix": ["fo", "for", "fore", "forea"],
-    "body": ["forEach((item) => {", "\t${1}", "});"],
-    "description": "forEach loop",
+  "className with clsx": {
+    "prefix": ["cclsx"],
+    "body": ["className={clsx(${1})}"],
+    "description": "className with style",
   },
   "export default": {
-    "prefix": ["ex", "exp", "expo", "exdef"],
+    "prefix": ["ex", "exp", "expo"],
     "body": ["export { default } from '.${1}';"],
     "description": "const props",
   },
@@ -47,8 +47,13 @@
     ],
     "description": "My React functional component.",
   },
-  "My React Function Typescript with Styles": {
-    "prefix": ["rfcts"],
+  "Hook": {
+    "prefix": ["hook"],
+    "body": ["export function ${1:$TM_FILENAME_BASE}(){", "\treturn {};", "}"],
+    "description": "Hook function",
+  },
+  "React Function with Styles": {
+    "prefix": ["rfts"],
     "body": [
       "import styles from './${1:$TM_FILENAME_BASE}.module.scss';",
       "",
@@ -63,57 +68,31 @@
       "}",
       "",
     ],
-    "description": "My React functional component.",
-  },
-  "My React Function Typescript": {
-    "prefix": ["rfct"],
-    "body": [
-      "type ${1:$TM_FILENAME_BASE}Props = {",
-      "\tname: string;",
-      "};",
-      "",
-      "export default function ${1:$TM_FILENAME_BASE}(props: ${1:$TM_FILENAME_BASE}Props) {",
-      "\tconst { name } = props;",
-      "",
-      "\treturn <div>${1:$TM_FILENAME_BASE}</div>;",
-      "}",
-      "",
-    ],
-    "description": "My React functional component.",
+    "description": "React functional component",
   },
   "My useState": {
-    "prefix": ["ss", "uses", "use"],
+    "prefix": ["use", "uses"],
     "body": ["const [${1:value},set${1:value}] = useState();"],
     "description": "My Simple useState.",
   },
-  "My useEfect": {
-    "prefix": ["ue", "usee", "use"],
-    "body": ["useEffect(() => {", "\t$0", "}, [${1:dependencies}])"],
+  "useEffect": {
+    "prefix": ["use", "usee"],
+    "body": ["useEffect(() => {", "\t$0", "}, [])"],
     "description": "My Simple useState.",
   },
-  "My clean useEfect": {
-    "prefix": ["uecl"],
-    "body": ["useEffect(()=>{", "\treturn () => ${2:cleanup}", "},[${3:dependencies}])"],
-    "description": "My Simple useState.",
-  },
-  "My console.log": {
+  "Console log": {
     "prefix": ["c", "co", "con", "clg"],
     "body": ["console.log('${1:hi}')"],
     "description": "My Console Log",
   },
-  "My console.log is": {
-    "prefix": ["c", "clgis"],
+  "Console log is": {
+    "prefix": ["clgi"],
     "body": ["console.log('${1:props} is:', ${1:props})"],
     "description": "My Console Log Is",
   },
-  "My console.error": {
+  "Console error": {
     "prefix": ["cle"],
     "body": ["console.error(${0:error});"],
     "description": "My Console Error",
-  },
-  "My console.warn": {
-    "prefix": ["clw"],
-    "body": ["console.warn(${0:props});"],
-    "description": "My Console Warn",
   },
 }
