@@ -5,3 +5,4 @@ export type Prettify<T> = {
 export type * from './postMessageEvents';
 export type * from './backgroundSync';
 export type * from './route';
+export type * from './websocket';

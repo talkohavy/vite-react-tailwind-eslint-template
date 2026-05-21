@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { DatePicker as DatePickerOriginal, useDatePicker, type DateValue } from '@ark-ui/react/date-picker';
 import { Portal } from '@ark-ui/react/portal';
 import clsx from 'clsx';
@@ -79,10 +80,14 @@ export default function DatePicker(props: DatePickerProps) {
     // maxView: 'day',
   });
 
+  const handleClearValue = useCallback(() => {
+    datePicker.clearValue();
+  }, [datePicker]);
+
   return (
     <>
       {Boolean(value.length) && (
-        <button type='button' className='self-start' onClick={datePicker.clearValue}>
+        <button type='button' className='self-start' onClick={handleClearValue}>
           Clear
         </button>
       )}

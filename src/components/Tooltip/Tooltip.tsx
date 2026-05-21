@@ -1,5 +1,5 @@
-import type { PropsWithChildren } from 'react';
-import { Tooltip as TooltipOriginal, type ChildrenType } from 'react-tooltip';
+import type { PropsWithChildren, ReactNode } from 'react';
+import { Tooltip as TooltipOriginal } from 'react-tooltip';
 import { Placement, type PlacementValues, type VariantValues } from './logic/constants';
 import styles from './Tooltip.module.scss';
 
@@ -48,7 +48,7 @@ type TooltipProps = PropsWithChildren<{
    */
   noArrow?: boolean;
   variant?: VariantValues;
-  render?: (render: { content: string | null; activeAnchor: HTMLElement | null }) => ChildrenType;
+  render?: (render: { content: ReactNode | null; activeAnchor: HTMLElement | null }) => ReactNode;
   className?: string;
   /**
    * You can add these:
