@@ -1,17 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
-import { ConnectionState, WebRtcSignalTypes, type ConnectionStateValues } from '../../../logic/constants';
-import { setupWebRtcReceiving } from './setupWebRtcReceiving';
+import { useWebSocket, WsConnectionStatus } from '@src/providers/WebSocketProvider';
+import { WebRtcSignalTypes } from '../../../logic/constants';
+import { handleCreateOfferIncomingMessage } from './utils/handleCreateOfferIncomingMessage';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
 
 export function useReceiverTabLogic() {
-  const [sessionId, setSessionId] = useState('');
-  const [connectionState, setConnectionState] = useState<ConnectionStateValues>(ConnectionState.Idle);
-  const [error, setError] = useState<Error | null>(null);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const {
+    isConnected: isOpen,
+    isConnecting,
+    isConnectionAcknowledged,
+    connect,
+    disconnect,
+    subscribeMessages,
+    send,
+    getSocket,
+  } = useWebSocket();
 
-  const socketRef = useRef<WebSocket | null>(null);
+  const [sessionId, setSessionId] = useState('');
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -19,11 +27,8 @@ export function useReceiverTabLogic() {
     null,
   );
 
-  const isConnected = connectionState === ConnectionState.Open;
-  const isConnecting = connectionState === ConnectionState.Connecting;
-
-  const isConnectDisabled = isConnecting || isConnected || !sessionId.trim();
-  const isDisconnectDisabled = !isConnected && !isConnecting;
+  const isConnectDisabled = isConnecting || isOpen || isConnectionAcknowledged || !sessionId.trim();
+  const isDisconnectDisabled = !isOpen && !isConnectionAcknowledged && !isConnecting;
 
   const clearRemoteStreamAndVideo = useCallback(() => {
     const mediaStream = remoteStreamRef.current;
@@ -44,40 +49,27 @@ export function useReceiverTabLogic() {
     }
   }, []);
 
-  const connect = useCallback(() => {
-    setError(null);
-    setConnectionState(ConnectionState.Connecting);
+  useEffect(() => {
+    return subscribeMessages(async (data) => {
+      if (data.type === WsConnectionStatus.ConnectionAcknowledged) {
+        const message: SocketEventMessage<WebRtcSignalingPayload> = {
+          event: SocketEvents.WebRtc,
+          payload: { type: WebRtcSignalTypes.Receiver, sessionId },
+        };
 
-    const socket = new WebSocket(API_GATEWAY_URL);
-    socketRef.current = socket;
+        send(JSON.stringify(message));
+      }
 
-    socket.onopen = () => {
-      setConnectionState(ConnectionState.Open);
-
-      const message: SocketEventMessage<WebRtcSignalingPayload> = {
-        event: SocketEvents.WebRtc,
-        payload: {
-          type: WebRtcSignalTypes.Receiver,
-          sessionId,
-        },
-      };
-
-      socket.send(JSON.stringify(message));
-    };
-
-    socket.onmessage = async (event: MessageEvent<string>) => {
-      const payload = JSON.parse(event.data);
-
-      if (payload.type === WebRtcSignalTypes.CreateOffer && payload.sdp) {
+      if (data.type === WebRtcSignalTypes.CreateOffer && data.sdp) {
         peerConnectionRef.current?.close();
         peerConnectionRef.current = null;
         messageHandlerRef.current = null;
         clearRemoteStreamAndVideo();
 
-        const { peerConnection, handleIceCandidate } = setupWebRtcReceiving({
-          socket,
+        const { peerConnection, handleIceCandidate } = handleCreateOfferIncomingMessage({
+          send,
           sessionId,
-          offerSdp: payload.sdp,
+          offerSdp: data.sdp,
           callbacks: {
             onRemoteStream: (stream) => {
               remoteStreamRef.current = stream;
@@ -93,38 +85,34 @@ export function useReceiverTabLogic() {
 
         peerConnectionRef.current = peerConnection;
         messageHandlerRef.current = { handleIceCandidate };
-      } else if (payload.type === WebRtcSignalTypes.IceCandidate && payload.candidate) {
-        await messageHandlerRef.current?.handleIceCandidate(payload.candidate);
+      } else if (data.type === WebRtcSignalTypes.IceCandidate && data.candidate) {
+        await messageHandlerRef.current?.handleIceCandidate(data.candidate);
       }
-    };
+    });
+  }, [getSocket, subscribeMessages, send, sessionId, clearRemoteStreamAndVideo]);
 
-    socket.onclose = () => {
-      setConnectionState(ConnectionState.Closed);
-      socketRef.current = null;
-      peerConnectionRef.current?.close();
-      peerConnectionRef.current = null;
-      messageHandlerRef.current = null;
-      clearRemoteStreamAndVideo();
-    };
+  const connectReceiver = useCallback(() => {
+    connect(API_GATEWAY_URL, {
+      onConnectionClose: () => {
+        peerConnectionRef.current?.close();
+        peerConnectionRef.current = null;
+        messageHandlerRef.current = null;
+        clearRemoteStreamAndVideo();
+      },
+    });
+  }, [clearRemoteStreamAndVideo, connect]);
 
-    socket.onerror = () => {
-      setError(new Error('WebSocket error'));
-    };
-  }, [clearRemoteStreamAndVideo, sessionId]);
-
-  const disconnect = useCallback(() => {
-    const socket = socketRef.current;
+  const disconnectReceiver = useCallback(() => {
+    const socket = getSocket();
     const isClosable = socket?.readyState === WebSocket.OPEN || socket?.readyState === WebSocket.CONNECTING;
 
     if (isClosable) socket.close();
 
-    socketRef.current = null;
     peerConnectionRef.current?.close();
     peerConnectionRef.current = null;
     messageHandlerRef.current = null;
     clearRemoteStreamAndVideo();
-    setConnectionState(ConnectionState.Closed);
-  }, [clearRemoteStreamAndVideo]);
+  }, [clearRemoteStreamAndVideo, getSocket]);
 
   const setVideoRef = useCallback(
     (videoElement: HTMLVideoElement | null) => {
@@ -144,16 +132,17 @@ export function useReceiverTabLogic() {
     };
   }, [disconnect]);
 
+  const isConnected = isOpen || isConnectionAcknowledged;
+
   return {
-    error,
     hasRemoteStream: !!remoteStream,
     remoteStream,
     isConnected,
     isConnecting,
     isConnectDisabled,
     isDisconnectDisabled,
-    connect,
-    disconnect,
+    connectReceiver,
+    disconnectReceiver,
     setVideoRef,
     sessionId,
     setSessionId,

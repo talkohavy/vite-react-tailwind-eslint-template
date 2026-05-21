@@ -1,31 +1,16 @@
 import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
-import { WebRtcSignalTypes } from '../../../logic/constants';
-import type { WebRtcSignalingPayload } from '../../../logic/types';
+import { WebRtcSignalTypes } from '../../../../logic/constants';
+import type { WebRtcSignalingPayload } from '../../../../logic/types';
 
-export type SetupWebRtcReceivingCallbacks = {
-  onRemoteStream: (stream: MediaStream) => void;
-  onStreamCleared: () => void;
-};
-
-type SetupWebRtcReceivingProps = {
-  socket: WebSocket;
+type HandleCreateOfferIncomingMessageProps = {
+  send: (message: string) => void;
   sessionId: string;
   offerSdp: RTCSessionDescriptionInit;
   callbacks: SetupWebRtcReceivingCallbacks;
 };
 
-export type ReceiverSession = {
-  peerConnection: RTCPeerConnection;
-  handleIceCandidate: (candidate: RTCIceCandidateInit) => Promise<void>;
-};
-
-/**
- * Single responsibility: create an RTCPeerConnection for the receiver side,
- * set remote description from the offer, create and send the answer, and
- * set up track/connection/ice handlers. Caller handles signaling message routing.
- */
-export function setupWebRtcReceiving(props: SetupWebRtcReceivingProps): ReceiverSession {
-  const { socket, sessionId, offerSdp, callbacks } = props;
+export function handleCreateOfferIncomingMessage(props: HandleCreateOfferIncomingMessageProps) {
+  const { send, sessionId, offerSdp, callbacks } = props;
 
   const { onRemoteStream, onStreamCleared } = callbacks;
 
@@ -52,7 +37,7 @@ export function setupWebRtcReceiving(props: SetupWebRtcReceivingProps): Receiver
       },
     };
 
-    socket.send(JSON.stringify(message));
+    send(JSON.stringify(message));
   };
 
   peerConnection.ontrack = (trackEvent) => {
@@ -85,7 +70,7 @@ export function setupWebRtcReceiving(props: SetupWebRtcReceivingProps): Receiver
       },
     };
 
-    socket.send(JSON.stringify(message));
+    send(JSON.stringify(message));
   }
 
   async function handleIceCandidate(candidate: RTCIceCandidateInit): Promise<void> {
@@ -105,3 +90,8 @@ export function setupWebRtcReceiving(props: SetupWebRtcReceivingProps): Receiver
     handleIceCandidate,
   };
 }
+
+type SetupWebRtcReceivingCallbacks = {
+  onRemoteStream: (stream: MediaStream) => void;
+  onStreamCleared: () => void;
+};
