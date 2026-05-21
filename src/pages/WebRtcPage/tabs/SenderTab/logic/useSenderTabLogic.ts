@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
 import { SocketEvents } from '@src/common/constants/websocket';
+import { isTopicMessage } from '@src/common/utils/isTopicMessage';
 import { useWebSocket, WsConnectionStatus } from '@src/providers/WebSocketProvider';
 import { WebRtcSignalTypes } from '../../../logic/constants';
 import { attachStreamToVideo } from './utils/attachStreamToVideo';
@@ -28,6 +29,10 @@ export function useSenderTabLogic() {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const messageHandlerRef = useRef<{
+    handleCreateAnswer: (sdp: RTCSessionDescriptionInit) => Promise<void>;
+    handleIceCandidate: (candidate: RTCIceCandidateInit) => Promise<void>;
+  } | null>(null);
 
   const handleGenerateNewSession = () => {
     disconnect();
@@ -45,14 +50,27 @@ export function useSenderTabLogic() {
   }, [connect]);
 
   useEffect(() => {
-    return subscribeMessages((data) => {
-      if (data.type === WsConnectionStatus.ConnectionAcknowledged) {
+    return subscribeMessages(async (message) => {
+      if (message.type === WsConnectionStatus.ConnectionAcknowledged) {
         const webRtcMessage: ClientMessage<WebRtcSignalingPayload> = {
           event: SocketEvents.WebRtc,
           payload: { type: WebRtcSignalTypes.Sender, sessionId },
         };
 
         send(JSON.stringify(webRtcMessage));
+        return;
+      }
+
+      if (isTopicMessage(message)) {
+        const { data } = message;
+
+        if (data.type === WebRtcSignalTypes.CreateAnswer && data.sdp) {
+          await messageHandlerRef.current?.handleCreateAnswer(data.sdp);
+        }
+
+        if (data.type === WebRtcSignalTypes.IceCandidate && data.candidate) {
+          await messageHandlerRef.current?.handleIceCandidate(data.candidate);
+        }
       }
     });
   }, [subscribeMessages, send, sessionId]);
@@ -62,6 +80,7 @@ export function useSenderTabLogic() {
 
     peerConnectionRef.current?.close();
     peerConnectionRef.current = null;
+    messageHandlerRef.current = null;
     mediaStreamRef.current?.getTracks().forEach((track) => void track.stop());
     mediaStreamRef.current = null;
     if (videoRef.current) videoRef.current.srcObject = null;
@@ -88,12 +107,18 @@ export function useSenderTabLogic() {
 
       attachStreamToVideo(mediaStream, videoRef.current);
 
-      const peerConnection = setupWebRtcPeerConnection({ socket, sessionId, mediaStream });
+      const { peerConnection, handleCreateAnswer, handleIceCandidate } = setupWebRtcPeerConnection({
+        send,
+        sessionId,
+        mediaStream,
+      });
+
       peerConnectionRef.current = peerConnection;
+      messageHandlerRef.current = { handleCreateAnswer, handleIceCandidate };
 
       setIsSharing(true);
     },
-    [getSocket, sessionId],
+    [getSocket, send, sessionId],
   );
 
   useEffect(() => {

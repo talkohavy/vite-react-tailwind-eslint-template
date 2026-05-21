@@ -42,7 +42,17 @@ export function handleCreateOfferIncomingMessage(props: HandleCreateOfferIncomin
   };
 
   peerConnection.ontrack = (trackEvent) => {
+    const streamFromEvent = trackEvent.streams[0];
+
+    if (streamFromEvent) {
+      if (remoteStream.getTracks().length === 0) {
+        onRemoteStream(streamFromEvent);
+      }
+      return;
+    }
+
     remoteStream.addTrack(trackEvent.track);
+
     // Notify once when the first track arrives so the UI can show and attach the stream.
     // Later tracks (e.g. audio) are added to the same MediaStream; no need to notify again.
     if (remoteStream.getTracks().length === 1) {

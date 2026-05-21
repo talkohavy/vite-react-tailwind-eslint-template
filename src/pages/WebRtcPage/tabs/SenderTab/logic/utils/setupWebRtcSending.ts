@@ -4,20 +4,29 @@ import type { WebRtcSignalingPayload } from '../../../../logic/types';
 import type { ClientMessage } from '@src/common/types';
 
 type SetupWebRtcPeerConnectionProps = {
-  socket: WebSocket;
+  send: (message: string) => void;
   sessionId: string;
   mediaStream: MediaStream;
 };
 
+type SetupWebRtcPeerConnectionResult = {
+  peerConnection: RTCPeerConnection;
+  handleCreateAnswer: (sdp: RTCSessionDescriptionInit) => Promise<void>;
+  handleIceCandidate: (candidate: RTCIceCandidateInit) => Promise<void>;
+};
+
 /**
  * Single responsibility: set up an RTCPeerConnection to send a media stream
- * over the given WebSocket (signaling) and add all tracks from the stream.
- * Does not handle acquiring the stream or displaying it locally.
+ * over the given signaling channel and add all tracks from the stream.
+ * Does not handle acquiring the stream, displaying it locally, or inbound signaling
+ * (answers / ICE) — callers wire those via the returned handlers.
  */
-export function setupWebRtcPeerConnection(props: SetupWebRtcPeerConnectionProps): RTCPeerConnection {
-  const { socket, sessionId, mediaStream } = props;
+export function setupWebRtcPeerConnection(props: SetupWebRtcPeerConnectionProps): SetupWebRtcPeerConnectionResult {
+  const { send, sessionId, mediaStream } = props;
 
   const peerConnection = new RTCPeerConnection();
+  const iceCandidateQueue: RTCIceCandidateInit[] = [];
+  let remoteDescriptionSet = false;
 
   peerConnection.onnegotiationneeded = async () => {
     const offer = await peerConnection.createOffer();
@@ -32,7 +41,7 @@ export function setupWebRtcPeerConnection(props: SetupWebRtcPeerConnectionProps)
       },
     };
 
-    socket.send(JSON.stringify(webRtcMessage));
+    send(JSON.stringify(webRtcMessage));
   };
 
   peerConnection.onicecandidate = (event) => {
@@ -47,30 +56,27 @@ export function setupWebRtcPeerConnection(props: SetupWebRtcPeerConnectionProps)
       },
     };
 
-    socket.send(JSON.stringify(webRtcMessage));
+    send(JSON.stringify(webRtcMessage));
   };
 
-  const iceCandidateQueue: RTCIceCandidateInit[] = [];
-  let remoteDescriptionSet = false;
+  async function handleCreateAnswer(sdp: RTCSessionDescriptionInit): Promise<void> {
+    await peerConnection.setRemoteDescription(sdp);
+    remoteDescriptionSet = true;
 
-  socket.onmessage = async (event: MessageEvent<string>) => {
-    const payload = JSON.parse(event.data);
-
-    if (payload.type === WebRtcSignalTypes.CreateAnswer && payload.sdp) {
-      await peerConnection.setRemoteDescription(payload.sdp);
-      remoteDescriptionSet = true;
-      for (const candidate of iceCandidateQueue) {
-        await peerConnection.addIceCandidate(candidate);
-      }
-      iceCandidateQueue.length = 0;
-    } else if (payload.type === WebRtcSignalTypes.IceCandidate && payload.candidate) {
-      if (remoteDescriptionSet) {
-        await peerConnection.addIceCandidate(payload.candidate);
-      } else {
-        iceCandidateQueue.push(payload.candidate);
-      }
+    for (const candidate of iceCandidateQueue) {
+      await peerConnection.addIceCandidate(candidate);
     }
-  };
+
+    iceCandidateQueue.length = 0;
+  }
+
+  async function handleIceCandidate(candidate: RTCIceCandidateInit): Promise<void> {
+    if (remoteDescriptionSet) {
+      await peerConnection.addIceCandidate(candidate);
+    } else {
+      iceCandidateQueue.push(candidate);
+    }
+  }
 
   const videoTrack = mediaStream.getVideoTracks()[0];
   const audioTrack = mediaStream.getAudioTracks()[0];
@@ -78,5 +84,9 @@ export function setupWebRtcPeerConnection(props: SetupWebRtcPeerConnectionProps)
   if (videoTrack) peerConnection.addTrack(videoTrack, mediaStream);
   if (audioTrack) peerConnection.addTrack(audioTrack, mediaStream);
 
-  return peerConnection;
+  return {
+    peerConnection,
+    handleCreateAnswer,
+    handleIceCandidate,
+  };
 }
