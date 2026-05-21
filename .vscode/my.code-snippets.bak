@@ -70,7 +70,7 @@
     ],
     "description": "React functional component",
   },
-  "My useState": {
+  "useState": {
     "prefix": ["use", "uses"],
     "body": ["const [${1:value},set${1:value}] = useState();"],
     "description": "My Simple useState.",
