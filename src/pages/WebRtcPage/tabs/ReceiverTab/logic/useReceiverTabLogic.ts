@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_GATEWAY_URL } from '@src/common/constants';
-import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
+import { SocketEvents } from '@src/common/constants/websocket';
+import { isTopicMessage } from '@src/common/utils/isTopicMessage';
 import { useWebSocket, WsConnectionStatus } from '@src/providers/WebSocketProvider';
 import { WebRtcSignalTypes } from '../../../logic/constants';
 import { handleCreateOfferIncomingMessage } from './utils/handleCreateOfferIncomingMessage';
 import type { WebRtcSignalingPayload } from '../../../logic/types';
+import type { ClientMessage } from '@src/common/types';
 
 export function useReceiverTabLogic() {
   const {
@@ -50,9 +52,9 @@ export function useReceiverTabLogic() {
   }, []);
 
   useEffect(() => {
-    return subscribeMessages(async (data) => {
-      if (data.type === WsConnectionStatus.ConnectionAcknowledged) {
-        const message: SocketEventMessage<WebRtcSignalingPayload> = {
+    return subscribeMessages(async (message) => {
+      if (message.type === WsConnectionStatus.ConnectionAcknowledged) {
+        const message: ClientMessage<WebRtcSignalingPayload> = {
           event: SocketEvents.WebRtc,
           payload: { type: WebRtcSignalTypes.Receiver, sessionId },
         };
@@ -60,33 +62,39 @@ export function useReceiverTabLogic() {
         send(JSON.stringify(message));
       }
 
-      if (data.type === WebRtcSignalTypes.CreateOffer && data.sdp) {
-        peerConnectionRef.current?.close();
-        peerConnectionRef.current = null;
-        messageHandlerRef.current = null;
-        clearRemoteStreamAndVideo();
+      if (isTopicMessage(message)) {
+        const { data } = message;
 
-        const { peerConnection, handleIceCandidate } = handleCreateOfferIncomingMessage({
-          send,
-          sessionId,
-          offerSdp: data.sdp,
-          callbacks: {
-            onRemoteStream: (stream) => {
-              remoteStreamRef.current = stream;
-              setRemoteStream(stream);
-              if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-                videoRef.current.play().catch(() => {});
-              }
+        if (data.type === WebRtcSignalTypes.CreateOffer && data.sdp) {
+          peerConnectionRef.current?.close();
+          peerConnectionRef.current = null;
+          messageHandlerRef.current = null;
+          clearRemoteStreamAndVideo();
+
+          const { peerConnection, handleIceCandidate } = handleCreateOfferIncomingMessage({
+            send,
+            sessionId,
+            offerSdp: data.sdp,
+            callbacks: {
+              onRemoteStream: (stream) => {
+                remoteStreamRef.current = stream;
+                setRemoteStream(stream);
+                if (videoRef.current) {
+                  videoRef.current.srcObject = stream;
+                  videoRef.current.play().catch(() => {});
+                }
+              },
+              onStreamCleared: clearRemoteStreamAndVideo,
             },
-            onStreamCleared: clearRemoteStreamAndVideo,
-          },
-        });
+          });
 
-        peerConnectionRef.current = peerConnection;
-        messageHandlerRef.current = { handleIceCandidate };
-      } else if (data.type === WebRtcSignalTypes.IceCandidate && data.candidate) {
-        await messageHandlerRef.current?.handleIceCandidate(data.candidate);
+          peerConnectionRef.current = peerConnection;
+          messageHandlerRef.current = { handleIceCandidate };
+        }
+
+        if (data.type === WebRtcSignalTypes.IceCandidate && data.candidate) {
+          await messageHandlerRef.current?.handleIceCandidate(data.candidate);
+        }
       }
     });
   }, [getSocket, subscribeMessages, send, sessionId, clearRemoteStreamAndVideo]);

@@ -1,6 +1,7 @@
-import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
+import { SocketEvents } from '@src/common/constants';
 import { WebRtcSignalTypes } from '../../../../logic/constants';
 import type { WebRtcSignalingPayload } from '../../../../logic/types';
+import type { ClientMessage } from '@src/common/types';
 
 type HandleCreateOfferIncomingMessageProps = {
   send: (message: string) => void;
@@ -28,7 +29,7 @@ export function handleCreateOfferIncomingMessage(props: HandleCreateOfferIncomin
   peerConnection.onicecandidate = (iceEvent) => {
     if (!iceEvent.candidate) return;
 
-    const message: SocketEventMessage<WebRtcSignalingPayload> = {
+    const message: ClientMessage<WebRtcSignalingPayload> = {
       event: SocketEvents.WebRtc,
       payload: {
         type: WebRtcSignalTypes.IceCandidate,
@@ -61,7 +62,7 @@ export function handleCreateOfferIncomingMessage(props: HandleCreateOfferIncomin
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
 
-    const message: SocketEventMessage<WebRtcSignalingPayload> = {
+    const message: ClientMessage<WebRtcSignalingPayload> = {
       event: SocketEvents.WebRtc,
       payload: {
         type: WebRtcSignalTypes.CreateAnswer,

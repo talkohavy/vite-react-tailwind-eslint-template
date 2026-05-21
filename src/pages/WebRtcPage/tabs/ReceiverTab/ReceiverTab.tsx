@@ -4,14 +4,13 @@ import { useReceiverTabLogic } from './logic/useReceiverTabLogic';
 
 export default function ReceiverTab() {
   const {
-    error,
     hasRemoteStream,
     isConnected,
     isConnecting,
     isConnectDisabled,
     isDisconnectDisabled,
-    connect,
-    disconnect,
+    connectReceiver,
+    disconnectReceiver,
     setVideoRef,
     sessionId,
     setSessionId,
@@ -50,7 +49,7 @@ export default function ReceiverTab() {
 
         <div className='flex flex-wrap gap-2'>
           <Button
-            onClick={connect}
+            onClick={connectReceiver}
             disabled={isConnectDisabled}
             className='bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50'
           >
@@ -58,7 +57,7 @@ export default function ReceiverTab() {
           </Button>
 
           <Button
-            onClick={disconnect}
+            onClick={disconnectReceiver}
             disabled={isDisconnectDisabled}
             className='bg-gray-600 hover:bg-gray-700 disabled:opacity-50'
           >
@@ -67,12 +66,6 @@ export default function ReceiverTab() {
         </div>
 
         {isConnecting && <span className='text-sm text-amber-600 dark:text-amber-400'>Connecting...</span>}
-
-        {error && (
-          <span className='text-sm text-red-600 dark:text-red-400' title={error.message}>
-            {error.message}
-          </span>
-        )}
       </section>
 
       {hasRemoteStream && (

@@ -11,8 +11,3 @@ export const SocketEvents = {
 };
 
 export type SocketEventValues = (typeof SocketEvents)[keyof typeof SocketEvents];
-
-export type SocketEventMessage<T = any> = {
-  event: SocketEventValues;
-  payload: T;
-};
