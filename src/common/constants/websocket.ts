@@ -8,6 +8,6 @@ export const SocketEvents = {
   Unregister: 'unregister',
   Send: 'send',
   WebRtc: 'web-rtc',
-};
+} as const;
 
 export type SocketEventValues = (typeof SocketEvents)[keyof typeof SocketEvents];
