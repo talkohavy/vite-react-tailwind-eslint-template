@@ -1,8 +1,9 @@
-import { SocketEvents, type SocketEventMessage } from '@src/common/constants/websocket';
-import { WebRtcSignalTypes } from '../../../logic/constants';
-import type { WebRtcSignalingPayload } from '../../../logic/types';
+import { SocketEvents } from '@src/common/constants';
+import { WebRtcSignalTypes } from '../../../../logic/constants';
+import type { WebRtcSignalingPayload } from '../../../../logic/types';
+import type { ClientMessage } from '@src/common/types';
 
-type SetupWebRtcSendingProps = {
+type SetupWebRtcPeerConnectionProps = {
   socket: WebSocket;
   sessionId: string;
   mediaStream: MediaStream;
@@ -13,7 +14,7 @@ type SetupWebRtcSendingProps = {
  * over the given WebSocket (signaling) and add all tracks from the stream.
  * Does not handle acquiring the stream or displaying it locally.
  */
-export function setupWebRtcSending(props: SetupWebRtcSendingProps): RTCPeerConnection {
+export function setupWebRtcPeerConnection(props: SetupWebRtcPeerConnectionProps): RTCPeerConnection {
   const { socket, sessionId, mediaStream } = props;
 
   const peerConnection = new RTCPeerConnection();
@@ -22,7 +23,7 @@ export function setupWebRtcSending(props: SetupWebRtcSendingProps): RTCPeerConne
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
 
-    const webRtcMessage: SocketEventMessage<WebRtcSignalingPayload> = {
+    const webRtcMessage: ClientMessage<WebRtcSignalingPayload> = {
       event: SocketEvents.WebRtc,
       payload: {
         type: WebRtcSignalTypes.CreateOffer,
@@ -37,7 +38,7 @@ export function setupWebRtcSending(props: SetupWebRtcSendingProps): RTCPeerConne
   peerConnection.onicecandidate = (event) => {
     if (!event.candidate) return;
 
-    const webRtcMessage: SocketEventMessage<WebRtcSignalingPayload> = {
+    const webRtcMessage: ClientMessage<WebRtcSignalingPayload> = {
       event: SocketEvents.WebRtc,
       payload: {
         type: WebRtcSignalTypes.IceCandidate,
