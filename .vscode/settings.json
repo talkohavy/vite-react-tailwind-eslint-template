@@ -303,6 +303,8 @@
     // "markdown" // <--- works badly on markdowns
   ],
 
+  "json.schemaDownload.enable": true, // <--- Allows the IDE to download the JSON schemas.
+
   // ----------
   // CSS Rules:
   // ----------
