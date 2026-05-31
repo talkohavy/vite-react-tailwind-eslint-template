@@ -3,7 +3,7 @@ import ProgressBarThumb from './ProgressBarThumb';
 import ProgressBarTrack from './ProgressBarTrack';
 import ProgressCompletedText from './ProgressCompletedText';
 
-type LinearProgressBarProps = {
+type FancyProgressBarProps = {
   /**
    * A number in range between 0 - 100.
    */
@@ -11,7 +11,7 @@ type LinearProgressBarProps = {
   className?: string;
 };
 
-export default function LinearProgressBar(props: LinearProgressBarProps) {
+export default function FancyProgressBar(props: FancyProgressBarProps) {
   const { className, completed = 50 } = props;
 
   return (

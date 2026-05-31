@@ -16,6 +16,7 @@ export default function ProgressBar(props: ProgressBarProps) {
       <div className={styles.progressBar}>
         <div className={styles.progressFill} style={{ width: `${completed}%` }} />
       </div>
+
       <div className={styles.progressText}>{Math.round(completed)}% complete</div>
     </div>
   );
