@@ -1,0 +1,107 @@
+{
+  // 1. Basic:
+  "export default": {
+    "prefix": ["ex", "exp", "expo"],
+    "body": ["export { default } from '.${1}';"],
+    "description": "const props"
+  },
+  "const props": {
+    "prefix": ["co", "con", "conprops"],
+    "body": ["const { ${0} } = props;"],
+    "description": "const props"
+  },
+  "New TS Function": {
+    "prefix": ["func"],
+    "body": [
+      "type ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}Props = {",
+      "\tname: string;",
+      "}",
+      "",
+      "export function ${3:$TM_FILENAME_BASE}(props: ${2:$TM_FILENAME_BASE}Props) {",
+      "\tconst { name } = props;",
+      "}",
+      ""
+    ],
+    "description": "New TS Function"
+  },
+  "Console log": {
+    "prefix": ["c", "co", "con", "clg"],
+    "body": ["console.log('${1:hi}')"],
+    "description": "My Console Log"
+  },
+  "Console log is": {
+    "prefix": ["clgi"],
+    "body": ["console.log('${1:props} is:', ${1:props})"],
+    "description": "My Console Log Is"
+  },
+  "Console error": {
+    "prefix": ["cle"],
+    "body": ["console.error(${0:error});"],
+    "description": "My Console Error"
+  },
+  // 2. React:
+  "className with string": {
+    "prefix": ["cl"],
+    "body": ["className=''"],
+    "description": "className with string"
+  },
+  "className with style.name": {
+    "prefix": ["clas", "class"],
+    "body": ["className={styles.${1}}"],
+    "description": "className with style"
+  },
+  "className with clsx": {
+    "prefix": ["cclsx"],
+    "body": ["className={clsx(${1})}"],
+    "description": "className with style"
+  },
+  "React Function with Styles": {
+    "prefix": ["rfts"],
+    "body": [
+      "import styles from './${1:$TM_FILENAME_BASE}.module.scss';",
+      "",
+      "type ${1:$TM_FILENAME_BASE}Props = {",
+      "\tname: string;",
+      "};",
+      "",
+      "export default function ${1:$TM_FILENAME_BASE}(props: ${1:$TM_FILENAME_BASE}Props) {",
+      "\tconst { name } = props;",
+      "",
+      "\treturn <div className={styles.${1:$TM_FILENAME_BASE}}>${1:$TM_FILENAME_BASE}</div>;",
+      "}",
+      ""
+    ],
+    "description": "React functional component"
+  },
+  "React Function": {
+    "prefix": ["rft"],
+    "body": [
+      "type ${1:$TM_FILENAME_BASE}Props = {",
+      "\tname: string;",
+      "};",
+      "",
+      "export default function ${1:$TM_FILENAME_BASE}(props: ${1:$TM_FILENAME_BASE}Props) {",
+      "\tconst { name } = props;",
+      "",
+      "\treturn <div>${1:$TM_FILENAME_BASE}</div>;",
+      "}",
+      ""
+    ],
+    "description": "My React functional component."
+  },
+  "Hook": {
+    "prefix": ["hook"],
+    "body": ["export function ${1:$TM_FILENAME_BASE}(){", "\treturn {};", "}"],
+    "description": "Hook function"
+  },
+  "useState": {
+    "prefix": ["use", "uses"],
+    "body": ["const [${1:value},set${1:value}] = useState();"],
+    "description": "My Simple useState."
+  },
+  "useEffect": {
+    "prefix": ["use", "usee"],
+    "body": ["useEffect(() => {", "\t$0", "}, [])"],
+    "description": "My Simple useState."
+  }
+}
