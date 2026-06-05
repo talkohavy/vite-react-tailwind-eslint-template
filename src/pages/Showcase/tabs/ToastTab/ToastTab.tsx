@@ -12,7 +12,7 @@ import CustomToastTitle from './content/CustomToastTitle';
 
 export default function ToastTab() {
   function showLoadingToSuccess() {
-    const id = showLoadingToast({ title: 'Uploading file…' });
+    const id = showLoadingToast({ title: 'Uploading file...' });
 
     setTimeout(() => {
       showSuccessToast({ title: 'Upload complete!', data: { id } });
@@ -27,7 +27,15 @@ export default function ToastTab() {
         <p className='text-xs text-white/40'>Green checkmark — use after a completed action.</p>
         <div className='flex flex-wrap gap-3'>
           <Button
-            onClick={() => showSuccessToast({ title: 'Changes saved successfully.' })}
+            onClick={() =>
+              showSuccessToast({
+                title: 'Changes saved successfully.',
+                data: {
+                  closeButton: true,
+                  duration: Number.POSITIVE_INFINITY,
+                },
+              })
+            }
             className='bg-emerald-600! hover:bg-emerald-500! active:bg-emerald-700!'
           >
             Success toast
@@ -85,34 +93,13 @@ export default function ToastTab() {
         </p>
         <div className='flex flex-wrap gap-3'>
           <Button
-            onClick={() => showLoadingToast({ title: 'Processing…' })}
+            onClick={() => showLoadingToast({ title: 'Processing...' })}
             className='bg-zinc-600! hover:bg-zinc-500 active:bg-zinc-700'
           >
             Loading toast
           </Button>
 
           <Button onClick={() => showLoadingToSuccess()}>Loading → success</Button>
-        </div>
-      </section>
-
-      {/* ── 6. Close button ────────────────────────────────────────────────── */}
-      <section className='flex flex-col gap-2'>
-        <p className='text-sm font-semibold text-white/50 uppercase tracking-wider'>Close button</p>
-        <p className='text-xs text-white/40'>
-          Pass <code>showCloseButton</code> to render a dismiss control. Stays on screen until closed.
-        </p>
-        <div className='flex flex-wrap gap-3'>
-          <Button
-            onClick={() =>
-              showInfoToast({
-                title: 'Click the × to dismiss this toast.',
-                showCloseButton: true,
-                data: { duration: Number.POSITIVE_INFINITY },
-              })
-            }
-          >
-            Toast with close button
-          </Button>
         </div>
       </section>
 
@@ -128,7 +115,7 @@ export default function ToastTab() {
             onClick={() =>
               showPromiseToast({
                 promise: delay(2000).then(() => ({ fileName: 'report.pdf' })),
-                loading: 'Uploading file…',
+                loading: 'Uploading file...',
                 success: (data) => `Uploaded ${data.fileName}!`,
                 error: 'Upload failed.',
               })
@@ -143,7 +130,7 @@ export default function ToastTab() {
                 promise: delay(2000).then(() => {
                   throw new Error('Network error');
                 }),
-                loading: 'Saving changes…',
+                loading: 'Saving changes...',
                 success: 'Changes saved!',
                 error: 'Failed to save changes.',
               })
