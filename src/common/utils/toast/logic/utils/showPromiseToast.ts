@@ -16,7 +16,7 @@ export function showPromiseToast<ToastData>(props: PromiseToastProps<ToastData>)
     onClose,
   } = props;
 
-  const finalData = Object.assign(DEFAULT_TOAST_DATA, data, {
+  const finalData = Object.assign({}, DEFAULT_TOAST_DATA, data, {
     loading,
     success,
     error,

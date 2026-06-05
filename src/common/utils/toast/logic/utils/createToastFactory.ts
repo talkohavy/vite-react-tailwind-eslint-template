@@ -6,7 +6,7 @@ import type { _CreateToastFactoryProps } from '../../types';
 export function createToastFactory(props: _CreateToastFactoryProps) {
   const { title, data = {}, level, showCloseButton = false, onClose } = props;
 
-  const finalData = Object.assign(DEFAULT_TOAST_DATA, data);
+  const finalData = Object.assign({}, DEFAULT_TOAST_DATA, data);
 
   // eslint-disable-next-line prefer-const -- it IS re-assigned!
   let toastId: string | number;

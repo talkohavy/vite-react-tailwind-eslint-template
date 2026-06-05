@@ -5,6 +5,8 @@ export const DEFAULT_TOAST_DATA: ExternalToast = {
   position: 'top-center',
 };
 
+Object.freeze(DEFAULT_TOAST_DATA);
+
 export const ToastLevels = {
   Success: 'success',
   Error: 'error',
