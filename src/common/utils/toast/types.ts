@@ -5,11 +5,6 @@ export type _CreateToastFactoryProps = {
   title: (() => React.ReactNode) | React.ReactNode;
   data?: ExternalToast;
   level?: ToastLevelValues;
-  /**
-   * @default false
-   */
-  showCloseButton?: boolean;
-  onClose?: () => void;
 };
 
 export type ToastProps = Omit<_CreateToastFactoryProps, 'level'>;
@@ -35,6 +30,4 @@ export type PromiseToastProps<ToastData = unknown> = {
   description?: PromiseToastResult;
   onFinally?: () => void | Promise<void>;
   data?: ExternalToast;
-  showCloseButton?: boolean;
-  onClose?: () => void;
 };

@@ -1,5 +1,4 @@
 import { toast } from 'sonner';
-import { addCloseButton } from '../addCloseButton';
 import { DEFAULT_TOAST_DATA } from '../constants';
 import type { PromiseToastProps } from '../../types';
 
@@ -12,8 +11,6 @@ export function showPromiseToast<ToastData>(props: PromiseToastProps<ToastData>)
     description,
     onFinally,
     data = {},
-    showCloseButton = false,
-    onClose,
   } = props;
 
   const finalData = Object.assign({}, DEFAULT_TOAST_DATA, data, {
@@ -29,10 +26,6 @@ export function showPromiseToast<ToastData>(props: PromiseToastProps<ToastData>)
       ...data.classNames,
     },
   });
-
-  if (showCloseButton) {
-    addCloseButton(finalData, onClose);
-  }
 
   return toast.promise(promise, finalData);
 }

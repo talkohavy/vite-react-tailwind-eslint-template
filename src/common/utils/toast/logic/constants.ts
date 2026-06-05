@@ -3,6 +3,8 @@ import type { ExternalToast } from 'sonner';
 export const DEFAULT_TOAST_DATA: ExternalToast = {
   duration: 3000,
   position: 'top-center',
+  dismissible: true,
+  closeButton: true,
 };
 
 Object.freeze(DEFAULT_TOAST_DATA);
