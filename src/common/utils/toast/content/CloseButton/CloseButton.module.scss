@@ -1,0 +1,18 @@
+.closeButton {
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+html[data-theme='dark'] .closeButton {
+  border-color: white;
+}
+
+.closeButton:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme='dark'] .closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
