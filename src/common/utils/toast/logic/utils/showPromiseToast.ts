@@ -30,20 +30,9 @@ export function showPromiseToast<ToastData>(props: PromiseToastProps<ToastData>)
     },
   });
 
-  let toastId: string | number | undefined;
-
   if (showCloseButton) {
-    addCloseButton(finalData, () => {
-      if (toastId !== undefined) toast.dismiss(toastId);
-      onClose?.();
-    });
+    addCloseButton(finalData, onClose);
   }
 
-  const result = toast.promise(promise, finalData);
-
-  if (typeof result === 'string' || typeof result === 'number') {
-    toastId = result;
-  }
-
-  return result;
+  return toast.promise(promise, finalData);
 }
