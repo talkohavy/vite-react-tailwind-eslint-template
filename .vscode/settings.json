@@ -1,5 +1,9 @@
 {
-  "workbench.colorTheme": "Default Dark Modern", // "Light"
+  // For cursor:
+  "workbench.preferredDarkColorTheme": "Default Dark Modern", // "Default Light Modern" | "Cursor Light" | "Visual Studio Light" | "Default Light+"
+
+  // For VsCode (?):
+  // "workbench.colorTheme": "Monokai", // "Light"
 
   "github.copilot.nextEditSuggestions.enabled": true, // <--- change to false in job-interviews
   "github.copilot.enable": {
