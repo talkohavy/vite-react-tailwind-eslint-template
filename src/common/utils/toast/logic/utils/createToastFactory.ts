@@ -8,11 +8,17 @@ export function createToastFactory(props: _CreateToastFactoryProps) {
 
   const finalData = Object.assign(data, DEFAULT_TOAST_DATA);
 
+  // eslint-disable-next-line prefer-const -- it IS re-assigned!
+  let toastId: string | number;
+
   if (showCloseButton) {
-    addCloseButton(data, onClose);
+    addCloseButton(data, () => {
+      toast.dismiss(toastId);
+      onClose?.();
+    });
   }
 
-  if (level) return toast[level](title, finalData);
+  toastId = level ? toast[level](title, finalData) : toast(title, finalData);
 
-  return toast(title, finalData);
+  return toastId;
 }
