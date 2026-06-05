@@ -8,6 +8,7 @@ import {
   showWarningToast,
 } from '@src/common/utils/toast';
 import Button from '@src/components/controls/Button';
+import CustomToastTitle from './content/CustomToastTitle';
 
 export default function ToastTab() {
   function showLoadingToSuccess() {
@@ -154,21 +155,24 @@ export default function ToastTab() {
         </div>
       </section>
 
-      {/* ── 8. All variants ────────────────────────────────────────────────── */}
+      {/* ── 8. Custom title ────────────────────────────────────────────────── */}
       <section className='flex flex-col gap-2'>
-        <p className='text-sm font-semibold text-white/50 uppercase tracking-wider'>Fire them all</p>
-        <p className='text-xs text-white/40'>Trigger every variant in quick succession.</p>
+        <p className='text-sm font-semibold text-white/50 uppercase tracking-wider'>Custom title</p>
+        <p className='text-xs text-white/40'>
+          Pass any <code>ReactNode</code> as <code>title</code> — not just a string. Handy for rich layouts, icons, or
+          styled copy.
+        </p>
         <div className='flex flex-wrap gap-3'>
           <Button
-            onClick={() => {
-              showSuccessToast({ title: 'Success toast' });
-              showErrorToast({ title: 'Error toast' });
-              showWarningToast({ title: 'Warning toast' });
-              showInfoToast({ title: 'Info toast' });
-              showLoadingToast({ title: 'Loading toast' });
-            }}
+            onClick={() =>
+              showSuccessToast({
+                title: <CustomToastTitle />,
+                data: { duration: 10000 },
+              })
+            }
+            className='bg-linear-to-r from-violet-600 to-fuchsia-600! hover:from-violet-500 hover:to-fuchsia-500! active:from-violet-700 active:to-fuchsia-700!'
           >
-            Show all toasts
+            Custom title toast
           </Button>
         </div>
       </section>
