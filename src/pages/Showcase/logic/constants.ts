@@ -9,6 +9,7 @@ import LoadersTab from '../tabs/LoadersTab';
 import ModalTab from '../tabs/ModalTab';
 import ProgressTab from '../tabs/ProgressTab';
 import RadioTab from '../tabs/RadioTab';
+import ToastTab from '../tabs/ToastTab';
 import TogglesTab from '../tabs/TogglesTab';
 import type { RadioOption } from '../../../components/controls/RadioButtons';
 
@@ -24,4 +25,5 @@ export const tabs: Array<RadioOption<() => ReactNode>> = [
   { value: 8, label: 'Menu', item: DropdownMenuTab },
   { value: 9, label: 'Loaders', item: LoadersTab },
   { value: 10, label: 'Button', item: ButtonTab },
+  { value: 11, label: 'Toast', item: ToastTab },
 ];

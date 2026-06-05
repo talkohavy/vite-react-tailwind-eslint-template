@@ -1,27 +1,21 @@
-import { useRef, useState } from 'react';
 import RadioTabs from '../../components/controls/RadioButtons/RadioTabs';
 import DownArrow from '../../components/svgs/DownArrow';
-import { useIsCloseToEdge } from '../../hooks/useIsCloseToEdge';
-import { useScrollToEdge } from '../../hooks/useScrollToEdge';
 import { tabs } from './logic/constants';
+import { useShowcaseLogic } from './logic/useShowcaseLogic';
 
 export default function Showcase() {
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-
-  const TabContent = tabs[selectedTabIndex]!.item!;
-
-  const refElement = useRef<HTMLElement>({} as HTMLElement);
-
-  const { isCloseToEdge: isCloseToBottom, onScroll: onScrollToBottom } = useIsCloseToEdge({
-    to: 'bottom',
-  });
-  const { scrollToEdge: scrollToBottom } = useScrollToEdge({ refElement: refElement, to: 'bottom' });
-
-  const { isCloseToEdge: isCloseToTop, onScroll: onScrollToTop } = useIsCloseToEdge({
-    to: 'top',
-    initialIsCloseToEdge: true,
-  });
-  const { scrollToEdge: scrollToTop } = useScrollToEdge({ refElement: refElement, to: 'top' });
+  const {
+    TabContent,
+    selectedTabIndex,
+    setSelectedTabIndex,
+    refElement,
+    isCloseToBottom,
+    isCloseToTop,
+    onScrollToBottom,
+    onScrollToTop,
+    scrollToBottom,
+    scrollToTop,
+  } = useShowcaseLogic();
 
   return (
     <div

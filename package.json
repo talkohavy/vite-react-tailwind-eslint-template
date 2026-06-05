@@ -42,7 +42,8 @@
     "react-router-dom": "^7.15.1",
     "react-simple-code-editor": "^0.14.1",
     "react-tooltip": "^6.0.3",
-    "socket.io-client": "^4.8.3"
+    "socket.io-client": "^4.8.3",
+    "sonner": "^2.0.7"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.15",
@@ -84,5 +85,5 @@
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-svgr": "^5.2.0"
   },
-  "packageManager": "pnpm@11.1.2"
+  "packageManager": "pnpm@11.5.1"
 }

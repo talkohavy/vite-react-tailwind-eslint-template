@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react';
+import { Toaster } from 'sonner';
 import { MemoryMonitor } from '../MemoryMonitor';
 import { Position } from '../MemoryMonitor/logic/constants';
 import Header from './Header';
@@ -21,6 +22,8 @@ export default function Layout(props: LayoutProps) {
 
         <MemoryMonitor position={Position.BottomRight} startMinimized />
       </div>
+
+      <Toaster />
     </div>
   );
 }
