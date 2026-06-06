@@ -6,11 +6,10 @@ import useSyntaxHighlighter from './logic/hooks/useSyntaxHighlighter';
 type CodeBlockProps = {
   code: string;
   onCopySuccess?: () => void;
-  language?: string; // 'bash' | 'javascript' | 'typescript' | 'html';
 };
 
 export default function CodeBlock(props: CodeBlockProps) {
-  const { code, language, onCopySuccess } = props;
+  const { code, onCopySuccess } = props;
 
   const codeRef = useRef<HTMLElement>(null);
 
@@ -18,9 +17,7 @@ export default function CodeBlock(props: CodeBlockProps) {
 
   return (
     <pre className={styles.codeBlock}>
-      <code ref={codeRef} className={language}>
-        {code}
-      </code>
+      <code ref={codeRef}>{code}</code>
 
       <CopyToClipboardButton code={code} onCopySuccess={onCopySuccess} />
     </pre>
