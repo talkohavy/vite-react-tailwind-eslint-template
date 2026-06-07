@@ -1,4 +1,15 @@
 {
+  "scm.diffDecorations": "gutter",
+  "scm.diffDecorationsGutterAction": "diff", // <--- defaults to "diff"
+  "scm.diffDecorationsGutterPattern": {
+    "added": false,
+    "modified": false
+  },
+  "scm.diffDecorationsGutterVisibility": "hover",
+  "scm.diffDecorationsGutterWidth": 5,
+  "scm.diffDecorationsIgnoreTrimWhitespace": "inherit",
+  "diffEditor.renderGutterMenu": true, // <--- should show the two action buttons (revert & stage)
+
   // For cursor:
   "workbench.preferredDarkColorTheme": "Default Dark Modern", // "Default Light Modern" | "Cursor Light" | "Visual Studio Light" | "Default Light+"
 
@@ -50,7 +61,11 @@
     "**/bower_components": true,
     "**/*.code-search": true
   },
-  "files.associations": { "*.json": "jsonc", "*.svg": "html", "*.code-snippets": "jsonc" },
+  "files.associations": {
+    "*.json": "jsonc",
+    "*.svg": "html",
+    "*.code-snippets": "jsonc"
+  },
   "editor.colorDecorators": true, // <--- Controls whether the editor should render the inline color decorators and color picker.
   "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
   "editor.gotoLocation.multipleDefinitions": "goto", // <--- I FOUND IT!!!! No more peeking !!! default value was peek
@@ -151,11 +166,10 @@
       "editorUnnecessaryCode.opacity": "#ffffff88",
       // "editorUnnecessaryCode.border": "#fff",
 
-      // "diffEditor.insertedTextBackground": "#3E8C43fe", // <--- Inserted Text (Greenish by default)
-      "diffEditor.insertedTextBackground": "#00ff0030", // <--- Inserted Text (Greenish by default)
-      "diffEditor.removedTextBackground": "#9E4247fe", // <--- Removed Text (Reddish by default)
-      "diffEditor.insertedLineBackground": "#3E8C4330",
-      "diffEditor.removedLineBackground": "#633E3Dfe",
+      "diffEditor.insertedTextBackground": "#13631350", // <--- Perfect: | 00ff0030
+      "diffEditor.removedTextBackground": "#ff000d20", // <--- Perfect: | 9E4247fe
+      "diffEditor.insertedLineBackground": "#13631310", // <--- Perfect: 3E8C4330 |
+      "diffEditor.removedLineBackground": "#7d151a30", // <--- Perfect: #633E3Dfe |
       // "diffEditor.insertedTextBorder": "#008000",
       // "diffEditor.removedTextBorder": "#FF0000fe",
       // "diffEditorGutter.insertedLineBackground": "#0000ff"
@@ -190,12 +204,13 @@
       // "textLink.foreground": "default"
     },
     // "focusBorder": "#00000000", // <--- don't make this transparent! It will make items in tree-view invisible upon traversing with the arrows.
-    "editorGutter.modifiedBackground": "#00000000",
-    "editorGutter.addedBackground": "#00000000",
-    "editorGutter.deletedBackground": "#00000000",
     "editorGutter.foldingControlForeground": "#6c6cff",
     "editorGutter.itemGlyphForeground": "#fff",
     "editorGutter.itemBackground": "#586bffdb"
+
+    // "editorGutter.modifiedBackground": "#00000000",
+    // "editorGutter.addedBackground": "#00000000",
+    // "editorGutter.deletedBackground": "#00000000",
   },
 
   // --------------------------
@@ -214,8 +229,8 @@
   // Git Rules:
   // ----------
   "git.closeDiffOnOperation": false, // <--- defaults to "true". Basically? This is relevant for when you hit the plus sign to stage changes. Do you want VsCode to close the DiffEditor afterwards? or not? I do not.
-  "git.showCommitInput": false, // <--- defaults to "true". I'm not using it to commit, so I hide it.
-  "git.showActionButton": { "commit": false, "publish": true, "sync": false },
+  "git.showCommitInput": true, // <--- defaults to "true". I'm not using it to commit, so I hide it.
+  "git.showActionButton": { "commit": true, "publish": true, "sync": false },
   "git.alwaysShowStagedChangesResourceGroup": true, // <--- defaults to "false". Always show the "Staged Changes" tab, even if there are 0 changes staged.
   // "git.showInlineOpenFileAction": false, // <--- defaults to "true". When examining changes, there's an "open file" icon near the revert changes icon. I use it, so I keep it visible.
   // "git.untrackedChanges": "separate", // <--- defaults to "mixed".
@@ -313,7 +328,10 @@
   // CSS Rules:
   // ----------
   "css.lint.unknownProperties": "ignore",
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "workbench.activityBar.orientation": "vertical",
+  "workbench.colorTheme": "Default Dark Modern",
+  "extensions.gallery.serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery"
   // "[css]": {
   //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
   // },
