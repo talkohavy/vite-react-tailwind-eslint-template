@@ -1,6 +1,7 @@
 {
   // For cursor:
-  "workbench.preferredDarkColorTheme": "Default Dark Modern", // "Default Light Modern" | "Cursor Light" | "Visual Studio Light" | "Default Light+"
+  // "workbench.preferredDarkColorTheme": "Default Light Modern", // "Default Light Modern" | "Cursor Light" | "Visual Studio Light" | "Default Light+"
+  "workbench.colorTheme": "Default Dark Modern",
 
   // ----------------
   // Diff Editor Rules:
@@ -138,6 +139,23 @@
   // ------------------------------
   "workbench.colorCustomizations": {
     "[Default Dark Modern]": {
+      // --------------
+      // Editor Colors:
+      // --------------
+      "editor.background": "#1c1c1c",
+      "editor.foreground": "#ddd",
+      "editorLineNumber.activeForeground": "#00ff00",
+      "editorMultiCursor.primary.foreground": "#fff",
+      "editorMultiCursor.secondary.foreground": "#888",
+      "editorUnnecessaryCode.opacity": "#ffffff88",
+      // "editorLineNumber.foreground": "default",
+      // "editorCursor.foreground": "#00ff00",
+      // "editor.selectionBackground": "#008800",
+      // "editorUnnecessaryCode.border": "#fff",
+
+      // -------------
+      // Activity Bar:
+      // -------------
       "activityBar.foreground": "#99ff99",
       "activityBar.inactiveForeground": "#444",
       "activityBar.dropBorder": "#00ff00",
@@ -148,33 +166,33 @@
       // "activityBarBadge.background": "#000",
       // "activityBarBadge.foreground": "#fff",
 
+      // ---------
+      // Side Bar:
+      // ---------
       "sideBar.border": "#535353",
       // "sideBarTitle.background": "#0d2d78",
       // "sideBar.background": "#000",
       // "sideBar.foreground": "#fff",
       // "sideBarTitle.foreground": "#ff0000",
 
-      // "tab.activeBackground": "default",
+      // ----
+      // Tab:
+      // ----
       "tab.inactiveBackground": "#00000000",
       "tab.inactiveForeground": "#666",
+      // "tab.activeBackground": "default",
       // "tab.hoverBackground": "#ff0000",
 
+      // ---------
+      // Dropdown:
+      // ---------
       "dropdown.border": "#bbb",
       "dropdown.foreground": "#ffffff",
       // "dropdown.background": "default", // <--- #393939c7
 
-      "editor.background": "#1c1c1c",
-      "editor.foreground": "#ddd",
-      "editorLineNumber.activeForeground": "#00ff00",
-      "editorMultiCursor.primary.foreground": "#fff",
-      "editorMultiCursor.secondary.foreground": "#888",
-      // "editorLineNumber.foreground": "default",
-      // "editorCursor.foreground": "#00ff00",
-      // "editor.selectionBackground": "#008800",
-
-      "editorUnnecessaryCode.opacity": "#ffffff88",
-      // "editorUnnecessaryCode.border": "#fff",
-
+      // ------------
+      // Diff Editor:
+      // ------------
       "diffEditor.insertedTextBackground": "#13631320", // <--- Perfect: 13631320
       "diffEditor.removedTextBackground": "#ff000d20", // <--- Perfect: ff000d20
       "diffEditor.insertedLineBackground": "#18921820", // <--- Perfect: 18921820
@@ -184,9 +202,15 @@
       // "diffEditorGutter.insertedLineBackground": "#0000ff"
       // "diffEditorGutter.removedLineBackground": "#0000ff"
 
+      // -------------
+      // Input Option:
+      // -------------
       "inputOption.activeBackground": "#007ACC", // #2A5072 or #007ACC
       "inputOption.activeBorder": "#007ACC",
 
+      // -----
+      // List:
+      // -----
       "list.focusHighlightForeground": "#2784ff",
       "list.highlightForeground": "#a3cbff",
       // "list.hoverBackground": "default",
@@ -194,18 +218,140 @@
       // "list.activeSelectionForeground": "default",
       // "list.activeSelectionIconForeground": "default",
 
+      // -------
+      // Search:
+      // -------
       "search.resultsInfoForeground": "#00a2ff",
 
+      // --------
+      // ToolBar:
+      // --------
       "toolbar.activeBackground": "#484848",
       "toolbar.hoverBackground": "#eeeeee33",
       // "toolbar.hoverOutline": "default",
 
+      // ----------
+      // Tree View:
+      // ----------
       "tree.indentGuidesStroke": "#c8c8c8", // <--- defaults to #585858
       // "tree.inactiveIndentGuidesStroke": "#ff0000",
 
+      // -------
+      // Widget:
+      // -------
       "widget.shadow": "#00ff00cc" // <--- or "#ff00cc". Color of find & replace tool, or the command palette.
       // "widget.border": "default", // <--- of find & replace tool, or the command palette.
 
+      // "icon.foreground": "#9dc4ff",
+      // "foreground": "default",
+      // "disabledForeground": "default",
+      // "selection.background": "default",
+      // "textLink.foreground": "default"
+    },
+
+    "[Default Light Modern]": {
+      // --------------
+      // Editor Colors:
+      // --------------
+      "editorLineNumber.activeForeground": "#0e5eff",
+      "editorMultiCursor.secondary.foreground": "#888",
+      "editorLineNumber.foreground": "#acacac",
+      // "editorMultiCursor.primary.foreground": "#fff",
+      // "editorUnnecessaryCode.opacity": "#ffffff88",
+      // "editorCursor.foreground": "#00ff00",
+      // "editor.selectionBackground": "#008800",
+      // "editorUnnecessaryCode.border": "#fff",
+
+      // -------------
+      // Activity Bar:
+      // -------------
+      // "activityBar.foreground": "#99ff99",
+      // "activityBar.inactiveForeground": "#444",
+      // "activityBar.dropBorder": "#00ff00",
+      // "activityBar.border": "#666",
+      // "activityBar.activeBorder": "#00000000",
+      // "activityBar.activeBackground": "#ffffff33",
+      // // "activityBar.background": "#000",
+      // // "activityBarBadge.background": "#000",
+      // // "activityBarBadge.foreground": "#fff",
+
+      // ---------
+      // Side Bar:
+      // ---------
+      "sideBar.border": "#535353",
+      // "sideBarTitle.background": "#0d2d78",
+      // "sideBar.background": "#000",
+      // "sideBar.foreground": "#fff",
+      // "sideBarTitle.foreground": "#ff0000",
+
+      // ----
+      // Tab:
+      // ----
+      "tab.hoverBackground": "#dedede",
+      "tab.inactiveBackground": "#f3f3f3",
+      // "tab.inactiveForeground": "#ff0000",
+      // "tab.activeBackground": "default",
+
+      // ---------
+      // Dropdown:
+      // ---------
+      // "dropdown.border": "#bbb",
+      // "dropdown.foreground": "#ffffff",
+      // "dropdown.background": "default", // <--- #393939c7
+
+      // ------------
+      // Diff Editor:
+      // ------------
+      "diffEditor.insertedTextBackground": "#78c67830", // <--- Perfect: 13631320
+      "diffEditor.insertedLineBackground": "#8aff8a30" // <--- Perfect: 18921820
+      // "diffEditor.insertedTextBorder": "#008000",
+
+      // "diffEditor.removedTextBackground": "#ff000d20", // <--- Perfect: ff000d20
+      // "diffEditor.removedLineBackground": "#7d151a60", // <--- Perfect: 7d151a60
+      // "diffEditor.removedTextBorder": "#FF0000fe",
+
+      // "diffEditorGutter.insertedLineBackground": "#0000ff"
+      // "diffEditorGutter.removedLineBackground": "#0000ff"
+
+      // -------------
+      // Input Option:
+      // -------------
+      // "inputOption.activeBackground": "#007ACC", // #2A5072 or #007ACC
+      // "inputOption.activeBorder": "#007ACC",
+
+      // -----
+      // List:
+      // -----
+      // "list.focusHighlightForeground": "#2784ff",
+      // "list.highlightForeground": "#a3cbff",
+      // "list.hoverBackground": "default",
+      // "list.activeSelectionBackground": "default",
+      // "list.activeSelectionForeground": "default",
+      // "list.activeSelectionIconForeground": "default",
+
+      // -------
+      // Search:
+      // -------
+      // "search.resultsInfoForeground": "#00a2ff",
+
+      // --------
+      // ToolBar:
+      // --------
+      // "toolbar.activeBackground": "#484848",
+      // "toolbar.hoverBackground": "#eeeeee33",
+      // // "toolbar.hoverOutline": "default",
+
+      // ----------
+      // Tree View:
+      // ----------
+      // "tree.indentGuidesStroke": "#c8c8c8", // <--- defaults to #585858
+      // // "tree.inactiveIndentGuidesStroke": "#ff0000",
+
+      // -------
+      // Widget:
+      // -------
+      // "widget.shadow": "#00ff00cc", // <--- or "#ff00cc". Color of find & replace tool, or the command palette.
+      // "widget.border": "default", // <--- of find & replace tool, or the command palette.
       // "icon.foreground": "#9dc4ff",
       // "foreground": "default",
       // "disabledForeground": "default",
@@ -327,7 +473,6 @@
   "css.lint.unknownProperties": "ignore",
   "css.lint.unknownAtRules": "ignore",
   "workbench.activityBar.orientation": "vertical",
-  "workbench.colorTheme": "Default Dark Modern",
   "extensions.gallery.serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
   // "[css]": {
   //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
