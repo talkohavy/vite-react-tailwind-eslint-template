@@ -41,7 +41,7 @@ addEventListener('message', (event: MessageEvent<WorkerAction>) => {
     }
 
     throw new Error(`Unknown action type: ${type}`);
-  } catch (error: any) {
+  } catch (error) {
     postMessage({ type: Actions.Error, payload: error.message });
   }
 });

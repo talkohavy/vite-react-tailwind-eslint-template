@@ -17,7 +17,7 @@ export async function syncAllRequests(): Promise<void> {
       await httpClient.post(url, options).promise;
 
       await indexedDBClient.deleteRecordById({ tableName: syncRequestsTableName, id });
-    } catch (error: any) {
+    } catch (error) {
       if (error instanceof HttpError && error.status === StatusCodes.Conflict) {
         await indexedDBClient.deleteRecordById({ tableName: syncRequestsTableName, id: request.id });
         continue; // <--- prevent console.log below. silently continue.

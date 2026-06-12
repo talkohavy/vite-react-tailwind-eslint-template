@@ -242,7 +242,7 @@ export function useAsyncFetch<ReturnType, TransformType = ReturnType>(
         const result = await promise;
 
         return result;
-      } catch (error: any) {
+      } catch (error) {
         console.error(error);
         setIsError(true);
         onError?.(error);

@@ -71,7 +71,7 @@ export function useInfiniteScrollPageLogic() {
       setBooks((prev) => [...prev, ...data]); // <--- Append new books to the existing books
 
       setIsLoadingNextPage(false);
-    } catch (error: any) {
+    } catch (error) {
       if (error.name == 'AbortError') return;
 
       console.error('Error loading books:', error);

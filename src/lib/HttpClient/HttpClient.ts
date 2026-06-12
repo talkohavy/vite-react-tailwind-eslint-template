@@ -137,7 +137,7 @@ export class HttpClient {
       }
 
       return data;
-    } catch (error: any) {
+    } catch (error) {
       this.removeAbortControllerFromList(requestId);
 
       throw error;

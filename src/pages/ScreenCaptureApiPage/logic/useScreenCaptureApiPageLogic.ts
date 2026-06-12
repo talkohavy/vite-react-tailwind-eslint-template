@@ -80,7 +80,7 @@ export function useScreenCaptureApiPageLogic() {
 
       // Screen sharing can end manually, but it can also end automatically when the user clicks "Stop sharing" or closes the browser tab.
       videoTrack.addEventListener('ended', stopScreenCapture);
-    } catch (err: unknown) {
+    } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setError(`Screen capture error: ${message}`);
     }

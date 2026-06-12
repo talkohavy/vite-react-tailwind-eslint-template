@@ -45,7 +45,7 @@ export function useMediaCaptureApiPageLogic() {
       video.srcObject = mediaStream;
 
       await video.play();
-    } catch (error: any) {
+    } catch (error) {
       const message = error.message || String(error) || error.name;
       setError(`Camera error: ${message}`);
     }

@@ -105,7 +105,7 @@
     "strict": true, // <--- Enable all strict type-checking options.
     "noImplicitAny": true, // <--- one one hand, we hate this, because when true it makes "function foo(a) {}" appear as an error. But, on the other hand, we like it, because when true it signals when trying to use a wrong enum value: "Gender['NO_SUCH_KEY']".
     "noImplicitThis": true, // <---Enable error reporting when 'this' is given the type 'any'.
-    "useUnknownInCatchVariables": true, // <--- Default catch clause variables as 'unknown' instead of 'any'.
+    "useUnknownInCatchVariables": false, // <--- Default catch clause variables as 'unknown' instead of 'any'.
     "alwaysStrict": true, // <--- Ensure 'use strict' is always emitted.
     "noUnusedLocals": true, // <--- Enable error reporting when local variables aren't read.
     "noUnusedParameters": true, // <--- Raise an error when a function parameter isn't read.
