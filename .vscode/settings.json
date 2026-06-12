@@ -1,4 +1,49 @@
 {
+  // For cursor:
+  "workbench.preferredDarkColorTheme": "Default Dark Modern", // "Default Light Modern" | "Cursor Light" | "Visual Studio Light" | "Default Light+"
+
+  // ----------------
+  // Diff Editor Rules:
+  // ----------------
+  "diffEditor.renderGutterMenu": true, // <--- should show the two action buttons (revert & stage)
+  "diffEditor.ignoreTrimWhitespace": false,
+  // "diffEditor.codeLens": false, // <--- defaults to "false"
+  // "diffEditor.renderSideBySide": true, // <--- defaults to "true"
+
+  // -------------
+  // Editor Rules:
+  // -------------
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.colorDecorators": true, // <--- Controls whether the editor should render the inline color decorators and color picker.
+  "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
+  "editor.gotoLocation.multipleDefinitions": "goto", // <--- I FOUND IT!!!! No more peeking !!! default value was peek
+  "editor.gotoLocation.multipleReferences": "peek", // <--- I FOUND IT!!!! When a reference was mis-spelled, it couldn't perform the goto operation, so it gets stuck in the same place.
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+    "source.fixAll.eslint": "explicit"
+    // "source.fixAll": true,
+    // "source.organizeImports": true, // <--- This also removes unused imports. I disabled it, since I'm already using eslint for that.
+    // "source.organizeImports.biome": "always",
+  },
+  // "editor.autoSurround": "languageDefined", // defaults to "languageDefined". Defines what to do when text is selected, and you hit ' or [.
+  // "editor.minimap.enabled": true, // <--- defaults to "true". The 'minimap' is the mini-code on the right, which you can use to navigate a really long file.
+  // "editor.mouseWheelZoom": false, // <--- default to "false".
+  // "editor.multiCursorModifier": "alt", // <--- defaults to "alt".
+  // "editor.showUnused": true, // <--- defaults to "true". true value marks unreachable code as faded out.
+  // "editor.wordWrap": "off", // <--- defaults to "off".
+  // "editor.gotoLocation.alternativeDeclarationCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeImplementationCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeReferenceCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToImplementation",
+  // "editor.gotoLocation.multipleDeclarations": "goto",
+  // "editor.gotoLocation.multipleImplementations": "goto",
+  // "editor.gotoLocation.multipleTypeDefinitions": ,
+
+  // ----------
+  // SCM Rules:
+  // ----------
   "scm.diffDecorations": "gutter",
   "scm.diffDecorationsGutterAction": "diff", // <--- defaults to "diff"
   "scm.diffDecorationsGutterPattern": {
@@ -8,34 +53,19 @@
   "scm.diffDecorationsGutterVisibility": "hover",
   "scm.diffDecorationsGutterWidth": 5,
   "scm.diffDecorationsIgnoreTrimWhitespace": "inherit",
-  "diffEditor.renderGutterMenu": true, // <--- should show the two action buttons (revert & stage)
-
-  // For cursor:
-  "workbench.preferredDarkColorTheme": "Default Dark Modern", // "Default Light Modern" | "Cursor Light" | "Visual Studio Light" | "Default Light+"
-
-  // For VsCode (?):
-  // "workbench.colorTheme": "Monokai", // "Light"
-
-  "github.copilot.nextEditSuggestions.enabled": true, // <--- change to false in job-interviews
-  "github.copilot.enable": {
-    "*": true, // <--- change to false in job-interviews
-    "plaintext": false,
-    "markdown": false,
-    "scminput": false
-  },
 
   // -----------
   // Font Sizes:
   // -----------
   "editor.fontSize": 16,
+  "editor.suggestFontSize": 14, // <--- suggestions popover
+  "editor.inlayHints.fontSize": 46,
+  "editor.codeLensFontSize": 16, // <--- conflict resolution: "Accept Current" | "No Changes Accepted" | "Remove Stashed Changes" | "Remove Incoming Changes"
   "debug.console.fontSize": 12,
   "terminal.integrated.fontSize": 12,
-  "editor.suggestFontSize": 14, // <--- suggestions popover
   "gitlens.currentLine.fontSize": 15, // <--- git blame
-  "editor.inlayHints.fontSize": 46,
-  "gitlens.blame.fontSize": 46,
+  "gitlens.blame.fontSize": 12,
   "markdown.preview.fontSize": 46,
-  "editor.codeLensFontSize": 16, // <--- conflict resolution: "Accept Current" | "No Changes Accepted" | "Remove Stashed Changes" | "Remove Incoming Changes"
   "chat.fontSize": 16,
 
   // -------------------
@@ -44,7 +74,6 @@
   "window.title": "${folderName}", // <--- "${dirty}${folderName}${separator}${activeFolderShort}\\${activeEditorShort}${separator}${activeEditorMedium}"
   "window.zoomLevel": 0,
   "window.zoomPerWindow": true, // <--- defaults to true. It used to be false before version 1.86.
-  "editor.formatOnSave": true,
   "workbench.tree.stickyScrollMaxItemCount": 7, // <--- defaults to 7. It used to be 1 before version 1.86.
   "workbench.activityBar.iconClickBehavior": "focus",
   "workbench.editor.editorActionsLocation": "default",
@@ -66,29 +95,9 @@
     "*.svg": "html",
     "*.code-snippets": "jsonc"
   },
-  "editor.colorDecorators": true, // <--- Controls whether the editor should render the inline color decorators and color picker.
-  "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
-  "editor.gotoLocation.multipleDefinitions": "goto", // <--- I FOUND IT!!!! No more peeking !!! default value was peek
-  "editor.gotoLocation.multipleReferences": "peek", // <--- I FOUND IT!!!! When a reference was mis-spelled, it couldn't perform the goto operation, so it gets stuck in the same place.
   // "files.autoSave": "off", // Defaults to false. Possible options: off | onFocusChange | afterDelay | onWindowChange
   // "files.autoSaveDelay": 1000,
   // "files.refactoring.autoSave": true,
-  // "editor.autoSurround": "languageDefined", // defaults to "languageDefined". Defines what to do when text is selected, and you hit ' or [.
-  // "editor.minimap.enabled": true, // <--- defaults to "true". The 'minimap' is the mini-code on the right, which you can use to navigate a really long file.
-  // "editor.mouseWheelZoom": false, // <--- default to "false".
-  // "editor.multiCursorModifier": "alt", // <--- defaults to "alt".
-  // "editor.showUnused": true, // <--- defaults to "true". true value marks unreachable code as faded out.
-  // "editor.wordWrap": "off", // <--- defaults to "off".
-  // "diffEditor.codeLens": false, // <--- defaults to "false"
-  // "diffEditor.renderSideBySide": true, // <--- defaults to "true"
-  // "editor.gotoLocation.alternativeDeclarationCommand": "editor.action.goToImplementation",
-  // "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.goToImplementation",
-  // "editor.gotoLocation.alternativeImplementationCommand": "editor.action.goToImplementation",
-  // "editor.gotoLocation.alternativeReferenceCommand": "editor.action.goToImplementation",
-  // "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToImplementation",
-  // "editor.gotoLocation.multipleDeclarations": "goto",
-  // "editor.gotoLocation.multipleImplementations": "goto",
-  // "editor.gotoLocation.multipleTypeDefinitions": ,
 
   // ---------------
   // Zen Mode Rules:
@@ -166,10 +175,10 @@
       "editorUnnecessaryCode.opacity": "#ffffff88",
       // "editorUnnecessaryCode.border": "#fff",
 
-      "diffEditor.insertedTextBackground": "#13631350", // <--- Perfect: | 00ff0030
-      "diffEditor.removedTextBackground": "#ff000d20", // <--- Perfect: | 9E4247fe
-      "diffEditor.insertedLineBackground": "#13631310", // <--- Perfect: 3E8C4330 |
-      "diffEditor.removedLineBackground": "#7d151a30", // <--- Perfect: #633E3Dfe |
+      "diffEditor.insertedTextBackground": "#13631320", // <--- Perfect: 13631320
+      "diffEditor.removedTextBackground": "#ff000d20", // <--- Perfect: ff000d20
+      "diffEditor.insertedLineBackground": "#18921820", // <--- Perfect: 18921820
+      "diffEditor.removedLineBackground": "#7d151a60", // <--- Perfect: 7d151a60
       // "diffEditor.insertedTextBorder": "#008000",
       // "diffEditor.removedTextBorder": "#FF0000fe",
       // "diffEditorGutter.insertedLineBackground": "#0000ff"
@@ -211,18 +220,6 @@
     // "editorGutter.modifiedBackground": "#00000000",
     // "editorGutter.addedBackground": "#00000000",
     // "editorGutter.deletedBackground": "#00000000",
-  },
-
-  // --------------------------
-  // Code actions onSave Rules:
-  // --------------------------
-  // - Mostly for formatting using a formatter (eslint & prettier)
-  "editor.codeActionsOnSave": {
-    "source.fixAll.biome": "explicit",
-    "source.fixAll.eslint": "explicit"
-    // "source.fixAll": true,
-    // "source.organizeImports": true, // <--- This also removes unused imports. I disabled it, since I'm already using eslint for that.
-    // "source.organizeImports.biome": "always",
   },
 
   // ----------
@@ -331,8 +328,19 @@
   "css.lint.unknownAtRules": "ignore",
   "workbench.activityBar.orientation": "vertical",
   "workbench.colorTheme": "Default Dark Modern",
-  "extensions.gallery.serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery"
+  "extensions.gallery.serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
   // "[css]": {
   //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
   // },
+
+  // --------------
+  // Copilot Rules:
+  // --------------
+  "github.copilot.nextEditSuggestions.enabled": true, // <--- change to false in job-interviews
+  "github.copilot.enable": {
+    "*": true, // <--- change to false in job-interviews
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  }
 }
