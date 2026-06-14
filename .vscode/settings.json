@@ -303,11 +303,11 @@
       // Diff Editor:
       // ------------
       "diffEditor.insertedTextBackground": "#78c67830", // <--- Perfect: 13631320
-      "diffEditor.insertedLineBackground": "#8aff8a30" // <--- Perfect: 18921820
+      "diffEditor.insertedLineBackground": "#8aff8a30", // <--- Perfect: 18921820
       // "diffEditor.insertedTextBorder": "#008000",
 
-      // "diffEditor.removedTextBackground": "#ff000d20", // <--- Perfect: ff000d20
-      // "diffEditor.removedLineBackground": "#7d151a60", // <--- Perfect: 7d151a60
+      "diffEditor.removedTextBackground": "#ff000d20", // <--- Perfect: ff000d20
+      "diffEditor.removedLineBackground": "#e74d5520" // <--- Perfect: 7d151a60 | e74d5520
       // "diffEditor.removedTextBorder": "#FF0000fe",
 
       // "diffEditorGutter.insertedLineBackground": "#0000ff"
